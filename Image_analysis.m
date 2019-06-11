@@ -25,15 +25,20 @@ for i =1:numel(code_fullfn)
        score_arr = cat(1, score_arr, nan([length(data.ids), 1]));
    end
 end
-
 %%
 tic
 code_dist = pdist(code_arr);
-code_coord3 = mdscale(code_dist, 3);
 toc
+tic
+code_coord3 = mdscale(code_dist, 3);
+toc % Elapsed time is 2374.430649 seconds.
 %%
-figure()
+figure(1)
 scatter3(code_coord3(:,1),code_coord3(:,2),code_coord3(:,3),9,1:4030)
 xlabel("MDS1")
 xlabel("MDS2")
 xlabel("MDS3")
+%%
+save('dimen_red_coord.mat','code_coord3')
+%%
+[PC_axiss,code_PC,PC_var,~,var_explained] = pca(code_arr,'NumComponents',10);
