@@ -24,11 +24,13 @@ cd ..\
 mkdir 'Evolv_response'
 cd 'Evolv_response'
 for channel_j = 1:65 %1, 6, 30, 31 are bad silent channel 
-figure('Position',[0,0,1000,600]);clf;hold on;
+h = figure(1);clf;hold on;
+h.Position = [ 1          41        2560         963];
+h.Visible = 'off'; 
 gen_list = 0:100;
 for i = 1:length(gen_list)
     shadedErrorBar([],evol_stim_fr(i, :, channel_j),evol_stim_sem(i, :, channel_j),...
-    'lineprops',{'Color',[color_seq(i, :),0.2]},'transparent',1,'patchSaturation',0.075)
+    'lineprops',{'Color',[color_seq(i, :),0.85]},'transparent',1,'patchSaturation',0.075)
     % plot(evol_stim_fr(i,:,channel_j))
 end
 YL=ylim;YL(1)=0;ylim(YL);
@@ -36,5 +38,7 @@ XL=xlim;XL(1)=0;xlim(XL);
 xlabel("time (ms)")
 title(['Generation averaged PSTH of Evolved Stimuli channel ', num2str(channel_j)])
 saveas(gcf,sprintf("Evolv_rsp_channel%d.png",channel_j))
+hold off
 end
 cd ..\
+%%
