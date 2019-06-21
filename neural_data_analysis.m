@@ -67,13 +67,14 @@ saveas(gcf, ".\Evolv_response\Generation_Color_code.png")
 % as -1
 trial_id_mask = sort_idx(gen_num_i~=-1);
 part_gen_num = gen_num_i(gen_num_i~=-1);
-for channel_j = 16:16
+for channel_j = 16:65
 cluster_input = rasters(trial_id_mask, :, channel_j);
 if sum(cluster_input,'all')==0
    continue 
 end
 Z = linkage(cluster_input, 'average', 'euclidean');%''correlation
 UL = prctile(cluster_input(:), 98)+1;
+LL =  prctile(cluster_input(:), 2)-1;
 %%
 figure(17);clf;
 set(gcf, "Position",[0,40,2560,960])
