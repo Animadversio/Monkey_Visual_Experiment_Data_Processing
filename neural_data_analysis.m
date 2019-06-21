@@ -65,20 +65,24 @@ saveas(gcf, ".\Evolv_response\Generation_Color_code.png")
 %%
 % `gen_num_i` maps from sorted id to generation number, map natural images
 % as -1
-channel_j = 4;
 trial_id_mask = sort_idx(gen_num_i~=-1);
 part_gen_num = gen_num_i(gen_num_i~=-1);
-sorted_gen_num = part_gen_num(perm_indx); 
+for channel_j = 16:16
 cluster_input = rasters(trial_id_mask, :, channel_j);
-% Z = linkage(cluster_input, 'average', 'euclidean');%''correlation
+if sum(cluster_input,'all')==0
+   continue 
+end
+Z = linkage(cluster_input, 'average', 'euclidean');%''correlation
+UL = prctile(cluster_input(:), 98)+1;
 %%
-figure("Position",[0,0,2500,1000])
+figure(17);clf;
+set(gcf, "Position",[0,40,2560,960])
 suptitle(sprintf("Evolving Image PSTH Sorted by Hierachical clustering Channel %d",channel_j))
 ax1 = subplot('Position', [0.06, 0.73, 0.88, 0.20]);
 [~, T , perm_indx] = dendrogram(Z,0);
 ax1.XTick=[];
 ax2 = subplot('Position', [0.06, 0.15, 0.88, 0.55]);
-imagesc(cluster_input(perm_indx, :)',[0,500])
+imagesc(cluster_input(perm_indx, :)',[0,UL])
 colormap(ax2,'parula')
 ch1 = colorbar();
 ch1.Position = [0.95, 0.15, 0.008, 0.55]; 
@@ -87,6 +91,7 @@ ylabel("Time (ms)   ",'Fontsize',14)
 ax2.YLabel.Rotation = 0;
 ax2.XTick={};
 ax3 = subplot('Position', [0.06, 0.08, 0.88, 0.05]);
+sorted_gen_num = part_gen_num(perm_indx); 
 imagesc(sorted_gen_num')
 xlabel("Sorted Image id",'Fontsize',14)
 ax3.YTick = [1];
@@ -97,6 +102,51 @@ caxis([min(gen_list),max(gen_list)]);
 ch2 = colorbar();
 ch2.Position = [0.95, 0.08, 0.008, 0.05]; 
 set(get(ch2, 'Label'), 'string','Generation #','Fontsize',12);
+
+saveas(gcf,sprintf(".\\Evolv_Sort_Rsp\\Evolv_rsp_sort_channel%d.png",channel_j))
+end
+%%
+trial_id_mask = sort_idx(gen_num_i~=-1);
+part_gen_num = gen_num_i(gen_num_i~=-1);
+for channel_j = 1:65
+cluster_input = rasters(trial_id_mask, :, channel_j);
+if sum(cluster_input,'all')==0
+   continue 
+end
+Z = linkage(cluster_input, 'average', 'correlation');%''
+UL = prctile(cluster_input(:), 98)+1;
+%
+figure(18);clf;
+set(gcf, "Position",[0,40,2560,960])
+suptitle(sprintf("Evolving Image PSTH Sorted by Hierachical clustering (correlation) Channel %d",channel_j))
+ax1 = subplot('Position', [0.06, 0.73, 0.88, 0.20]);
+[~, T , perm_indx] = dendrogram(Z,0);
+ax1.XTick=[];
+ax2 = subplot('Position', [0.06, 0.15, 0.88, 0.55]);
+imagesc(cluster_input(perm_indx, :)',[0,UL])
+colormap(ax2,'parula')
+ch1 = colorbar();
+ch1.Position = [0.95, 0.15, 0.008, 0.55]; 
+set(get(ch1, 'Label'), 'string','Firing rate','Fontsize',12);
+ylabel("Time (ms)   ",'Fontsize',14)
+ax2.YLabel.Rotation = 0;
+ax2.XTick={};
+ax3 = subplot('Position', [0.06, 0.08, 0.88, 0.05]);
+sorted_gen_num = part_gen_num(perm_indx); 
+imagesc(sorted_gen_num')
+xlabel("Sorted Image id",'Fontsize',14)
+ax3.YTick = [1];
+ax3.YTickLabel = {"Generation #"};
+ax3.YAxis.FontSize = 14;
+colormap(ax3,color_seq)
+caxis([min(gen_list),max(gen_list)]);
+ch2 = colorbar();
+ch2.Position = [0.95, 0.08, 0.008, 0.05]; 
+set(get(ch2, 'Label'), 'string','Generation #','Fontsize',12);
+
+saveas(gcf,sprintf(".\\Evolv_Corr_Sort_Rsp\\Evolv_rsp_sort_channel%d.png",channel_j))
+end
+
 %%
 figure("Position",[0,0,1500,500])
 imagesc(cluster_input(:, :)',[0,500])
