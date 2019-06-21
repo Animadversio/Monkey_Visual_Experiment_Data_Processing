@@ -45,7 +45,7 @@ for iter=1:maxiter
         gradd=sum(sum(grad.*d)); dQd = sum(sum((WtW*d).*d));
         suff_decr = 0.99*gradd + 0.5*dQd < 0;
         if inner_iter==1
-        decr_alpha = ~suff_decr; Hp = H;
+            decr_alpha = ~suff_decr; Hp = H;
         end
         if decr_alpha
             if suff_decr
