@@ -67,7 +67,7 @@ saveas(gcf, ".\Evolv_response\Generation_Color_code.png")
 % as -1
 trial_id_mask = sort_idx(gen_num_i~=-1);
 part_gen_num = gen_num_i(gen_num_i~=-1);
-for channel_j = 16:65
+for channel_j = 4
 cluster_input = rasters(trial_id_mask, :, channel_j);
 if sum(cluster_input,'all')==0
    continue 
@@ -109,7 +109,7 @@ end
 %%
 trial_id_mask = sort_idx(gen_num_i~=-1);
 part_gen_num = gen_num_i(gen_num_i~=-1);
-for channel_j = 1:65
+for channel_j = 4%1:65
 cluster_input = rasters(trial_id_mask, :, channel_j);
 if sum(cluster_input,'all')==0
    continue 
@@ -155,3 +155,53 @@ colorbar()
 title(sprintf("Evolving Image PSTH Channel %d",channel_j))
 ylabel("Time")
 xlabel("Image id")
+%% NMF on image sets 
+%%
+n_compon = 30;
+tic
+channel_j = 4;
+trial_id_mask = sort_idx(gen_num_i~=-1);
+NMF_input = rasters(trial_id_mask, :, channel_j);
+[img_mix,psth_basis,D] = nnmf(NMF_input, n_compon, 'algorithm','mult') ;
+toc
+%%
+figure()
+for cp = 1:15 
+    subplot(15,1,cp)
+    plot(img_mix(perm_indx, cp))
+    if cp~=15
+        xticks([])
+    end
+end
+%%
+figure(21);clf;
+nmf_reconst = psth_basis'*img_mix(perm_indx, :)';
+UL = prctile(nmf_reconst(:), 98)+1;
+LL =  prctile(nmf_reconst(:), 2)-1;
+imagesc(nmf_reconst,[0,500])
+ylabel('Time','Fontsize',14)
+xlabel('Sorted Img ID','Fontsize',14)
+title(sprintf('Evolving Image PSTH Sorted by Hierachical clustering (correlation) Channel %d (%d components)',channel_j,n_compon))
+saveas(21, sprintf('.\\NMF_decompose\\Evolv_PSTH_%d_NMF_%d.png',channel_j,n_compon))
+%clear nmf_reconst
+%%
+fh = figure(22);clf;
+suptitle(sprintf("Evolving Image PSTH %d, %d components NMF Reconstruction (Error %.1f) ",channel_j,n_compon,D)) 
+set(gcf, "Position",[0,40,2560,960])
+ax1=subplot('Position', [0.05, 0.20, 0.08, 0.74]);
+imagesc(psth_basis')
+colorbar('location','westoutside')
+xlabel("Components",'Fontsize',14)
+ylabel("Time (ms)",'Fontsize',14)
+ax2=subplot('Position', [0.14, 0.20, 0.84, 0.74]);
+imagesc(nmf_reconst,[0,500])
+xticklabels([])
+yticklabels([])
+colorbar('location','eastoutside')
+ax3=subplot('Position', [0.14, 0.03, 0.84, 0.15]);
+imagesc(img_mix(perm_indx, :)',[0,500])
+xlabel("Sorted Image ID",'Fontsize',14)
+ylabel("Components ",'Fontsize',14)
+colorbar('location','eastoutside')
+
+%%
