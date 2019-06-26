@@ -151,14 +151,149 @@ toc
 save('image_psth_nmf30_norm.mat', 'psth_img_basis', 'cof_img_mix', 'iter');
 %%
 figure;
-n_compon = 15;
-for i =1:n_compon
-    subplot(3,n_compon,i)
+n_compon = 8;
+for sub_i =1:n_compon
+    i = sub_i + 22;
+    subplot(3,n_compon,sub_i)
     nmf_img = psth_img_basis(201:end, i)*0.7*max(cof_img_mix(i, :))*256;
     imshow(reshape(uint8(nmf_img), size(img)))
-    subplot(3,n_compon,i+n_compon)
+    subplot(3,n_compon,sub_i+n_compon)
     plot(psth_img_basis(1:200, i))
-    subplot(3,n_compon,i+2*n_compon)
+    subplot(3,n_compon,sub_i+2*n_compon)
     plot(cof_img_mix(i, :)')
 end
 toc
+%%
+reconstr_psth2 = psth_img_basis(1:200, :) * cof_img_mix(:, perm_indx);
+figure;
+imagesc(reconstr_psth2)
+%%
+tic
+n_compon = 20;
+% [psth_img_basis,cof_img_mix,D] = nnmf([cluster_input, showed_image_arr/256^2]', n_compon);
+[psth_img_basis,cof_img_mix,iter] = nmf([cluster_input, showed_image_arr/32]', n_compon,...
+    'verbose',0,'method','hals');
+toc
+save('image_psth_nmf20_norm32.mat', 'psth_img_basis', 'cof_img_mix', 'iter');
+%%
+figure;
+n_compon = 10;
+for sub_i =1:n_compon
+    i = sub_i+10;
+    subplot(3,n_compon,sub_i)
+    nmf_img = psth_img_basis(201:end, i)*0.7*max(cof_img_mix(i, :))*32;
+    imshow(reshape(uint8(nmf_img), size(img)))
+    subplot(3,n_compon,sub_i+n_compon)
+    plot(psth_img_basis(1:200, i))
+    subplot(3,n_compon,sub_i+2*n_compon)
+    plot(cof_img_mix(i, :)')
+end
+toc
+%%
+reconstr_psth2 = psth_img_basis(1:200, :) * cof_img_mix(:, perm_indx);
+figure;
+imagesc(reconstr_psth2)
+title("Reconstruction PSTH from 20 component NMF, Image normalization 32, HALS")
+%%
+tic
+n_compon = 15;
+% [psth_img_basis,cof_img_mix,D] = nnmf([cluster_input, showed_image_arr/256^2]', n_compon);
+[psth_img_basis,cof_img_mix,iter] = nmf([cluster_input, showed_image_arr/16]', n_compon,...
+    'verbose',0,'method','hals');
+toc
+save('image_psth_nmf15_norm16.mat', 'psth_img_basis', 'cof_img_mix', 'iter');
+%%
+figure('Position',[0         500        1916         450]);
+pos = get(gca, 'Position');
+pos(1) = 0.055;
+pos(3) = 0.9;
+set(gca, 'Position', pos)
+n_compon = 15;
+for sub_i =1:n_compon
+    %i = sub_i+10;
+    i = sub_i ;
+    subplot(3,n_compon,sub_i)
+    nmf_img = psth_img_basis(201:end, i)*0.7*max(cof_img_mix(i, :))*16;
+    imshow(reshape(uint8(nmf_img), size(img)))
+    subplot(3,n_compon,sub_i+n_compon)
+    plot(psth_img_basis(1:200, i))
+    subplot(3,n_compon,sub_i+2*n_compon)
+    plot(cof_img_mix(i, :)')
+    xlim([0,length(perm_indx)])
+end
+toc
+%%
+reconstr_psth2 = psth_img_basis(1:200, :) * cof_img_mix(:, perm_indx);
+figure('Position',[0         500        1915         650]);
+imagesc(reconstr_psth2)
+title("Reconstruction PSTH from 15 component NMF, Image normalization 16, HALS")
+
+%%
+tic
+n_compon = 15;
+% [psth_img_basis,cof_img_mix,D] = nnmf([cluster_input, showed_image_arr/256^2]', n_compon);
+[psth_img_basis,cof_img_mix,iter] = nmf([cluster_input, showed_image_arr/64]', n_compon,...
+    'verbose',0,'method','hals');
+toc
+save('image_psth_nmf15_norm64.mat', 'psth_img_basis', 'cof_img_mix', 'iter');
+%
+figure('Position',[0         500        1916         450]);
+pos = get(gca, 'Position');
+pos(1) = 0.055;
+pos(3) = 0.9;
+set(gca, 'Position', pos)
+n_compon = 15;
+for sub_i =1:n_compon
+    %i = sub_i+10;
+    i = sub_i ;
+    subplot(3,n_compon,sub_i)
+    nmf_img = psth_img_basis(201:end, i)*0.7*max(cof_img_mix(i, :))*64;
+    imshow(reshape(uint8(nmf_img), size(img)))
+    subplot(3,n_compon,sub_i+n_compon)
+    plot(psth_img_basis(1:200, i))
+    subplot(3,n_compon,sub_i+2*n_compon)
+    plot(cof_img_mix(i, :)')
+    xlim([0,length(perm_indx)])
+end
+suptitle("Image and response Motif from 15 component NMF, Image normalization 64, HALS")
+toc
+%
+reconstr_psth2 = psth_img_basis(1:200, :) * cof_img_mix(:, perm_indx);
+figure('Position',[0         500        1915         650]);
+imagesc(reconstr_psth2)
+title("Reconstruction PSTH from 15 component NMF, Image normalization 64, HALS")
+
+%%
+tic
+n_compon = 15;
+% [psth_img_basis,cof_img_mix,D] = nnmf([cluster_input, showed_image_arr/256^2]', n_compon);
+[psth_img_basis,cof_img_mix,iter] = nmf([cluster_input, showed_image_arr/32]', n_compon,...
+    'verbose',0,'method','hals');
+toc
+save('image_psth_nmf15_norm32.mat', 'psth_img_basis', 'cof_img_mix', 'iter');
+%
+figure('Position',[0         500        1916         450]);
+pos = get(gca, 'Position');
+pos(1) = 0.055;
+pos(3) = 0.9;
+set(gca, 'Position', pos)
+n_compon = 15;
+for sub_i =1:n_compon
+    %i = sub_i+10;
+    i = sub_i ;
+    subplot(3,n_compon,sub_i)
+    nmf_img = psth_img_basis(201:end, i)*0.7*max(cof_img_mix(i, :))*32;
+    imshow(reshape(uint8(nmf_img), size(img)))
+    subplot(3,n_compon,sub_i+n_compon)
+    plot(psth_img_basis(1:200, i))
+    subplot(3,n_compon,sub_i+2*n_compon)
+    plot(cof_img_mix(i, :)')
+    xlim([0,length(perm_indx)])
+end
+suptitle("Image and response Motif from 15 component NMF, Image normalization 32, HALS")
+toc
+%
+reconstr_psth2 = psth_img_basis(1:200, :) * cof_img_mix(:, perm_indx);
+figure('Position',[0         500        1915         650]);
+imagesc(reconstr_psth2)
+title("Reconstruction PSTH from 15 component NMF, Image normalization 32, HALS")
