@@ -155,7 +155,7 @@ colorbar()
 title(sprintf("Evolving Image PSTH Channel %d",channel_j))
 ylabel("Time")
 xlabel("Image id")
-%% NMF on image sets 
+%% NMF on PSTH response dataset
 %%
 n_compon = 30;
 tic
