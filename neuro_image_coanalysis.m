@@ -145,15 +145,16 @@ imagesc(reconstr_psth)
 tic
 n_compon = 30;
 % [psth_img_basis,cof_img_mix,D] = nnmf([cluster_input, showed_image_arr/256^2]', n_compon);
-[psth_img_basis,cof_img_mix,iter] = nmf([cluster_input, showed_image_arr/256^2]', n_compon,...
+[psth_img_basis,cof_img_mix,iter] = nmf([cluster_input, showed_image_arr/256]', n_compon,...
     'verbose',0,'method','hals');
 toc
 save('image_psth_nmf30_norm.mat', 'psth_img_basis', 'cof_img_mix', 'iter');
+%%
 figure;
 n_compon = 15;
 for i =1:n_compon
     subplot(3,n_compon,i)
-    nmf_img = psth_img_basis(201:end, i)*0.7*max(img_mix(i, :))*256^2;
+    nmf_img = psth_img_basis(201:end, i)*0.7*max(cof_img_mix(i, :))*256;
     imshow(reshape(uint8(nmf_img), size(img)))
     subplot(3,n_compon,i+n_compon)
     plot(psth_img_basis(1:200, i))
