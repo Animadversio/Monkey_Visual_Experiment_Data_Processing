@@ -1,5 +1,5 @@
 exp_num = 4;
-codes_all = StatsB{exp_num}.genes.all;
+codes_all = StatsB{exp_num}.genes.all; % size(codes_all) = [img_num, code_dim]
 generations = StatsB{exp_num}.genes.gen;
 %%
 figure(1)
@@ -19,6 +19,9 @@ ylabel("Norm of code", 'Fontsize', 14)
 tic
 [PC_axiss,code_PC,PC_var,~,var_explained] = pca(codes_all,'NumComponents',10);
 toc
+%% See the cumulative variance curve. 
+figure
+plot(cumsum(var_explained))
 %% 
 figure(3)
 for i=1:10
