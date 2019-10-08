@@ -23,6 +23,13 @@ end
 %
 opts.tilted = true;
 [PC2_ang, PC3_ang] = meshgrid(18*(-5:5), 18*(-5:5));
-results = autoGaussianSurf(PC2_ang, PC3_ang, sum(score_mat,3)./cnt_mat, opts)
+avg_score = sum(score_mat,3)./cnt_mat;
+results = autoGaussianSurf(PC2_ang, PC3_ang, avg_score, opts);
 %
 fprintf("x0=%.1f, y0=%.1f, theta=%.1f, sgmx=%.1f, sgmy=%.1f\n", results.x0, results.y0, results.angle, results.sigmax, results.sigmay)
+%%
+figure
+subplot(1,2,1);imagesc(PC2_ang(:),PC3_ang(:),avg_score, [0, max(avg_score,[],'all')]);axis image
+colorbar();
+subplot(1,2,2);imagesc(PC2_ang(:),PC3_ang(:),results.G, [0, max(avg_score,[],'all')]);axis image
+colorbar();
