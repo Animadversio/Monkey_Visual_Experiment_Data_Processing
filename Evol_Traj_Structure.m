@@ -1,4 +1,4 @@
-exp_num = 4;
+exp_num = 1;
 codes_all = StatsB{exp_num}.genes.all; % size(codes_all) = [img_num, code_dim]
 generations = StatsB{exp_num}.genes.gen;
 %%
