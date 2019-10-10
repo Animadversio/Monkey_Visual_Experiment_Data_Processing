@@ -5,10 +5,11 @@ load(fullfile("\\storage1.ris.wustl.edu\crponce\Active\Data-Ephys-MAT","Beto64ch
 
 img_names = unique(Trials.imageName);
 
-norm = 326;
+norm = 269; % 269 Day3 % 326 Daye % 328 Day 1
 ang_step = 18;
-pref_chan = 6;
-savepath = "C:\Users\ponce\OneDrive\Desktop\OneDrive_Binxu\OneDrive\PC_space_tuning\Exp2_chan06";
+pref_chan = 5;
+savepath = "C:\Users\ponce\OneDrive\Desktop\OneDrive_Binxu\OneDrive\PC_space_tuning\Exp3_chan05";
+mkdir(savepath);
 for pref_chan = 1:size(rasters,1)
 figure(6);clf
 set(gcf, 'position', [131         338        2109         616]);
@@ -25,7 +26,7 @@ for i = -5:5
         score_mat(i+6, j+6, 1:length(img_idx)) = scores;
     end
 end
-figure(3)
+figure(3);clf
 imagesc(-90:18:90, -90:18:90, sum(score_mat,3)./cnt_mat)
 ylabel("PC 2 degree")
 xlabel("PC 3 degree")
@@ -56,7 +57,7 @@ for i = -5:5
         score_mat(i+6, j+6, 1:length(img_idx)) = scores;
     end
 end
-figure(4)
+figure(4);clf
 imagesc(-90:18:90, -90:18:90, sum(score_mat,3)./cnt_mat)
 ylabel("PC 49 degree")
 xlabel("PC 50 degree")
@@ -87,7 +88,7 @@ for i = -5:5
         score_mat(i+6, j+6, 1:length(img_idx)) = scores;
     end
 end
-figure(5)
+figure(5);clf
 imagesc(-90:18:90, -90:18:90, mean(score_mat,3))
 ylabel("Rand vector 1 degree")
 xlabel("Rand vector 2 degree")
