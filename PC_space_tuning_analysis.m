@@ -116,20 +116,21 @@ saveas(5, fullfile(savepath, sprintf("chan%02d_RND_tune.png", pref_chan)))
 end
 
 
-% %%
-% Unit_id = [meta.spikeID];
-% % char(97) = 'a'
-% cnt = 0;
-% cur_chan = 1;
-% for i = 1:length(Unit_id)
-%     if cur_chan == Unit_id(i)
-%         cnt = cnt + 1;
-%     else
-%         cur_chan = Unit_id(i);
-%         cnt = 1;
-%     end
-%     sprintf()
-% end
+%%
+Unit_id = [meta_arr{5}.spikeID];
+% char(97) = 'a'; char(65) = 'A'
+unit_name_arr = {}; % name tag for each unit 
+for i = 1:length(Unit_id)
+    cur_chan = Unit_id(i);
+    if sum(Unit_id == cur_chan) == 1
+        unit_name_arr{i} = num2str(cur_chan);
+    else
+        cur_chan = Unit_id(i);
+        rel_idx = find(find(Unit_id == cur_chan) == i);
+        unit_name_arr{i} = [num2str(cur_chan), char(64+rel_idx)];
+    end
+end
+disp(unit_name_arr)
 %% Modulate the contrast by the score of firing
 img_folder = "\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Selectivity\2019-10-03a-beto";
 cnt = 1;

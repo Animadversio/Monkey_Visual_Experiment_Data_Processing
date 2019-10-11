@@ -1,18 +1,35 @@
-%load("D:\\Beto64chan-02102019-003_formatted");
+% Batch processing code  calculating the statistics (t, 1way ANOVA, 2way ANOVA) 
+% and generate annotated figures for each and every experiment 
+%% 
+storedStruct = load("D:\\Manifold_Exps.mat");
 %%
-global sphere_norm Trials channel rasters ang_step Reps
+%load("D:\\Beto64chan-02102019-003_formatted");
+norm_arr = [328, 326, 269, 329, 401, 386];
+pref_chan_arr = [29, 6, 5, 20, 19, 13]; 
+global sphere_norm Trials channel rasters ang_step Reps meta
+%%
+for Expi=1:6
+    rasters = storedStruct.rasters{Expi};
+    Trials = storedStruct.Trials{Expi};
+    meta = storedStruct.meta{Expi};
+    unit_name_arr = generate_unit_labels();
 Stat_summary = {};
-% channel = 62;
-sphere_norm = 328; % 269 Day3 % 326 Daye % 328 Day 1
+pref_chan = pref_chan_arr(Expi);
+sphere_norm = norm_arr(Expi);%328; % 269 Day3 % 326 Daye % 328 Day 1 [328, 326, 269, 329, 401]
 ang_step = 18;
-Reps = 8; % can be any number larger than the largest repitition. or there may be problems caused by NAN and 0 filling
-savepath = "C:\Users\ponce\OneDrive\Desktop\OneDrive_Binxu\OneDrive\PC_space_tuning\Exp1_chan29";
+Reps = 10; % can be any number LARGER than the largest repitition. or there may be problems caused by NAN and 0 filling
+% savepath = "C:\Users\ponce\OneDrive\Desktop\OneDrive_Binxu\OneDrive\PC_space_tuning\Exp1_chan29";
+savepath = sprintf("C:\\Users\\ponce\\OneDrive\\Desktop\\OneDrive_Binxu\\OneDrive\\PC_space_tuning\\Exp%d_chan%02d", Expi, pref_chan);
 mkdir(savepath);
+fid = fopen(fullfile(savepath, "Unit_Label.txt"),'w');
+fprintf(fid,'%s\n', unit_name_arr{:});
+fclose(fid);
 for channel = 1:size(rasters,1)
 figure(1);clf;set(1, 'position', [304    12   560   577]);
 figure(2);clf;set(2, 'position', [304    12   560   577]);
 figure(3);clf;set(3, 'position', [304    12   560   577]);
 figure(4);clf;set(4, 'position', [73  -40  2418  705]);
+chan_label_str = sprintf("Exp%d Channel %s", Expi, unit_name_arr{channel});
 %% PC12
 [score_mat, ~, summary, stat_str] = get_stats_from_result('norm_%d_PC2_%d_PC3_%d');
 Stat_summary{channel, 1} = summary;
@@ -22,7 +39,7 @@ figure(1);
 imagesc(-90:18:90, -90:18:90, nanmean(score_mat,3))
 ylabel("PC 2 degree")
 xlabel("PC 3 degree")
-title(["Tuning map on PC2 3 subspace", stat_str])
+title([chan_label_str, "Tuning map on PC2 3 subspace", stat_str])
 shading flat
 axis image
 colorbar
@@ -32,7 +49,7 @@ subplot(131)
 imagesc(-90:18:90, -90:18:90, nanmean(score_mat,3))
 ylabel("PC 2 degree")
 xlabel("PC 3 degree")
-title(["Tuning map on PC2 3 subspace", stat_str])
+title([chan_label_str, "Tuning map on PC2 3 subspace", stat_str])
 shading flat
 axis image
 colorbar
@@ -46,7 +63,7 @@ figure(2);
 imagesc(-90:18:90, -90:18:90, nanmean(score_mat,3))
 ylabel("PC 49 degree")
 xlabel("PC 50 degree")
-title(["Tuning map on PC49 50 subspace", stat_str])
+title([chan_label_str, "Tuning map on PC49 50 subspace", stat_str])
 shading flat
 axis image
 colorbar
@@ -56,7 +73,7 @@ subplot(132)
 imagesc(-90:18:90, -90:18:90, nanmean(score_mat,3))
 ylabel("PC 49 degree")
 xlabel("PC 50 degree")
-title(["Tuning map on PC49 50 subspace", stat_str])
+title([chan_label_str, "Tuning map on PC49 50 subspace", stat_str])
 shading flat
 axis image
 colorbar
@@ -69,7 +86,7 @@ figure(3);clf
 imagesc(-90:18:90, -90:18:90, nanmean(score_mat,3))
 ylabel("Rand vector 1 degree")
 xlabel("Rand vector 2 degree")
-title(["Tuning map on Random Vector (outside first 50 PCs) subspace", stat_str])
+title([chan_label_str, "Tuning map on Random Vector (outside first 50 PCs) subspace", stat_str])
 shading flat
 axis image
 colorbar
@@ -79,7 +96,7 @@ subplot(133)
 imagesc(-90:18:90, -90:18:90, nanmean(score_mat,3))
 ylabel("Rand vector 1 degree")
 xlabel("Rand vector 2 degree")
-title(["Tuning map on Random Vector (outside first 50 PCs) subspace", stat_str])
+title([chan_label_str, "Tuning map on Random Vector (outside first 50 PCs) subspace", stat_str])
 shading flat
 axis image
 colorbar
@@ -90,6 +107,7 @@ saveas(2, fullfile(savepath, sprintf("chan%02d_PC4950_tune_stat.png", channel)))
 saveas(3, fullfile(savepath, sprintf("chan%02d_RND_tune_stat.png", channel)))
 end
 save(fullfile(savepath, "Basic_Stats.mat"), 'Stat_summary')
+end
 %%
 function [score_mat, bsl_mat, summary, stat_str] = get_stats_from_result(name_pattern)
     global  Trials rasters channel sphere_norm ang_step Reps
@@ -147,3 +165,21 @@ function [score_mat, bsl_mat, summary, stat_str] = get_stats_from_result(name_pa
             stats2.F(1),stats2.p(1), stats2.F(2),stats2.p(2),stats2.F(3),stats2.p(3));
 
 end
+
+function unit_name_arr = generate_unit_labels()
+% Generate the unit labels 17B from the spikeID variable
+global meta
+Unit_id = meta.spikeID;
+unit_name_arr = {}; % name tag for each unit 
+for i = 1:length(Unit_id)
+    cur_chan = Unit_id(i);
+    if sum(Unit_id == cur_chan) == 1
+        unit_name_arr{i} = num2str(cur_chan);
+    else
+        cur_chan = Unit_id(i);
+        rel_idx = find(find(Unit_id == cur_chan) == i);
+        unit_name_arr{i} = [num2str(cur_chan), char(64+rel_idx)];
+    end
+end
+end
+
