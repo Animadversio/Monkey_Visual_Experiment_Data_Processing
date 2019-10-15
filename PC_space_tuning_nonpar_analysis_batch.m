@@ -4,11 +4,11 @@
 storedStruct = load("D:\\Manifold_Exps.mat");
 %%
 %load("D:\\Beto64chan-02102019-003_formatted");
-norm_arr = [328, 326, 269, 329, 401, 386];
-pref_chan_arr = [29, 6, 5, 20, 19, 13]; 
+norm_arr = [328, 326, 269, 329, 401, 386, 300];
+pref_chan_arr = [29, 6, 5, 20, 19, 13, 28]; 
 global sphere_norm Trials channel rasters ang_step Reps meta
 %%
-for Expi=1:6
+for Expi=7
     rasters = storedStruct.rasters{Expi};
     Trials = storedStruct.Trials{Expi};
     meta = storedStruct.meta{Expi};
