@@ -2,13 +2,14 @@
 % and generate annotated figures for each and every experiment 
 %% 
 storedStruct = load("D:\\Manifold_Exps.mat");
-%%
+%
 %load("D:\\Beto64chan-02102019-003_formatted");
-norm_arr = [328, 326, 269, 329, 401, 386, 300];
-pref_chan_arr = [29, 6, 5, 20, 19, 13, 28]; 
+% norm_arr = [328, 326, 269, 329, 401, 386, 300];
+% pref_chan_arr = [29, 6, 5, 20, 19, 13, 28]; 
+Set_Exp_Specs
 global sphere_norm Trials channel rasters ang_step Reps meta
 %%
-for Expi=7
+for Expi=8
     rasters = storedStruct.rasters{Expi};
     Trials = storedStruct.Trials{Expi};
     meta = storedStruct.meta{Expi};
@@ -17,7 +18,7 @@ Stat_summary = {};
 pref_chan = pref_chan_arr(Expi);
 sphere_norm = norm_arr(Expi);%328; % 269 Day3 % 326 Daye % 328 Day 1 [328, 326, 269, 329, 401]
 ang_step = 18;
-Reps = 10; % can be any number LARGER than the largest repitition. or there may be problems caused by NAN and 0 filling
+Reps = 11; % can be any number LARGER than the largest repitition. or there may be problems caused by NAN and 0 filling
 % savepath = "C:\Users\ponce\OneDrive\Desktop\OneDrive_Binxu\OneDrive\PC_space_tuning\Exp1_chan29";
 savepath = sprintf("C:\\Users\\ponce\\OneDrive\\Desktop\\OneDrive_Binxu\\OneDrive\\PC_space_tuning\\Exp%d_chan%02d", Expi, pref_chan);
 mkdir(savepath);

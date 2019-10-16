@@ -88,18 +88,31 @@ function [meta,rasters,lfps,Trials] = Project_Manifold_Beto_loadRaw
 % preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191011a\backup_10_11_2019_13_17_02' ;
 % preMeta(iExp).comments = 'CMA Evolution of Ch 28 191011(CRP). generate PCs for later PC space tuning';
 
-% day 001 Interp Exp
-iExp = 1; % PC space interpolation between the 2 ending points 
-preMeta(iExp).ephysFN = 'Beto64chan-14102019-007'; 
-preMeta(iExp).expControlFN = '191014_Beto_selectivity_basic(1)'; 
-preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191014a\backup_10_14_2019_12_51_15\PC_imgs' ;
-preMeta(iExp).comments = ['Derived from PCs of Ch 26 single unit evolution 191014(CRP BXW). (16*11 - 30)*2= 292 images'];
+% day 008
+iExp = 1; % PC space exploration
+preMeta(iExp).ephysFN = 'Beto64chan-15102019-005'; 
+preMeta(iExp).expControlFN = '191015_Beto_selectivity_basic'; 
+preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191015a\backup_10_15_2019_14_25_42\PC_imgs' ;
+preMeta(iExp).comments = ['Derived from PCs of Ch 15 evolution 191015(CRP BXW). 363 images {11*11 in PC2,PC3; PC49 PC50; RND12 space respectively,'];
 
-iExp = 2; % Cma parallel evolution
-preMeta(iExp).ephysFN = 'Beto64chan-14102019-005'; 
-preMeta(iExp).expControlFN = '191014_Beto_generate_parallel(3)'; % 
-preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191014a\backup_10_14_2019_12_51_15' ;
-preMeta(iExp).comments = 'CMA parallel Evolution of Ch 26 and Ch 26 191014(CRP BXW). generate PCs for later PC space tuning';
+iExp = 2; % Cma
+preMeta(iExp).ephysFN = 'Beto64chan-15102019-003'; 
+preMeta(iExp).expControlFN = '191015_Beto_generate_parallel(2)'; % 
+preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191015a\backup_10_15_2019_14_25_42' ;
+preMeta(iExp).comments = 'CMA Evolution of Ch 15 191015(CRP BXW). generate PCs for later PC space tuning';
+
+% day 001 Interp Exp
+% iExp = 1; % PC space interpolation between the 2 ending points 
+% preMeta(iExp).ephysFN = 'Beto64chan-14102019-007'; 
+% preMeta(iExp).expControlFN = '191014_Beto_selectivity_basic(1)'; 
+% preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191014a\backup_10_14_2019_12_51_15\PC_imgs' ;
+% preMeta(iExp).comments = ['Derived from PCs of Ch 26 single unit evolution 191014(CRP BXW). (16*11 - 30)*2= 292 images'];
+% 
+% iExp = 2; % Cma parallel evolution
+% preMeta(iExp).ephysFN = 'Beto64chan-14102019-005'; 
+% preMeta(iExp).expControlFN = '191014_Beto_generate_parallel(3)'; % 
+% preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191014a\backup_10_14_2019_12_51_15' ;
+% preMeta(iExp).comments = 'CMA parallel Evolution of Ch 26 and Ch 26 191014(CRP BXW). generate PCs for later PC space tuning';
 
 for iExp = 1:length(preMeta) 
     

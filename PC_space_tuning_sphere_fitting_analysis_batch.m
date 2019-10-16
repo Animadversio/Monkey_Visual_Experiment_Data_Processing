@@ -9,7 +9,7 @@ background_plot = 0;
 global sphere_norm Trials channel rasters ang_step Reps meta
 %%
 background_plot = 0;
-for Expi=4:7
+for Expi=8
 rasters = storedStruct.rasters{Expi};
 Trials = storedStruct.Trials{Expi};
 meta = storedStruct.meta{Expi};
@@ -18,7 +18,7 @@ Param_summary = cell(size(rasters,1),3);
 pref_chan = pref_chan_arr(Expi);
 sphere_norm = norm_arr(Expi);
 ang_step = 18;
-Reps = 10; % can be any number LARGER than the largest repitition. or there may be problems caused by NAN and 0 filling
+Reps = 11; % can be any number LARGER than the largest repitition. or there may be problems caused by NAN and 0 filling
 % savepath = "C:\Users\ponce\OneDrive\Desktop\OneDrive_Binxu\OneDrive\PC_space_tuning\Exp1_chan29";
 savepath = sprintf("C:\\Users\\ponce\\OneDrive\\Desktop\\OneDrive_Binxu\\OneDrive\\PC_space_tuning\\Exp%d_chan%02d", Expi, pref_chan);
 mkdir(savepath);
