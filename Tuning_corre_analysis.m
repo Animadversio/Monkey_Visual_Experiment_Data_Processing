@@ -1,7 +1,7 @@
 % Correlation analysis between channels
 Set_Exp_Specs;
 %Expi = 8;
-for Expi = 1:8
+for Expi = 8
 rasters = storedStruct.rasters{Expi};
 meta = storedStruct.meta{Expi};
 Trials = storedStruct.Trials{Expi};
@@ -52,6 +52,12 @@ title([exp_str, "Rsp - Baseline Rate Correlation"])
 ax3 = subplot(133);set(ax3,'position',[0.65, 0.05, 0.28, 0.90])
 res_corr = corr_mat_plot(ax3, res_all);
 title([exp_str, "Stimuli Avg Subtracted (Residue) Rate Correlation"])
+%%
+diff_corr = (rsp_corr - res_corr) ;
+figure
+imagesc(diff_corr)%'AlphaData',double(eye(n_chan) == 0))
+xticks(1:n_chan);xticklabels(unit_label_arr);
+yticks(1:n_chan);yticklabels(unit_label_arr);
 %%
 figure(10);set(10,'position',[0          40        2560         963])
 ax1 = subplot(131);set(ax1,'position',[0.05, 0.05, 0.28, 0.90])
