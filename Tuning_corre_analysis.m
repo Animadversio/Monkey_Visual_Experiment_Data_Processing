@@ -1,7 +1,7 @@
 % Correlation analysis between channels
 Set_Exp_Specs;
 %Expi = 8;
-for Expi = 8
+for Expi = 9
 rasters = storedStruct.rasters{Expi};
 meta = storedStruct.meta{Expi};
 Trials = storedStruct.Trials{Expi};

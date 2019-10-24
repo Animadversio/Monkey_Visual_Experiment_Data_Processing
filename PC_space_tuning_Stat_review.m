@@ -1,11 +1,10 @@
 %% PC space tuning Stats Review
 % read the statstics in matlab / export it in readable format! 
 
-norm_arr = [328, 326, 269, 329, 401, 386, 300];
-pref_chan_arr = [29, 6, 5, 20, 19, 13, 26]; 
+Set_Exp_Specs
 global sphere_norm Trials channel rasters ang_step Reps meta
 %%
-for Expi=8%1:6
+for Expi=9%1:6
 %     rasters = storedStruct.rasters{Expi};
     Trials = storedStruct.Trials{Expi};
     meta = storedStruct.meta{Expi};

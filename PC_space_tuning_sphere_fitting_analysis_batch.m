@@ -9,7 +9,7 @@ background_plot = 0;
 global sphere_norm Trials channel rasters ang_step Reps meta
 %%
 background_plot = 0;
-for Expi=8
+for Expi=9
 rasters = storedStruct.rasters{Expi};
 Trials = storedStruct.Trials{Expi};
 meta = storedStruct.meta{Expi};
@@ -35,6 +35,9 @@ for channel = 1:size(rasters,1)
     figure(6);set(6, 'position', [573         294        1377         591]);
     figure(7);set(7, 'position', [573         294        1377         591]);
     chan_label_str = sprintf("Exp%d Channel %s", Expi, unit_name_arr{channel});
+    theta_arr = -90:ang_step:90;
+    phi_arr   = -90:ang_step:90;
+    [phi_grid, theta_grid] = meshgrid(theta_arr, phi_arr);
     %% PC12
     [score_mat, Parameter, param_str, score_estim] = get_fitting_from_result('norm_%d_PC2_%d_PC3_%d');
     Param_summary{channel, 1} = Parameter;

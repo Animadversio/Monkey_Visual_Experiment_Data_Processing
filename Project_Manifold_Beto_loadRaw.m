@@ -89,17 +89,43 @@ function [meta,rasters,lfps,Trials] = Project_Manifold_Beto_loadRaw
 % preMeta(iExp).comments = 'CMA Evolution of Ch 28 191011(CRP). generate PCs for later PC space tuning';
 
 % day 008
-iExp = 1; % PC space exploration
-preMeta(iExp).ephysFN = 'Beto64chan-15102019-005'; 
-preMeta(iExp).expControlFN = '191015_Beto_selectivity_basic'; 
-preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191015a\backup_10_15_2019_14_25_42\PC_imgs' ;
-preMeta(iExp).comments = ['Derived from PCs of Ch 15 evolution 191015(CRP BXW). 363 images {11*11 in PC2,PC3; PC49 PC50; RND12 space respectively,'];
+% iExp = 1; % PC space exploration
+% preMeta(iExp).ephysFN = 'Beto64chan-15102019-005'; 
+% preMeta(iExp).expControlFN = '191015_Beto_selectivity_basic'; 
+% preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191015a\backup_10_15_2019_14_25_42\PC_imgs' ;
+% preMeta(iExp).comments = ['Derived from PCs of Ch 15 evolution 191015(CRP BXW). 363 images {11*11 in PC2,PC3; PC49 PC50; RND12 space respectively,'];
+% 
+% iExp = 2; % Cma
+% preMeta(iExp).ephysFN = 'Beto64chan-15102019-003'; 
+% preMeta(iExp).expControlFN = '191015_Beto_generate_parallel(2)'; % 
+% preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191015a\backup_10_15_2019_14_25_42' ;
+% preMeta(iExp).comments = 'CMA Evolution of Ch 15 191015(CRP BXW). generate PCs for later PC space tuning';
 
-iExp = 2; % Cma
-preMeta(iExp).ephysFN = 'Beto64chan-15102019-003'; 
-preMeta(iExp).expControlFN = '191015_Beto_generate_parallel(2)'; % 
-preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191015a\backup_10_15_2019_14_25_42' ;
-preMeta(iExp).comments = 'CMA Evolution of Ch 15 191015(CRP BXW). generate PCs for later PC space tuning';
+% day 009
+% iExp = 1; % PC space exploration
+% preMeta(iExp).ephysFN = 'Beto64chan-16102019-002'; 
+% preMeta(iExp).expControlFN = '191016_Beto_selectivity_basic'; 
+% preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191016a\backup_10_16_2019_14_20_03\PC_imgs' ;
+% preMeta(iExp).comments = ['Derived from PCs of Ch 17 evolution 191016(CRP). 363 images {11*11 in PC2,PC3; PC49 PC50; RND12 space respectively,'];
+% 
+% iExp = 2; % Cma
+% preMeta(iExp).ephysFN = 'Beto64chan-16102019-001'; 
+% preMeta(iExp).expControlFN = '191016_Beto_generate_parallel'; % 
+% preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191016a\backup_10_16_2019_14_20_03' ;
+% preMeta(iExp).comments = 'CMA Evolution of Ch 17 191016(CRP). generate PCs for later PC space tuning';
+
+% day 010
+iExp = 1; % PC space exploration
+preMeta(iExp).ephysFN = 'Beto64chan-17102019-007'; 
+preMeta(iExp).expControlFN = '191017_Beto_selectivity_basic'; 
+preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191017a\backup_10_17_2019_15_39_04\PC_imgs' ;
+preMeta(iExp).comments = ['Derived from PCs of Ch 63 evolution 191017(CRP). 363 images {11*11 in PC2,PC3; PC49 PC50; RND12 space respectively,'];
+
+iExp = 2; % CMA
+preMeta(iExp).ephysFN = 'Beto64chan-17102019-006'; 
+preMeta(iExp).expControlFN = '191017_Beto_generate_parallel(3)'; % 
+preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191017a\backup_10_17_2019_15_39_04' ;
+preMeta(iExp).comments = 'CMA Evolution of Ch 63 191017(CRP). generate PCs for later PC space tuning';
 
 % day 001 Interp Exp
 % iExp = 1; % PC space interpolation between the 2 ending points 
