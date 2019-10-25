@@ -9,7 +9,7 @@ storedStruct = load("D:\\Manifold_Exps.mat");
 Set_Exp_Specs
 global sphere_norm Trials channel rasters ang_step Reps meta
 %%
-for Expi=9
+for Expi=10
     rasters = storedStruct.rasters{Expi};
     Trials = storedStruct.Trials{Expi};
     meta = storedStruct.meta{Expi};

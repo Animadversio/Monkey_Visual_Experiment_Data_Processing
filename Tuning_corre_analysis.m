@@ -1,7 +1,7 @@
 % Correlation analysis between channels
 Set_Exp_Specs;
 %Expi = 8;
-for Expi = 9
+for Expi = 10
 rasters = storedStruct.rasters{Expi};
 meta = storedStruct.meta{Expi};
 Trials = storedStruct.Trials{Expi};
@@ -78,11 +78,12 @@ savefig(10, fullfile(savepath, 'corr_mat_subspace_cmp.fig'))
 saveas( 9, fullfile(savepath, 'corr_mat_bsl_rsp_res_cmp.bmp'))
 saveas(10, fullfile(savepath, 'corr_mat_subspace_cmp.bmp'))
 end
+% Baseline firing events
+
 %% Demo code
-%%
 figure(11)
 scatter(score_all(37,:) + bsl_all(37,:),score_all(47,:) + bsl_all(47,:))
-%
+% 
 [~,P,CI] = ttest(bsl_all(47,:) , score_all(47,:))
 %%
 rndidx = 1:size(rasters,3);%randsample(size(rasters,3), 100);

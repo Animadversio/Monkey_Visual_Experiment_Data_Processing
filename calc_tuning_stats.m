@@ -1,3 +1,4 @@
+% Calculate the tuning statistics t,F, p from a matrix of response
 function [summary, stat_str] = calc_tuning_stats(score_mat, bsl_mat, theta_arr, phi_arr)
 Reps = size(score_mat, 3);
 num_theta = size(score_mat, 1);
