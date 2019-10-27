@@ -4,6 +4,9 @@ Set_Exp_Specs
 global sphere_norm Trials channel rasters ang_step Reps meta
 ExpNum = 10;
 %% 
+Fstat_arr = [];
+kstat_arr = [];
+RootDir = "C:\\Users\\ponce\\OneDrive\\Desktop\\OneDrive_Binxu\\OneDrive\\PC_space_tuning";
 figure(13);clf;set(13, 'position', [1          41        2560         963]);
 for Expi=1:10%1:6
 %     rasters = storedStruct.rasters{Expi};
@@ -20,12 +23,12 @@ for Expi=1:10%1:6
     pref_chan_msk = contains(padded_name_arr, num2str(pref_chan, '%03d'));
     pref_chan_idx = find(pref_chan_msk);
     ax1 = subplot(2, ExpNum, Expi);hold on 
-    plotStat(ax1, Stat_summary, pref_chan_idx, 'anova_F')
+    Fstat_arr = [Fstat_arr; plotStat(ax1, Stat_summary, pref_chan_idx, 'anova_F')];
     ylim([0,25])
     title(['Exp',num2str(Expi),'  pref channel',num2str(pref_chan)])
     if Expi == 1, ylabel('anova F'), end
     ax2 = subplot(2, ExpNum, 1*ExpNum + Expi);hold on 
-    plotStat(ax2, Param_summary, pref_chan_idx, 'kappa')
+    kstat_arr = [kstat_arr; plotStat(ax2, Param_summary, pref_chan_idx, 'kappa')];
     ylim([0,16])
     if Expi == 1, ylabel('Kent Fit kappa'), end
 %     
@@ -45,13 +48,30 @@ for Expi=1:10%1:6
 %     xticks(1:3)
 %     saveas(8, fullfile(savepath, sprintf("Exp%d_ANOVA_stat.bmp", Expi)))
 end
-function plotStat(ax, stat_array, chan_idx, stat_name)
-for idx = chan_idx
+set(13, 'position', [1          41        2560         963])
+saveas(13, fullfile(RootDir, sprintf("TuningStatCmp_EolveUnit")))
+% Doing ANOVA on the tuning statistics values 
+anova1(kstat_arr, {'PC23', 'PC4950', 'RND12'})
+ylabel("\kappa value Kent fitting")
+title({"Comparison of tuning Statistics","between Subspaces"})
+set(gcf,'position',[1328         130         373         548])
+saveas(gcf, fullfile(RootDir, sprintf("kappa_value_cmp_EvolveUnit.png")))
+anova1(Fstat_arr, {'PC23', 'PC4950', 'RND12'})
+ylabel("F value ANOVA")
+title({"Comparison of tuning Statistics","between Subspaces"})
+set(gcf,'position',[1328         130         373         548])
+saveas(gcf, fullfile(RootDir, sprintf("F_value_cmp_EvolveUnit.png")))
+
+%%
+function stat_arr = plotStat(ax, stat_array, chan_idx, stat_name)
+    stat_arr = [];
+    for idx = chan_idx
         plot_stat = [];
         for j =1:3
             plot_stat(j) = getfield(stat_array{idx,j}, stat_name);
         end
         plot(ax, plot_stat)
+        stat_arr = [stat_arr; plot_stat ];
     end
     xlim([0.5,3.5])
     xticks(1:3)
