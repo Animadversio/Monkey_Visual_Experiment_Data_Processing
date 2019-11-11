@@ -10,7 +10,7 @@ Set_Exp_Specs
 Vis_Images = true;
 global sphere_norm Trials channel rasters ang_step Reps meta
 %%
-for Expi=1:10
+for Expi=6:10
     rasters = storedStruct.rasters{Expi};
     Trials = storedStruct.Trials{Expi};
     meta = storedStruct.meta{Expi};

@@ -41,7 +41,7 @@ iExp = 0;
 % % iExp = 4; % PC space exploration
 % % preMeta(iExp).ephysFN = 'Beto64chan-08102019-006'; 
 % % preMeta(iExp).expControlFN = '191008_Beto_selectivity_basic'; 
-% % preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\ActiveStimuli\2019-Manifold\beto-191008a\backup_10_08_2019_12_14_29\PC_imgs' ;
+% % preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191008a\backup_10_08_2019_12_14_29\PC_imgs' ;
 % % preMeta(iExp).comments = ['Derived from PCs of Ch 20 evolution 191008(CRP). Fewer Reps 363 images {11*11 in PC2,PC3; PC49 PC50; RND12 space respectively,'];
 % % 
 % iExp = 4; % Cma
@@ -54,7 +54,7 @@ iExp = 0;
 % % iExp = 5; % PC space exploration
 % % preMeta(iExp).ephysFN = 'Beto64chan-09102019-003'; 
 % % preMeta(iExp).expControlFN = '191009_Beto_selectivity_basic'; 
-% % preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\Stimuli\2019-Selectivity\2019-10-09a-beto' ;
+% % preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Selectivity\2019-10-09a-beto' ;
 % % preMeta(iExp).comments = ['Derived from PCs of Ch 19 evolution 191009(BXW). Fewer Reps 363 images {11*11 in PC2,PC3; PC49 PC50; RND12 space respectively,'];
 % % % 
 % iExp = 5; % Cma
@@ -67,7 +67,7 @@ iExp = 0;
 % % iExp = 6; % PC space exploration
 % % preMeta(iExp).ephysFN = 'Beto64chan-10102019-003'; 
 % % preMeta(iExp).expControlFN = '191010_Beto_selectivity_basic'; 
-% % preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\Stimuli\2019-Manifold\beto-191010a\backup_10_10_2019_13_10_15\PC_imgs' ;
+% % preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191010a\backup_10_10_2019_13_10_15\PC_imgs' ;
 % % preMeta(iExp).comments = ['Derived from PCs of Ch 13 evolution 191010(CRP). Fewer Reps 363 images {11*11 in PC2,PC3; PC49 PC50; RND12 space respectively,'];
 % % 
 % iExp = 6; % Cma
