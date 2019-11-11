@@ -1,4 +1,5 @@
 %% pasu_images_montage
+% demo code for montage and visualizign the pasupathy images
 
 %'pasu_%02d_ori_%02d_wg_f'
 img_dir = 'S:\Stimuli\2019-Manifold\pasupathy-wg-f-4-ori';

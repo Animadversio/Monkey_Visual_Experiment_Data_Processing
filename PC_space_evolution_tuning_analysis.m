@@ -1,4 +1,5 @@
 %% Correlated PC space tuning with the tuning map around the preferred image 
+% analyze the evolution and the manifold tuning together.
 %%
 load('D:\Beto64chan-03102019-001_formatted.mat')
 %%

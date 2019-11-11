@@ -1,140 +1,129 @@
+% Code to do basic analysis on PC + Pasupathy patch manifold experiment
+% analysis
+% 
+
 %load(fullfile("\\storage1.ris.wustl.edu\crponce\Active\Data-Ephys-MAT","Beto64chan-02102019-003_formatted.mat"))
 %load(fullfile("\\storage1.ris.wustl.edu\crponce\Active\Data-Ephys-MAT","Beto64chan-03102019-002_formatted.mat"))
 % meta,rasters,lfps,Trials
-meta = meta_new{5};
-rasters = rasters_new{5};
-Trials = Trials_new{5};
-img_names = unique(Trials.imageName);
-%% Loading code from "D:\Poncelab_Github\office-main\Project_Selectivity_Beto_loadRaw.m"
 global  Trials rasters channel sphere_norm ang_step Reps
-Reps = 11;
+% meta = meta_new{5};
+% rasters = rasters_new{5};
+% Trials = Trials_new{5};
+% img_names = unique(Trials.imageName);
+
+%% Load code from "D:\Poncelab_Github\office-main\Project_Selectivity_Beto_loadRaw.m"
+Reps = 11; % constant for maximum number of repetitions (as long as it's larger than the maximum, it's fine)
 Set_Exp_Specs;
-%% Set 
+
+for Expi = 12 % universal manifold experiment identifier
+% Load the dataset 
+% meta = meta_new{2*(Expi-10)-1};
+% rasters = rasters_new{2*(Expi-10)-1};
+% Trials = Trials_new{2*(Expi-10)-1};
+meta = meta_new{2*(Expi-10)-1};
+rasters = rasters_new{2*(Expi-10)-1};
+Trials = Trials_new{2*(Expi-10)-1};
+sphere_norm = Pasu_norm_arr(Expi-10); % Load the specific information
+pref_chan = Pasu_pref_chan_arr(Expi-10);
+
+ang_step = 18;
+% Save basic info
+savepath = sprintf("C:\\Users\\ponce\\OneDrive\\Desktop\\OneDrive_Binxu\\OneDrive\\PC_space_tuning\\Exp%d_chan%02d", Expi, pref_chan);
+mkdir(savepath);
+unit_name_arr = generate_unit_labels(meta.spikeID, savepath); % Generate readable labels for each channel
+
+% Load and visualize the Pasupathy shapes
 img_dir = 'S:\Stimuli\2019-Manifold\pasupathy-wg-f-4-ori';
-img_list = {};
-ctr = 1;
+img_list = cell(51, 4);%{};
 for j = 1:4
     for i = 1:51
         cur_fn = sprintf('pasu_%02d_ori_%02d_wg_f', i, 2*j-1);
         img_idx = find(contains(Trials.imageName, cur_fn));
-        if length(img_idx) == 0
+        if length(img_idx) == 0 % empty space
             img_list{i,j} = [];
         else
             img_list{i,j} = imread(fullfile(img_dir, [cur_fn, '.jpg']));
         end
-        ctr = ctr+1;
     end
 end
+clear cur_fn i j img_idx
 figure(1);set(1,'position', [ 326         629        2089         254])
 montage(img_list, 'Size', [4, 51]);
-
-for Expi = 11:13
-Stat_summary = {};
-ang_step = 18;
-meta = meta_new{2*(Expi-10)-1};
-rasters = rasters_new{2*(Expi-10)-1};
-Trials = Trials_new{2*(Expi-10)-1};
-sphere_norm = Pasu_norm_arr(Expi-10); % 269 Day3 % 326 Daye % 328 Day 1
-pref_chan = Pasu_pref_chan_arr(Expi-10);
-
-savepath = sprintf("C:\\Users\\ponce\\OneDrive\\Desktop\\OneDrive_Binxu\\OneDrive\\PC_space_tuning\\Exp%d_chan%02d", Expi, pref_chan);
-mkdir(savepath);
-saveas(1, fullfile(savepath, ["pasupathy_images.jpg"]))
-unit_name_arr = generate_unit_labels(meta.spikeID);
-% load(fullfile(savepath, "KentFit_Stats.mat"), 'Param_summary') % Load computed Kent Fit 
-% load(fullfile(savepath, "Basic_Stats.mat"), 'Stat_summary') % Load Stats
-for channel = 1:size(rasters, 1)
-    chan_label_str = sprintf("Exp%d Channel %s", Expi, unit_name_arr{channel});
-% figure(6);clf
-% set(gcf, 'position', [131         338        2109         616]);
-figure(3);clf; set(3, 'position', [1000         558         560         420]);
-figure(4);clf; set(4, 'position', [ 73         181        2479         593]);
-%%
-score_mat = zeros(11,11,11);
-cnt_mat = zeros(11,11);
-for i = -5:5
-    for j = -5:5
-        cur_fn = sprintf('norm_%d_PC2_%d_PC3_%d', norm, i*ang_step, j*ang_step);
+saveas(1, fullfile(savepath, "pasupathy_images.jpg"))
+% Load and visualize the Pasupathy shapes
+img_dir = meta.stimuli; % image storage path online
+evolv_img_list = cell(11, 11);%{};
+for j = 1:11
+    for i = 1:11
+        cur_fn = sprintf('norm_%d_PC2_%d_PC3_%d', sphere_norm, ...
+            (i - 6)*ang_step, (j - 6)*ang_step);
         img_idx = find(contains(Trials.imageName, cur_fn));
-        cnt_mat(i+6, j+6) = length(img_idx);
-        psths = rasters(channel, :, img_idx);
-        scores = squeeze(mean(psths(1, 51:200, :)) - mean(psths(1, 1:50, :)) );
-        score_mat(i+6, j+6, 1:length(img_idx)) = scores;
-    end
-end
-[score_mat, bsl_mat, summary, stat_str] = get_stats_from_result('norm_%d_PC2_%d_PC3_%d');
-Stat_summary{channel, 1} = summary;
-figure(3);clf
-imagesc(-90:18:90, -90:18:90, nanmean(score_mat, 3)) % sum(score_mat,3)./cnt_mat
-ylabel("PC 2 degree")
-xlabel("PC 3 degree")
-title([chan_label_str, "Tuning map on PC2 3 subspace", stat_str])
-shading flat
-axis image
-colorbar
-%%
-score_mat = zeros(51,4,11);
-cnt_mat = zeros(51,4);
-for i = 1:51
-    for j = 1:4
-        cur_fn = sprintf('pasu_%02d_ori_%02d_wg_f', i, 2*j-1);
-        img_idx = find(contains(Trials.imageName, cur_fn));
-        cnt_mat(i, j) = length(img_idx);
-        psths = rasters(channel, :, img_idx);
-        scores = squeeze(mean(psths(1, 51:200, :)) - mean(psths(1, 1:50, :)) );
-        score_mat(i, j, 1:length(img_idx)) = scores;
-    end
-end
-[score_mat, bsl_mat, summary, stat_str] = get_pasu_tuning_stats();
-Stat_summary{channel, 2} = summary;
-% figure(4);clf
-% imagesc(1:51, 1:4, nanmean(score_mat, 3)');% (sum(score_mat,3)./cnt_mat)'
-% xlabel("Shape id")
-% ylabel("orientation")
-% title([chan_label_str, "Tuning map on Pasupathy patches", stat_str])
-% shading flat
-% axis image
-% colorbar
-% hl_mat = nanmean(score_mat,3);
-figure(4);clf
-subplot(2,1,1)
-h = imagesc(hl_mat');
-xlabel("Shape id")
-ylabel("orientation")
-title([chan_label_str, "Tuning map on Pasupathy patches", stat_str])
-shading flat
-colorbar
-axis image;
-cmap = colormap();
-[Cmin, Cmax] = caxis();
-mod_img_list = cell(51,4);
-for j = 1:4
-    for i = 1:51
-        cur_fn = sprintf('pasu_%02d_ori_%02d_wg_f', i, 2*j-1);
-        img_idx = find(contains(Trials.imageName, cur_fn));
-        if length(img_idx) == 0
-            mod_img_list{i,j} = [];
+        if length(img_idx) == 0 % empty space
+            evolv_img_list{i,j} = [];
         else
-            scale_val = (hl_mat(i,j) - Cmin) / (Cmax - Cmin);
-            c = interp1(cmap, scale_val * (size(cmap, 1) - 1) + 1);
-            LineWidth = 50;
-            pad_img = padarray(img_list{i,j}, [2*LineWidth, 2*LineWidth], 0);
-            tmp_img = insertShape(pad_img, ...
-                'Rectangle', [LineWidth,LineWidth,size(img_list{i,j})+2*LineWidth], ...
-                'LineWidth', 2 * LineWidth, 'Color', 256 * c);
-            mod_img_list{i,j} = tmp_img;
+            evolv_img_list{i,j} = imread(fullfile(img_dir, [cur_fn, '.jpg']));
         end
     end
 end
-subplot(2,1,2)
-montage(mod_img_list, 'Size', [4, 51]);
+clear cur_fn i j img_idx
+figure(2);set(2,'position', [ 326         629        2089         254])
+montage(evolv_img_list, 'Size', [11, 11]);
+title(sprintf("Exp%d pref chan%02d PC23 hemisphere", Expi, pref_chan))
+ylabel("PC3 axis");xlabel("PC2 axis");
+saveas(2, fullfile(savepath, sprintf("norm_%d_PC23.jpg", sphere_norm)))
+% Record the basic statisitcs or load them from the saved file. 
+Stat_summary = {};
+% load(fullfile(savepath, "KentFit_Stats.mat"), 'Param_summary') % Load computed Kent Fit 
+% load(fullfile(savepath, "Basic_Stats.mat"), 'Stat_summary') % Load Stats
+for channel = 21%1:size(rasters, 1)
+chan_label_str = sprintf("Exp%d Channel %s", Expi, unit_name_arr{channel});
 
+figure(3);clf; set(3, 'position', [ 805         197        1559         781]);
+figure(4);clf; set(4, 'position', [  73         181        2479         593]);
+%%
+[score_mat, bsl_mat, summary, stat_str] = get_stats_from_result('norm_%d_PC2_%d_PC3_%d');
+Stat_summary{channel, 1} = summary;
+figure(3);clf;
+ax1 = subplot(1,2,1);
+imagesc(-90:18:90, -90:18:90, nanmean(score_mat, 3)) % sum(score_mat,3)./cnt_mat
+ylabel("PC 2 degree");xlabel("PC 3 degree")
+title([chan_label_str, "Tuning map on PC2 3 subspace", stat_str])
+shading flat;axis image;colorbar
+% Get the colormap from the heatmap in order to visualize the map below. 
+frame_img_list = score_frame_image_arr(evolv_img_list, nanmean(score_mat, 3)...
+    , caxis(ax1), colormap(ax1), 20);
+ax2 = subplot(1,2,2);
+montage(frame_img_list', 'Size', [11, 11]);
+set(ax2, 'Position', [0.5303    0.0500    0.4347    0.9049]);
+set(ax1, 'position', [0.0500    0.0700    0.4018    0.8050]);
+%%
+[score_mat, bsl_mat, summary, stat_str] = get_pasu_tuning_stats();
+Stat_summary{channel, 2} = summary;
+% visualize the pasupathy tuning 
+hl_mat = nanmean(score_mat,3);
+figure(4);clf % 2 panel plot for response and images
+ax1 = subplot(2,1,1);
+imagesc(hl_mat');
+xlabel("Shape id");ylabel("orientation")
+yticks(1:4);yticklabels(0:90:270)
+title([chan_label_str, "Tuning map on Pasupathy patches", stat_str])
+shading flat;axis image;colorbar
+% Get the colormap from the heatmap in order to visualize the map below. 
+% cmap = colormap(); 
+% [Cmin, Cmax] = caxis();
+frame_img_list = score_frame_image_arr(img_list, hl_mat, ...
+    caxis(ax1), colormap(ax1), 50);
+ax2 = subplot(2,1,2);
+montage(frame_img_list, 'Size', [4, 51]);
+set(ax1,'position',[0.0500    0.5038    0.9050    0.2977])
+set(ax2,'position',[0.0500    0.0800    0.9050    0.2977])
 %%
 saveas(3, fullfile(savepath, sprintf("chan%02d_PC23_tune.png", channel)))
 saveas(4, fullfile(savepath, sprintf("chan%02d_Pasu_tune.png", channel)))
+save_to_pdf(3, fullfile(savepath, sprintf("chan%02d_PC23_tune.pdf", channel)))
+save_to_pdf(4, fullfile(savepath, sprintf("chan%02d_Pasu_tune.pdf", channel)))
 end
 save(fullfile(savepath, "Basic_Stats.mat"), 'Stat_summary')
-
 end
 % 
 % %% Modulate the contrast by the score of firing
@@ -269,5 +258,43 @@ function [score_mat, bsl_mat, summary, stat_str] = get_pasu_tuning_stats() %name
             'Modulation: All image, F=%.2f(%.3f)\n'...
             'Shape, F=%.2f(%.3f), Rotation, F=%.2f(%.3f), Interact, F=%.2f(%.3f)'],CI(1), CI(2), P, stats.F, stats.p, ...
             stats2.F(1),stats2.p(1), stats2.F(2),stats2.p(2),stats2.F(3),stats2.p(3));
+
+end
+
+% Plot the padded image montage 
+% Note this can be a seperate function. 
+function frame_img_list = score_frame_image_arr(img_list, score_mat, clim, cmap, LineWidth)
+% Use the cmap and clim to map values in hl_mat to color, and form color frame
+% for corresponding image in the img_list. 
+% Argument 
+% img_list is a image array, same shape as hl_mat
+% hl_mat is a score matrix, with nan is images with no observation.
+% clim is the limit of value mapped to color
+% cmap is a K-by-3 matrix coding the RGB values in 1:64. 
+Cmin = clim(1); Cmax = clim(2);
+assert(all(size(img_list) == size(score_mat)), ...
+    "Score matrix and image cell array size doesn't matach")
+% LineWidth = 50; % Key parameter controlling the width of margin, can be different for different
+frame_img_list = cell(size(img_list)); % the list storing the padde image
+for j = 1:size(img_list, 2)
+    for i = 1:size(img_list, 1)
+%         cur_fn = sprintf('pasu_%02d_ori_%02d_wg_f', i, 2*j-1);
+%         img_idx = find(contains(Trials.imageName, cur_fn));
+        if isnan(score_mat(i,j)) % check if there is any score
+            frame_img_list{i,j} = [];
+        else
+            scale_val = (score_mat(i,j) - Cmin) / (Cmax - Cmin);
+            c = interp1(cmap, scale_val * (size(cmap, 1) - 1) + 1); % Note, interpolation can be done from 1-64, not from 0
+            
+            pad_img = padarray(img_list{i,j}, [2*LineWidth, 2*LineWidth], 0);
+            tmp_img = insertShape(pad_img, ...
+                'Rectangle', [LineWidth,LineWidth,...
+                            size(img_list{i,j},2)+2*LineWidth,...
+                            size(img_list{i,j},1)+2*LineWidth], ...
+                'LineWidth', 2 * LineWidth, 'Color', 256 * c);
+            frame_img_list{i,j} = tmp_img;
+        end
+    end
+end
 
 end
