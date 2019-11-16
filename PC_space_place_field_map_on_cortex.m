@@ -1,11 +1,11 @@
 %% PC space tuning summary on cortex 
 global  Trials rasters channel sphere_norm ang_step Reps
-storedStruct = load("D:\\Manifold_Exps.mat");
+%storedStruct = load("D:\\Manifold_Exps.mat");
 %%
 Reps = 11; % constant for maximum number of repetitions (as long as it's larger than the maximum, it's fine)
 Set_Exp_Specs;
 
-for Expi = [11,13:23]
+for Expi = 1:10
 % meta = meta_new{2*(Expi-23)-1};
 % rasters = rasters_new{2*(Expi-23)-1};
 % Trials = Trials_new{2*(Expi-23)-1};
@@ -21,20 +21,24 @@ mkdir(savepath);
 unit_name_arr = generate_unit_labels(meta.spikeID); % Generate readable labels for each channel
 load(fullfile(savepath, "Basic_Stats.mat"), 'Stat_summary') % Load Stats
 sign_filter = true;
+
+name_pattern_list = {'norm_%d_PC2_%d_PC3_%d', 'norm_%d_PC49_%d_PC50_%d', 'norm_%d_RND1_%d_RND2_%d'};
+space_list = {'PC23', 'PC4950', 'RND12'};
+for space_i = 1:3
 % assert(sum(contains(unit_name_arr, "C"))==0, "Too many units in a channel! FIX THE CODE TO HANDLE ME! ")
 % Select the significant channels
 signif_chan = [];
 rsp_mat_arr = {};
 signif_F = [];
 signif_P = [];
-fprintf("=======\nExp %02d Significantly modulated channels:\n", Expi)
+fprintf("=======\nExp %02d Significantly modulated channels in %s:\n", Expi, space_list{space_i})
 for channel = 1:size(rasters,1)
     chan_label_str = sprintf("Channel %s  ", unit_name_arr{channel});
     if Stat_summary{channel,1}.anova_p < 0.01
         signif_chan(end+1) = channel;
-        signif_F(end+1) = Stat_summary{channel,1}.anova_F;
-        signif_P(end+1) = Stat_summary{channel,1}.anova_p;
-        [score_mat, bsl_mat] = get_score_mat('norm_%d_PC2_%d_PC3_%d');
+        signif_F(end+1) = Stat_summary{channel,space_i}.anova_F;
+        signif_P(end+1) = Stat_summary{channel,space_i}.anova_p;
+        [score_mat, bsl_mat] = get_score_mat( name_pattern_list{space_i} );
         rsp_mat_arr{end+1} = score_mat;
         fprintf("%s\t", unit_name_arr{channel})
     else
@@ -47,7 +51,7 @@ fprintf("\n%d units in total \n", length(signif_chan))
 % coln = ceil(length(signif_chan)/4);
 % figwidth =  1000 / 4 * coln +100;
 %% Plotting only the significant channels 
-Exp_label = sprintf("Exp %d Evolv channel %d PC23 space", Expi, pref_chan);
+Exp_label = sprintf("Exp %d Evolv channel %d %s space", Expi, pref_chan, space_list{space_i});
 figIT = figure(9);clf;hold on
 figV1 = figure(10);clf;hold on
 figV4 = figure(11);clf;hold on
@@ -75,7 +79,7 @@ for arr_chan = 1:64 % array channel! not number in the resulting array
     end
     chan_label_str = sprintf("Ch %s F%.2f(p=%.1e)", unit_name_arr{channel}, ...
         Stat_summary{channel,1}.anova_F, Stat_summary{channel,1}.anova_p);
-    [score_mat, bsl_mat] = get_score_mat('norm_%d_PC2_%d_PC3_%d');
+    [score_mat, bsl_mat] = get_score_mat( name_pattern_list{space_i} );
     plot_contour_heatmap(nanmean(score_mat, 3), ax_arrA{arr_chan})
     title([chan_label_str])
     
@@ -83,7 +87,7 @@ for arr_chan = 1:64 % array channel! not number in the resulting array
         channel = chan_idxB(arr_chan); % the c
         chan_label_str = sprintf("Ch %s F%.2f(p=%.1e)", unit_name_arr{channel}, ...
             Stat_summary{channel,1}.anova_F, Stat_summary{channel,1}.anova_p);
-        [score_mat, bsl_mat] = get_score_mat('norm_%d_PC2_%d_PC3_%d');
+        [score_mat, bsl_mat] = get_score_mat( name_pattern_list{space_i} );
         plot_contour_heatmap(nanmean(score_mat, 3), ax_arrB{arr_chan})
         title([chan_label_str])
     end
@@ -99,19 +103,19 @@ if plot2unit
     title(tV4B,strcat(Exp_label, " V4 array"))
 end
 %%
-saveas(figIT, fullfile(savepath, sprintf("IT_array_Exp%02d_PC23_placemapA.jpg", Expi)))
-saveas(figIT, fullfile(result_dir, sprintf("IT_array_Exp%02d_PC23_placemapA.jpg", Expi)))
-saveas(figV1, fullfile(savepath, sprintf("V1_array_Exp%02d_PC23_placemapA.jpg", Expi)))
-saveas(figV1, fullfile(result_dir, sprintf("V1_array_Exp%02d_PC23_placemapA.jpg", Expi)))
-saveas(figV4, fullfile(savepath, sprintf("V4_array_Exp%02d_PC23_placemapA.jpg", Expi)))
-saveas(figV4, fullfile(result_dir, sprintf("V4_array_Exp%02d_PC23_placemapA.jpg", Expi)))
+saveas(figIT, fullfile(savepath, sprintf("IT_array_Exp%02d_%s_placemapA.jpg", Expi, space_list{space_i})))
+saveas(figIT, fullfile(result_dir, sprintf("IT_array_Exp%02d_%s_placemapA.jpg", Expi, space_list{space_i})))
+saveas(figV1, fullfile(savepath, sprintf("V1_array_Exp%02d_%s_placemapA.jpg", Expi, space_list{space_i})))
+saveas(figV1, fullfile(result_dir, sprintf("V1_array_Exp%02d_%s_placemapA.jpg", Expi, space_list{space_i})))
+saveas(figV4, fullfile(savepath, sprintf("V4_array_Exp%02d_%s_placemapA.jpg", Expi, space_list{space_i})))
+saveas(figV4, fullfile(result_dir, sprintf("V4_array_Exp%02d_%s_placemapA.jpg", Expi, space_list{space_i})))
 if plot2unit
-saveas(figITB, fullfile(savepath, sprintf("IT_array_Exp%02d_PC23_placemapB.jpg", Expi)))
-saveas(figITB, fullfile(result_dir, sprintf("IT_array_Exp%02d_PC23_placemapB.jpg", Expi)))
-saveas(figV1B, fullfile(savepath, sprintf("V1_array_Exp%02d_PC23_placemapB.jpg", Expi)))
-saveas(figV1B, fullfile(result_dir, sprintf("V1_array_Exp%02d_PC23_placemapB.jpg", Expi)))
-saveas(figV4B, fullfile(savepath, sprintf("V4_array_Exp%02d_PC23_placemapB.jpg", Expi)))
-saveas(figV4B, fullfile(result_dir, sprintf("V4_array_Exp%02d_PC23_placemapB.jpg", Expi)))
+saveas(figITB, fullfile(savepath, sprintf("IT_array_Exp%02d_%s_placemapB.jpg", Expi, space_list{space_i})))
+saveas(figITB, fullfile(result_dir, sprintf("IT_array_Exp%02d_%s_placemapB.jpg", Expi, space_list{space_i})))
+saveas(figV1B, fullfile(savepath, sprintf("V1_array_Exp%02d_%s_placemapB.jpg", Expi, space_list{space_i})))
+saveas(figV1B, fullfile(result_dir, sprintf("V1_array_Exp%02d_%s_placemapB.jpg", Expi, space_list{space_i})))
+saveas(figV4B, fullfile(savepath, sprintf("V4_array_Exp%02d_%s_placemapB.jpg", Expi, space_list{space_i})))
+saveas(figV4B, fullfile(result_dir, sprintf("V4_array_Exp%02d_%s_placemapB.jpg", Expi, space_list{space_i})))
 end
 %%
 if sign_filter
@@ -132,22 +136,22 @@ if sign_filter
     end
     end
     end
-    saveas(figIT, fullfile(savepath, sprintf("IT_array_Exp%02d_PC23_placemap_signifA.jpg", Expi)))
-    saveas(figIT, fullfile(result_dir, sprintf("IT_array_Exp%02d_PC23_placemap_signifA.jpg", Expi)))
-    saveas(figV1, fullfile(savepath, sprintf("V1_array_Exp%02d_PC23_placemap_signifA.jpg", Expi)))
-    saveas(figV1, fullfile(result_dir, sprintf("V1_array_Exp%02d_PC23_placemap_signifA.jpg", Expi)))
-    saveas(figV4, fullfile(savepath, sprintf("V4_array_Exp%02d_PC23_placemap_signifA.jpg", Expi)))
-    saveas(figV4, fullfile(result_dir, sprintf("V4_array_Exp%02d_PC23_placemap_signifA.jpg", Expi)))
+    saveas(figIT, fullfile(savepath, sprintf("IT_array_Exp%02d_%s_placemap_signifA.jpg", Expi, space_list{space_i})))
+    saveas(figIT, fullfile(result_dir, sprintf("IT_array_Exp%02d_%s_placemap_signifA.jpg", Expi, space_list{space_i})))
+    saveas(figV1, fullfile(savepath, sprintf("V1_array_Exp%02d_%s_placemap_signifA.jpg", Expi, space_list{space_i})))
+    saveas(figV1, fullfile(result_dir, sprintf("V1_array_Exp%02d_%s_placemap_signifA.jpg", Expi, space_list{space_i})))
+    saveas(figV4, fullfile(savepath, sprintf("V4_array_Exp%02d_%s_placemap_signifA.jpg", Expi, space_list{space_i})))
+    saveas(figV4, fullfile(result_dir, sprintf("V4_array_Exp%02d_%s_placemap_signifA.jpg", Expi, space_list{space_i})))
     if plot2unit
-    saveas(figITB, fullfile(savepath, sprintf("IT_array_Exp%02d_PC23_placemap_signifB.jpg", Expi)))
-    saveas(figITB, fullfile(result_dir, sprintf("IT_array_Exp%02d_PC23_placemap_signifB.jpg", Expi)))
-    saveas(figV1B, fullfile(savepath, sprintf("V1_array_Exp%02d_PC23_placemap_signifB.jpg", Expi)))
-    saveas(figV1B, fullfile(result_dir, sprintf("V1_array_Exp%02d_PC23_placemap_signifB.jpg", Expi)))
-    saveas(figV4B, fullfile(savepath, sprintf("V4_array_Exp%02d_PC23_placemap_signifB.jpg", Expi)))
-    saveas(figV4B, fullfile(result_dir, sprintf("V4_array_Exp%02d_PC23_placemap_signifB.jpg", Expi)))
+    saveas(figITB, fullfile(savepath, sprintf("IT_array_Exp%02d_%s_placemap_signifB.jpg", Expi, space_list{space_i})))
+    saveas(figITB, fullfile(result_dir, sprintf("IT_array_Exp%02d_%s_placemap_signifB.jpg", Expi, space_list{space_i})))
+    saveas(figV1B, fullfile(savepath, sprintf("V1_array_Exp%02d_%s_placemap_signifB.jpg", Expi, space_list{space_i})))
+    saveas(figV1B, fullfile(result_dir, sprintf("V1_array_Exp%02d_%s_placemap_signifB.jpg", Expi, space_list{space_i})))
+    saveas(figV4B, fullfile(savepath, sprintf("V4_array_Exp%02d_%s_placemap_signifB.jpg", Expi, space_list{space_i})))
+    saveas(figV4B, fullfile(result_dir, sprintf("V4_array_Exp%02d_%s_placemap_signifB.jpg", Expi, space_list{space_i})))
     end
 end
-
+end
 end
 %%
 
