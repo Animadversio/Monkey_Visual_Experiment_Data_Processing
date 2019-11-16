@@ -2,10 +2,9 @@
 % analysis
 % 
 
-%load(fullfile("\\storage1.ris.wustl.edu\crponce\Active\Data-Ephys-MAT","Beto64chan-02102019-003_formatted.mat"))
-%load(fullfile("\\storage1.ris.wustl.edu\crponce\Active\Data-Ephys-MAT","Beto64chan-03102019-002_formatted.mat"))
-% meta,rasters,lfps,Trials
 global  Trials rasters channel sphere_norm ang_step Reps
+%storedStruct = load("D:\\Manifold_Exps.mat");
+
 % meta = meta_new{5};
 % rasters = rasters_new{5};
 % Trials = Trials_new{5};
@@ -15,14 +14,15 @@ global  Trials rasters channel sphere_norm ang_step Reps
 Reps = 11; % constant for maximum number of repetitions (as long as it's larger than the maximum, it's fine)
 Set_Exp_Specs;
 
-for Expi = 12 % universal manifold experiment identifier
+for Expi = 24 % universal manifold experiment identifier
 % Load the dataset 
-% meta = meta_new{2*(Expi-10)-1};
-% rasters = rasters_new{2*(Expi-10)-1};
-% Trials = Trials_new{2*(Expi-10)-1};
-meta = meta_new{2*(Expi-10)-1};
-rasters = rasters_new{2*(Expi-10)-1};
-Trials = Trials_new{2*(Expi-10)-1};
+% meta = storedStruct.meta{Expi};
+% rasters = storedStruct.rasters{Expi};
+% Trials = storedStruct.Trials{Expi};
+% Load new dataset
+meta = meta_new{2*(Expi-23)-1};
+rasters = rasters_new{2*(Expi-23)-1};
+Trials = Trials_new{2*(Expi-23)-1};
 sphere_norm = Pasu_norm_arr(Expi-10); % Load the specific information
 pref_chan = Pasu_pref_chan_arr(Expi-10);
 
@@ -75,7 +75,7 @@ saveas(2, fullfile(savepath, sprintf("norm_%d_PC23.jpg", sphere_norm)))
 Stat_summary = {};
 % load(fullfile(savepath, "KentFit_Stats.mat"), 'Param_summary') % Load computed Kent Fit 
 % load(fullfile(savepath, "Basic_Stats.mat"), 'Stat_summary') % Load Stats
-for channel = 21%1:size(rasters, 1)
+for channel = 1:size(rasters, 1)
 chan_label_str = sprintf("Exp%d Channel %s", Expi, unit_name_arr{channel});
 
 figure(3);clf; set(3, 'position', [ 805         197        1559         781]);
@@ -117,11 +117,11 @@ ax2 = subplot(2,1,2);
 montage(frame_img_list, 'Size', [4, 51]);
 set(ax1,'position',[0.0500    0.5038    0.9050    0.2977])
 set(ax2,'position',[0.0500    0.0800    0.9050    0.2977])
-%%
+%
 saveas(3, fullfile(savepath, sprintf("chan%02d_PC23_tune.png", channel)))
 saveas(4, fullfile(savepath, sprintf("chan%02d_Pasu_tune.png", channel)))
-save_to_pdf(3, fullfile(savepath, sprintf("chan%02d_PC23_tune.pdf", channel)))
-save_to_pdf(4, fullfile(savepath, sprintf("chan%02d_Pasu_tune.pdf", channel)))
+% save_to_pdf(3, fullfile(savepath, sprintf("chan%02d_PC23_tune.pdf", channel)))
+% save_to_pdf(4, fullfile(savepath, sprintf("chan%02d_Pasu_tune.pdf", channel)))
 end
 save(fullfile(savepath, "Basic_Stats.mat"), 'Stat_summary')
 end

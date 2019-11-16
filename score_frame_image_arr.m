@@ -1,6 +1,7 @@
 function frame_img_list = score_frame_image_arr(img_list, score_mat, clim, cmap, LineWidth)
 % Use the cmap and clim to map values in hl_mat to color, and form color frame
 % for corresponding image in the img_list. 
+% 
 % Argument 
 % img_list is a image array, same shape as hl_mat
 % hl_mat is a score matrix, with nan is images with no observation.

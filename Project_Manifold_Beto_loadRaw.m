@@ -229,30 +229,93 @@ iExp = 0;
 % preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191108a\backup_11_08_2019_10_05_21' ;
 % preMeta(iExp).comments = 'CMA Evolution of Ch 37 evolution 191108(CRP). generate PCs for later PC space tuning';
 
-% day 017
-iExp = iExp + 1;% iExp = 19; % PC space exploration
-preMeta(iExp).ephysFN = 'Beto64chan-11112019-006'; 
-preMeta(iExp).expControlFN = '191111_Beto_selectivity_basic(1)'; % 
-preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-19111a-selectivity' ;
-preMeta(iExp).comments = ['Derived from PCs of Ch 49 (V4) evolution 191111(BXW). 121 images from PC23 space, add the pasupathy images to it. white background 4 rotations.'];
+% % day 017
+% iExp = iExp + 1;% iExp = 19; % PC space exploration
+% preMeta(iExp).ephysFN = 'Beto64chan-11112019-006'; 
+% preMeta(iExp).expControlFN = '191111_Beto_selectivity_basic(1)'; % 
+% preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-19111a-selectivity' ;
+% preMeta(iExp).comments = ['Derived from PCs of Ch 49 (V4) evolution 191111(BXW). 121 images from PC23 space, add the pasupathy images to it. white background 4 rotations.'];
+% 
+% iExp = iExp + 1;% iExp = 19; % CMA
+% preMeta(iExp).ephysFN = 'Beto64chan-11112019-003'; 
+% preMeta(iExp).expControlFN = '191111_Beto_generate_parallel'; % 
+% preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-19111a\backup_11_11_2019_12_36_58' ;
+% preMeta(iExp).comments = 'CMA Evolution of Ch 49 (V4) evolution 191111(BXW). generate PCs for later PC space tuning';
+% 
+% iExp = iExp + 1;% iExp = 20; % PC space exploration
+% preMeta(iExp).ephysFN = 'Beto64chan-11112019-011'; 
+% preMeta(iExp).expControlFN = '191111_Beto_selectivity_basic(2)'; % 
+% preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-19111b-selectivity' ;
+% preMeta(iExp).comments = ['Derived from PCs of Ch 60 (V4) evolution 191111(BXW). 121 images from PC23 space, add the pasupathy images to it. white background 4 rotations.'];
+% 
+% iExp = iExp + 1;% iExp = 20; % CMA
+% preMeta(iExp).ephysFN = 'Beto64chan-11112019-010'; 
+% preMeta(iExp).expControlFN = '191111_Beto_generate_parallel(1)'; % 
+% preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-19111a\backup_11_11_2019_12_36_58' ;
+% preMeta(iExp).comments = 'CMA Evolution of Ch 60 (V4) evolution 191111(BXW). generate PCs for later PC space tuning';
 
-iExp = iExp + 1;% iExp = 19; % CMA
-preMeta(iExp).ephysFN = 'Beto64chan-11112019-003'; 
-preMeta(iExp).expControlFN = '191111_Beto_generate_parallel'; % 
-preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-19111a\backup_11_11_2019_12_36_58' ;
-preMeta(iExp).comments = 'CMA Evolution of Ch 49 (V4) evolution 191111(BXW). generate PCs for later PC space tuning';
+% % day 018
+% iExp = iExp + 1;% iExp = 21; % PC space exploration
+% preMeta(iExp).ephysFN = 'Beto64chan-12112019-004'; 
+% preMeta(iExp).expControlFN = '191112_Beto_selectivity_basic'; % 
+% preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-19112a-selectivity' ;
+% preMeta(iExp).comments = ['Derived from PCs of Ch 56 (V4) evolution 191112(CRP). 121 images from PC23 space, add the pasupathy images to it. white background 4 rotations.'];
+% 
+% iExp = iExp + 1;% iExp = 21; % CMA
+% preMeta(iExp).ephysFN = 'Beto64chan-12112019-002'; 
+% preMeta(iExp).expControlFN = '191112_Beto_generate_parallel'; % 
+% preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191112a\backup_11_12_2019_12_05_57' ;
+% preMeta(iExp).comments = 'CMA Evolution of Ch 56 (V4) evolution 191112(CRP). generate PCs for later PC space tuning';
 
-iExp = iExp + 1;% iExp = 20; % PC space exploration
-preMeta(iExp).ephysFN = 'Beto64chan-11112019-011'; 
-preMeta(iExp).expControlFN = '191111_Beto_selectivity_basic(2)'; % 
-preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-19111b-selectivity' ;
-preMeta(iExp).comments = ['Derived from PCs of Ch 60 (V4) evolution 191111(BXW). 121 images from PC23 space, add the pasupathy images to it. white background 4 rotations.'];
+% % day 019
+% iExp = iExp + 1;% iExp = 22; % PC space exploration
+% preMeta(iExp).ephysFN = 'Beto64chan-13112019-006'; 
+% preMeta(iExp).expControlFN = '191113_Beto_selectivity_basic'; % 
+% preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191113a-selectivity' ;
+% preMeta(iExp).comments = ['Derived from PCs of Ch 54 (V4) evolution 191113(BXW). [-4.8 -6.3] 3  121 images from PC23 space, add the pasupathy images to it. white background 4 rotations.'];
+% 
+% iExp = iExp + 1;% iExp = 22; % CMA
+% preMeta(iExp).ephysFN = 'Beto64chan-13112019-004'; 
+% preMeta(iExp).expControlFN = '191113_Beto_generate_parallel(2)'; % 
+% preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191113a\backup_11_13_2019_11_54_12' ;
+% preMeta(iExp).comments = 'CMA Evolution of Ch 54 (V4) evolution 191113(BXW). [-4.8 -6.3] 3  generate PCs for later PC space tuning';
+% 
+% iExp = iExp + 1;% iExp = 23; % PC space exploration
+% preMeta(iExp).ephysFN = 'Beto64chan-13112019-012'; 
+% preMeta(iExp).expControlFN = '191113_Beto_selectivity_basic(1)'; % 
+% preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191113b-selectivity' ;
+% preMeta(iExp).comments = ['Derived from PCs of Ch 58 MU (V4) evolution 191113(BXW). [-3 -4] 3  121 images from PC23 space, add the pasupathy images to it. white background 4 rotations.'];
+% 
+% iExp = iExp + 1;% iExp = 23; % CMA
+% preMeta(iExp).ephysFN = 'Beto64chan-13112019-010'; 
+% preMeta(iExp).expControlFN = '191113_Beto_generate_parallel(3)'; % 
+% preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191113b\backup_11_13_2019_13_22_16' ;
+% preMeta(iExp).comments = 'CMA Evolution of Ch 58 MU (V4) evolution 191113(BXW). [-3 -4] 3  generate PCs for later PC space tuning';
 
-iExp = iExp + 1;% iExp = 20; % CMA
-preMeta(iExp).ephysFN = 'Beto64chan-11112019-010'; 
-preMeta(iExp).expControlFN = '191111_Beto_generate_parallel(1)'; % 
-preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-19111a\backup_11_11_2019_12_36_58' ;
-preMeta(iExp).comments = 'CMA Evolution of Ch 60 (V4) evolution 191111(BXW). generate PCs for later PC space tuning';
+% day 020
+iExp = iExp + 1;% iExp = 24; % PC space exploration
+preMeta(iExp).ephysFN = 'Beto64chan-14112019-007'; 
+preMeta(iExp).expControlFN = '191114_Beto_selectivity_basic'; % 
+preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191114a-selectivity' ;
+preMeta(iExp).comments = ['Derived from PCs of Ch 50 (V4) evolution 191114(CRP). ch 50 (-5,-6) 3 -degrees  121 images from PC23 space, add the pasupathy images to it. white background 4 rotations.'];
+
+iExp = iExp + 1;% iExp = 24; % CMA
+preMeta(iExp).ephysFN = 'Beto64chan-14112019-004'; 
+preMeta(iExp).expControlFN = '191114_Beto_generate_parallel'; % 
+preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191114a\backup_11_14_2019_12_25_14' ;
+preMeta(iExp).comments = 'CMA Evolution of Ch 50 (V4) evolution 191114(CRP). ch 50 (-5,-6) 3 -degrees  generate PCs for later PC space tuning';
+
+% iExp = iExp + 1;% iExp = 25; % PC space exploration
+% preMeta(iExp).ephysFN = 'Beto64chan-14112019-007'; 
+% preMeta(iExp).expControlFN = '191114_Beto_selectivity_basic'; % 
+% preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191114a-selectivity' ;
+% preMeta(iExp).comments = ['Derived from PCs of Ch 50 (V4) evolution 191114(CRP). ch 50 (-5,-6) 3 -degrees  121 images from PC23 space, add the pasupathy images to it. white background 4 rotations.'];
+
+iExp = iExp + 1;% iExp = 25; % CMA
+preMeta(iExp).ephysFN = 'Beto64chan-14112019-009'; 
+preMeta(iExp).expControlFN = '191114_Beto_generate_parallel(1)'; % 
+preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191114b\backup_11_14_2019_13_50_18' ;
+preMeta(iExp).comments = 'CMA Evolution of Ch 57 (V4) evolution 191114(CRP). ch 57 (-3,-6) 3 1, SU 2/5 generate PCs for later PC space tuning';
 
 
 % day 001 Interp Exp
