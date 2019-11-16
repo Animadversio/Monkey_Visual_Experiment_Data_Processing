@@ -18,8 +18,9 @@ Neural code is intrinsically multifaceted. To parse out useful information and m
   * Compute the F statistics of ANOVA across images. 
   * Compute the t statistics between baseline and response period
   * Fit tuning function (*Kent* or other unimodal function) to the tuning landscape and extract statistics 
+  * Plot the tuning map (hot spot) across channels: see if they tile the image space.
   * Un-parametrized characterization of the landscape. 
-    * Flood fill / level set method
+    * Flood fill / level set method (size of hot spot)
   * Correlation between channel
     * in baseline period
     * in response period, score period
