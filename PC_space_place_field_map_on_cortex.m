@@ -12,8 +12,8 @@ for Expi = 1:10
 meta = storedStruct.meta{Expi}; % loading data from long term store
 rasters = storedStruct.rasters{Expi};
 Trials = storedStruct.Trials{Expi};
-sphere_norm = Pasu_norm_arr(Expi-10); % Load the specific information
-pref_chan = Pasu_pref_chan_arr(Expi-10);
+sphere_norm = norm_arr(Expi); % Load the specific information
+pref_chan = pref_chan_arr(Expi);
 ang_step = 18;
 % Save basic info
 savepath = sprintf("C:\\Users\\ponce\\OneDrive - Washington University in St. Louis\\PC_space_tuning\\Exp%d_chan%02d", Expi, pref_chan);
