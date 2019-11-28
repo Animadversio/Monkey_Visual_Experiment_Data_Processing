@@ -1,3 +1,4 @@
+%% Analyze the evolution of the norm of the code
 Norm_arr = {};
 %%
 codes_all = StatsB{1}.genes.all;

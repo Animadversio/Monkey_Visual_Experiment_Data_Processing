@@ -14,17 +14,21 @@ global  Trials rasters channel sphere_norm ang_step Reps
 Reps = 11; % constant for maximum number of repetitions (as long as it's larger than the maximum, it's fine)
 Set_Exp_Specs;
 
-for Expi = 24 % universal manifold experiment identifier
+for Expi = 32:33 % universal manifold experiment identifier
 % Load the dataset 
 % meta = storedStruct.meta{Expi};
 % rasters = storedStruct.rasters{Expi};
 % Trials = storedStruct.Trials{Expi};
 % Load new dataset
-meta = meta_new{2*(Expi-23)-1};
-rasters = rasters_new{2*(Expi-23)-1};
-Trials = Trials_new{2*(Expi-23)-1};
-sphere_norm = Pasu_norm_arr(Expi-10); % Load the specific information
-pref_chan = Pasu_pref_chan_arr(Expi-10);
+% meta = meta_new{2*(Expi-24)-1};
+% rasters = rasters_new{2*(Expi-24)-1};
+% Trials = Trials_new{2*(Expi-24)-1};
+% sphere_norm = Pasu_norm_arr(Expi-10); % Load the specific information
+meta = meta_new{2*(Expi - 31) - 1};
+rasters = rasters_new{2*(Expi - 31) - 1};
+Trials = Trials_new{2*(Expi - 31) - 1};
+sphere_norm = norm_arr(Expi);
+pref_chan = pref_chan_arr(Expi);
 
 ang_step = 18;
 % Save basic info
@@ -33,7 +37,7 @@ mkdir(savepath);
 unit_name_arr = generate_unit_labels(meta.spikeID, savepath); % Generate readable labels for each channel
 
 % Load and visualize the Pasupathy shapes
-img_dir = 'S:\Stimuli\2019-Manifold\pasupathy-wg-f-4-ori';
+img_dir = 'N:\Stimuli\2019-Manifold\pasupathy-wg-f-4-ori';
 img_list = cell(51, 4);%{};
 for j = 1:4
     for i = 1:51

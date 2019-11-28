@@ -5,15 +5,23 @@ storedStruct = load("D:\\Manifold_Exps.mat");
 Reps = 11; % constant for maximum number of repetitions (as long as it's larger than the maximum, it's fine)
 Set_Exp_Specs;
 
-for Expi = 24
-meta = meta_new{2*(Expi-23)-1};
-rasters = rasters_new{2*(Expi-23)-1};
-Trials = Trials_new{2*(Expi-23)-1};
+for Expi = 32:33
+% meta = meta_new{2*(Expi-24)-1};
+% rasters = rasters_new{2*(Expi-24)-1};
+% Trials = Trials_new{2*(Expi-24)-1};
+% meta = meta_new{5};
+% rasters = rasters_new{5};
+% Trials = Trials_new{5};
 % meta = storedStruct.meta{Expi}; % loading data from long term store
 % rasters = storedStruct.rasters{Expi};
 % Trials = storedStruct.Trials{Expi};
-sphere_norm = Pasu_norm_arr(Expi-10); % Load the specific information
-pref_chan = Pasu_pref_chan_arr(Expi-10);
+% sphere_norm = Pasu_norm_arr(Expi-10); % Load the specific information
+% pref_chan = Pasu_pref_chan_arr(Expi-10);
+meta = meta_new{2*(Expi - 31) - 1};
+rasters = rasters_new{2*(Expi - 31) - 1};
+Trials = Trials_new{2*(Expi - 31) - 1};
+sphere_norm = norm_arr(Expi);
+pref_chan = pref_chan_arr(Expi);
 ang_step = 18;
 % Save basic info
 savepath = sprintf("C:\\Users\\ponce\\OneDrive - Washington University in St. Louis\\PC_space_tuning\\Exp%d_chan%02d", Expi, pref_chan);

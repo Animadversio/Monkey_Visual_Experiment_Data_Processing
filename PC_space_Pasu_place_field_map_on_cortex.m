@@ -5,15 +5,23 @@ storedStruct = load("D:\\Manifold_Exps.mat");
 Reps = 11; % constant for maximum number of repetitions (as long as it's larger than the maximum, it's fine)
 Set_Exp_Specs;
 
-for Expi = [11,13:23]
-% meta = meta_new{2*(Expi-23)-1};
-% rasters = rasters_new{2*(Expi-23)-1};
-% Trials = Trials_new{2*(Expi-23)-1};
-meta = storedStruct.meta{Expi}; % loading data from long term store
-rasters = storedStruct.rasters{Expi};
-Trials = storedStruct.Trials{Expi};
-sphere_norm = Pasu_norm_arr(Expi-10); % Load the specific information
-pref_chan = Pasu_pref_chan_arr(Expi-10);
+for Expi = 32:33
+% meta = meta_new{2*(Expi-24)-1};
+% rasters = rasters_new{2*(Expi-24)-1};
+% Trials = Trials_new{2*(Expi-24)-1};
+% meta = storedStruct.meta{Expi}; % loading data from long term store
+% rasters = storedStruct.rasters{Expi};
+% Trials = storedStruct.Trials{Expi};
+% meta = meta_new{5};
+% rasters = rasters_new{5};
+% Trials = Trials_new{5};
+% sphere_norm = Pasu_norm_arr(Expi-10); % Load the specific information
+% pref_chan = Pasu_pref_chan_arr(Expi-10);
+meta = meta_new{2*(Expi - 31) - 1};
+rasters = rasters_new{2*(Expi - 31) - 1};
+Trials = Trials_new{2*(Expi - 31) - 1};
+sphere_norm = norm_arr(Expi);
+pref_chan = pref_chan_arr(Expi);
 ang_step = 18;
 % Save basic info
 savepath = sprintf("C:\\Users\\ponce\\OneDrive - Washington University in St. Louis\\PC_space_tuning\\Exp%d_chan%02d", Expi, pref_chan);
@@ -46,12 +54,12 @@ fprintf(num2str(signif_F,'%.2f\t'))
 fprintf("\n%d units in total \n", length(signif_chan))
 % coln = ceil(length(signif_chan)/4);
 % figwidth =  1000 / 4 * coln +100;
-%% Plotting only the significant channels 
+%% 
 Exp_label = sprintf("Exp %d Evolv channel %d PC23 space", Expi, pref_chan);
 figIT = figure(9);clf;hold on
 figV1 = figure(10);clf;hold on
 figV4 = figure(11);clf;hold on
-%set(figA,'visible','off')
+% set(figA,'visible','off')
 %[tA, ax_arrA] = Cortex_Channel_Tile_Layout("IT", figA); % index to array channel should be the absolute array channel index 
 [ax_arrA,tIT,tV1,tV4] = Cortex_Channel_Tile_Layout_All(figIT, figV1, figV4);
 [chan_idxA, chan_idxB] = unit_id2_chan_idx(1:64, meta.spikeID); 
@@ -68,7 +76,7 @@ else % some channels have more than 1 unit
 end
 for arr_chan = 1:64 % array channel! not number in the resulting array
     channel = chan_idxA(arr_chan); % the 
-    if isnan(channel)
+    if isnan(channel) % if the channel has no unit. 
         set(ax_arrA{arr_chan},'Visible','off')
         set(ax_arrB{arr_chan},'Visible','off')
         continue
@@ -113,7 +121,7 @@ saveas(figV1B, fullfile(result_dir, sprintf("V1_array_Exp%02d_PC23_placemapB.jpg
 saveas(figV4B, fullfile(savepath, sprintf("V4_array_Exp%02d_PC23_placemapB.jpg", Expi)))
 saveas(figV4B, fullfile(result_dir, sprintf("V4_array_Exp%02d_PC23_placemapB.jpg", Expi)))
 end
-%%
+%% if sign filter then Plot only the significant channels 
 if sign_filter
     for arr_chan = 1:64 % array channel! not number in the resulting array
     channel = chan_idxA(arr_chan);

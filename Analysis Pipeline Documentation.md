@@ -44,6 +44,7 @@ Neural code is intrinsically multifaceted. To parse out useful information and m
 * General Characterization 
   * Successfulness of an evolution 
   * **Norm Trajectory**, Slope and intercept of *Norm^2 ~ geni* curve. 
+  * **Score Trajectory**
 * 
 * Focus on temporal dynamics
   * : (What's the time period in PSTH that contribute most to the increase of firing rate?)  

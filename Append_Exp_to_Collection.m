@@ -1,21 +1,32 @@
-%% 0
-[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw();
-%%
+ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xls");
+%% Load exp file from certain entry 
+[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw([84:88]);
+crp_sync_localMat_to_networkMat
+%% Load exp file by filtering the experimental record
+find(contains(ExpSpecTable_Aug.expControlFN,'generate_parallel'))';
+expid = [2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,45,48,51,55,58,61,64,67,70,72,74,77,79,83,85,88];
+[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(expid);
+crp_sync_localMat_to_networkMat
+%% Code for appending new experiments to the older ones
 load("D:\\Manifold_Evolv_Exps.mat")
-%
-lfps{end+1}=lfps_new{2};
-meta{end+1}=meta_new{2};
-Trials{end+1}=Trials_new{2};
-rasters{end+1}=rasters_new{2}; 
+%%
+for i=1:length(meta_new)
+    lfps{end+1}=lfps_new{i};
+    meta{end+1}=meta_new{i};
+    Trials{end+1}=Trials_new{i};
+    rasters{end+1}=rasters_new{i}; 
+end
 savefast("D:\\Manifold_Evolv_Exps.mat", 'lfps', 'meta', 'rasters', 'Trials')
 %%
 load("D:\\Manifold_Exps.mat")
-%
-lfps{end+1}=lfps_new{1};
-meta{end+1}=meta_new{1};
-Trials{end+1}=Trials_new{1};
-rasters{end+1}=rasters_new{1}; 
-
+%%
+for i=1
+    lfps{end+1}=lfps_new{i};
+    meta{end+1}=meta_new{i};
+    Trials{end+1}=Trials_new{i};
+    rasters{end+1}=rasters_new{i}; 
+end
+%%
 savefast("D:\\Manifold_Exps.mat", 'lfps', 'meta', 'rasters', 'Trials')
 %%
 storedStruct.meta{4}.stimuli = '\\storage1.ris.wustl.edu\crponce\ActiveStimuli\2019-Manifold\beto-191008a\backup_10_08_2019_12_14_29\PC_imgs';
@@ -50,3 +61,10 @@ storedStruct.meta = meta;
 storedStruct.Trials = Trials;
 storedStruct.rasters = rasters;
 storedStruct.lfps = lfps;
+%%
+
+%
+lfps = cat(3, lfps_new{3}, lfps_new{4});
+rasters = cat(3, rasters_new{3}, rasters_new{4});
+%%
+meta = cell2struct(cellfun(@vertcat,struct2cell(meta_new{3}),struct2cell(meta_new{4}),'uni',0),fieldnames(meta_new{3}),1);
