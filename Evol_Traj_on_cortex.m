@@ -1,15 +1,14 @@
 %% 
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evolution_Exp";
-
 global block_arr gen_list color_seq row_gen row_nat
 global evol_stim_fr evol_stim_sem meanscore_syn stdscore_syn meanscore_nat stdscore_nat
-for Expi = 37
-Triali = 5;%Expi - 34;
+for Expi = 1:37
+Triali = Expi;%Expi - 34;
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
 exp_rowi = find(contains(ExpSpecTable_Aug.ephysFN, meta.ephysFN));
-% Check the 
+% Check the Expi match number
 Expi = ExpSpecTable_Aug.Expi(exp_rowi);
 fprintf("Processing Exp %d, %s\n", Expi, meta.comments)
 % Prepare the relevant folder and info
@@ -52,7 +51,7 @@ stdscore_syn = [];
 meanscore_nat = [];
 stdscore_nat = [];
 for blocki = min(block_arr):max(block_arr)
-    tmpscore_syn = mean(scores_tsr(:, row_gen & block_arr == blocki), 2);
+    tmpscore_syn = mean(scores_tsr(:, row_gen & block_arr == blocki), 2);cloase   
     tmpscore_nat = mean(scores_tsr(:, row_nat & block_arr == blocki), 2);
     tmpstdscore_syn = std(scores_tsr(:, row_gen & block_arr == blocki), 1, 2) / sqrt(sum(row_gen & block_arr == blocki));
     tmpstdscore_nat = std(scores_tsr(:, row_nat & block_arr == blocki), 1, 2) / sqrt(sum(row_gen & block_arr == blocki));

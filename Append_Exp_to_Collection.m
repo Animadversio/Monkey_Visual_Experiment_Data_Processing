@@ -1,10 +1,15 @@
 ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xls");
+%%
+ExpSpecTable = ExpSpecTable_Aug(:, ["ephysFN","expControlFN","stimuli","comments"]);
+writetable(ExpSpecTable, "S:\ExpSpecTable.xls")
+writetable(ExpSpecTable_Aug, "S:\ExpSpecTable_Augment.xls")
 %% Load exp file from certain entry 
-[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw([84:88]);
+[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw([96:107]);
 crp_sync_localMat_to_networkMat
 %% Load exp file by filtering the experimental record
 find(contains(ExpSpecTable_Aug.expControlFN,'generate_parallel'))';
-expid = [2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,45,48,51,55,58,61,64,67,70,72,74,77,79,83,85,88];
+%expid = [2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,45,48,51,55,58,61,64,67,70,72,74,77,79,83,85,88];
+expid = find(ExpSpecTable_Aug.Expi > 33 & contains(ExpSpecTable_Aug.expControlFN,'selectivity'));
 [meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(expid);
 crp_sync_localMat_to_networkMat
 %% Code for appending new experiments to the older ones
@@ -61,10 +66,47 @@ storedStruct.meta = meta;
 storedStruct.Trials = Trials;
 storedStruct.rasters = rasters;
 storedStruct.lfps = lfps;
+%% solve the broken experiment problem  Beto64chan-25112019-006 
+lfps = cat(3, lfps_new{2}, lfps_new{3});
+rasters = cat(3, rasters_new{2}, rasters_new{3});
 %%
-
-%
-lfps = cat(3, lfps_new{3}, lfps_new{4});
-rasters = cat(3, rasters_new{3}, rasters_new{4});
+meta = meta_new{2};
+assert(all(meta_new{3}.spikeID==meta_new{2}.spikeID), "The spike ID for 2 experiments matched to each other.")
+for field = string(fieldnames(meta))'
+    if isstr(getfield(meta,field)) 
+        if strcmp(getfield(meta,field), getfield(meta_new{3},field))
+            fprintf("%s field matched.\n",field);
+            continue;
+        end
+    else
+        if all(getfield(meta,field) == getfield(meta_new{3},field))
+            fprintf("%s field matched.\n",field);
+            continue;
+        end
+    end
+    meta = setfield(meta, field+"_2", getfield(meta_new{3},field));
+end    
+meta.comments = "Combined data from 2 broken experiments " + meta.comments;
+%% Combine the Trials array
+Trials = Trials_new{2};
+for field = ["imageName", "XY", "eyeXY", "width", "eyePupil", "eventMarkers", "block"]
+    Trials = setfield(Trials, field, [getfield(Trials_new{2},field);getfield(Trials_new{3},field)]);
+end
+for field = ["B", "trialStart"]
+    Trials = setfield(Trials, field, [getfield(Trials_new{2},field),getfield(Trials_new{3},field)]);
+end
+for field = ["words", "event10", "event03", "MLConfig", "TrialRecord"]
+    Trials = setfield(Trials, field+"_2", getfield(Trials_new{3},field));
+end
 %%
-meta = cell2struct(cellfun(@vertcat,struct2cell(meta_new{3}),struct2cell(meta_new{4}),'uni',0),fieldnames(meta_new{3}),1);
+Trials_new{2} = Trials;
+lfps_new{2} = lfps;
+meta_new{2} = meta;
+rasters_new{2} = rasters;
+%% Only use it once! 
+Trials_new(3)=[];
+lfps_new(3)=[];
+meta_new(3)=[];
+rasters_new(3)=[];
+%%
+savefast( fullfile(meta.pathMat,[meta.ephysFN '_cmb_formatted']) ,'meta','rasters','lfps','Trials')

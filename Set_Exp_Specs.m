@@ -2,7 +2,8 @@
 % for the preferred channel
 
 system("subst S: D:\Network_Data_Sync") % set this alias! so that copying and syncing could work 
-
+% it will load the newest version of ExpSpecTable and compute pref_chan_arr
+% and norm_arr from it! 
 ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xls");
 pref_chan_arr = [];
 for iExp = 1:max(ExpSpecTable_Aug.Expi)
