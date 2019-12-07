@@ -1,15 +1,7 @@
 % Code to do basic analysis on PC + Pasupathy patch manifold experiment
 % analysis
-% 
-
 global  Trials rasters channel sphere_norm ang_step Reps
 %storedStruct = load("D:\\Manifold_Exps.mat");
-
-% meta = meta_new{5};
-% rasters = rasters_new{5};
-% Trials = Trials_new{5};
-% img_names = unique(Trials.imageName);
-
 %% Load code from "D:\Poncelab_Github\office-main\Project_Selectivity_Beto_loadRaw.m"
 Reps = 15; % constant for maximum number of repetitions (as long as it's larger than the maximum, it's fine)
 Set_Exp_Specs; 
