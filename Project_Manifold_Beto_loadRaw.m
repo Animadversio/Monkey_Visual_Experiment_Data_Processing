@@ -1,5 +1,5 @@
 function [meta,rasters,lfps,Trials] = Project_Manifold_Beto_loadRaw(rowlist)
-iExp = 0;
+% iExp = 0;
 % day 001 
 % iExp = 1; % PC space exploration
 % preMeta(iExp).ephysFN = 'Beto64chan-02102019-003'; 

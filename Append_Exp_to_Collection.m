@@ -4,7 +4,7 @@ ExpSpecTable = ExpSpecTable_Aug(:, ["ephysFN","expControlFN","stimuli","comments
 writetable(ExpSpecTable, "S:\ExpSpecTable.xls")
 writetable(ExpSpecTable_Aug, "S:\ExpSpecTable_Augment.xls")
 %% Load exp file from certain entry 
-[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw([96:107]);
+[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw([108:113]);
 crp_sync_localMat_to_networkMat
 %% Load exp file by filtering the experimental record
 find(contains(ExpSpecTable_Aug.expControlFN,'generate_parallel'))';
@@ -12,6 +12,14 @@ find(contains(ExpSpecTable_Aug.expControlFN,'generate_parallel'))';
 expid = find(ExpSpecTable_Aug.Expi > 33 & contains(ExpSpecTable_Aug.expControlFN,'selectivity'));
 [meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(expid);
 crp_sync_localMat_to_networkMat
+%%
+[meta_new2,rasters_new2,lfps_new2,Trials_new2] = Project_Manifold_Beto_loadRaw([109,113]);
+%
+meta_new = [meta_new, meta_new2];
+rasters_new = [rasters_new, rasters_new2];
+lfps_new = [lfps_new2, lfps_new2];
+Trials_new = [Trials_new, Trials_new2];
+clear meta_new2 rasters_new2 lfps_new2 Trials_new2
 %% Code for appending new experiments to the older ones
 load("D:\\Manifold_Evolv_Exps.mat")
 %%

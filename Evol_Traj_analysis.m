@@ -19,7 +19,9 @@ mkdir(savepath);
 unit_name_arr = generate_unit_labels(meta.spikeID, savepath); % Generate readable labels for each channel
 % Compute the block structure from imagenames
 imgnm = Trials.imageName;
-row_gen = contains(imgnm, "gen") & contains(imgnm, "block") & cellfun(@(c) isempty(regexp(c(1:2), "\d\d")), imgnm);
+row_gen = contains(imgnm, "gen") & ... % contains gen
+        contains(imgnm, "block") & ... % contains block 
+        cellfun(@(c) isempty(regexp(c(1:2), "\d\d")), imgnm); % first 2 characters are not digits
 row_nat = ~row_gen;%contains(imgnm, "nat") & cellfun(@(c) ~isempty(regexp(c(1:2), "\d\d")), imgnm);
 block_arr = zeros(numel(imgnm), 1);
 generations = zeros(numel(imgnm), 1);
@@ -58,6 +60,7 @@ for blocki = min(block_arr):max(block_arr)
     stdscore_syn  = cat(2, stdscore_syn, tmpstdscore_syn);
     stdscore_nat  = cat(2, stdscore_nat, tmpstdscore_nat);
 end
+% clear tmpscore_syn tmpscore_nat tmpstdscore_syn tmpstdscore_nat
 %%
 gen_list = min(block_arr):max(block_arr);
 evol_stim_fr = zeros(size(rasters, 1), size(rasters, 2), length(gen_list));

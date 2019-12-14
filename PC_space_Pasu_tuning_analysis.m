@@ -2,11 +2,11 @@
 % analysis
 global  Trials rasters channel sphere_norm ang_step Reps
 %storedStruct = load("D:\\Manifold_Exps.mat");
-%% Load code from "D:\Poncelab_Github\office-main\Project_Selectivity_Beto_loadRaw.m"
+% Load code from "D:\Poncelab_Github\office-main\Project_Selectivity_Beto_loadRaw.m"
 Reps = 15; % constant for maximum number of repetitions (as long as it's larger than the maximum, it's fine)
 Set_Exp_Specs; 
-
-for Expi = 34:43 % universal manifold experiment identifier
+%%
+for Expi = 44:45 % universal manifold experiment identifier
 % Load the dataset 
 % meta = storedStruct.meta{Expi};
 % rasters = storedStruct.rasters{Expi};
@@ -16,7 +16,7 @@ for Expi = 34:43 % universal manifold experiment identifier
 % rasters = rasters_new{2*(Expi-24)-1};
 % Trials = Trials_new{2*(Expi-24)-1};
 % sphere_norm = Pasu_norm_arr(Expi-10); % Load the specific information
-Triali = Expi - 33;%Expi - 34;
+Triali = 3*(Expi - 43)-2;%Expi - 34;
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
