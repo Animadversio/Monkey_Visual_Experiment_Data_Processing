@@ -1,5 +1,5 @@
 %% Standard code for Evolution Exp Analysis
-clearvars -except meta_new rasters_new lfps_new Trials_new
+clearvars -except meta_new rasters_new lfps_new Trials_new % keep only the codes store data
 %%
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evolution_Exp";
 Expi = 28:33;

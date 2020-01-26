@@ -1,4 +1,31 @@
 function [meta,rasters,lfps,Trials] = Project_Manifold_Beto_loadRaw(rowlist)
+ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xls");
+iExp = 0;
+for iExp = 1:numel(rowlist)
+    rowi = rowlist(iExp);
+    preMeta(iExp).ephysFN = ExpSpecTable_Aug.ephysFN{rowi}; 
+    preMeta(iExp).expControlFN = ExpSpecTable_Aug.expControlFN{rowi}; % 
+    preMeta(iExp).stimuli = ExpSpecTable_Aug.stimuli{rowi} ;
+    preMeta(iExp).comments = ExpSpecTable_Aug.comments{rowi};
+end
+
+Project_General_copyMissingFiles(preMeta); % communicating and copying data from network to local 
+
+for iExp = 1:length(preMeta) 
+    
+    tMeta = preMeta(iExp);
+    [meta_,rasters_,lfps_,Trials_] = loadData(tMeta.ephysFN,'expControlFN',tMeta.expControlFN) ;
+    meta_merged = rmfield( tMeta, intersect(fieldnames(tMeta), fieldnames(meta_)) );
+    names = [fieldnames(meta_merged); fieldnames(meta_)];
+    meta_ = cell2struct([struct2cell(meta_merged); struct2cell(meta_)], names, 1);
+
+    meta{iExp} = meta_;
+    rasters{iExp} = rasters_;
+    lfps{iExp} = lfps_;
+    Trials{iExp} = Trials_;
+    clear meta_  rasters_ lpfs_ Trials_ names meta_merged tMeta
+end
+end
 % iExp = 0;
 % day 001 
 % iExp = 1; % PC space exploration
@@ -460,7 +487,6 @@ function [meta,rasters,lfps,Trials] = Project_Manifold_Beto_loadRaw(rowlist)
 % preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191121a\backup_11_21_2019_12_42_39' ;
 % preMeta(iExp).comments = 'CMA Evolution of Ch 45 (V1) evolution 191121(CRP). ch 45 (0,0) 1 1, hash (MU 5/5)  generate PCs for later PC space tuning';
 
-
 % day 001 Interp Exp
 % iExp = 1; % PC space interpolation between the 2 ending points 
 % preMeta(iExp).ephysFN = 'Beto64chan-14102019-007'; 
@@ -473,28 +499,3 @@ function [meta,rasters,lfps,Trials] = Project_Manifold_Beto_loadRaw(rowlist)
 % preMeta(iExp).expControlFN = '191014_Beto_generate_parallel(3)'; % 
 % preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191014a\backup_10_14_2019_12_51_15' ;
 % preMeta(iExp).comments = 'CMA parallel Evolution of Ch 26 and Ch 26 191014(CRP BXW). generate PCs for later PC space tuning';
-ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xls");
-iExp = 0;
-for iExp = 1:numel(rowlist)
-    rowi = rowlist(iExp);
-    preMeta(iExp).ephysFN = ExpSpecTable_Aug.ephysFN{rowi}; 
-    preMeta(iExp).expControlFN = ExpSpecTable_Aug.expControlFN{rowi}; % 
-    preMeta(iExp).stimuli = ExpSpecTable_Aug.stimuli{rowi} ;
-    preMeta(iExp).comments = ExpSpecTable_Aug.comments{rowi};
-end
-Project_General_copyMissingFiles(preMeta); % communicating and copying data from network to local 
-
-for iExp = 1:length(preMeta) 
-    
-    tMeta = preMeta(iExp);
-    [meta_,rasters_,lfps_,Trials_] = loadData(tMeta.ephysFN,'expControlFN',tMeta.expControlFN) ;
-    meta_merged = rmfield( tMeta, intersect(fieldnames(tMeta), fieldnames(meta_)) );
-    names = [fieldnames(meta_merged); fieldnames(meta_)];
-    meta_ = cell2struct([struct2cell(meta_merged); struct2cell(meta_)], names, 1);
-
-    meta{iExp} = meta_;
-    rasters{iExp} = rasters_;
-    lfps{iExp} = lfps_;
-    Trials{iExp} = Trials_;
-    clear meta_  rasters_ lpfs_ Trials_ names meta_merged tMeta
-end

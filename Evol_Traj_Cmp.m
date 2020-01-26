@@ -32,6 +32,7 @@ Expi_tab = ExpSpecTable_Aug.Expi(exp_rowi);
 %assert(Expi_tab == Expi, "Data Expi doesn't match that in exp record! Check your indexing or record.")
 Expi = Expi_tab; 
 fprintf("Processing Exp %d, %s\n", Expi, meta.comments)
+
 %% Sort channel id
 pref_chan = Trials.TrialRecord.User.prefChan;
 pref_chan_id = find(meta.spikeID==pref_chan); % the id in the raster and lfps matrix 
@@ -55,9 +56,10 @@ for blocki = gen_list
     meanscore_syn(:,blocki) = mean(scores_tsr(:, row_gen & block_arr == blocki), 2);%cat(2, meanscore_syn, tmpscore_syn);
     meanscore_nat(:,blocki) = mean(scores_tsr(:, row_nat & block_arr == blocki), 2);%cat(2, meanscore_nat, tmpscore_nat);
     stdscore_syn(:,blocki)  = std(scores_tsr(:, row_gen & block_arr == blocki), 1, 2) / sqrt(sum(row_gen & block_arr == blocki));%cat(2, stdscore_syn, tmpstdscore_syn);
-    stdscore_nat(:,blocki)  = std(scores_tsr(:, row_nat & block_arr == blocki), 1, 2) / sqrt(sum(row_gen & block_arr == blocki));%cat(2, stdscore_nat, tmpstdscore_nat);
-end
-% 
+    stdscore_nat(:,blocki)  = std(scores_tsr(:, row_nat & block_arr == blocki), 1, 2) / sqrt(sum(row_nat & block_arr == blocki));%cat(2, stdscore_nat, tmpstdscore_nat);
+    % error fixed on Jan.26 2020, the row_nat is mistaken as row_gen
+end 
+% Average PSTH and sem for evolved image
 evol_stim_fr = zeros(size(rasters, 1), size(rasters, 2), length(gen_list));
 evol_stim_sem = zeros(size(rasters, 1), size(rasters, 2), length(gen_list));
 for blocki = 1:length(gen_list)
@@ -102,6 +104,7 @@ function axs = AlignAxisLimits(axs)
 % Given a group of axis, make their YLim and XLim the same as each other
 %     YLIM = [min([axs{1}.YLim, axs{2}.YLim]), max([axs{1}.YLim, axs{2}.YLim])];
 %     XLIM = [min([axs{1}.XLim, axs{2}.XLim]), max([axs{1}.XLim, axs{2}.XLim])];
+% Now a util function in utils subfolder
     XLIM = axs{1}.XLim; YLIM = axs{1}.YLim;
     for i = 2:numel(axs)
         XLIM = [min(XLIM(1), axs{i}.XLim(1)), max(XLIM(2), axs{i}.XLim(2))];
