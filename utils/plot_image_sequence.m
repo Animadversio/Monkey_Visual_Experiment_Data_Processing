@@ -1,4 +1,8 @@
-for Triali = 2
+
+h = figure();set(h,'position',[1          41        2560         963]);
+axs{1} = subplot(1,2,1);axs{2} = subplot(1,2,2);
+%%
+for Triali = 1
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
@@ -34,9 +38,11 @@ thread_msks = {row_thread0, row_thread1}; % store masks in a structure for the e
 % get the generation number 
 channel_j = pref_chan_id;
 block_arr = cell2mat(Trials.block);
+block_list = min(block_arr):max(block_arr);
 scores_tsr = squeeze(mean(rasters(:, 51:200, :), 2) - mean(rasters(:, 1:40, :), 2)); % [unit_num, img_nums]
 %% Get the Image FileName Sequence
 imgColl = repmat("", length(block_list), thread_num);
+scoreColl = zeros(length(block_list), thread_num);
 for threadi = 1:thread_num 
     for blocki = min(block_arr):max(block_arr)
         gen_msk = row_gen & block_arr == blocki & thread_msks{threadi}; 
@@ -44,15 +50,23 @@ for threadi = 1:thread_num
         % meanscore_syn(:, blocki, threadi) = mean(scores_tsr(:, gen_msk), 2);
         [maxScore, maxIdx] = max(scores_tsr(channel_j, gen_msk));
         tmpimgs = imgnm(gen_msk);
-        imgColl(blocki, threadi) = fullfile(meta.stimuli, [tmpimgs(maxIdx)+".bmp"]);
+        imgColl(blocki, threadi) = fullfile(meta.stimuli, [tmpimgs(maxIdx)+".bmp"]); % this is a temporary solution. the suffix may not be .bmp
+        scoreColl(blocki, threadi) = maxScore;
     end
 end
 %% Montage the images
-h = figure();set(h,'position',[1          41        2560         963]);
-subplot(1,2,1)
+set(0,'CurrentFigure',h); %clf; %
+set(gcf, "CurrentAxes", axs{1}); cla(axs{1},'reset'); 
 montage(imgColl(:,1))
 title([Exp_label_str, compose('Best Image per Generation'), compose("Optimizer %s", Optim_names(1))])
-subplot(1,2,2)
+set(gcf, "CurrentAxes", axs{2}); cla(axs{2},'reset'); 
 montage(imgColl(:,2))
 title([Exp_label_str, compose('Best Image per Generation'), compose("Optimizer %s", Optim_names(2))])
+saveas(h, fullfile(savepath, "EvolImageSeq_cmp.png"))
+
+%% t test the last 5 generations 
+scores_tsr = squeeze(mean(rasters(:, 51:200, :), 2) - mean(rasters(:, 1:40, :), 2)); % [unit_num, img_nums]
+scores_thread1 = scores_tsr(pref_chan_id, row_gen & (block_arr > max(block_arr)-6) & thread_msks{1});
+scores_thread2 = scores_tsr(pref_chan_id, row_gen & (block_arr > max(block_arr)-6) & thread_msks{2});
+[~,Pval,CI] = ttest2(scores_thread1, scores_thread2);
 end

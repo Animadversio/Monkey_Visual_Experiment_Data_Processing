@@ -10,7 +10,7 @@ ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xls");
 
 %%
 %Expi=1;
-for Triali = 1:2
+for Triali = 1
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
@@ -91,7 +91,7 @@ end
 MAX_BLOCK_NUM = length(block_list); 
 color_seq = brewermap(MAX_BLOCK_NUM, 'spectral');
 
-for channel_j = 1:size(rasters, 1)
+for channel_j = pref_chan_id%1:size(rasters, 1)
 %% Plot Mean response compare figure
 %channel_j = pref_chan_id;
 % h1 = figure(1);clf
@@ -139,8 +139,8 @@ title([Exp_label_str, compose('Generation averaged PSTH , channel %s', unit_name
 end
 axs3 = AlignAxisLimits(axs3);
 %%
-saveas(h2, fullfile(savepath, compose("score_traj_cmp_chan%d.png", channel_j)))
-saveas(h3, fullfile(savepath, compose("Evolv_psth_cmp_chan%d.png", channel_j)))
+% saveas(h2, fullfile(savepath, compose("score_traj_cmp_chan%d.png", channel_j)))
+% saveas(h3, fullfile(savepath, compose("Evolv_psth_cmp_chan%d.png", channel_j)))
 end
 end
 %% Plot the Image Evolution Trajectory 
