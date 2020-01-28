@@ -6,17 +6,19 @@
 Set_Path;
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
 ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xls");
-[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(115); 
+[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(117:118); 
 
 %%
-Expi=1;
-Triali = 1;
+%Expi=1;
+for Triali = 1:2
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
 exp_rowi = find(contains(ExpSpecTable_Aug.ephysFN, meta.ephysFN));
 % Check the Expi match number
-% Expi_tab = ExpSpecTable_Aug.Expi(exp_rowi);
+Expi_tab = ExpSpecTable_Aug.Expi(exp_rowi);
+Expi = Expi_tab;
+disp(ExpSpecTable_Aug.comments(exp_rowi))
 % assert(Expi_tab == Expi, "Data Expi doesn't match that in exp record! Check your indexing or record.")
 % fprintf("Processing Exp %d, %s\n", Expi, meta.comments)
 %% Sort channel id
@@ -139,6 +141,7 @@ axs3 = AlignAxisLimits(axs3);
 %%
 saveas(h2, fullfile(savepath, compose("score_traj_cmp_chan%d.png", channel_j)))
 saveas(h3, fullfile(savepath, compose("Evolv_psth_cmp_chan%d.png", channel_j)))
+end
 end
 %% Plot the Image Evolution Trajectory 
 %% t test the last 5 generations 

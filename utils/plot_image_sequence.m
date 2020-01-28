@@ -1,3 +1,24 @@
+for Triali = 2
+meta = meta_new{Triali};
+rasters = rasters_new{Triali};
+Trials = Trials_new{Triali};
+exp_rowi = find(contains(ExpSpecTable_Aug.ephysFN, meta.ephysFN));
+% Check the Expi match number
+Expi = ExpSpecTable_Aug.Expi(exp_rowi);
+% 
+pref_chan = Trials.TrialRecord.User.prefChan;
+assert(pref_chan(1) == pref_chan(2))
+pref_chan_id = find(meta.spikeID==pref_chan(1)); % the id in the raster and lfps matrix
+Exp_label_str = sprintf("Exp%d pref chan %d", Expi, pref_chan(1));
+% 
+thread_num = size(Trials.TrialRecord.User.evoConfiguration, 1);
+Optim_names = [];
+for i = 1:thread_num
+    Optim_names = [Optim_names, string(Trials.TrialRecord.User.evoConfiguration{i,end})];
+end
+% 
+savepath = fullfile(result_dir, compose("Evol%02d_chan%02d", Expi, pref_chan(1)));
+mkdir(savepath);
 % Plot Image sequence
 imgnm = Trials.imageName;
 % seperate the thread natural images and generated images 
@@ -14,7 +35,7 @@ thread_msks = {row_thread0, row_thread1}; % store masks in a structure for the e
 channel_j = pref_chan_id;
 block_arr = cell2mat(Trials.block);
 scores_tsr = squeeze(mean(rasters(:, 51:200, :), 2) - mean(rasters(:, 1:40, :), 2)); % [unit_num, img_nums]
-%%
+%% Get the Image FileName Sequence
 imgColl = repmat("", length(block_list), thread_num);
 for threadi = 1:thread_num 
     for blocki = min(block_arr):max(block_arr)
@@ -26,11 +47,12 @@ for threadi = 1:thread_num
         imgColl(blocki, threadi) = fullfile(meta.stimuli, [tmpimgs(maxIdx)+".bmp"]);
     end
 end
-%%
-figure(5)
+%% Montage the images
+h = figure();set(h,'position',[1          41        2560         963]);
 subplot(1,2,1)
 montage(imgColl(:,1))
 title([Exp_label_str, compose('Best Image per Generation'), compose("Optimizer %s", Optim_names(1))])
 subplot(1,2,2)
 montage(imgColl(:,2))
 title([Exp_label_str, compose('Best Image per Generation'), compose("Optimizer %s", Optim_names(2))])
+end
