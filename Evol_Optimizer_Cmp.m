@@ -119,7 +119,6 @@ legend(["Generated img","Natural img"],'Location',"Best")
 xlabel("generations")
 title([Exp_label_str, compose('Generation averaged score, channel %s', unit_name_arr{channel_j}), compose("Optimizer %s", Optim_names(threadi))])
 end
-% title([Exp_label_str, compose('PSTH averaged scores, channel %s', unit_name_arr{channel_j})])
 axs = AlignAxisLimits(axs);
 %% Plot PSTH Evolution Plot 
 % h3 = figure('Visible','on');h3.Position = [  782          43        1779         743];

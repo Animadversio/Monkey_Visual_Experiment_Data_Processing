@@ -46,11 +46,11 @@ scoreColl = zeros(length(block_list), thread_num);
 for threadi = 1:thread_num 
     for blocki = min(block_arr):max(block_arr)
         gen_msk = row_gen & block_arr == blocki & thread_msks{threadi}; 
-        % nat_msk = row_nat & block_arr == blocki & thread_msks{threadi};
-        % meanscore_syn(:, blocki, threadi) = mean(scores_tsr(:, gen_msk), 2);
         [maxScore, maxIdx] = max(scores_tsr(channel_j, gen_msk));
         tmpimgs = imgnm(gen_msk);
-        imgColl(blocki, threadi) = fullfile(meta.stimuli, [tmpimgs(maxIdx)+".bmp"]); % this is a temporary solution. the suffix may not be .bmp
+        imgfullfn = ls(fullfile(meta.stimuli, [tmpimgs(maxIdx)+"*"]));
+        assert(~isempty(imgfullfn), "Image not found %s",fullfile(meta.stimuli, [tmpimgs(maxIdx)+"*"]))
+        imgColl(blocki, threadi) = fullfile(meta.stimuli, imgfullfn); % this is a temporary solution. the suffix may not be .bmp % solved @ Jan.29
         scoreColl(blocki, threadi) = maxScore;
     end
 end
