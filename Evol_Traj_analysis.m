@@ -1,20 +1,21 @@
 %% Standard code for Evolution Exp Analysis
+% well editted @Jan 30 for batch processing. 
 clearvars -except meta_new rasters_new lfps_new Trials_new % keep only the codes store data
 %%
 Set_Path;
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evolution_Exp";
 %ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xls");
 %%
-expftr = ExpSpecTable_Aug.Expi<=45 & ExpSpecTable_Aug.Expi>=38 & ...
+expftr = ExpSpecTable_Aug.Expi<=31 & ExpSpecTable_Aug.Expi>=24 & ...
     contains(ExpSpecTable_Aug.expControlFN,"generate");
 [meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr)); 
-%%
+%
 h  = figure('Visible','off');h.Position = [828 42 1026 954];
 h1 = figure('Visible','off');
 h2 = figure('Visible','off'); 
 h3 = figure('Visible','off');h3.Position = [ 794         328        1233         463];
-%%
-for Triali = 2:length(meta_new)
+%
+for Triali = 1:length(meta_new)
 % Fetch the trial info
 %Triali = Expi - 26;
 meta = meta_new{Triali};
@@ -90,6 +91,7 @@ end
 %     nat_stim_fr_sem(i,:,:) = nat_stim_fr_std(i,:,:) / sqrt(sum(natural_stim_i==i));
 % end
 %% Get the Image FileName Sequence
+channel_j = pref_chan_id(1);
 imgColl = repmat("", length(block_list),1);
 scoreColl = zeros(length(block_list),1);
 for blocki = block_list

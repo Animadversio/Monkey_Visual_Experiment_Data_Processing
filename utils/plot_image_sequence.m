@@ -46,7 +46,7 @@ scoreColl = zeros(length(block_list), thread_num);
 for threadi = 1:thread_num 
     for blocki = min(block_arr):max(block_arr)
         gen_msk = row_gen & block_arr == blocki & thread_msks{threadi}; 
-        [maxScore, maxIdx] = max(scores_tsr(channel_j, gen_msk));
+        [maxScore, maxIdx] = max(scores_tsr(pref_chan_id, gen_msk));
         tmpimgs = imgnm(gen_msk);
         imgfullfn = ls(fullfile(meta.stimuli, [tmpimgs(maxIdx)+"*"]));
         assert(~isempty(imgfullfn), "Image not found %s",fullfile(meta.stimuli, [tmpimgs(maxIdx)+"*"]))

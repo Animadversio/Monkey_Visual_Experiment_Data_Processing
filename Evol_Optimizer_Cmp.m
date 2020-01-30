@@ -1,12 +1,16 @@
 %% Analysis Code for Comparing Optimizers on a same unit. 
-% much adapted from Evol_Traj_Cmp code 
+% much adapted from Evol_Traj_Cmp code, inspired Evol_Traj_analysis code.
+% (it's kind of a multi-thread) version of Evol Traj analysis
 
 % global block_arr gen_list color_seq row_gen row_nat
 % global evol_stim_fr evol_stim_sem meanscore_syn stdscore_syn meanscore_nat stdscore_nat
 Set_Path;
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
 ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xls");
-[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(117:118); 
+expftr = contains(ExpSpecTable_Aug.expControlFN,"200130");
+% ExpSpecTable_Aug.Expi<=5 & ExpSpecTable_Aug.Expi>=4 & ...
+%     contains(ExpSpecTable_Aug.expControlFN,"generate");
+[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr)); 
 
 %%
 %Expi=1;
