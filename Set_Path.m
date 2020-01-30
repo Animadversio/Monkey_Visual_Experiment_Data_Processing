@@ -7,7 +7,7 @@ ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xls");
 copyfile("S:\ExpSpecTable_Augment.xls", ".\ExpSpecTable_Augment.xls")
 addpath(".\utils")
 addpath(".\DNN")
-
+addpath(".\NMF")
 % Depends on 
 % - brewermap
 % - shadedErrorBar

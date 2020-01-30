@@ -1,3 +1,5 @@
+%% Ancient code to read Formatted data and put similar experiments into a compiled mat file locally. 
+
 ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xls");
 %%
 ExpSpecTable = ExpSpecTable_Aug(:, ["ephysFN","expControlFN","stimuli","comments"]);
