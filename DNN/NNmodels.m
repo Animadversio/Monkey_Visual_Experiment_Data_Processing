@@ -1,3 +1,10 @@
+%% Demo to use Matlab Deep Learning Framework to fit a "Linear" model to neural response and 
+%% Interpret that by using DeepDream to avctivate the fitted model. 
+%% This project finally becomes anothor repo https://github.com/Animadversio/Visual_Neuron_Modelling
+%% The matlab Deep Network Visualization Framework doesn't work well....Majorly because the DeepDream function doesn't allow using weights to weight the units. 
+%% Many internal CNN functions I've tried to modified are copied here. 
+%% 2019 Dec. BXW
+
 %% Import Codes
 
 stimPath = "\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191002a\backup_10_02_2019_14_33_18";
