@@ -8,48 +8,22 @@ writetable(ExpSpecTable_Aug, "S:\ExpSpecTable_Augment.xls")
 %%
 ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xls");
 %% Analysis and Fix the table 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Fix the prefix to the stimuli folder
+%% Add the path prefix to the stimuli path
 for i = 1:size(ExpSpecTable_Aug,1)
     stimpath = ExpSpecTable_Aug.stimuli{i};
     if ~contains(stimpath, "N:\") && ~contains(stimpath, "\\storage1.ris.wustl.edu\crponce\Active\") && contains(stimpath(1:8), "Stimuli")
         ExpSpecTable_Aug.stimuli{i} = fullfile("N:\", stimpath);
     end
 end
-%% Extract the norm value from the name of file~ 
-norm_arr = [];
-for iExp = 1:max(ExpSpecTable_Aug.Expi)
-    rowi = ExpSpecTable_Aug.Expi == iExp & contains(ExpSpecTable_Aug.expControlFN, 'selectivity');
-    path = ExpSpecTable_Aug.stimuli(rowi);
-    path = path{1};
-    imglist = struct2table(dir(path));
-    idx = find(contains(imglist.name, 'norm'));
-    if isempty(idx)
-        warning("No norm file found cannot get the norm value.")
-    end
-    norm = regexp(imglist.name(idx(1)), "norm_(\d*)_PC2", 'tokens');
-    norm = str2num(norm{1}{1}{1});
-    norm_arr = [norm_arr, norm];
-end
-%% Extract the preferred channel from the File 
-pref_chan_arr = [];
-for iExp = 1:max(ExpSpecTable_Aug.Expi)
-    rowi = ExpSpecTable_Aug.Expi == iExp & contains(ExpSpecTable_Aug.expControlFN, 'selectivity');
-    if iExp == 35
-        rowi = find(rowi,1);
-    end
-    pref_chan_arr = [pref_chan_arr, ExpSpecTable_Aug.pref_chan(rowi)];
-end
-
 
 %% Generate Experiment Numbering
 cur_Expi = 0;
-Expi_arr = cumsum(contains(ExpSpecTable.expControlFN,'selectivity')); % number a new experiment by counting the number of Manifold Experiments
+Expi_arr = cumsum(contains(ExpSpecTable_Aug.expControlFN,'selectivity')); % number a new experiment by counting the number of Manifold Experiments
+Expi_arr(82:end) = Expi_arr(82:end) - 1;
 ExpSpecTable_Aug.Expi = Expi_arr;
-% Note not all the experiment 
 %% Generate Preferred Channel
-pref_chan_arr = regexp(ExpSpecTable.comments, 'Ch ?(?<channel>\d+)', 'names');
+pref_chan_arr = regexp(ExpSpecTable_Aug.comments, 'Ch ?(?<channel>\d+)', 'names');
 pref_chan_arr = cellfun(@(c) str2num(c(1).channel), pref_chan_arr);
 ExpSpecTable_Aug.pref_chan = pref_chan_arr;
 %% Extract all the date 
@@ -84,8 +58,9 @@ else
     fprintf('Some Ephys file date and stimuli file date don t align!! They are:\n')
     disp(idx)
 end
+%% Check the 
 
-%% Check the dates
+%%
 for i = size(ExpSpecTable,1)
    if ephysdate{i}.day == bhvdate{i}.day && bhvdate{i}.day == commentdata{i}.day && bhvdate{i}.day == stimdate{i}.day
    else
@@ -96,8 +71,36 @@ for i = size(ExpSpecTable,1)
        disp(commentdata{i})
    end
 end
-
+%% Extract the norm value from the name of file~ 
+norm_arr = [];
+for iExp = 1:max(ExpSpecTable_Aug.Expi)
+    rowi = ExpSpecTable_Aug.Expi == iExp & contains(ExpSpecTable_Aug.expControlFN, 'selectivity');
+    path = ExpSpecTable_Aug.stimuli(rowi);
+    path = path{1};
+    imglist = struct2table(dir(path));
+    idx = find(contains(imglist.name, 'norm'));
+    if isempty(idx)
+        warning("No norm file found cannot get the norm value.")
+    end
+    norm = regexp(imglist.name(idx(1)), "norm_(\d*)_PC2", 'tokens');
+    norm = str2num(norm{1}{1}{1});
+    norm_arr = [norm_arr, norm];
+end
+%% 
+pref_chan_arr = [];
+for iExp = 1:max(ExpSpecTable_Aug.Expi)
+    rowi = ExpSpecTable_Aug.Expi == iExp & contains(ExpSpecTable_Aug.expControlFN, 'selectivity');
+    if iExp == 35, rowi = find(rowi,1); end
+    pref_chan_arr = [pref_chan_arr, ExpSpecTable_Aug.pref_chan(rowi)];
+end
+assert(length(pref_chan_arr) == max(ExpSpecTable_Aug.Expi), "Wrong number of experiments");
 %%
+pref_chan_arr = [];
+for i = size(ExpSpecTable,1)
+    rowi = ExpSpecTable_Aug.Expi == iExp & contains(ExpSpecTable_Aug.expControlFN, 'selectivity');
+    pref_chan_arr = [pref_chan_arr, ExpSpecTable_Aug.pref_chan(rowi)];
+end
+% %%
 % iExp = 0;
 % iExp = iExp + 1; % iExp = 1; % PC space exploration 
 % preMeta(iExp).ephysFN = 'Beto64chan-02102019-003'; 
@@ -557,22 +560,22 @@ end
 % preMeta(iExp).expControlFN = '191121_Beto_generate_parallel(1)'; % 
 % preMeta(iExp).stimuli = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191121a\backup_11_21_2019_12_42_39' ;
 % preMeta(iExp).comments = 'CMA Evolution of Ch 45 (V1) evolution 191121(CRP). ch 45 (0,0) 1 1, hash (MU 5/5)  generate PCs for later PC space tuning';
-%% construct the tables 
-% ExpSpecTable_Aug = ExpSpecTable;
-%% Fixing many typos in the tables
-ExpSpecTable_Aug.stimuli{37} = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191111a-selectivity';
-ExpSpecTable_Aug.stimuli{38} = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191111a\backup_11_11_2019_12_36_58';
-ExpSpecTable_Aug.stimuli{39} = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191111b-selectivity';
-ExpSpecTable_Aug.stimuli{40} = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191111a\backup_11_11_2019_12_36_58';
-ExpSpecTable_Aug.stimuli{41} = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191112a-selectivity';
-
-ExpSpecTable_Aug.comments{44} = 'RFMapping Heatmap of Ch 54 (V4) evolution 191113(BXW). chan 54 [-4.8 -6.3] -1.5:0.5:1.5 ';
-ExpSpecTable_Aug.comments{47} = 'RFMapping Heatmap of Ch 58 (V4) evolution 191113(BXW). chan MU 58 [-3 -4] 3 deg -1.5:0.5:1.5 ';
-ExpSpecTable_Aug.comments{50} = 'RFMapping Heatmap of Ch 50 (V4) evolution 191114(CRP). chan MU ch 50 (-5,-6) -1.5:0.5:1.5 ';
-
-ExpSpecTable_Aug.comments{12} = 'CMA Evolution of Ch 13 191010(CRP). generate PCs for later PC space tuning';
-ExpSpecTable_Aug.comments{53} = 'Derived from PCs of Ch 57 (V4) evolution 191115(CRP). ch 50 (-3,-4) 4 -degrees  121 images from PC23 space, add the pasupathy images to it. white background 4 rotations.';
-ExpSpecTable_Aug.comments{53} = 'Derived from PCs of Ch 57 (V4) evolution 191115(CRP). ch 57 (-3,-4) 4 -degrees  121 images from PC23 space, add the pasupathy images to it. white background 4 rotations.';
-ExpSpecTable_Aug.comments{54} = 'RFMapping Heatmap of Ch 57 (V4) evolution 191115(CRP). ch  57 (-3,-4) 4-deg, grid -2:0.5:2';
-ExpSpecTable_Aug.comments{55} = 'CMA Evolution of Ch 57 (V4) evolution 191115(CRP). ch 57 (-3,-4) 4 1, MU 5/5 generate PCs for later PC space tuning';
-ExpSpecTable_Aug.stimuli{65} = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191120b-selectivity';
+% %% construct the tables 
+% % ExpSpecTable_Aug = ExpSpecTable;
+% %% Fixing many typos in the tables
+% ExpSpecTable_Aug.stimuli{37} = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191111a-selectivity';
+% ExpSpecTable_Aug.stimuli{38} = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191111a\backup_11_11_2019_12_36_58';
+% ExpSpecTable_Aug.stimuli{39} = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191111b-selectivity';
+% ExpSpecTable_Aug.stimuli{40} = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191111a\backup_11_11_2019_12_36_58';
+% ExpSpecTable_Aug.stimuli{41} = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191112a-selectivity';
+% 
+% ExpSpecTable_Aug.comments{44} = 'RFMapping Heatmap of Ch 54 (V4) evolution 191113(BXW). chan 54 [-4.8 -6.3] -1.5:0.5:1.5 ';
+% ExpSpecTable_Aug.comments{47} = 'RFMapping Heatmap of Ch 58 (V4) evolution 191113(BXW). chan MU 58 [-3 -4] 3 deg -1.5:0.5:1.5 ';
+% ExpSpecTable_Aug.comments{50} = 'RFMapping Heatmap of Ch 50 (V4) evolution 191114(CRP). chan MU ch 50 (-5,-6) -1.5:0.5:1.5 ';
+% 
+% ExpSpecTable_Aug.comments{12} = 'CMA Evolution of Ch 13 191010(CRP). generate PCs for later PC space tuning';
+% ExpSpecTable_Aug.comments{53} = 'Derived from PCs of Ch 57 (V4) evolution 191115(CRP). ch 50 (-3,-4) 4 -degrees  121 images from PC23 space, add the pasupathy images to it. white background 4 rotations.';
+% ExpSpecTable_Aug.comments{53} = 'Derived from PCs of Ch 57 (V4) evolution 191115(CRP). ch 57 (-3,-4) 4 -degrees  121 images from PC23 space, add the pasupathy images to it. white background 4 rotations.';
+% ExpSpecTable_Aug.comments{54} = 'RFMapping Heatmap of Ch 57 (V4) evolution 191115(CRP). ch  57 (-3,-4) 4-deg, grid -2:0.5:2';
+% ExpSpecTable_Aug.comments{55} = 'CMA Evolution of Ch 57 (V4) evolution 191115(CRP). ch 57 (-3,-4) 4 1, MU 5/5 generate PCs for later PC space tuning';
+% ExpSpecTable_Aug.stimuli{65} = '\\storage1.ris.wustl.edu\crponce\Active\Stimuli\2019-Manifold\beto-191120b-selectivity';
