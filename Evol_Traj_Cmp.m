@@ -2,9 +2,17 @@
 % Comparing Evolution Experiments of different size 
 % Final Score and Evolution time course. 
 % Get all the pairs! 
-% expid = find(ExpSpecTable_Aug.Expi > 27 & contains(ExpSpecTable_Aug.expControlFN,'generate'));
-% expid(1) = 67; expid(2) = 64; % Switch the first 2 entries so that 1deg experiments go first, 3 deg experiments go second. 
-% [meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(expid);
+expid = find(ExpSpecTable_Aug.Expi >= 28 & ...
+    contains(ExpSpecTable_Aug.expControlFN,'generate') & ...
+    contains(ExpSpecTable_Aug.Exp_collection,'Manifold'));
+expid(1:2) = expid(2:-1:1);
+expid(3:4) = expid(4:-1:3);% Switch the first 2 entries so that 1deg experiments go first, 3 deg experiments go second. 
+%  Note exp 30 it's 3 deg. 31 it's 1 deg, also need to be switched 
+[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(expid);
+%% Check That the experiment follows the pairs
+for Triali = 1:length(meta_new)
+    fprintf("Position: %d %d, %d Deg\n",Trials_new{Triali}.XY{1}, Trials_new{Triali}.TrialRecord.User.width_perChan)
+end
 %% 
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evolution_Exp";
 savepath = fullfile(result_dir, compose("Manifold_Evol_Resize_Cmp"));
@@ -16,16 +24,18 @@ axs = {}; axs{1} = subplot(1,2,1);axs{2} = subplot(1,2,2);
 h3 = figure('Visible','on');h3.Position = [  782          43        1779         743];
 axs3 = {}; axs3{1} = subplot(1,2,1);axs3{2} = subplot(1,2,2);
 %color_seq = brewermap(length(gen_list), 'spectral');
-for groupi = 9%1:8
-    rel_i = -2;%(groupi - 1) * 2;
+%%
+scores_col = {};
+for groupi = 1:9
+    rel_i = (groupi - 1) * 2;
     %MAX_BLOCK_NUM = max(max(cell2mat(Trials_new{rel_i+1}.block)), max(cell2mat(Trials_new{rel_i+2}.block)));
-    MAX_BLOCK_NUM = max(max(cell2mat(Trials_new{2}.block)), max(cell2mat(Trials_new{6}.block)));
+    MAX_BLOCK_NUM = max(max(cell2mat(Trials_new{rel_i+1}.block)), max(cell2mat(Trials_new{rel_i+2}.block)));
     color_seq = brewermap(MAX_BLOCK_NUM, 'spectral');
     % MAX_BLOCK_NUM = 50
 for Triali = 1:2
-meta = meta_new{Triali * 4 + rel_i};
-rasters = rasters_new{Triali * 4 + rel_i};
-Trials = Trials_new{Triali * 4 + rel_i};
+meta = meta_new{Triali + rel_i};
+rasters = rasters_new{Triali + rel_i};
+Trials = Trials_new{Triali + rel_i};
 exp_rowi = find(contains(ExpSpecTable_Aug.ephysFN, meta.ephysFN));
 % Check the Expi match number
 Expi_tab = ExpSpecTable_Aug.Expi(exp_rowi);
@@ -36,7 +46,7 @@ fprintf("Processing Exp %d, %s\n", Expi, meta.comments)
 %% Sort channel id
 pref_chan = Trials.TrialRecord.User.prefChan;
 pref_chan_id = find(meta.spikeID==pref_chan); % the id in the raster and lfps matrix 
-Exp_label_str = sprintf("Exp%d pref chan %d", Expi, pref_chan);
+Exp_label_str = sprintf("Exp%d pref chan %d (center [%.1f %.1f] width %.1f)", Expi, pref_chan, Trials.XY{1}, Trials.TrialRecord.User.width_perChan);
 unit_name_arr = generate_unit_labels(meta.spikeID);
 %% Sort the block id and the identity of image. 
 block_arr = cell2mat(Trials.block);
@@ -47,7 +57,7 @@ row_gen = contains(imgnm, "gen") & ... % contains gen
 row_nat = ~row_gen;%contains(imgnm, "nat") & cellfun(@(c) ~isempty(regexp(c(1:2), "\d\d")), imgnm);
 gen_list = min(block_arr):max(block_arr);
 %%
-scores_tsr = squeeze(mean(rasters(:, 151:200, :), 2) - mean(rasters(:, 1:40, :), 2));
+scores_tsr = squeeze(mean(rasters(:, 51:200, :), 2) - mean(rasters(:, 1:40, :), 2)); % debug @ Jan.31
 meanscore_syn = zeros(size(rasters, 1), length(gen_list)); % []
 stdscore_syn = zeros(size(rasters, 1), length(gen_list));
 meanscore_nat = zeros(size(rasters, 1), length(gen_list));
@@ -68,6 +78,8 @@ for blocki = 1:length(gen_list)
 end
 %%
 channel_j = pref_chan_id;
+msk = blocki & block_arr <= gen_list(end-1) & block_arr >= gen_list(end-5);
+scores_col{groupi,Triali} = scores_tsr(channel_j,msk);
 %%
 set(0,'CurrentFigure',h3); %clf; %
 set(gcf, "CurrentAxes", axs3{Triali}); cla(axs3{Triali},'reset'); % some plot from shadedErrorBar cannot be cleared by cla!
@@ -100,17 +112,25 @@ axs3 = AlignAxisLimits(axs3);
 saveas(h2, fullfile(savepath, compose("score_traj_cmp_group%02d_Exp%02d.png", groupi, Expi)))
 saveas(h3, fullfile(savepath, compose("Evolv_psth_cmp_group%02d_Exp%02d.png", groupi, Expi)))
 end
-function axs = AlignAxisLimits(axs)
-% Given a group of axis, make their YLim and XLim the same as each other
-%     YLIM = [min([axs{1}.YLim, axs{2}.YLim]), max([axs{1}.YLim, axs{2}.YLim])];
-%     XLIM = [min([axs{1}.XLim, axs{2}.XLim]), max([axs{1}.XLim, axs{2}.XLim])];
-% Now a util function in utils subfolder
-    XLIM = axs{1}.XLim; YLIM = axs{1}.YLim;
-    for i = 2:numel(axs)
-        XLIM = [min(XLIM(1), axs{i}.XLim(1)), max(XLIM(2), axs{i}.XLim(2))];
-        YLIM = [min(YLIM(1), axs{i}.YLim(1)), max(YLIM(2), axs{i}.YLim(2))];
-    end
-    for i = 1:numel(axs)
-        axs{i}.XLim = XLIM; axs{i}.YLim = YLIM;
-    end
+%%
+for groupi = 1:9
+[H,P,CI] = ttest2(scores_col{groupi,1}, scores_col{groupi,2});
+fprintf("H=%d P=%e CI = [%.2f %.2f]\n",H,P,CI)
 end
+% plot the ttest comparison
+
+
+% function axs = AlignAxisLimits(axs)
+% % Given a group of axis, make their YLim and XLim the same as each other
+% %     YLIM = [min([axs{1}.YLim, axs{2}.YLim]), max([axs{1}.YLim, axs{2}.YLim])];
+% %     XLIM = [min([axs{1}.XLim, axs{2}.XLim]), max([axs{1}.XLim, axs{2}.XLim])];
+% % Now a util function in utils subfolder
+%     XLIM = axs{1}.XLim; YLIM = axs{1}.YLim;
+%     for i = 2:numel(axs)
+%         XLIM = [min(XLIM(1), axs{i}.XLim(1)), max(XLIM(2), axs{i}.XLim(2))];
+%         YLIM = [min(YLIM(1), axs{i}.YLim(1)), max(YLIM(2), axs{i}.YLim(2))];
+%     end
+%     for i = 1:numel(axs)
+%         axs{i}.XLim = XLIM; axs{i}.YLim = YLIM;
+%     end
+% end
