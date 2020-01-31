@@ -12,16 +12,22 @@ expftr = contains(ExpSpecTable_Aug.expControlFN,"200130");
 %     contains(ExpSpecTable_Aug.expControlFN,"generate");
 [meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr)); 
 
+%% Prepare figure frames 
+h = figure('Visible','on');set(h,'position',[1          41        2560         963]);
+axs{1} = subplot(1,2,1);axs{2} = subplot(1,2,2);
+h2 = figure('Visible','on');clf; h2.Position = [  19         235        1779         743];
+axs2 = {}; axs2{1} = subplot(1,2,1); axs2{2} = subplot(1,2,2);
+h3 = figure('Visible','on');h3.Position = [  782          43        1779         743];
+axs3 = {}; axs3{1} = subplot(1,2,1); axs3{2} = subplot(1,2,2);
 %%
-%Expi=1;
-for Triali = 1
+for Triali = [2,6]
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
 exp_rowi = find(contains(ExpSpecTable_Aug.ephysFN, meta.ephysFN));
 % Check the Expi match number
-Expi_tab = ExpSpecTable_Aug.Expi(exp_rowi);
-Expi = Expi_tab;
+Expi = ExpSpecTable_Aug.Expi(exp_rowi);
+fprintf("Exp %d:\n",Expi)
 disp(ExpSpecTable_Aug.comments(exp_rowi))
 % assert(Expi_tab == Expi, "Data Expi doesn't match that in exp record! Check your indexing or record.")
 % fprintf("Processing Exp %d, %s\n", Expi, meta.comments)
@@ -36,11 +42,7 @@ unit_name_arr = generate_unit_labels(meta.spikeID);
 %%
 savepath = fullfile(result_dir, compose("Evol%02d_chan%02d", Expi, pref_chan(1)));
 mkdir(savepath);
-%% Prepare figure frames 
-h2 = figure('Visible','on');clf; h2.Position = [  19         235        1779         743];
-axs = {}; axs{1} = subplot(1,2,1); axs{2} = subplot(1,2,2);
-h3 = figure('Visible','on');h3.Position = [  782          43        1779         743];
-axs3 = {}; axs3{1} = subplot(1,2,1); axs3{2} = subplot(1,2,2);
+
 %% Optimizer Names 
 thread_num = size(Trials.TrialRecord.User.evoConfiguration, 1);
 Optim_names = [];
@@ -91,11 +93,34 @@ for blocki = 1:length(block_list)
     evol_stim_sem(:, :, blocki, threadi) = std(rasters(:,:, gen_msk),1,3) / sqrt(sum(gen_msk));
 end
 end
+%% Get image name array
+channel_j = pref_chan_id(1);
+imgColl = repmat("", length(block_list), thread_num);
+scoreColl = zeros(length(block_list), thread_num);
+for threadi = 1:thread_num 
+    for blocki = min(block_arr):max(block_arr)
+        gen_msk = row_gen & block_arr == blocki & thread_msks{threadi}; 
+        [maxScore, maxIdx] = max(scores_tsr(channel_j, gen_msk));
+        tmpimgs = imgnm(gen_msk);
+        imgfullfn = ls(fullfile(meta.stimuli, [tmpimgs(maxIdx)+"*"]));
+        assert(~isempty(imgfullfn), "Image not found %s",fullfile(meta.stimuli, [tmpimgs(maxIdx)+"*"]))
+        imgColl(blocki, threadi) = fullfile(meta.stimuli, imgfullfn); % this is a temporary solution. the suffix may not be .bmp % solved @ Jan.29
+        scoreColl(blocki, threadi) = maxScore;
+    end
+end
+% Montage the images
+set(0,'CurrentFigure',h); %clf; %
+set(gcf, "CurrentAxes", axs{1}); cla(axs{1},'reset'); 
+montage(imgColl(:,1))
+title([Exp_label_str, compose('Best Image per Generation'), compose("Optimizer %s", Optim_names(1))])
+set(gcf, "CurrentAxes", axs{2}); cla(axs{2},'reset'); 
+montage(imgColl(:,2))
+title([Exp_label_str, compose('Best Image per Generation'), compose("Optimizer %s", Optim_names(2))])
+saveas(h, fullfile(savepath, "EvolImageSeq_cmp.png"))
 %% Prepare color sequence 
 MAX_BLOCK_NUM = length(block_list); 
 color_seq = brewermap(MAX_BLOCK_NUM, 'spectral');
-
-for channel_j = pref_chan_id%1:size(rasters, 1)
+for channel_j = 1:size(rasters, 1)%pref_chan_id%
 %% Plot Mean response compare figure
 %channel_j = pref_chan_id;
 % h1 = figure(1);clf
@@ -112,7 +137,7 @@ for channel_j = pref_chan_id%1:size(rasters, 1)
 % axs = {}; axs{1} = subplot(1,2,1);axs{2} = subplot(1,2,2);
 for threadi = 1:thread_num
 set(0,'CurrentFigure',h2); %clf; %
-set(gcf, "CurrentAxes", axs{threadi}); cla(axs{threadi},'reset'); % some plot from shadedErrorBar cannot be cleared by cla!
+set(gcf, "CurrentAxes", axs2{threadi}); cla(axs2{threadi},'reset'); % some plot from shadedErrorBar cannot be cleared by cla!
 hold on 
 shadedErrorBar(block_list(1:end-1), meanscore_syn(channel_j, 1:end-1, threadi), stdscore_syn(channel_j, 1:end-1, threadi),...
     'lineprops',{'Color',[0,0,0,0.7]},'transparent',1,'patchSaturation',0.075)
@@ -123,7 +148,7 @@ legend(["Generated img","Natural img"],'Location',"Best")
 xlabel("generations")
 title([Exp_label_str, compose('Generation averaged score, channel %s', unit_name_arr{channel_j}), compose("Optimizer %s", Optim_names(threadi))])
 end
-axs = AlignAxisLimits(axs);
+axs2 = AlignAxisLimits(axs2);
 %% Plot PSTH Evolution Plot 
 % h3 = figure('Visible','on');h3.Position = [  782          43        1779         743];
 % axs3 = {}; axs3{1} = subplot(1,2,1);axs3{2} = subplot(1,2,2);
@@ -142,8 +167,8 @@ title([Exp_label_str, compose('Generation averaged PSTH , channel %s', unit_name
 end
 axs3 = AlignAxisLimits(axs3);
 %%
-% saveas(h2, fullfile(savepath, compose("score_traj_cmp_chan%d.png", channel_j)))
-% saveas(h3, fullfile(savepath, compose("Evolv_psth_cmp_chan%d.png", channel_j)))
+saveas(h2, fullfile(savepath, compose("score_traj_cmp_chan%d.png", channel_j)))
+saveas(h3, fullfile(savepath, compose("Evolv_psth_cmp_chan%d.png", channel_j)))
 end
 end
 %% Plot the Image Evolution Trajectory 
