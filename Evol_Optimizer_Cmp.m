@@ -7,9 +7,10 @@
 Set_Path;
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
 ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xls");
-expftr = contains(ExpSpecTable_Aug.expControlFN,"200130");
-% ExpSpecTable_Aug.Expi<=5 & ExpSpecTable_Aug.Expi>=4 & ...
-%     contains(ExpSpecTable_Aug.expControlFN,"generate");
+%expftr = contains(ExpSpecTable_Aug.expControlFN,"200203");
+expftr = contains(ExpSpecTable_Aug.expControlFN,"generate") & ...
+     contains(ExpSpecTable_Aug.Exp_collection, "Optimizer_cmp");
+%  ExpSpecTable_Aug.Expi<=5 & ExpSpecTable_Aug.Expi>=4 & ...
 [meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr)); 
 
 %% Prepare figure frames 
@@ -20,7 +21,7 @@ axs2 = {}; axs2{1} = subplot(1,2,1); axs2{2} = subplot(1,2,2);
 h3 = figure('Visible','on');h3.Position = [  782          43        1779         743];
 axs3 = {}; axs3{1} = subplot(1,2,1); axs3{2} = subplot(1,2,2);
 %%
-for Triali = [2,6]
+for Triali = [2,3]
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
