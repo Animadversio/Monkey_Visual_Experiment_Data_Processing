@@ -13,6 +13,8 @@ for Expi=1:10%1:6
     Trials = storedStruct.Trials{Expi};
     meta = storedStruct.meta{Expi};
     padded_name_arr = generate_unit_labels(meta.spikeID, [], '%03d');
+    [activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters, [], '%03d');
+    
     pref_chan = pref_chan_arr(Expi);
     sphere_norm = norm_arr(Expi);
     ang_step = 18;

@@ -2,6 +2,12 @@
 % generate_unit_labels.m
 function [activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, spikeID, rasters, varargin)
 % you can put `savepath` in `varargin`
+if nargin == 5 % decide if we want 0 padding for the matrix
+    fmt = varargin{2};
+else
+    fmt = '%d';
+end
+
 EMPTYTHR = 1000;
 empty_msk = sum(rasters(:,:,1:10),[2,3]) < EMPTYTHR; 
 activ_msk = ~ empty_msk;
@@ -16,7 +22,6 @@ end
 % TODO: we may conbine the generate unit_labels here! 
 unit_name_arr = repmat("",length(spikeID),1); % name tag for each unit 
 unit_num_arr = zeros(length(spikeID),1);
-fmt = '%d';
 for i = 1:length(spikeID) % point of this loop is to figure out the unit number! 
     cur_chan = spikeID(i); 
     if empty_msk(i) % this channel is empty! (effectively)
@@ -33,7 +38,7 @@ for i = 1:length(spikeID) % point of this loop is to figure out the unit number!
 end
 
 assert(length(unique(unit_name_arr))==length(unit_name_arr),"Some problem with unit label, Examine the label!")
-if nargin == 4 % If there is varargin, then we parse it as savepath, then write the Unit_Label.txt There
+if nargin >= 4 % If there is varargin, then we parse it as savepath, then write the Unit_Label.txt There
     savepath = varargin{1};
     if isempty(savepath)
         return

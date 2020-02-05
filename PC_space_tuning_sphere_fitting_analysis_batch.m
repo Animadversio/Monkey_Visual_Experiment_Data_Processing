@@ -13,7 +13,8 @@ for Expi=10
 rasters = storedStruct.rasters{Expi};
 Trials = storedStruct.Trials{Expi};
 meta = storedStruct.meta{Expi};
-unit_name_arr = generate_unit_labels();
+unit_name_arr = generate_unit_labels(meta.spikeID);
+[activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
 Param_summary = cell(size(rasters,1),3);
 pref_chan = pref_chan_arr(Expi);
 sphere_norm = norm_arr(Expi);
@@ -240,20 +241,22 @@ function [score_mat, Parameter, stat_str, festim] = get_fitting_from_result(name
     festim = reshape(festim, size(theta_grid));
 end
 
-function unit_name_arr = generate_unit_labels()
-% Generate the unit labels 17B from the spikeID variable
-global meta
-Unit_id = meta.spikeID;
-unit_name_arr = {}; % name tag for each unit 
-for i = 1:length(Unit_id)
-    cur_chan = Unit_id(i);
-    if sum(Unit_id == cur_chan) == 1
-        unit_name_arr{i} = num2str(cur_chan);
-    else
-        cur_chan = Unit_id(i);
-        rel_idx = find(find(Unit_id == cur_chan) == i);
-        unit_name_arr{i} = [num2str(cur_chan), char(64+rel_idx)];
-    end
-end
-end
+% Has become individual file 
+% 
+% function unit_name_arr = generate_unit_labels()
+% % Generate the unit labels 17B from the spikeID variable
+% global meta
+% Unit_id = meta.spikeID;
+% unit_name_arr = {}; % name tag for each unit 
+% for i = 1:length(Unit_id)
+%     cur_chan = Unit_id(i);
+%     if sum(Unit_id == cur_chan) == 1
+%         unit_name_arr{i} = num2str(cur_chan);
+%     else
+%         cur_chan = Unit_id(i);
+%         rel_idx = find(find(Unit_id == cur_chan) == i);
+%         unit_name_arr{i} = [num2str(cur_chan), char(64+rel_idx)];
+%     end
+% end
+% end
 

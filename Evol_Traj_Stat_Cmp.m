@@ -26,6 +26,7 @@ pref_chan = Trials.TrialRecord.User.prefChan;
 pref_chan_id = find(meta.spikeID==pref_chan); % the id in the raster and lfps matrix 
 Exp_label_str = sprintf("Exp%d pref chan %d", Expi, pref_chan);
 unit_name_arr = generate_unit_labels(meta.spikeID);
+[activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
 %% Sort the block id and the identity of image. 
 block_arr = cell2mat(Trials.block);
 imgnm = Trials.imageName;

@@ -40,10 +40,12 @@ pref_chan = Trials.TrialRecord.User.prefChan;
 assert(pref_chan(1) == pref_chan(2))
 pref_chan_id = find(meta.spikeID==pref_chan(1)); % the id in the raster and lfps matrix 
 Exp_label_str = sprintf("Exp%d pref chan %d", Expi, pref_chan(1));
-unit_name_arr = generate_unit_labels(meta.spikeID);
-%%
+
 savepath = fullfile(result_dir, compose("Evol%02d_chan%02d", Expi, pref_chan(1)));
 mkdir(savepath);
+
+unit_name_arr = generate_unit_labels(meta.spikeID);
+[activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
 
 %% Optimizer Names 
 thread_num = size(Trials.TrialRecord.User.evoConfiguration, 1);

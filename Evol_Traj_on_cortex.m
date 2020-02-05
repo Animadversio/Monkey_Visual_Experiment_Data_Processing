@@ -18,6 +18,7 @@ Exp_label_str = sprintf("Exp%d pref chan %d", Expi, pref_chan);
 savepath = fullfile(result_dir, compose("Manifold_Evol%02d_chan%02d", Expi, pref_chan));
 mkdir(savepath);
 unit_name_arr = generate_unit_labels(meta.spikeID, savepath); % Generate readable labels for each channel 
+[activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters, savepath);
 % Compute the block structure
 imgnm = Trials.imageName;
 row_gen = contains(imgnm, "gen") & contains(imgnm, "block") & cellfun(@(c) isempty(regexp(c(1:2), "\d\d")), imgnm);

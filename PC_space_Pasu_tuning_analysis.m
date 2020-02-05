@@ -34,6 +34,7 @@ ang_step = 18;
 savepath = sprintf("C:\\Users\\ponce\\OneDrive - Washington University in St. Louis\\PC_space_tuning\\Exp%d_chan%02d", Expi, pref_chan);
 mkdir(savepath);
 unit_name_arr = generate_unit_labels(meta.spikeID, savepath); % Generate readable labels for each channel
+[activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters, savepath);
 
 % Load and visualize the Pasupathy shapes
 img_dir = 'N:\Stimuli\2019-Manifold\pasupathy-wg-f-4-ori';

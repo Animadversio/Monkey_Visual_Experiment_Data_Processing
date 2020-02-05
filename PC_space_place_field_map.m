@@ -19,6 +19,7 @@ ang_step = 18;
 savepath = sprintf("C:\\Users\\ponce\\OneDrive - Washington University in St. Louis\\PC_space_tuning\\Exp%d_chan%02d", Expi, pref_chan);
 mkdir(savepath);
 unit_name_arr = generate_unit_labels(meta.spikeID); % Generate readable labels for each channel
+[activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
 load(fullfile(savepath, "Basic_Stats.mat"), 'Stat_summary') % Load Stats
 % Loop through all 3 spaces. 
 name_pattern_list = {'norm_%d_PC2_%d_PC3_%d', 'norm_%d_PC49_%d_PC50_%d', 'norm_%d_RND1_%d_RND2_%d'};

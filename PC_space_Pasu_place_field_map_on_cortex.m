@@ -23,6 +23,7 @@ ang_step = 18;
 savepath = sprintf("C:\\Users\\ponce\\OneDrive - Washington University in St. Louis\\PC_space_tuning\\Exp%d_chan%02d", Expi, pref_chan);
 mkdir(savepath);
 unit_name_arr = generate_unit_labels(meta.spikeID); % Generate readable labels for each channel
+[activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
 load(fullfile(savepath, "Basic_Stats.mat"), 'Stat_summary') % Load Stats
 sign_filter = true;
 % assert(sum(contains(unit_name_arr, "C"))==0, "Too many units in a channel! FIX THE CODE TO HANDLE ME! ")

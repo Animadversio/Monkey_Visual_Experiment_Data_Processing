@@ -23,6 +23,7 @@ Reps = 11; % can be any number LARGER than the largest repitition. or there may 
 savepath = sprintf("C:\\Users\\ponce\\OneDrive - Washington University in St. Louis\\PC_space_tuning\\Exp%d_chan%02d", Expi, pref_chan);
 mkdir(savepath);
 unit_name_arr = generate_unit_labels(meta.spikeID, savepath);
+[activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters, savepath);
 
 if Vis_Images
     PC23_img_list = get_image_arr('norm_%d_PC2_%d_PC3_%d');

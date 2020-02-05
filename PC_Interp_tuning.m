@@ -16,6 +16,7 @@ mkdir(savepath);
 %%
 Stat_summary = {};%cell(size(rasters,1), 2);
 unit_name_arr = generate_unit_labels(meta.spikeID,savepath);
+[activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters, savepath);
 global channel
 for channel = 1:size(rasters,1)
     

@@ -10,7 +10,8 @@ sphere_norm = norm_arr(Expi);
 pref_chan = pref_chan_arr(Expi);
 savepath = sprintf("C:\\Users\\ponce\\OneDrive\\Desktop\\OneDrive_Binxu\\OneDrive\\PC_space_tuning\\Exp%d_chan%02d", Expi, pref_chan);
 global unit_label_arr
-unit_label_arr = generate_unit_labels(meta.spikeID);
+unit_name_arr = generate_unit_labels(meta.spikeID);
+[activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
 n_chan = length(unit_label_arr);
 exp_str = sprintf("Exp%d preferred channel %d", Expi, pref_chan);
 %% Calculate the baseline and response rate 
