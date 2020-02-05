@@ -1,5 +1,5 @@
 function [meta,rasters,lfps,Trials] = Project_Manifold_Beto_loadRaw(rowlist)
-ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xls");
+ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xlsx");
 iExp = 0;
 for iExp = 1:numel(rowlist)
     rowi = rowlist(iExp);

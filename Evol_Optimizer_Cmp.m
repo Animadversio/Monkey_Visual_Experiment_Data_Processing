@@ -1,3 +1,4 @@
+clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug 
 %% Analysis Code for Comparing Optimizers on a same unit. 
 % much adapted from Evol_Traj_Cmp code, inspired Evol_Traj_analysis code.
 % (it's kind of a multi-thread) version of Evol Traj analysis
@@ -6,13 +7,12 @@
 % global evol_stim_fr evol_stim_sem meanscore_syn stdscore_syn meanscore_nat stdscore_nat
 Set_Path;
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
-ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xls");
-%expftr = contains(ExpSpecTable_Aug.expControlFN,"200203");
-expftr = contains(ExpSpecTable_Aug.expControlFN,"generate") & ...
-     contains(ExpSpecTable_Aug.Exp_collection, "Optimizer_cmp");
+ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xlsx");
+expftr = contains(ExpSpecTable_Aug.expControlFN,"200204");
+% expftr = contains(ExpSpecTable_Aug.expControlFN,"generate") & ...
+%      contains(ExpSpecTable_Aug.Exp_collection, "Optimizer_cmp");
 %  ExpSpecTable_Aug.Expi<=5 & ExpSpecTable_Aug.Expi>=4 & ...
 [meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr)); 
-
 %% Prepare figure frames 
 h = figure('Visible','on');set(h,'position',[1          41        2560         963]);
 axs{1} = subplot(1,2,1);axs{2} = subplot(1,2,2);
@@ -21,17 +21,17 @@ axs2 = {}; axs2{1} = subplot(1,2,1); axs2{2} = subplot(1,2,2);
 h3 = figure('Visible','on');h3.Position = [  782          43        1779         743];
 axs3 = {}; axs3{1} = subplot(1,2,1); axs3{2} = subplot(1,2,2);
 %%
-for Triali = [2,3]
+result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
+for Triali = [4]
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
 exp_rowi = find(contains(ExpSpecTable_Aug.ephysFN, meta.ephysFN));
 % Check the Expi match number
 Expi = ExpSpecTable_Aug.Expi(exp_rowi);
-fprintf("Exp %d:\n",Expi)
+fprintf("Processing  Exp %d:\n",Expi)
 disp(ExpSpecTable_Aug.comments(exp_rowi))
 % assert(Expi_tab == Expi, "Data Expi doesn't match that in exp record! Check your indexing or record.")
-% fprintf("Processing Exp %d, %s\n", Expi, meta.comments)
 %% Sort channel id
 % finding spike ID, note for multi-thread optimizer, we will have multiple
 % pref_chan for different optimizers 

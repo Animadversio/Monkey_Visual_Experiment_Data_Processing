@@ -190,7 +190,7 @@ end
 title("Score Comparison of last 5 Generations")
 ylabel("CMA-ES")
 xlabel("GA-classic")
-legend(["Synthetic","","","Natural","","",""])
+legend(["Natural","","","Synthetic","","",""])
 %%
 h=figure(1);
 save_to_pdf(h,fullfile(savepath,"ScoreCmp.pdf"))

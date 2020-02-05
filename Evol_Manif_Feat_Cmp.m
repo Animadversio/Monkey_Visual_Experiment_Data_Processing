@@ -1,21 +1,12 @@
-%% Standard code for Evolution Exp Analysis
-% well editted @Jan 30 for batch processing. 
-clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug % keep only the codes store data
-%%
 Set_Path;
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evolution_Exp";
-%ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xlsx");
-%%
-expftr = ExpSpecTable_Aug.Expi<=31 & ExpSpecTable_Aug.Expi>=24 & ...
-    contains(ExpSpecTable_Aug.expControlFN,"generate");
+ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xlsx");
+expftr = ExpSpecTable_Aug.Expi==20 & ...
+     contains(ExpSpecTable_Aug.Exp_collection, "Manifold");
 [meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr)); 
-%
-h  = figure('Visible','off');h.Position = [828 42 1026 954];
-h1 = figure('Visible','off');
-h2 = figure('Visible','off'); 
-h3 = figure('Visible','off');h3.Position = [ 794         328        1233         463];
-%
-for Triali = 1:length(meta_new)
+%%
+h  = figure('Visible','on');h.Position = [828 42 1026 954];
+for Triali = 2%1:length(meta_new)
 % Fetch the trial info
 %Triali = Expi - 26;
 meta = meta_new{Triali};
@@ -39,21 +30,6 @@ row_gen = contains(imgnm, "gen") & ... % contains gen
         cellfun(@(c) isempty(regexp(c(1:2), "\d\d")), imgnm); % first 2 characters are not digits
 row_nat = ~row_gen;%contains(imgnm, "nat") & cellfun(@(c) ~isempty(regexp(c(1:2), "\d\d")), imgnm);
 block_arr = cell2mat(Trials.block);
-% generations = zeros(numel(imgnm), 1);
-% blocki = 0;geni = 0;
-% for i = 1:numel(imgnm)
-%     if row_gen(i)
-%         matchstr = regexp(imgnm{i}, "block(?<blocki>\d\d\d)_thread(?<threadi>\d\d\d)_gen_(?<imgname>.*)",'names');
-%         if str2num(matchstr.blocki) == blocki
-%             
-%         else
-%             blocki = str2num(matchstr.blocki);
-%             geni = blocki - 1;
-%         end
-%     end
-%     block_arr(i) = blocki;
-%     generations(i) = geni;
-% end
 %% Generate Gradual Changing Color Labels 
 block_list = min(block_arr):max(block_arr);
 % fun = @(m)srgb_to_Lab(m);
@@ -108,45 +84,4 @@ set(0,'CurrentFigure',h); %clf; %
 montage(imgColl(:))
 title([Exp_label_str, compose('Best Image per Generation')])
 saveas(h, fullfile(savepath, "EvolImageSeq.png"))
-
-for channel_j = 1:size(rasters, 1) %pref_chan_id;
-%channel_j = pref_chan_id;
-set(0,'CurrentFigure',h1); clf; hold on 
-scatter(block_arr(row_gen), scores_tsr(channel_j, row_gen))
-scatter(block_arr(row_nat), scores_tsr(channel_j, row_nat))
-plot(block_list, meanscore_syn(channel_j, :), 'LineWidth',2,'Color','k')
-plot(block_list, meanscore_nat(channel_j, :),'LineWidth',2,'Color','g')
-legend(["Generated img","Natural img","Gen mean","Nat mean"])
-xlabel("generations")
-title([Exp_label_str, compose('PSTH averaged scores, channel %s', unit_name_arr{channel_j})])
-saveas(h1,fullfile(savepath,compose("score_traj_chan%d.png",channel_j)))
-%h1.Visible='on';
-%%
-set(0,'CurrentFigure',h2); clf; hold on %
-shadedErrorBar(block_list(1:end-1), meanscore_syn(channel_j, 1:end-1), stdscore_syn(channel_j, 1:end-1),...
-    'lineprops',{'Color',[0,0,0,0.7]},'transparent',1,'patchSaturation',0.075)
-shadedErrorBar(block_list(1:end-1), meanscore_nat(channel_j, 1:end-1), stdscore_nat(channel_j, 1:end-1),...
-    'lineprops',{'Color',[0,1,0,0.7]},'transparent',1,'patchSaturation',0.075)
-axis tight
-legend(["Generated img","Natural img"])
-xlabel("generations")
-title([Exp_label_str, compose('Generation averaged score, channel %s', unit_name_arr{channel_j})])
-saveas(h2,fullfile(savepath,compose("score_traj_std_chan%d.png",channel_j)))
-%h2.Visible='on';
-%%
-set(0,'CurrentFigure',h3); clf;hold on;
-block_list = min(block_arr):max(block_arr);
-for i = block_list(1:end-1)
-    shadedErrorBar([],evol_stim_fr(channel_j, :, i),evol_stim_sem(channel_j, :, i),...
-    'lineprops',{'Color',[color_seq(i, :),0.85]},'transparent',1,'patchSaturation',0.075)
-    % plot(evol_stim_fr(i,:,channel_j))
-end
-YL=ylim;YL(1)=0;ylim(YL);
-XL=xlim;XL(1)=0;xlim(XL);
-xlabel("time (ms)")
-title([Exp_label_str, compose('Generation averaged PSTH of Evolved Stimuli channel %s', unit_name_arr{channel_j})])%num2str(meta.spikeID(pref_chan_id))
-saveas(h3,fullfile(savepath,compose("Evolv_psth_chan%d.png",channel_j)))
-hold off
-%h3.Visible='on';
-end
 end
