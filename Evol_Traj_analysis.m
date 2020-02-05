@@ -137,7 +137,8 @@ plot(block_list, meanscore_nat(channel_j, :),'LineWidth',2,'Color','g')
 legend(["Generated img","Natural img","Gen mean","Nat mean"])
 xlabel("generations")
 title([Exp_label_str, compose('PSTH averaged scores, channel %s', unit_name_arr{channel_j})])
-saveas(h1,fullfile(savepath,compose("score_traj_chan%d.png",channel_j)))
+%saveas(h1,fullfile(savepath,compose("score_traj_chan%d.png",channel_j)))
+saveas(h1,fullfile(savepath,compose("score_traj_chan%s.png",unit_name_arr{channel_j})))
 %h1.Visible='on';
 %%
 set(0,'CurrentFigure',h2); clf; hold on %
@@ -149,7 +150,8 @@ axis tight
 legend(["Generated img","Natural img"])
 xlabel("generations")
 title([Exp_label_str, compose('Generation averaged score, channel %s', unit_name_arr{channel_j})])
-saveas(h2,fullfile(savepath,compose("score_traj_std_chan%d.png",channel_j)))
+%saveas(h2,fullfile(savepath,compose("score_traj_std_chan%d.png",channel_j)))
+saveas(h2,fullfile(savepath,compose("score_traj_std_chan%s.png",unit_name_arr{channel_j})))
 %h2.Visible='on';
 %%
 set(0,'CurrentFigure',h3); clf;hold on;
@@ -163,7 +165,8 @@ YL=ylim;YL(1)=0;ylim(YL);
 XL=xlim;XL(1)=0;xlim(XL);
 xlabel("time (ms)")
 title([Exp_label_str, compose('Generation averaged PSTH of Evolved Stimuli channel %s', unit_name_arr{channel_j})])%num2str(meta.spikeID(pref_chan_id))
-saveas(h3,fullfile(savepath,compose("Evolv_psth_chan%d.png",channel_j)))
+%saveas(h3,fullfile(savepath,compose("Evolv_psth_chan%d.png",channel_j)))
+saveas(h3,fullfile(savepath,compose("Evolv_psth_chan%s.png",unit_name_arr{channel_j})))
 hold off
 %h3.Visible='on';
 end
