@@ -20,9 +20,10 @@ h2 = figure('Visible','on');clf; h2.Position = [  19         235        1779    
 axs2 = {}; axs2{1} = subplot(1,2,1); axs2{2} = subplot(1,2,2);
 h3 = figure('Visible','on');h3.Position = [  782          43        1779         743];
 axs3 = {}; axs3{1} = subplot(1,2,1); axs3{2} = subplot(1,2,2);
-%%
-result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
-for Triali = [4]
+%
+% result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
+result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evolution_Exp";
+for Triali = [3]
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};

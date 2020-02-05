@@ -6,7 +6,8 @@ Set_Path;
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evolution_Exp";
 %ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xlsx");
 %%
-expftr = ExpSpecTable_Aug.Expi<=15 & ExpSpecTable_Aug.Expi>=1 & ...
+% 15 has someth special
+expftr = ExpSpecTable_Aug.Expi<=27 & ExpSpecTable_Aug.Expi>=15 & ...
     contains(ExpSpecTable_Aug.expControlFN,"generate");
 [meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr)); 
 %%
@@ -15,7 +16,7 @@ h0  = figure('Visible','on');h0.Position = [828 42 1026 954]; % Evolution Image 
 h1 = figure('Visible','off'); % score line plot + scatter plot for each trial 
 h2 = figure('Visible','off'); % shaded Errorbar of score for each generation 
 h3 = figure('Visible','off');h3.Position = [ 1128         314         899         505]; % shaded Errorbar of PSTH for each generation
-
+%%
 for Triali = 1:length(meta_new)
 % Fetch the trial info
 %Triali = Expi - 26;
@@ -29,10 +30,14 @@ disp(ExpSpecTable_Aug.comments(exp_rowi))
 % Prepare the relevant folder and info
 pref_chan = Trials.TrialRecord.User.prefChan;
 pref_chan_id = find(meta.spikeID==pref_chan);
-Exp_label_str = sprintf("Exp%d pref chan %d", Expi, pref_chan);
+pref_chan_unit = Trials.TrialRecord.User.evoConfiguration{Trials.TrialRecord.User.iConfig.unit}; % which unit is it evolving to
+Exp_label_str = sprintf("Exp%d pref chan %d (unit %d)", Expi, pref_chan, pref_chan_unit);
 savepath = fullfile(result_dir, compose("Manifold_Evol%02d_chan%02d", Expi, pref_chan));
 mkdir(savepath);
+
 unit_name_arr = generate_unit_labels(meta.spikeID, savepath); % Generate readable labels for each channel
+[activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, spikeID, rasters, savepath);
+% Check if the units are active
 % Compute the block structure from imagenames
 imgnm = Trials.imageName;
 row_gen = contains(imgnm, "gen") & ... % contains gen
@@ -92,7 +97,12 @@ end
 %     nat_stim_fr_sem(i,:,:) = nat_stim_fr_std(i,:,:) / sqrt(sum(natural_stim_i==i));
 % end
 %% Get the Image FileName Sequence
-channel_j = pref_chan_id(1);
+EMPTYTHR= 1000;
+emptychan = sum(rasters(pref_chan_id(1),:,1:10),[2,3]) < EMPTYTHR;
+if emptychan
+    fprintf("There is an empty unit %d in the prefered channel %d\n", pref_chan_id(1), pref_chan)
+end
+channel_j = pref_chan_id(emptychan + pref_chan_unit);
 imgColl = repmat("", length(block_list),1);
 scoreColl = zeros(length(block_list),1); % have to be same size with imgColl. 
 for blocki = block_list
@@ -117,7 +127,7 @@ montage(frame_img_list)
 colorbar();caxis(cLim)
 title([Exp_label_str, compose('Best Image per Generation (Best Score frame)')])
 saveas(h0, fullfile(savepath, "EvolImageSeq_BestScore.png"))
-for channel_j = []%1:size(rasters, 1) %pref_chan_id; % []
+for channel_j = 1:size(rasters, 1) %pref_chan_id; % []
 %channel_j = pref_chan_id;
 set(0,'CurrentFigure',h1); clf; hold on 
 scatter(block_arr(row_gen), scores_tsr(channel_j, row_gen))
