@@ -3,10 +3,10 @@
 % ExpSpecTable = struct2table(preMeta); % Build from preMeta
 % ExpSpecTable = readtable("S:\ExpSpecTable.xls"); % Read and Load from xls
 ExpSpecTable = ExpSpecTable_Aug(:, ["ephysFN","expControlFN","stimuli","comments"]);
-writetable(ExpSpecTable, "S:\ExpSpecTable.xls")
-writetable(ExpSpecTable_Aug, "S:\ExpSpecTable_Augment.xls")
+%writetable(ExpSpecTable, "S:\ExpSpecTable.xlsx")
+writetable(ExpSpecTable_Aug, "S:\ExpSpecTable_Augment.xlsx")
 %%
-ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xls");
+ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xlsx");
 %% Analysis and Fix the table 
 
 %% Add the path prefix to the stimuli path

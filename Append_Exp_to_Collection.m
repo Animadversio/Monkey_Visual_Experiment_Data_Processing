@@ -1,10 +1,9 @@
-%% Ancient code to read Formatted data and put similar experiments into a compiled mat file locally. 
-
-ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xls");
+%% Obsolete code to read Formatted data and put similar experiments into a compiled mat file locally. 
+ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xlsx");
 %%
-ExpSpecTable = ExpSpecTable_Aug(:, ["ephysFN","expControlFN","stimuli","comments"]);
-writetable(ExpSpecTable, "S:\ExpSpecTable.xls")
-writetable(ExpSpecTable_Aug, "S:\ExpSpecTable_Augment.xls")
+% ExpSpecTable = ExpSpecTable_Aug(:, ["ephysFN","expControlFN","stimuli","comments"]);
+% writetable(ExpSpecTable, "S:\ExpSpecTable.xlsx")
+writetable(ExpSpecTable_Aug, "S:\ExpSpecTable_Augment.xlsx")
 %% Load exp file from certain entry 
 [meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw([108:113]);
 crp_sync_localMat_to_networkMat
@@ -19,7 +18,7 @@ crp_sync_localMat_to_networkMat
 %
 meta_new = [meta_new, meta_new2];
 rasters_new = [rasters_new, rasters_new2];
-lfps_new = [lfps_new2, lfps_new2];
+lfps_new = [lfps_new, lfps_new2];
 Trials_new = [Trials_new, Trials_new2];
 clear meta_new2 rasters_new2 lfps_new2 Trials_new2
 %% Code for appending new experiments to the older ones
@@ -76,7 +75,7 @@ storedStruct.meta = meta;
 storedStruct.Trials = Trials;
 storedStruct.rasters = rasters;
 storedStruct.lfps = lfps;
-%% solve the broken experiment problem  Beto64chan-25112019-006 
+%% solve the broken experiment problem  Beto64chan-25112019-006 Try to concatanate 2 manifold into 1. 
 lfps = cat(3, lfps_new{2}, lfps_new{3});
 rasters = cat(3, rasters_new{2}, rasters_new{3});
 %%

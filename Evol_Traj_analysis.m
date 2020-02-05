@@ -6,15 +6,16 @@ Set_Path;
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evolution_Exp";
 %ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xlsx");
 %%
-expftr = ExpSpecTable_Aug.Expi<=31 & ExpSpecTable_Aug.Expi>=24 & ...
+expftr = ExpSpecTable_Aug.Expi<=15 & ExpSpecTable_Aug.Expi>=1 & ...
     contains(ExpSpecTable_Aug.expControlFN,"generate");
 [meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr)); 
-%
-h  = figure('Visible','off');h.Position = [828 42 1026 954];
-h1 = figure('Visible','off');
-h2 = figure('Visible','off'); 
-h3 = figure('Visible','off');h3.Position = [ 794         328        1233         463];
-%
+%%
+h   = figure('Visible','on');h.Position = [828 42 1026 954]; % Evolution Image Sequence 
+h0  = figure('Visible','on');h0.Position = [828 42 1026 954]; % Evolution Image Sequence with score frame
+h1 = figure('Visible','off'); % score line plot + scatter plot for each trial 
+h2 = figure('Visible','off'); % shaded Errorbar of score for each generation 
+h3 = figure('Visible','off');h3.Position = [ 1128         314         899         505]; % shaded Errorbar of PSTH for each generation
+
 for Triali = 1:length(meta_new)
 % Fetch the trial info
 %Triali = Expi - 26;
@@ -93,7 +94,7 @@ end
 %% Get the Image FileName Sequence
 channel_j = pref_chan_id(1);
 imgColl = repmat("", length(block_list),1);
-scoreColl = zeros(length(block_list),1);
+scoreColl = zeros(length(block_list),1); % have to be same size with imgColl. 
 for blocki = block_list
     gen_msk = row_gen & block_arr == blocki; 
     [maxScore, maxIdx] = max(scores_tsr(channel_j, gen_msk));
@@ -109,7 +110,14 @@ montage(imgColl(:))
 title([Exp_label_str, compose('Best Image per Generation')])
 saveas(h, fullfile(savepath, "EvolImageSeq.png"))
 
-for channel_j = 1:size(rasters, 1) %pref_chan_id;
+set(0,'CurrentFigure',h0);
+cLim = [min(scoreColl), max(scoreColl)];
+frame_img_list = score_frame_image_arr(imgColl, scoreColl, cLim, parula, 20);
+montage(frame_img_list)
+colorbar();caxis(cLim)
+title([Exp_label_str, compose('Best Image per Generation (Best Score frame)')])
+saveas(h0, fullfile(savepath, "EvolImageSeq_BestScore.png"))
+for channel_j = []%1:size(rasters, 1) %pref_chan_id; % []
 %channel_j = pref_chan_id;
 set(0,'CurrentFigure',h1); clf; hold on 
 scatter(block_arr(row_gen), scores_tsr(channel_j, row_gen))

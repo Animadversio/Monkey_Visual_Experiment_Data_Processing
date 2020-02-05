@@ -5,19 +5,25 @@
 
 Set_Path;
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
-ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xls");
+
 expftr = contains(ExpSpecTable_Aug.expControlFN,"generate") & ...
      contains(ExpSpecTable_Aug.Exp_collection, "Optimizer_cmp");
 [meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr)); 
-savepath = fullfile(result_dir, "summary");
+%% Use this block to append new experiments to the collection
+expftr = contains(ExpSpecTable_Aug.expControlFN,"generate") & ...
+     contains(ExpSpecTable_Aug.Exp_collection, "Optimizer_cmp") &...
+     ExpSpecTable_Aug.Expi > 6;
+[meta_new,rasters_new,lfps_new,Trials_new] = LoadRaw_and_Append_Coll(find(expftr), meta_new, rasters_new, lfps_new, Trials_new);
+%%
+savepath = fullfile(result_dir, "summary"); 
 mkdir(savepath);
 %% Prepare figure frames 
-h = figure('Visible','on');set(h,'position',[1          41        2560         963]);
-axs{1} = subplot(1,2,1);axs{2} = subplot(1,2,2);
-h2 = figure('Visible','on');clf; h2.Position = [  19         235        1779         743];
-axs2 = {}; axs2{1} = subplot(1,2,1); axs2{2} = subplot(1,2,2);
-h3 = figure('Visible','on');h3.Position = [  782          43        1779         743];
-axs3 = {}; axs3{1} = subplot(1,2,1); axs3{2} = subplot(1,2,2);
+% h = figure('Visible','on');set(h,'position',[1          41        2560         963]);
+% axs{1} = subplot(1,2,1);axs{2} = subplot(1,2,2);
+% h2 = figure('Visible','on');clf; h2.Position = [  19         235        1779         743];
+% axs2 = {}; axs2{1} = subplot(1,2,1); axs2{2} = subplot(1,2,2);
+% h3 = figure('Visible','on');h3.Position = [  782          43        1779         743];
+% axs3 = {}; axs3{1} = subplot(1,2,1); axs3{2} = subplot(1,2,2);
 %%
 score_traces = cell(length(meta_new), 2);
 block_traces = cell(length(meta_new), 2);
@@ -30,7 +36,7 @@ Trials = Trials_new{Triali};
 exp_rowi = find(contains(ExpSpecTable_Aug.ephysFN, meta.ephysFN));
 % Check the Expi match number
 Expi = ExpSpecTable_Aug.Expi(exp_rowi);
-fprintf("Exp %d:\n",Expi)
+fprintf("Processing Exp %d:\n",Expi)
 disp(ExpSpecTable_Aug.comments(exp_rowi))
 % assert(Expi_tab == Expi, "Data Expi doesn't match that in exp record! Check your indexing or record.")
 %% Sort channel id
@@ -138,12 +144,11 @@ end
 % end
 end
 %% Plot the Image Evolution Trajectory 
-%% t test the last 5 generations 
 scores_tsr = squeeze(mean(rasters(:, 51:200, :), 2) - mean(rasters(:, 1:40, :), 2)); % [unit_num, img_nums]
 scores_thread1 = scores_tsr(pref_chan_id, row_gen & (block_arr > max(block_arr)-6) & thread_msks{1});
 scores_thread2 = scores_tsr(pref_chan_id, row_gen & (block_arr > max(block_arr)-6) & thread_msks{2});
 [~,Pval,CI] = ttest2(scores_thread1, scores_thread2);
-%%
+%% t test the last 5 generations 
 CMA_score = zeros(length(meta_new),1);
 CMA_err = zeros(length(meta_new),1);
 GA_score = zeros(length(meta_new),1);
@@ -169,7 +174,7 @@ for Triali = 1:length(meta_new)
 end
 %% Error bar comparison plot
 % https://www.mathworks.com/matlabcentral/answers/455796-errorbars-on-scatter-plot
-figure(1);clf
+h=figure(1);clf
 scatter(GA_ref_score, CMA_ref_score, 50,'g','filled');
 hold on
 eb2(1) = errorbar(GA_ref_score,CMA_ref_score,GA_ref_err, 'horizontal', 'LineStyle', 'none');
@@ -190,7 +195,8 @@ end
 title("Score Comparison of last 5 Generations")
 ylabel("CMA-ES")
 xlabel("GA-classic")
-legend(["Natural","","","Synthetic","","",""])
+legend(["Natural","","","Synthetic","","",""],"Location","Best")
 %%
-h=figure(1);
+h.Position=[6.3854    0.4271   10.8542    9.9375];
+saveas(h, fullfile(savepath,"ScoreCmp.png"))
 save_to_pdf(h,fullfile(savepath,"ScoreCmp.pdf"))

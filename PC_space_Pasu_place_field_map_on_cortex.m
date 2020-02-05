@@ -6,12 +6,6 @@ Reps = 11; % constant for maximum number of repetitions (as long as it's larger 
 Set_Exp_Specs;
 
 for Expi = 34:43
-% meta = meta_new{2*(Expi-24)-1};
-% rasters = rasters_new{2*(Expi-24)-1};
-% Trials = Trials_new{2*(Expi-24)-1};
-% meta = storedStruct.meta{Expi}; % loading data from long term store
-% rasters = storedStruct.rasters{Expi};
-% Trials = storedStruct.Trials{Expi};
 Triali = Expi - 33;%Expi - 34;
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};

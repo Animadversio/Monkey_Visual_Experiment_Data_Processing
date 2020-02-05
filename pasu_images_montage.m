@@ -1,5 +1,6 @@
 %% pasu_images_montage
-% demo code for montage and visualizign the pasupathy images
+% demo code for montage and visualizign the pasupathy images (Included in PC_space_Pasu_tuning_analysis.m)
+% part of this code goes to score_frame_image_arr.m
 
 %'pasu_%02d_ori_%02d_wg_f'
 img_dir = 'S:\Stimuli\2019-Manifold\pasupathy-wg-f-4-ori';
