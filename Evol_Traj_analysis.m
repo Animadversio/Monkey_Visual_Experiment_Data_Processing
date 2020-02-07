@@ -12,12 +12,13 @@ expftr = ExpSpecTable_Aug.Expi<=14 & ExpSpecTable_Aug.Expi>=1 & ...
     contains(ExpSpecTable_Aug.Exp_collection,"Manifold");
 [meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr)); 
 %%
+if ~(exist("h","var") && exist("h0","var") && exist("h1","var") && exist("h2","var") && exist("h3","var"))
 h   = figure('Visible','on');h.Position = [828 42 1026 954]; % Evolution Image Sequence 
 h0  = figure('Visible','on');h0.Position = [828 42 1026 954]; % Evolution Image Sequence with score frame
 h1 = figure('Visible','off'); % score line plot + scatter plot for each trial 
 h2 = figure('Visible','off'); % shaded Errorbar of score for each generation 
 h3 = figure('Visible','off');h3.Position = [ 1128         314         899         505]; % shaded Errorbar of PSTH for each generation
-%
+end
 for Triali = 1:length(meta_new)
 % Fetch the trial info
 %Triali = Expi - 26;
