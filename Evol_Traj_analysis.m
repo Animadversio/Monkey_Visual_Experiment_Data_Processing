@@ -7,7 +7,7 @@ result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evolu
 %ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xlsx");
 %%
 % 15 has someth special
-expftr = ExpSpecTable_Aug.Expi<=27 & ExpSpecTable_Aug.Expi>=15 & ...
+expftr = ExpSpecTable_Aug.Expi<=14 & ExpSpecTable_Aug.Expi>=1 & ...
     contains(ExpSpecTable_Aug.expControlFN,"generate");
 [meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr)); 
 %%
@@ -16,7 +16,7 @@ h0  = figure('Visible','on');h0.Position = [828 42 1026 954]; % Evolution Image 
 h1 = figure('Visible','off'); % score line plot + scatter plot for each trial 
 h2 = figure('Visible','off'); % shaded Errorbar of score for each generation 
 h3 = figure('Visible','off');h3.Position = [ 1128         314         899         505]; % shaded Errorbar of PSTH for each generation
-%%
+%
 for Triali = 1:length(meta_new)
 % Fetch the trial info
 %Triali = Expi - 26;
@@ -97,8 +97,8 @@ end
 %     nat_stim_fr_sem(i,:,:) = nat_stim_fr_std(i,:,:) / sqrt(sum(natural_stim_i==i));
 % end
 %% Get the Image FileName Sequence
-EMPTYTHR= 1000;
-emptychan = sum(rasters(pref_chan_id(1),:,1:10),[2,3]) < EMPTYTHR;
+%EMPTYTHR= 1000;
+emptychan = ~activ_msk(pref_chan_id(1)); %sum(rasters(pref_chan_id(1),:,1:10),[2,3]) < EMPTYTHR;
 if emptychan
     fprintf("There is an empty unit %d in the prefered channel %d\n", pref_chan_id(1), pref_chan)
 end
@@ -138,7 +138,7 @@ legend(["Generated img","Natural img","Gen mean","Nat mean"])
 xlabel("generations")
 title([Exp_label_str, compose('PSTH averaged scores, channel %s', unit_name_arr{channel_j})])
 %saveas(h1,fullfile(savepath,compose("score_traj_chan%d.png",channel_j)))
-saveas(h1,fullfile(savepath,compose("score_traj_chan%s.png",unit_name_arr{channel_j})))
+saveas(h1,fullfile(savepath,compose("score_traj_chan%s.png",unit_name_arr{channel_j}))) % update @Feb.5 to use new unit name label on filename
 %h1.Visible='on';
 %%
 set(0,'CurrentFigure',h2); clf; hold on %
@@ -151,7 +151,7 @@ legend(["Generated img","Natural img"])
 xlabel("generations")
 title([Exp_label_str, compose('Generation averaged score, channel %s', unit_name_arr{channel_j})])
 %saveas(h2,fullfile(savepath,compose("score_traj_std_chan%d.png",channel_j)))
-saveas(h2,fullfile(savepath,compose("score_traj_std_chan%s.png",unit_name_arr{channel_j})))
+saveas(h2,fullfile(savepath,compose("score_traj_std_chan%s.png",unit_name_arr{channel_j}))) % update @Feb.5 to use new unit name label on filename
 %h2.Visible='on';
 %%
 set(0,'CurrentFigure',h3); clf;hold on;
@@ -166,7 +166,7 @@ XL=xlim;XL(1)=0;xlim(XL);
 xlabel("time (ms)")
 title([Exp_label_str, compose('Generation averaged PSTH of Evolved Stimuli channel %s', unit_name_arr{channel_j})])%num2str(meta.spikeID(pref_chan_id))
 %saveas(h3,fullfile(savepath,compose("Evolv_psth_chan%d.png",channel_j)))
-saveas(h3,fullfile(savepath,compose("Evolv_psth_chan%s.png",unit_name_arr{channel_j})))
+saveas(h3,fullfile(savepath,compose("Evolv_psth_chan%s.png",unit_name_arr{channel_j}))) % update @Feb.5 to use new unit name label on filename
 hold off
 %h3.Visible='on';
 end

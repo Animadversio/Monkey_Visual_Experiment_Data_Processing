@@ -6,3 +6,10 @@ NS_response.fig
 neuro_image_coanalysis.asv
 NMCoF.asv
 *.asv
+.idea/deployment.xml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/libraries/R_User_Library.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/Monkey_Visual_Experiment_Data_Processing.iml
+.idea/vcs.xml

@@ -14,6 +14,7 @@ activ_msk = ~ empty_msk;
 empty_labels = unit_name_arr(empty_msk);
 if ~ all(contains(empty_labels,"A")) 
     % Heurist rule: empty unit should be the first in its channel, and there is usually an active unit present there. 
+    % May be better ways of handling this is process them by hand
     fprintf("Empty Channel original labels :")
     fprintf("%s ",string(empty_labels))
     fprintf("\nPlease Check\n")
