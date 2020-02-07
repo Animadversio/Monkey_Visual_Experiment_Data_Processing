@@ -10,6 +10,13 @@ end
 
 EMPTYTHR = 1000;
 empty_msk = sum(rasters(:,:,1:10),[2,3]) < EMPTYTHR; 
+empty_unit_tmp = find(empty_msk); % channel index in empty mask.
+for l = 1:numel(empty_unit_tmp) % if there is only one channel then it is not unsorted channel
+    cur_chan = spikeID(empty_unit_tmp(l));
+    if sum(spikeID==cur_chan) == 1 % if there is only one unit it cannot be empty
+        empty_msk(empty_unit_tmp(l)) = 0; %it's no longer empty
+    end
+end
 activ_msk = ~ empty_msk;
 empty_labels = unit_name_arr(empty_msk);
 if ~ all(contains(empty_labels,"A")) 
@@ -29,7 +36,7 @@ for i = 1:length(spikeID) % point of this loop is to figure out the unit number!
         unit_name_arr{i} = [num2str(cur_chan, fmt), 'U']; % Unsorted unit
         unit_num_arr(i) = 0; % means this unit is unsorted unit. 
     else % if this channel is not empty
-        unit_num_arr(i) = find(find(spikeID == cur_chan & activ_msk) == i); % in all the active units find the numbering of this.
+        unit_num_arr(i) = find(find(spikeID == cur_chan & activ_msk) == i); % in all the active units in this channel find the numbering of this.
         if sum(spikeID(activ_msk) == cur_chan) == 1 % if this is the only unit active (or only unit present)
             unit_name_arr{i} = num2str(cur_chan, fmt);
         else % if multiple unit active, then attach unit label to it.

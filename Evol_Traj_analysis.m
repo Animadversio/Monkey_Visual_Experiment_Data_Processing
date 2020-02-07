@@ -8,7 +8,8 @@ result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evolu
 %%
 % 15 has someth special
 expftr = ExpSpecTable_Aug.Expi<=14 & ExpSpecTable_Aug.Expi>=1 & ...
-    contains(ExpSpecTable_Aug.expControlFN,"generate");
+    contains(ExpSpecTable_Aug.expControlFN,"generate") & ...
+    contains(ExpSpecTable_Aug.Exp_collection,"Manifold");
 [meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr)); 
 %%
 h   = figure('Visible','on');h.Position = [828 42 1026 954]; % Evolution Image Sequence 
