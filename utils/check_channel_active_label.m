@@ -16,6 +16,9 @@ for l = 1:numel(empty_unit_tmp) % if there is only one channel then it is not un
     if sum(spikeID==cur_chan) == 1 % if there is only one unit it cannot be empty
         empty_msk(empty_unit_tmp(l)) = 0; %it's no longer empty
     end
+    if find(find(spikeID == cur_chan)==empty_unit_tmp(l))~=1% the unsorted unit always happens the first in it's channel 
+        empty_msk(empty_unit_tmp(l)) = 0; %it's no longer empty
+    end
 end
 activ_msk = ~ empty_msk;
 empty_labels = unit_name_arr(empty_msk);

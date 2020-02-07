@@ -13,7 +13,7 @@ figITB = figure('Visible','on');clf;
 figV1B = figure('Visible','on');clf;
 figV4B = figure('Visible','on');clf;
 end
-for Triali = 1:length(meta_new)
+for Triali = 4:length(meta_new)
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
