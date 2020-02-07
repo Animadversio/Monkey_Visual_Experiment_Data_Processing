@@ -9,7 +9,7 @@ function [ax_arr,tIT,tV1,tV4] = Cortex_Channel_Tile_Layout_All(figIT, figV1, fig
 Extract_Channel_Organization; % a separate function to extract location of electrode in array. 
 ax_arr = {};
 if isempty(figIT), figIT = figure(); end
-set(0,'CurrentFigure',figIT);% figure(figIT) % Note call figure will make the figure appear! 
+set(0,'CurrentFigure',figIT);clf;% figure(figIT) % Note call figure will make the figure appear! 
 set(figIT,'position',[  1          41        2560         963]);%set(figIT,'Visible','off')
 tIT = tiledlayout(8,20,'TileSpacing','Compact');
 for i = 1:32
@@ -21,7 +21,7 @@ for i = 1:32
 end
 
 if isempty(figV1), figV1 = figure(); end
-set(0,'CurrentFigure',figV1);% figure(figV1)
+set(0,'CurrentFigure',figV1);clf;% figure(figV1)
 set(figV1,'position',[ 50          33        1220         963]);%set(figV1,'Visible','off')
 tV1 = tiledlayout(8,10,'TileSpacing','Compact');
 for i = 1:16
@@ -33,7 +33,7 @@ for i = 1:16
 end
 
 if isempty(figV4), figV4 = figure(); end
-set(0,'CurrentFigure',figV4); % figure(figV4)
+set(0,'CurrentFigure',figV4);clf; % figure(figV4)
 set(figV4,'position',[ 50          33        1220         963]);%set(figV4,'Visible','off')
 tV4 = tiledlayout(8,10,'TileSpacing','Compact');
 for i = 1:16
