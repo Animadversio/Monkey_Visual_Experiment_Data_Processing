@@ -13,7 +13,7 @@ figITB = figure('Visible','on');clf;
 figV1B = figure('Visible','on');clf;
 figV4B = figure('Visible','on');clf;
 end
-for Triali = 4:length(meta_new)
+for Triali = 1:length(meta_new)
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
@@ -200,7 +200,7 @@ function plot_score_error_traj(channel, ax)
     % axis! 
     global block_arr gen_list meanscore_syn stdscore_syn meanscore_nat stdscore_nat
     set(0, "CurrentFigure", ancestor(ax,'figure'))
-    set(gcf, "CurrentAxes", ax);cla(ax);hold on 
+    set(gcf, "CurrentAxes", ax);cla(ax,'reset');hold on 
     axis normal;
     gen_list = min(block_arr):max(block_arr);
 %     errorbar(ax, gen_list, meanscore_syn(channel, :), stdscore_syn(channel, :), 'LineWidth',2,'Color',[0,0,0,0.5])
@@ -211,7 +211,7 @@ function plot_score_error_traj(channel, ax)
         'lineprops',{'Color',[0,0,0,0.7]},'transparent',1,'patchSaturation',0.075)
     shadedErrorBar(gen_list(1:end-1), meanscore_nat(channel, 1:end-1), stdscore_nat(channel, 1:end-1),...
         'lineprops',{'Color',[0,1,0,0.7]},'transparent',1,'patchSaturation',0.075)
-    legend(["Gen","Nat"])
+    legend(["Gen","Nat"],'Location','best')
     xlabel("generations")
     hold off
 end
@@ -219,7 +219,7 @@ function plot_PSTH_change(channel, ax)
     % plot PSTH over generations
     global block_arr gen_list color_seq evol_stim_fr evol_stim_sem
     set(0, "CurrentFigure", ancestor(ax,'figure'))
-    set(gcf, "CurrentAxes", ax);cla(ax);hold on 
+    set(gcf, "CurrentAxes", ax);cla(ax,'reset');hold on % add reset to clear up the remains from 
     axis normal;
     for i = 1:length(gen_list)-1 % avoid the last generation! as it's much more noise
         shadedErrorBar([],evol_stim_fr(channel, :, i),evol_stim_sem(channel, :, i),...
