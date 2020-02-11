@@ -1,14 +1,25 @@
 Set_Path;
 % Collect Manifold Experiments specs 
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evolution_Exp";
-
+animal = "Alfa";
+switch animal 
+    case "Beto"
+        ExpSpecTable_Aug = readtable("ExpSpecTable_Augment.xlsx");
+    case "Alfa"
+        ExpSpecTable_Aug = readtable("Exp_Record_Alfa.xlsx");
+end
 expftr = contains(ExpSpecTable_Aug.expControlFN,"generate") & ...
      contains(ExpSpecTable_Aug.Exp_collection, "Manifold");
 %  ExpSpecTable_Aug.Expi<=5 & ExpSpecTable_Aug.Expi>=4 & ...
 Expi_arr = ExpSpecTable_Aug(expftr,"Expi").Expi;
-Pasu_msk = Expi_arr > 10;
+switch animal 
+    case "Beto"
+        Pasu_msk = Expi_arr > 10;
+    case "Alfa"
+        Pasu_msk = Expi_arr > 0;
+end
 pref_chan_arr = ExpSpecTable_Aug(expftr,"pref_chan").pref_chan; % indexed by Expi number
-ExpSpecTable_Aug(expftr,"stim_size").stim_size
+stim_size_arr = ExpSpecTable_Aug(expftr,"stim_size").stim_size;
 %%
 [meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr)); 
 %% Break down Experiment numbers 
