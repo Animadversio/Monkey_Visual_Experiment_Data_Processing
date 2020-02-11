@@ -135,7 +135,7 @@ function [score_mat, bsl_mat] = get_score_mat(name_pattern)
             img_idx = find(contains(Trials.imageName, cur_fn));
             psths = rasters(channel, :, img_idx);
             scores = squeeze(mean(psths(1, 50:150, :))- mean(psths(1, 1:50, :)) );
-            baseline = squeeze(mean(psths(1, 50:150, :)));
+            baseline = squeeze(mean(psths(1, 50:150, :))); % BUGGGGG TO?Solve
             score_mat(i+6, j+6, 1:length(img_idx)) = scores;
             bsl_mat(i+6, j+6, 1:length(img_idx)) = baseline;
         end
