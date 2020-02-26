@@ -8,8 +8,8 @@ result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evolu
 %%
 % 15 has someth special
 expftr = ExpSpecTable_Aug.Expi<=14 & ExpSpecTable_Aug.Expi>=1 & ...
-    contains(ExpSpecTable_Aug.expControlFN,"generate") & ...
-    contains(ExpSpecTable_Aug.Exp_collection,"Manifold");
+    contains(ExpSpecTable_Aug.expControlFN,"generate") & ... 
+    contains(ExpSpecTable_Aug.Exp_collection,"Manifold"); 
 [meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr)); 
 %%
 if ~(exist("h","var") && exist("h0","var") && exist("h1","var") && exist("h2","var") && exist("h3","var"))
