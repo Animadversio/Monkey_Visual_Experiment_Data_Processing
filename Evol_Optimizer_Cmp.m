@@ -37,18 +37,21 @@ disp(ExpSpecTable_Aug.comments(exp_rowi))
 % finding spike ID, note for multi-thread optimizer, we will have multiple
 % pref_chan for different optimizers 
 pref_chan = Trials.TrialRecord.User.prefChan;
-assert(pref_chan(1) == pref_chan(2))
-pref_chan_id = find(meta.spikeID==pref_chan(1)); % the id in the raster and lfps matrix 
-Exp_label_str = sprintf("Exp%d pref chan %d", Expi, pref_chan(1));
+unit_in_pref_chan = cell2mat(Trials_new{1}.TrialRecord.User.evoConfiguration(:,4))';
+thread_num = size(Trials.TrialRecord.User.evoConfiguration, 1);
 
+assert(pref_chan(1) == pref_chan(2))
+Exp_label_str = sprintf("Exp%d pref chan %d", Expi, pref_chan(1));
 savepath = fullfile(result_dir, compose("Evol%02d_chan%02d", Expi, pref_chan(1)));
 mkdir(savepath);
 
 unit_name_arr = generate_unit_labels(meta.spikeID);
 [activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
-
+for i = 1:thread_num
+    pref_chan_id(i) = find(meta.spikeID==pref_chan(i) & ... % the id in the raster and lfps matrix 
+                    unit_num_arr==unit_in_pref_chan(i)); % match for unit number
+end
 %% Optimizer Names 
-thread_num = size(Trials.TrialRecord.User.evoConfiguration, 1);
 Optim_names = [];
 for i = 1:thread_num
     Optim_names = [Optim_names, string(Trials.TrialRecord.User.evoConfiguration{i,end})];
@@ -98,10 +101,10 @@ for blocki = 1:length(block_list)
 end
 end
 %% Get image name array
-channel_j = pref_chan_id(1);
 imgColl = repmat("", length(block_list), thread_num);
 scoreColl = zeros(length(block_list), thread_num);
-for threadi = 1:thread_num 
+for threadi = 1:thread_num
+    channel_j = pref_chan_id(threadi);
     for blocki = min(block_arr):max(block_arr)
         gen_msk = row_gen & block_arr == blocki & thread_msks{threadi}; 
         [maxScore, maxIdx] = max(scores_tsr(channel_j, gen_msk));
