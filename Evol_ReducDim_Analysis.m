@@ -19,7 +19,7 @@ h3 = figure('Visible','on');h3.Position = [  782          43        1779        
 axs3 = {}; axs3{1} = subplot(1,2,1); axs3{2} = subplot(1,2,2);
 % result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evol_ReducDim";
-for Triali = [2:6]
+for Triali = 1:6
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
@@ -38,7 +38,7 @@ thread_num = size(Trials.TrialRecord.User.evoConfiguration, 1);
 Exp_label_str = sprintf("Exp%d pref chan %d", Expi, pref_chan(1));
 savepath = fullfile(result_dir, compose("Evol%02d_chan%02d", Expi, pref_chan(1)));
 mkdir(savepath);
-% assert(pref_chan(1) == pref_chan(2))
+% 
 unit_name_arr = generate_unit_labels(meta.spikeID);
 [activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
 pref_chan_id = zeros(1, thread_num);
@@ -47,6 +47,7 @@ for i = 1:thread_num
     pref_chan_id(i) = find(meta.spikeID==pref_chan(i) & ... % the id in the raster and lfps matrix 
                     unit_num_arr==unit_in_pref_chan(i)); % match for unit number
 end
+assert(pref_chan(1) == pref_chan(2))
 %% Optimizer Names 
 Optim_names = [];
 for i = 1:thread_num
@@ -173,7 +174,7 @@ axs3 = AlignAxisLimits(axs3);
 %%
 saveas(h2, fullfile(savepath, compose("score_traj_cmp_chan%s.png", unit_name_arr{channel_j})))
 saveas(h3, fullfile(savepath, compose("Evolv_psth_cmp_chan%s.png", unit_name_arr{channel_j})))
-if channel_j == 
+if any(channel_j == pref_chan_id) % export to outside Folder if that is the preferred channel evolution
 saveas(h2, fullfile(result_dir, compose("Exp%02d_score_traj_cmp_chan%s.png", Expi, unit_name_arr{channel_j})))
 saveas(h3, fullfile(result_dir, compose("Exp%02d_Evolv_psth_cmp_chan%s.png", Expi, unit_name_arr{channel_j})))
 end
