@@ -5,9 +5,9 @@ clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug
 % Has to add support for more general analysis
 Set_Path;
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evol_ReducDim";
-% expftr = contains(ExpSpecTable_Aug.expControlFN,"200226");
-expftr = contains(ExpSpecTable_Aug.expControlFN,"generate") & ...
-     contains(ExpSpecTable_Aug.Exp_collection, "RedDim_Evol");
+expftr = contains(ExpSpecTable_Aug.expControlFN,"200303");
+% expftr = contains(ExpSpecTable_Aug.expControlFN,"generate") & ...
+%      contains(ExpSpecTable_Aug.Exp_collection, "RedDim_Evol");
 %  ExpSpecTable_Aug.Expi<=5 & ExpSpecTable_Aug.Expi>=4 & ...
 [meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr)); 
 %% Prepare figure frames 
