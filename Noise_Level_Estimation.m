@@ -10,7 +10,8 @@ expftr = ExpSpecTable_Aug.Expi<=5 & ExpSpecTable_Aug.Expi>=1 & ...
 global  Trials rasters sphere_norm ang_step Reps
 ang_step = 18;
 Reps = 11;
-for Triali = [1]
+result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Manifold_Noise_Estim";
+for Triali = [1:5]
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
@@ -25,12 +26,17 @@ unit_in_pref_chan = 1;
 [activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
 pref_chan_id = find(meta.spikeID==pref_chan & ... % the id in the raster and lfps matrix 
                     unit_num_arr==unit_in_pref_chan); % match for unit number
+
+Exp_label_str = sprintf("Exp%d pref chan %d", Expi, pref_chan(1));
+savepath = fullfile(result_dir, compose("Manifold%02d_chan%02d", Expi, pref_chan(1)));
+mkdir(savepath);
 % Parse out the sphere norm from image names
 tmp = cellfun(@(c) regexp(c,"norm_(?<norm>\d*)_",'names'), Trials.imageName, 'UniformOutput', false);      
 extnorms = cellfun(@(c) str2num(c.norm), tmp(~cellfun('isempty',tmp)));
 sphere_norm = mode(extnorms);
 %%
 channel_j = pref_chan_id + 1;
+for channel_j = 1:size(rasters,1)
 var_vect_col = [];
 std_vect_col = [];
 mean_vect_col = [];
@@ -56,7 +62,7 @@ end
 %
 ccoef = correlation(mean_vect_col, std_vect_col);
 [b,bint]=regress(std_vect_col',[mean_vect_col',ones(length(mean_vect_col),1)]);
-figure
+figure(13);clf
 subplot(121)
 scatter(mean_vect_col, std_vect_col)
 title([sprintf("corr coef %.3f",ccoef),sprintf("slope %.2f intercept %.1f", b(1), b(2))])
@@ -65,8 +71,11 @@ ylabel("response std")
 subplot(122)
 histogram(resid_col)
 xlabel("residue response")
-suptitle(sprintf("Manifold Exp%d chan%02d", Expi, pref_chan))
+suptitle([sprintf("Manifold Exp%d chan%02d", Expi, pref_chan),sprintf("Unit %s", unit_name_arr(channel_j))])
 %%
+saveas(13, fullfile(savepath, compose("noise_estim_%s.png", unit_name_arr(channel_j))))
+end
+end
 figure
 subplot(231)
 imagesc(score_mean)
@@ -92,7 +101,7 @@ figure, imagesc(nanstd(bsl_mat,0,3))
 % unit_in_pref_chan = cell2mat(Trials_new{1}.TrialRecord.User.evoConfiguration(:,4))';
 %%
 
-end
+
 
 function [score_mat, bsl_mat, summary, stat_str] = get_stats_from_result(name_pattern, channel)
     global  Trials rasters sphere_norm ang_step Reps

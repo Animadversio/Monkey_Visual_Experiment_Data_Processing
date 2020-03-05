@@ -3,8 +3,14 @@
 global  Trials rasters channel sphere_norm ang_step Reps
 %storedStruct = load("D:\\Manifold_Exps.mat");
 % Load code from "D:\Poncelab_Github\office-main\Project_Selectivity_Beto_loadRaw.m"
-Reps = 15; % constant for maximum number of repetitions (as long as it's larger than the maximum, it's fine)
-Set_Exp_Specs; 
+Reps = 11; % constant for maximum number of repetitions (as long as it's larger than the maximum, it's fine)
+% Set_Exp_Specs; 
+Set_Path;
+expftr = ExpSpecTable_Aug_alfa.Expi<=5 & ExpSpecTable_Aug_alfa.Expi>=1 & ...
+    contains(ExpSpecTable_Aug_alfa.expControlFN,"selectivity") & ...
+     contains(ExpSpecTable_Aug_alfa.Exp_collection, "Manifold");
+[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr),"Alfa"); 
+
 %%
 for Expi = 44:45 % universal manifold experiment identifier
 % Load the dataset 

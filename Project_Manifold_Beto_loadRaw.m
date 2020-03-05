@@ -1,5 +1,14 @@
-function [meta,rasters,lfps,Trials] = Project_Manifold_Beto_loadRaw(rowlist)
-ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xlsx");
+function [meta,rasters,lfps,Trials] = Project_Manifold_Beto_loadRaw(rowlist, animal)
+if nargin == 1
+animal = "Beto";
+end
+switch animal 
+    case "Beto"
+        ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xlsx");
+    case "Alfa"
+        ExpSpecTable_Aug = readtable("Exp_Record_Alfa.xlsx");
+end
+% ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xlsx");
 iExp = 0;
 for iExp = 1:numel(rowlist)
     rowi = rowlist(iExp);

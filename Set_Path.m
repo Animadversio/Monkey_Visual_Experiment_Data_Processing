@@ -4,6 +4,7 @@ system("subst S: D:\Network_Data_Sync") % set this alias! so that copying and sy
 % it will load the newest version of ExpSpecTable and compute pref_chan_arr
 % and norm_arr from it! 
 ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xlsx");
+ExpSpecTable_Aug_alfa = readtable("Exp_Record_Alfa.xlsx");
 copyfile("S:\ExpSpecTable_Augment.xlsx", ".\ExpSpecTable_Augment.xlsx")
 addpath(".\utils")
 addpath(".\DNN")
