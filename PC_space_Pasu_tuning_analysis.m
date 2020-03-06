@@ -1,3 +1,5 @@
+clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug  ExpSpecTable_Aug_alfa ExpRecord
+%%
 % Code to do basic analysis on PC + Pasupathy patch manifold experiment
 % analysis
 global  Trials rasters channel sphere_norm ang_step Reps
@@ -13,11 +15,10 @@ switch Animal
     case "Beto"
         ExpRecord = ExpSpecTable_Aug;
 end 
-expftr = ExpRecord.Expi<=15 & ExpRecord.Expi>=6 & ...
+expftr = ExpRecord.Expi<=24 & ExpRecord.Expi>=16 & ...
     contains(ExpRecord.expControlFN,"selectivity") & ...
      contains(ExpRecord.Exp_collection, "Manifold");
 [meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr),Animal); 
-
 %%
 figure(1);clf; set(1,'position', [ 326         629        2089         254]); % all pasu images montage 
 figure(2);clf; set(2,'position', [ 326         629        2089         254]); % all manifold images montaged
@@ -25,7 +26,8 @@ figure(3);clf; set(3, 'position', [ 805         197        1559         781]); %
 figure(4);clf; set(4, 'position', [  73         181        2479         593]); % neural response to pasu images
 
 %%
-for Triali = 1:5 % universal manifold experiment identifier
+Reps = 15;
+for Triali = 1:length(meta_new) % universal manifold experiment identifier
 % Load the dataset 
 % meta = storedStruct.meta{Expi};
 % rasters = storedStruct.rasters{Expi};
@@ -37,6 +39,7 @@ exp_rowi = find(contains(ExpRecord.ephysFN, meta.ephysFN));
 Expi = ExpRecord.Expi(exp_rowi);% Check the Expi match number
 fprintf("Processing %s Exp %d:\n", Animal, Expi)
 disp(ExpRecord.comments(exp_rowi))
+
 % assert(Expi_tab == Expi, "Data Expi doesn't match that in exp record! Check your indexing or record.")
 
 sphere_norm = infer_norm_from_imgname(Trials.imageName);
