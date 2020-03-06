@@ -80,9 +80,10 @@ montage(img_list, 'Size', [4, 51]);
 saveas(1, fullfile(savepath, "pasupathy_images.jpg"))
 % Load and visualize the Pasupathy shapes
 img_dir = meta.stimuli; % image storage path online
-if ~contains(img_dir, "N:\") && ~contains(img_dir, "\\storage1.ris.wustl.edu\crponce\Active\") && contains(img_dir(1:8), "Stimuli")
-    img_dir = fullfile("N:\", img_dir);
-end
+% if ~contains(img_dir, "N:\") && ~contains(img_dir, "\\storage1.ris.wustl.edu\crponce\Active\") && contains(img_dir(1:8), "Stimuli")
+%     img_dir = fullfile("N:\", img_dir);
+% end
+sphere_norm = 325;
 evolv_img_list = cell(11, 11);%{};
 for j = 1:11
     for i = 1:11
@@ -102,6 +103,27 @@ montage(evolv_img_list, 'Size', [11, 11]);
 title(sprintf("Exp%d pref chan%02d PC23 hemisphere", Expi, pref_chan))
 ylabel("PC3 axis");xlabel("PC2 axis");
 saveas(2, fullfile(savepath, sprintf("norm_%d_PC23.jpg", sphere_norm)))
+%% 
+sphere_norm = 332;
+evolv_img_list = cell(11, 11);%{};
+for j = 1:11
+    for i = 1:11
+        cur_fn = sprintf('norm_%d_PC49_%d_PC50_%d', sphere_norm, ...
+            (i - 6)*ang_step, (j - 6)*ang_step);
+        img_idx = find(contains(Trials.imageName, cur_fn));
+        if length(img_idx) == 0 % empty space
+            evolv_img_list{i,j} = [];
+        else
+            evolv_img_list{i,j} = imread(fullfile(img_dir, [cur_fn, '.jpg']));
+        end
+    end
+end
+clear cur_fn i j img_idx
+figure(5);%set(0,'CurrentFigure',2); %clf; %
+montage(evolv_img_list, 'Size', [11, 11]);
+title(sprintf("Exp%d pref chan%02d PC4950 hemisphere", Expi, pref_chan))
+ylabel("PC50 axis");xlabel("PC49 axis");
+saveas(5, fullfile(savepath, sprintf("norm_%d_PC4950.jpg", sphere_norm)))
 % Record the basic statisitcs or load them from the saved file. 
 Stat_summary = {};
 % load(fullfile(savepath, "KentFit_Stats.mat"), 'Param_summary') % Load computed Kent Fit 
@@ -176,9 +198,14 @@ end
 % end
 % figure(11)
 % montage(img_list, 'Size', [11 11])
+%%
+infer_norm_from_imgname(Trials.imageName, "RND2")
 %% Getting Stats
-function sphere_norm = infer_norm_from_imgname(imgnames)
-    tmp = cellfun(@(c) regexp(c,"norm_(?<norm>\d*)_",'names'), imgnames, 'UniformOutput', false);      
+function sphere_norm = infer_norm_from_imgname(imgnames, pattern)
+    if nargin == 1
+        pattern = "PC2"; % by default it's the PC2 PC3 space
+    end
+    tmp = cellfun(@(c) regexp(c,strcat("norm_(?<norm>\d*)_", pattern),'names'), imgnames, 'UniformOutput', false);      
     extnorms = cellfun(@(c) str2num(c.norm), tmp(~cellfun('isempty',tmp)));
     sphere_norm = mode(extnorms);
 end
