@@ -37,7 +37,7 @@ disp(ExpSpecTable_Aug.comments(exp_rowi))
 % finding spike ID, note for multi-thread optimizer, we will have multiple
 % pref_chan for different optimizers 
 pref_chan = Trials.TrialRecord.User.prefChan;
-unit_in_pref_chan = cell2mat(Trials_new{1}.TrialRecord.User.evoConfiguration(:,4))';
+unit_in_pref_chan = cell2mat(Trials.TrialRecord.User.evoConfiguration(:,4))';
 thread_num = size(Trials.TrialRecord.User.evoConfiguration, 1);
 
 assert(pref_chan(1) == pref_chan(2))

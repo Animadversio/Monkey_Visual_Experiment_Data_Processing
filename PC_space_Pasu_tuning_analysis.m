@@ -3,46 +3,61 @@
 global  Trials rasters channel sphere_norm ang_step Reps
 %storedStruct = load("D:\\Manifold_Exps.mat");
 % Load code from "D:\Poncelab_Github\office-main\Project_Selectivity_Beto_loadRaw.m"
-Reps = 11; % constant for maximum number of repetitions (as long as it's larger than the maximum, it's fine)
+Reps = 15; % constant for maximum number of repetitions (as long as it's larger than the maximum, it's fine)
 % Set_Exp_Specs; 
 Set_Path;
-expftr = ExpSpecTable_Aug_alfa.Expi<=5 & ExpSpecTable_Aug_alfa.Expi>=1 & ...
-    contains(ExpSpecTable_Aug_alfa.expControlFN,"selectivity") & ...
-     contains(ExpSpecTable_Aug_alfa.Exp_collection, "Manifold");
-[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr),"Alfa"); 
+Animal = "Alfa";
+switch Animal
+    case "Alfa"
+        ExpRecord = ExpSpecTable_Aug_alfa;
+    case "Beto"
+        ExpRecord = ExpSpecTable_Aug;
+end 
+expftr = ExpRecord.Expi<=15 & ExpRecord.Expi>=6 & ...
+    contains(ExpRecord.expControlFN,"selectivity") & ...
+     contains(ExpRecord.Exp_collection, "Manifold");
+[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr),Animal); 
 
 %%
-for Expi = 44:45 % universal manifold experiment identifier
+figure(1);clf; set(1,'position', [ 326         629        2089         254]); % all pasu images montage 
+figure(2);clf; set(2,'position', [ 326         629        2089         254]); % all manifold images montaged
+figure(3);clf; set(3, 'position', [ 805         197        1559         781]); % neural response to manifold images
+figure(4);clf; set(4, 'position', [  73         181        2479         593]); % neural response to pasu images
+
+%%
+for Triali = 1:5 % universal manifold experiment identifier
 % Load the dataset 
 % meta = storedStruct.meta{Expi};
 % rasters = storedStruct.rasters{Expi};
 % Trials = storedStruct.Trials{Expi};
-% Load new dataset
-% meta = meta_new{2*(Expi-24)-1};
-% rasters = rasters_new{2*(Expi-24)-1};
-% Trials = Trials_new{2*(Expi-24)-1};
-% sphere_norm = Pasu_norm_arr(Expi-10); % Load the specific information
-Triali = 3*(Expi - 43)-2;%Expi - 34;
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
-exp_rowi = find(contains(ExpSpecTable_Aug.ephysFN, meta.ephysFN));
-% Check the Expi match number
-Expi_tab = ExpSpecTable_Aug.Expi(exp_rowi);
-assert(Expi_tab == Expi, "Data Expi doesn't match that in exp record! Check your indexing or record.")
-fprintf("Processing Exp %d, %s\n", Expi, meta.comments)
+exp_rowi = find(contains(ExpRecord.ephysFN, meta.ephysFN));
+Expi = ExpRecord.Expi(exp_rowi);% Check the Expi match number
+fprintf("Processing %s Exp %d:\n", Animal, Expi)
+disp(ExpRecord.comments(exp_rowi))
+% assert(Expi_tab == Expi, "Data Expi doesn't match that in exp record! Check your indexing or record.")
 
-sphere_norm = norm_arr(Expi);
-pref_chan = pref_chan_arr(Expi);
+sphere_norm = infer_norm_from_imgname(Trials.imageName);
+pref_chan = Trials.TrialRecord.User.prefChan;
+unit_in_pref_chan = 1; % TODO find this number somewhere
+% unit_in_pref_chan = cell2mat(Trials.TrialRecord.User.evoConfiguration(:,4))';
+% thread_num = size(Trials.TrialRecord.User.evoConfiguration, 1);
+
+% sphere_norm = norm_arr(Expi);
+% pref_chan = pref_chan_arr(Expi);
 
 ang_step = 18;
 % Save basic info
-savepath = sprintf("C:\\Users\\ponce\\OneDrive - Washington University in St. Louis\\PC_space_tuning\\Exp%d_chan%02d", Expi, pref_chan);
+Exp_label_str = sprintf("Exp%d pref chan %d", Expi, pref_chan(1));
+savepath = sprintf("C:\\Users\\ponce\\OneDrive - Washington University in St. Louis\\PC_space_tuning\\Alfa_Exp%d_chan%02d", Expi, pref_chan);
 mkdir(savepath);
 unit_name_arr = generate_unit_labels(meta.spikeID, savepath); % Generate readable labels for each channel
 [activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters, savepath);
 
 % Load and visualize the Pasupathy shapes
+% Pre load the pasu images and montage them in figure(1)
 img_dir = 'N:\Stimuli\2019-Manifold\pasupathy-wg-f-4-ori';
 img_list = cell(51, 4);%{};
 for j = 1:4
@@ -57,11 +72,14 @@ for j = 1:4
     end
 end
 clear cur_fn i j img_idx
-figure(1);set(1,'position', [ 326         629        2089         254])
+set(0,'CurrentFigure',1); %clf; %
 montage(img_list, 'Size', [4, 51]);
 saveas(1, fullfile(savepath, "pasupathy_images.jpg"))
 % Load and visualize the Pasupathy shapes
 img_dir = meta.stimuli; % image storage path online
+if ~contains(img_dir, "N:\") && ~contains(img_dir, "\\storage1.ris.wustl.edu\crponce\Active\") && contains(img_dir(1:8), "Stimuli")
+    img_dir = fullfile("N:\", img_dir);
+end
 evolv_img_list = cell(11, 11);%{};
 for j = 1:11
     for i = 1:11
@@ -76,7 +94,7 @@ for j = 1:11
     end
 end
 clear cur_fn i j img_idx
-figure(2);set(2,'position', [ 326         629        2089         254])
+set(0,'CurrentFigure',2); %clf; %
 montage(evolv_img_list, 'Size', [11, 11]);
 title(sprintf("Exp%d pref chan%02d PC23 hemisphere", Expi, pref_chan))
 ylabel("PC3 axis");xlabel("PC2 axis");
@@ -86,14 +104,11 @@ Stat_summary = {};
 % load(fullfile(savepath, "KentFit_Stats.mat"), 'Param_summary') % Load computed Kent Fit 
 % load(fullfile(savepath, "Basic_Stats.mat"), 'Stat_summary') % Load Stats
 for channel = 1:size(rasters, 1)
-chan_label_str = sprintf("Exp%d Channel %s", Expi, unit_name_arr{channel});
-
-figure(3);clf; set(3, 'position', [ 805         197        1559         781]);
-figure(4);clf; set(4, 'position', [  73         181        2479         593]);
+chan_label_str = sprintf("%s Exp%d Channel %s", Animal, Expi, unit_name_arr{channel});
 %%
 [score_mat, bsl_mat, summary, stat_str] = get_stats_from_result('norm_%d_PC2_%d_PC3_%d');
 Stat_summary{channel, 1} = summary;
-figure(3);clf;
+set(0,'CurrentFigure',3); clf;
 ax1 = subplot(1,2,1);
 imagesc(-90:18:90, -90:18:90, nanmean(score_mat, 3)) % sum(score_mat,3)./cnt_mat
 ylabel("PC 2 degree");xlabel("PC 3 degree")
@@ -111,7 +126,7 @@ set(ax1, 'position', [0.0500    0.0700    0.4018    0.8050]);
 Stat_summary{channel, 2} = summary;
 % visualize the pasupathy tuning 
 hl_mat = nanmean(score_mat,3);
-figure(4);clf % 2 panel plot for response and images
+set(0,'CurrentFigure',4); clf;% 2 panel plot for response and images
 ax1 = subplot(2,1,1);
 imagesc(hl_mat');
 xlabel("Shape id");ylabel("orientation")
@@ -128,8 +143,8 @@ montage(frame_img_list, 'Size', [4, 51]);
 set(ax1,'position',[0.0500    0.5038    0.9050    0.2977])
 set(ax2,'position',[0.0500    0.0800    0.9050    0.2977])
 %
-saveas(3, fullfile(savepath, sprintf("chan%02d_PC23_tune.png", channel)))
-saveas(4, fullfile(savepath, sprintf("chan%02d_Pasu_tune.png", channel)))
+saveas(3, fullfile(savepath, sprintf("PC23_tune_chan%s.png", unit_name_arr{channel})))
+saveas(4, fullfile(savepath, sprintf("Pasu_tune_chan%s.png", unit_name_arr{channel})))
 % save_to_pdf(3, fullfile(savepath, sprintf("chan%02d_PC23_tune.pdf", channel)))
 % save_to_pdf(4, fullfile(savepath, sprintf("chan%02d_Pasu_tune.pdf", channel)))
 end
@@ -159,6 +174,12 @@ end
 % figure(11)
 % montage(img_list, 'Size', [11 11])
 %% Getting Stats
+function sphere_norm = infer_norm_from_imgname(imgnames)
+    tmp = cellfun(@(c) regexp(c,"norm_(?<norm>\d*)_",'names'), imgnames, 'UniformOutput', false);      
+    extnorms = cellfun(@(c) str2num(c.norm), tmp(~cellfun('isempty',tmp)));
+    sphere_norm = mode(extnorms);
+end
+
 function [score_mat, bsl_mat, summary, stat_str] = get_stats_from_result(name_pattern)
     global  Trials rasters channel sphere_norm ang_step Reps
     score_mat = nan(11,11,Reps); 

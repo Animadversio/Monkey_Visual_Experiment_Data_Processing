@@ -8,12 +8,17 @@ writetable(ExpSpecTable_Aug, "S:\ExpSpecTable_Augment.xlsx")
 %%
 ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xlsx");
 %% Analysis and Fix the table 
-
+ExpRecord = ExpSpecTable_Aug_alfa;
+%%
+writetable(ExpRecord, "Exp_Record_Alfa.xlsx")
+writetable(ExpRecord, "S:\Exp_Record_Alfa.xlsx")
 %% Add the path prefix to the stimuli path
-for i = 1:size(ExpSpecTable_Aug,1)
-    stimpath = ExpSpecTable_Aug.stimuli{i};
+for i = 1:size(ExpRecord,1)
+    stimpath = ExpRecord.stimuli{i};
+    if ~isempty(stimpath)
     if ~contains(stimpath, "N:\") && ~contains(stimpath, "\\storage1.ris.wustl.edu\crponce\Active\") && contains(stimpath(1:8), "Stimuli")
-        ExpSpecTable_Aug.stimuli{i} = fullfile("N:\", stimpath);
+        ExpRecord.stimuli{i} = fullfile("N:\", stimpath);
+    end
     end
 end
 
