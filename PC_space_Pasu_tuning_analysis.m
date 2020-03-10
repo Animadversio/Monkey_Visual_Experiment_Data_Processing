@@ -28,7 +28,6 @@ figure(3);clf; set(3, 'position', [ 805         197        1559         781]); %
 figure(4);clf; set(4, 'position', [  73         181        2479         593]); % neural response to pasu images
 figure(7);clf; set(7, 'position', [ 805         197        1559         781]); % neural response to manifold images PC 49 50 
 figure(8);clf; set(8, 'position', [ 805         197        1559         781]); % neural response to manifold images RND 1 2 
-
 %%
 Reps = 15;
 for Triali = 4:length(meta_new) % universal manifold experiment identifier

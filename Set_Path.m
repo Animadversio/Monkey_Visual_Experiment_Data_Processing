@@ -13,3 +13,9 @@ addpath(".\NMF")
 % Depends on 
 % - brewermap
 % - shadedErrorBar
+switch Animal
+    case "Alfa"
+        ExpRecord = ExpSpecTable_Aug_alfa;
+    case "Beto"
+        ExpRecord = ExpSpecTable_Aug;
+end 

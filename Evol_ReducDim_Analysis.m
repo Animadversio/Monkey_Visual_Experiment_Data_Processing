@@ -3,13 +3,16 @@ clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug
 % much adapted from Evol_Traj_Cmp & Evol_Optimizer_Cmp code, inspired Evol_Traj_analysis code.
 % (it's kind of a multi-thread) version of Evol Traj analysis
 % Has to add support for more general analysis
-Set_Path;
-result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evol_ReducDim";
-expftr = contains(ExpSpecTable_Aug.expControlFN,"200303");
 % expftr = contains(ExpSpecTable_Aug.expControlFN,"generate") & ...
 %      contains(ExpSpecTable_Aug.Exp_collection, "RedDim_Evol");
 %  ExpSpecTable_Aug.Expi<=5 & ExpSpecTable_Aug.Expi>=4 & ...
-[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr)); 
+Animal = "Beto";Set_Path;
+result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evol_ReducDim";
+expftr = contains(ExpRecord.expControlFN,"200309");
+% expftr = ExpRecord.Expi<=24 & ExpRecord.Expi>=16 & ...
+%     contains(ExpRecord.expControlFN,"selectivity") & ...
+%      contains(ExpRecord.Exp_collection, "Manifold");
+[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr),Animal); 
 %% Prepare figure frames 
 h = figure('Visible','on');set(h,'position',[1          41        2560         963]);
 axs{1} = subplot(1,2,1);axs{2} = subplot(1,2,2);
