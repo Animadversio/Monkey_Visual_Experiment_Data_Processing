@@ -5,13 +5,14 @@ clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug ExpR
 
 % global block_arr gen_list color_seq row_gen row_nat
 % global evol_stim_fr evol_stim_sem meanscore_syn stdscore_syn meanscore_nat stdscore_nat
-Animal = "Alfa"; Set_Path;
+Animal = "Beto"; Set_Path;
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
-expftr = contains(ExpRecord.expControlFN,"200303");
 % expftr = contains(ExpSpecTable_Aug.expControlFN,"generate") & ...
 %      contains(ExpSpecTable_Aug.Exp_collection, "Optimizer_cmp");
 %  ExpSpecTable_Aug.Expi<=5 & ExpSpecTable_Aug.Expi>=4 & ...
-[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(147,Animal); %find(expftr)
+expftr = contains(ExpRecord.expControlFN,"generate") & ...
+      contains(ExpSpecTable_Aug.Exp_collection, "Optim_tuning");
+[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr),Animal); %find(expftr)
 %% Prepare figure frames 
 h = figure(1);set(h,'position',[1          41        2560         963],'Visible','on');
 axs{1} = subplot(1,2,1);axs{2} = subplot(1,2,2);
@@ -41,7 +42,7 @@ thread_num = size(Trials.TrialRecord.User.evoConfiguration, 1);
 
 assert(pref_chan(1) == pref_chan(2))
 Exp_label_str = sprintf("Exp%d pref chan %d", Expi, pref_chan(1));
-savepath = fullfile(result_dir, compose("%s_Evol%02d_chan%02d", Animal, Triali, pref_chan(1)));
+savepath = fullfile(result_dir, compose("%s_Evol%02d_chan%02d", Animal, Expi, pref_chan(1)));
 mkdir(savepath);
 
 unit_name_arr = generate_unit_labels(meta.spikeID);
