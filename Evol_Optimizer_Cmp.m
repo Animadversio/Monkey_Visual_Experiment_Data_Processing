@@ -1,37 +1,36 @@
-clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug 
+clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug ExpRecord
 %% Analysis Code for Comparing Optimizers on a same unit. 
 % much adapted from Evol_Traj_Cmp code, inspired Evol_Traj_analysis code.
 % (it's kind of a multi-thread) version of Evol Traj analysis
 
 % global block_arr gen_list color_seq row_gen row_nat
 % global evol_stim_fr evol_stim_sem meanscore_syn stdscore_syn meanscore_nat stdscore_nat
-Set_Path;
+Animal = "Alfa"; Set_Path;
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
-ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xlsx");
-expftr = contains(ExpSpecTable_Aug.expControlFN,"200204");
+expftr = contains(ExpRecord.expControlFN,"200303");
 % expftr = contains(ExpSpecTable_Aug.expControlFN,"generate") & ...
 %      contains(ExpSpecTable_Aug.Exp_collection, "Optimizer_cmp");
 %  ExpSpecTable_Aug.Expi<=5 & ExpSpecTable_Aug.Expi>=4 & ...
-[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr)); 
+[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(147,Animal); %find(expftr)
 %% Prepare figure frames 
-h = figure('Visible','on');set(h,'position',[1          41        2560         963]);
+h = figure(1);set(h,'position',[1          41        2560         963],'Visible','on');
 axs{1} = subplot(1,2,1);axs{2} = subplot(1,2,2);
-h2 = figure('Visible','on');clf; h2.Position = [  19         235        1779         743];
+h2 = figure(2);h2.Visible='on';clf; h2.Position = [  19         235        1779         743];
 axs2 = {}; axs2{1} = subplot(1,2,1); axs2{2} = subplot(1,2,2);
-h3 = figure('Visible','on');h3.Position = [  782          43        1779         743];
+h3 = figure(3);h3.Visible='on';h3.Position = [  782          43        1779         743];
 axs3 = {}; axs3{1} = subplot(1,2,1); axs3{2} = subplot(1,2,2);
-%
+% 
+result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Tuning";
 % result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
-result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evolution_Exp";
-for Triali = [3]
+for Triali = [3:6]
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
-exp_rowi = find(contains(ExpSpecTable_Aug.ephysFN, meta.ephysFN));
+exp_rowi = find(contains(ExpRecord.ephysFN, meta.ephysFN));
 % Check the Expi match number
-Expi = ExpSpecTable_Aug.Expi(exp_rowi);
+Expi = ExpRecord.Expi(exp_rowi);
 fprintf("Processing  Exp %d:\n",Expi)
-disp(ExpSpecTable_Aug.comments(exp_rowi))
+disp(ExpRecord.comments(exp_rowi))
 % assert(Expi_tab == Expi, "Data Expi doesn't match that in exp record! Check your indexing or record.")
 %% Sort channel id
 % finding spike ID, note for multi-thread optimizer, we will have multiple
@@ -42,7 +41,7 @@ thread_num = size(Trials.TrialRecord.User.evoConfiguration, 1);
 
 assert(pref_chan(1) == pref_chan(2))
 Exp_label_str = sprintf("Exp%d pref chan %d", Expi, pref_chan(1));
-savepath = fullfile(result_dir, compose("Evol%02d_chan%02d", Expi, pref_chan(1)));
+savepath = fullfile(result_dir, compose("%s_Evol%02d_chan%02d", Animal, Triali, pref_chan(1)));
 mkdir(savepath);
 
 unit_name_arr = generate_unit_labels(meta.spikeID);
@@ -54,14 +53,15 @@ end
 %% Optimizer Names 
 Optim_names = [];
 for i = 1:thread_num
-    Optim_names = [Optim_names, string(Trials.TrialRecord.User.evoConfiguration{i,end})];
+    Optim_names = [Optim_names, strrep(string(Trials.TrialRecord.User.evoConfiguration{i,end}),"_"," ")];
 end
 %% Sort the images
 imgnm = Trials.imageName;
 % seperate the thread natural images and generated images 
 row_gen = contains(imgnm, "gen") & ... % contains gen
         contains(imgnm, "block") & ... % contains block 
-        cellfun(@(c) isempty(regexp(c(1:2), "\d\d")), imgnm); % first 2 characters are not digits
+        cellfun(@(c) isempty(regexp(c(1:2), "\d\d")), imgnm) & ...% first 2 characters are not digits
+        cellfun(@(c) ~contains(c(end-4:end), "_nat"), imgnm) ; % last 4 characters are not `_nat`
 row_nat = ~row_gen;%contains(imgnm, "nat") & cellfun(@(c) ~isempty(regexp(c(1:2), "\d\d")), imgnm);
 % seperate the thread 1 and 2 
 row_thread0 = contains(imgnm, compose("thread%03d", 0));
@@ -174,8 +174,8 @@ title([Exp_label_str, compose('Generation averaged PSTH , channel %s', unit_name
 end
 axs3 = AlignAxisLimits(axs3);
 %%
-saveas(h2, fullfile(savepath, compose("score_traj_cmp_chan%d.png", channel_j)))
-saveas(h3, fullfile(savepath, compose("Evolv_psth_cmp_chan%d.png", channel_j)))
+saveas(h2, fullfile(savepath, compose("score_traj_cmp_chan%s.png", unit_name_arr{channel_j})))
+saveas(h3, fullfile(savepath, compose("Evolv_psth_cmp_chan%s.png", unit_name_arr{channel_j})))
 end
 end
 %% Plot the Image Evolution Trajectory 

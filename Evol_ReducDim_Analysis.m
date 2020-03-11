@@ -1,14 +1,11 @@
-clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug 
+clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug ExpRecord
 %% Analysis Code for Comparing Optimizers on a same unit. 
 % much adapted from Evol_Traj_Cmp & Evol_Optimizer_Cmp code, inspired Evol_Traj_analysis code.
 % (it's kind of a multi-thread) version of Evol Traj analysis
 % Has to add support for more general analysis
-% expftr = contains(ExpSpecTable_Aug.expControlFN,"generate") & ...
-%      contains(ExpSpecTable_Aug.Exp_collection, "RedDim_Evol");
-%  ExpSpecTable_Aug.Expi<=5 & ExpSpecTable_Aug.Expi>=4 & ...
-Animal = "Beto";Set_Path;
+Animal = "Alfa"; Set_Path;
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evol_ReducDim";
-expftr = contains(ExpRecord.expControlFN,"200309");
+expftr = contains(ExpRecord.expControlFN,"200310");
 % expftr = ExpRecord.Expi<=24 & ExpRecord.Expi>=16 & ...
 %     contains(ExpRecord.expControlFN,"selectivity") & ...
 %      contains(ExpRecord.Exp_collection, "Manifold");
