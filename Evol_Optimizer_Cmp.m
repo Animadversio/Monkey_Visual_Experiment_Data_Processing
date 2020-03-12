@@ -7,6 +7,7 @@ clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug ExpR
 % global evol_stim_fr evol_stim_sem meanscore_syn stdscore_syn meanscore_nat stdscore_nat
 Animal = "Beto"; Set_Path;
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
+result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Tuning";
 % expftr = contains(ExpSpecTable_Aug.expControlFN,"generate") & ...
 %      contains(ExpSpecTable_Aug.Exp_collection, "Optimizer_cmp");
 %  ExpSpecTable_Aug.Expi<=5 & ExpSpecTable_Aug.Expi>=4 & ...

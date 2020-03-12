@@ -3,8 +3,10 @@ clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug ExpR
 
 Animal = "Beto"; Set_Path;
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Tuning";
-% Loading the Exp data
-Triali = 3;
+% load Generator
+G = FC6Generator("matlabGANfc6");
+%% Loading the Exp data
+Triali = 1;
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
@@ -22,6 +24,12 @@ savepath = fullfile(result_dir, compose("%s_Evol%02d_chan%02d", Animal, Expi, pr
 Optim_names = [];
 for i = 1:thread_num
     Optim_names = [Optim_names, strrep(string(Trials.TrialRecord.User.evoConfiguration{i,end}),"_"," ")];
+end
+unit_name_arr = generate_unit_labels(meta.spikeID);
+[activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
+for i = 1:thread_num
+    pref_chan_id(i) = find(meta.spikeID==pref_chan(i) & ... % the id in the raster and lfps matrix 
+                    unit_num_arr==unit_in_pref_chan(i)); % match for unit number
 end
 
 imgnm = Trials.imageName;
@@ -56,18 +64,47 @@ for threadi = 1:thread_num
         stdscore_nat(:, blocki, threadi)  = std(scores_tsr(:, nat_msk), 1, 2) / sqrt(sum(nat_msk));
     end
 end
-% 
+%%
 threadi=2;
+scores_pref_ch = scores_tsr(pref_chan_id(threadi), :);
+bsl_pref_ch = squeeze(mean(rasters(pref_chan_id(threadi), 1:40, :), 2));
+rsp_pref_ch = squeeze(mean(rasters(pref_chan_id(threadi), 50:200, :), 2));
+corrcoef(bsl_pref_ch',scores_pref_ch) 
+corrcoef(bsl_pref_ch',rsp_pref_ch) 
+% note the correlation between the baseline and score is significantly negative -0.8938! 
+% Correlation bettwen rsponse and baseline rate is -0.1112, not
+% significant. 
+% The change of score is majorly (negatively) driven by fluctuation in baseline firing
+% rate
+%% 
 % Find and load all codes 
-[codes_all, img_ids, code_geni] = load_codes_all(stim_path, threadi);
-% load Generator
-G = FC6Generator("matlabGANfc6");
-% For each generation in the experiment 
-
-% get all codes in this gen, basis 
-
+[codes_all, img_ids, code_geni] = load_codes_all(meta.stimuli, threadi);
+code_scores = nan(1, length(img_ids));
+% img_ids_wsfx = cellfun(@(c) c(1:end-4), img_ids, 'UniformOutput', false);
+%% For each generation in the experiment, sort the scores onto codes
+for blocki = 2:max(block_arr)
+    gen_msk = row_gen & block_arr == blocki & thread_msks{threadi}; 
+    %nat_msk = row_nat & block_arr == blocki & thread_msks{threadi};
+    gen_imgnms = imgnm(gen_msk);
+    code_idx = zeros(1, length(gen_imgnms));
+    for imgi = 1:numel(gen_imgnms)
+        code_idx(imgi) = find(contains(img_ids, gen_imgnms{imgi}));
+    end
+    code_scores(code_idx) = scores_pref_ch(gen_msk);
+end
+%% get all codes in this gen, basis 
 % do local PCA on codes? Or norm ? 
-
 % Plot the image at the given location 
+figure(1);clf;
+for geni = 1:max(code_geni) - 1
+    codes_cur = codes_all(code_geni <= geni+3 & code_geni >= geni-2, :);
+    scores_cur = code_scores(code_geni <= geni+3 & code_geni >= geni-2); 
+    [codeRD, RDmap] = pca(codes_cur, 3);
+    sz_arr = 50*ones(1, length(scores_cur)); sz_arr(1:41:end) = 150;
+    scatter3(codeRD(:,1),codeRD(:,2), codeRD(:,3), sz_arr, scores_cur,"filled")%,"MarkerFaceColor",0.5)
+    xlabel("PC1");ylabel("PC2");zlabel("PC3")
+    colorbar()
+    pause
+end
 
 % Visualize the gradient / the next sample 
