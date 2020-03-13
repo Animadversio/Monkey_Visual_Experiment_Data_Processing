@@ -6,7 +6,7 @@ result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optim
 % load Generator
 G = FC6Generator("matlabGANfc6");
 %% Loading the Exp data
-Triali = 1;
+Triali = 4;
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
@@ -65,10 +65,11 @@ for threadi = 1:thread_num
     end
 end
 %%
-threadi=2;
+threadi=1;
 scores_pref_ch = scores_tsr(pref_chan_id(threadi), :);
 bsl_pref_ch = squeeze(mean(rasters(pref_chan_id(threadi), 1:40, :), 2));
 rsp_pref_ch = squeeze(mean(rasters(pref_chan_id(threadi), 50:200, :), 2));
+corrcoef(bsl_pref_ch',max(0,scores_pref_ch) )
 corrcoef(bsl_pref_ch',scores_pref_ch) 
 corrcoef(bsl_pref_ch',rsp_pref_ch) 
 % note the correlation between the baseline and score is significantly negative -0.8938! 
@@ -81,7 +82,7 @@ corrcoef(bsl_pref_ch',rsp_pref_ch)
 [codes_all, img_ids, code_geni] = load_codes_all(meta.stimuli, threadi);
 code_scores = nan(1, length(img_ids));
 % img_ids_wsfx = cellfun(@(c) c(1:end-4), img_ids, 'UniformOutput', false);
-%% For each generation in the experiment, sort the scores onto codes
+% For each generation in the experiment, sort the scores onto codes
 for blocki = 2:max(block_arr)
     gen_msk = row_gen & block_arr == blocki & thread_msks{threadi}; 
     %nat_msk = row_nat & block_arr == blocki & thread_msks{threadi};
@@ -95,11 +96,14 @@ end
 %% get all codes in this gen, basis 
 % do local PCA on codes? Or norm ? 
 % Plot the image at the given location 
-figure(1);clf;
+figure(4);clf;
 for geni = 1:max(code_geni) - 1
-    codes_cur = codes_all(code_geni <= geni+3 & code_geni >= geni-2, :);
-    scores_cur = code_scores(code_geni <= geni+3 & code_geni >= geni-2); 
-    [codeRD, RDmap] = pca(codes_cur, 3);
+    codes_basis = codes_all(code_geni <= geni+3 & code_geni >= geni-2, :);
+    scores_basis = code_scores(code_geni <= geni+3 & code_geni >= geni-2); 
+    codes_cur = codes_all(code_geni <= 15, :);
+    scores_cur = code_scores(code_geni <= 15); 
+    [~, RDmap] = pca(codes_basis, 3);
+    codeRD = codes_cur * RDmap.M;
     sz_arr = 50*ones(1, length(scores_cur)); sz_arr(1:41:end) = 150;
     scatter3(codeRD(:,1),codeRD(:,2), codeRD(:,3), sz_arr, scores_cur,"filled")%,"MarkerFaceColor",0.5)
     xlabel("PC1");ylabel("PC2");zlabel("PC3")
@@ -107,4 +111,104 @@ for geni = 1:max(code_geni) - 1
     pause
 end
 
-% Visualize the gradient / the next sample 
+%% Visualize the gradient / the next sample 
+addpath ..\CMAES_optimizer_matlab\
+figure(5);clf;
+figure(6);clf;set(6,'Position',[108         408        1894         284])
+for geni = 1:max(code_geni) - 1
+%     codes_basis = codes_all(code_geni <= geni+1 & code_geni >= geni, :);
+%     scores_basis = code_scores(code_geni <= geni+1 & code_geni >= geni); 
+%     [~, RDmap] = pca(codes_basis, 2);
+    codes_cur = codes_all(code_geni == geni, :);
+    scores_cur = code_scores(code_geni == geni);
+    codes_next = codes_all(code_geni == geni + 1, :);
+    scores_next = code_scores(code_geni == geni + 1);
+    if ~contains(Optim_names{threadi},"CMAES")
+    cur_basis = codes_cur(1,:);
+    next_basis = codes_next(1,:); 
+    [~, cur_idx] = sort(scores_cur(2:end),'descend');
+    [~, next_idx] = sort(scores_next(2:end),'descend');
+    ang_cur_samp = ang_dist(codes_cur(2:end, :),cur_basis);
+    ang_next_samp = ang_dist(codes_next(2:end, :),next_basis);
+    else
+        weights = rankweight(40,20);
+        [~, cur_idx] = sort(scores_cur,'descend');
+        [~, next_idx] = sort(scores_next,'descend');
+        cur_basis = weights * codes_cur(cur_idx,:);
+        next_basis = weights * codes_next(next_idx,:);
+        ang_cur_samp = ang_dist(codes_cur,cur_basis);
+        ang_next_samp = ang_dist(codes_next,next_basis);
+    end
+    ang_among_cur = real(acos(1-pdist(codes_cur,"cosine")));%pdist(codes_cur)
+    ang_among_next = real(acos(1-pdist(codes_next,"cosine")));
+    set(0,"CurrentFigure",5)
+    subplot(211)
+    if geni == 1, imgs_cur = G.visualize(codes_cur(end-39:end,:));else, imgs_cur = imgs_next; end
+    montage(imgs_cur(:,:,:,cur_idx),'Size',[4,10]) % sort the images from the most exciting ones to least
+    title(sprintf("Gen %02d: Mean %.1f Max %.1f\n code dist %.3f (%.1f deg), ang dist to basis %.3f (%.1f deg)", ...
+        geni+1, mean(scores_cur), max(scores_cur), mean(ang_among_cur), mean(ang_among_cur) / pi *180,...
+        mean(ang_cur_samp), mean(ang_cur_samp) / pi * 180))
+%     subplot(224)
+    subplot(212)
+    imgs_next = G.visualize(codes_next(end-39:end,:));
+    montage(imgs_next(:,:,:,next_idx),'Size',[4,10])
+    title(sprintf("Gen %02d: Mean %.1f Max %.1f; code dist %.3f (%.1f deg), ang dist to basis %.3f (%.1f deg)", ...
+        geni+2, mean(scores_next), max(scores_next), mean(ang_among_next), mean(ang_among_next) / pi *180, ...
+        mean(ang_next_samp), mean(ang_next_samp) / pi *180))
+    
+    interp_codes = sphere_interp(cur_basis, next_basis, linspace(-0.5,2, 11));
+    interp_imgs = G.visualize(interp_codes);
+    set(0,"CurrentFigure",6);clf%figure(6);
+    montage(interp_imgs,'Size',[1,11])
+    ang_basis = ang_dist(cur_basis,next_basis);
+    title(sprintf("Gen %02d: From %.1f to %.1f; ang dist %.3f (%.1f deg)", ...
+        geni+2, scores_cur(1), scores_next(1), ang_basis, ang_basis / pi * 180))
+%     subplot(221)
+%     imshow(G.visualize(cur_basis))
+%     title(num2str(scores_cur(1),"%.2f"))
+%     subplot(223)
+%     imshow(G.visualize(next_basis))
+%     title(num2str(scores_next(1),"%.2f"))
+%     
+%     codeRD = codes_cur * RDmap.M;
+%     sz_arr = 50*ones(1, length(scores_cur)); sz_arr(1:41:end) = 150;
+%     scatter3(codeRD(:,1),codeRD(:,2), codeRD(:,3), sz_arr, scores_cur,"filled")%,"MarkerFaceColor",0.5)
+%     xlabel("PC1");ylabel("PC2");zlabel("PC3")
+%     colorbar()
+    pause
+end
+%%
+ang_dist(codes_next, cur_basis)
+%%
+interp_codes = sphere_interp(cur_basis, next_basis, 9);
+interp_imgs = G.visualize(interp_codes);
+set(0,"CurrentFigure",6);clf%figure(6);
+montage(interp_imgs,'Size',[1,9])
+title(sprintf("Gen %02d: From %.1f to %.1f; ang dist %.f", ...
+        geni+2, scores_cur(1), scores_next(1), ang_dist(cur_basis,next_basis)))
+%%
+ang_dist(codes_cur,codes_cur)
+%%
+norm_axis(codes_cur,2)
+%%
+function ang = ang_dist(V1,V2)
+nV1 = V1 ./ norm_axis(V1,2);
+nV2 = V2 ./ norm_axis(V2,2);
+cosang = nV1 * nV2';
+ang = real(acos(cosang));
+end
+function norms = norm_axis(Vecs, dim)
+norms = sqrt(sum(Vecs.^2,dim));
+end
+function Vecs = sphere_interp(V1, V2, samp_n)
+nV1 = V1 / norm(V1);
+nV2 = V2 / norm(V2);
+cosang = nV1 * nV2';
+ang = acos(cosang);
+if size(samp_n) == 1
+    lingrid = linspace(0,1,samp_n)';
+else
+    lingrid = reshape(samp_n, [], 1);
+end
+Vecs = (sin((1-lingrid) * ang) * V1 + sin(lingrid * ang) * V2) / sin(ang);
+end
