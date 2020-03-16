@@ -1,17 +1,17 @@
 clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug 
 %% Estimate Noise level with Manifold Experiment Data
-Set_Path;
+Animal="Beto";Set_Path;
 % expftr = contains(ExpSpecTable_Aug.expControlFN,"200303");
-expftr = ExpSpecTable_Aug.Expi<=5 & ExpSpecTable_Aug.Expi>=6 & ...
+expftr = ExpSpecTable_Aug.Expi<=5 & ExpSpecTable_Aug.Expi>=1 & ...
     contains(ExpSpecTable_Aug.expControlFN,"selectivity") & ...
      contains(ExpSpecTable_Aug.Exp_collection, "Manifold");
-[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr)); 
+[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr),Animal); 
 %%
 global  Trials rasters sphere_norm ang_step Reps
 ang_step = 18;
 Reps = 11;
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Manifold_Noise_Estim";
-for Triali = [1:5]
+for Triali = 1:5
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
@@ -34,17 +34,29 @@ mkdir(savepath);
 tmp = cellfun(@(c) regexp(c,"norm_(?<norm>\d*)_",'names'), Trials.imageName, 'UniformOutput', false);      
 extnorms = cellfun(@(c) str2num(c.norm), tmp(~cellfun('isempty',tmp)));
 sphere_norm = mode(extnorms);
-%%
-channel_j = pref_chan_id + 1;
+%% Channel loop
+%channel_j = pref_chan_id + 1;
+% collect statistics across channel see the distribution
+cc_col = nan(size(rasters,1));
+slope_col = nan(size(rasters,1));
+evk_cc_col = nan(size(rasters,1));
+evk_slope_col = nan(size(rasters,1));
+fout = fopen(fullfile(savepath, "rate_std_corr_stats.txt"),'w');
 for channel_j = 1:size(rasters,1)
+% for each channel collect these statistics for each image identity, and form a vector. 
 var_vect_col = [];
 std_vect_col = [];
 mean_vect_col = [];
 resid_col = [];
+evk_var_vect_col = [];
+evk_std_vect_col = [];
+evk_mean_vect_col = [];
+evk_resid_col = [];
 for pattern = string({'norm_%d_PC2_%d_PC3_%d', 'norm_%d_PC49_%d_PC50_%d', 'norm_%d_RND1_%d_RND2_%d'})
 % [score_mat, bsl_mat, summary, stat_str] = get_stats_from_result('norm_%d_PC2_%d_PC3_%d', pref_chan_id);
 [score_mat, bsl_mat, summary, stat_str] = get_stats_from_result(pattern, channel_j);
 %%
+% use the score i.e. difference of rates. 
 score_mean = nanmean(score_mat, 3);
 score_std = nanstd(score_mat, 0, 3);
 score_var = nanvar(score_mat, 0, 3);
@@ -54,28 +66,89 @@ var_vect = [nanvar(score_mat(:, 1, :), 0, "all"),  reshape(score_var(:, 2:end-1)
 std_vect = [nanstd(score_mat(:, 1, :), 0, "all"), reshape(score_std(:, 2:end-1), 1, []), nanstd(score_mat(:, end, :), 0, "all")];
 mean_vect = [nanmean(score_mat(:, 1, :), "all"), reshape(score_mean(:, 2:end-1), 1, []), nanmean(score_mat(:, end, :), "all")];
 res_vect = rmmissing(reshape(score_mat-score_mean,1,[]));
+
 var_vect_col = [var_vect_col, var_vect];
 std_vect_col = [std_vect_col, std_vect];
 mean_vect_col = [mean_vect_col, mean_vect];
 resid_col = [resid_col, res_vect];
+% use the evoked rate to compute the same thing
+evk_mat = score_mat + bsl_mat;
+evk_mean = nanmean(evk_mat, 3);
+evk_std = nanstd(evk_mat, 0, 3);
+evk_var = nanvar(evk_mat, 0, 3);
+evk_mean(:, 1) = mean(evk_mat(:, 1));
+evk_mean(:, end) = mean(evk_mat(:, end));
+evk_var_vect = [nanvar(evk_mat(:, 1, :), 0, "all"),  reshape(evk_var(:, 2:end-1), 1, []),  nanvar(evk_mat(:, end, :), 0, "all")];
+evk_std_vect = [nanstd(evk_mat(:, 1, :), 0, "all"), reshape(evk_std(:, 2:end-1), 1, []), nanstd(evk_mat(:, end, :), 0, "all")];
+evk_mean_vect = [nanmean(evk_mat(:, 1, :), "all"), reshape(evk_mean(:, 2:end-1), 1, []), nanmean(evk_mat(:, end, :), "all")];
+evk_res_vect = rmmissing(reshape(evk_mat-evk_mean,1,[]));
+
+evk_var_vect_col = [evk_var_vect_col, evk_var_vect];
+evk_std_vect_col = [evk_std_vect_col, evk_std_vect];
+evk_mean_vect_col = [evk_mean_vect_col, evk_mean_vect];
+evk_resid_col = [evk_resid_col, evk_res_vect];
 end
 %
 ccoef = correlation(mean_vect_col, std_vect_col);
 [b,bint]=regress(std_vect_col',[mean_vect_col',ones(length(mean_vect_col),1)]);
-figure(13);clf
-subplot(121)
-scatter(mean_vect_col, std_vect_col)
-title([sprintf("corr coef %.3f",ccoef),sprintf("slope %.2f intercept %.1f", b(1), b(2))])
-xlabel("mean response")
-ylabel("response std")
-subplot(122)
-histogram(resid_col)
-xlabel("residue response")
-suptitle([sprintf("Manifold Exp%d chan%02d", Expi, pref_chan),sprintf("Unit %s", unit_name_arr(channel_j))])
+ccoef2 = correlation(evk_mean_vect_col, evk_std_vect_col);
+[b2,bint2]=regress(evk_std_vect_col',[evk_mean_vect_col',ones(length(evk_mean_vect_col),1)]);
+% Plot the residue and scatter for each channel
+% figure(13);clf;set(13,'position',[503         404        1156         500])
+% subplot(121)
+% scatter(mean_vect_col, std_vect_col)
+% title([sprintf("corr coef %.3f",ccoef),sprintf("slope %.2f intercept %.1f", b(1), b(2))])
+% xlabel("mean response")
+% ylabel("response std")
+% subplot(122)
+% histogram(resid_col)
+% xlabel("residue response")
+% suptitle([sprintf("Manifold Exp%d chan%02d", Expi, pref_chan),sprintf("Unit %s, Statisitcs of Score", unit_name_arr(channel_j))])
+%% Plot the residue and scatter for each channel
+% figure(14);clf;set(14,'position',[503         404        1156         500])
+% subplot(121)
+% scatter(evk_mean_vect_col, evk_std_vect_col)
+% title([sprintf("corr coef %.3f",ccoef2),sprintf("slope %.2f intercept %.1f", b2(1), b2(2))])
+% xlabel("mean response")
+% ylabel("response std")
+% subplot(122)
+% histogram(evk_resid_col)
+% xlabel("residue response rate")
+% suptitle([sprintf("Manifold Exp%d chan%02d", Expi, pref_chan),sprintf("Unit %s, Statisitcs of Evoked Response", unit_name_arr(channel_j))])
 %%
-saveas(13, fullfile(savepath, compose("noise_estim_%s.png", unit_name_arr(channel_j))))
+% saveas(14, fullfile(savepath, compose("evk_noise_estim_%s.png", unit_name_arr(channel_j))))
+cc_col(channel_j) = ccoef; 
+slope_col(channel_j) = b(1);
+evk_cc_col(channel_j) = ccoef2; 
+evk_slope_col(channel_j) = b2(1);
+% write readable statistics
+fprintf("Chan %s\t Evoked: cc %.3f, slp %.3f(%.3f,%.3f) interc %.1f(%.1f,%.1f)  Score: cc %.3f, slp %.3f(%.3f,%.3f) interc %.1f(%.1f,%.1f)\n",unit_name_arr(channel_j),...
+    ccoef2,b2(1),bint2(1,1),bint2(1,2),b2(2),bint2(2,1),bint2(2,2),...
+    ccoef,b(1),bint(1,1),bint(1,2),b(2),bint(2,1),bint(2,2))
+fprintf(fout, "Chan %s\t Evoked: cc %.3f, slp %.3f(%.3f,%.3f) interc %.1f(%.1f,%.1f)  Score: cc %.3f, slp %.3f(%.3f,%.3f) interc %.1f(%.1f,%.1f)\n",unit_name_arr(channel_j),...
+    ccoef2,b2(1),bint2(1,1),bint2(1,2),b2(2),bint2(2,1),bint2(2,2),...
+    ccoef,b(1),bint(1,1),bint(1,2),b(2),bint(2,1),bint(2,2)) ;
 end
+fclose(fout);
+save(fullfile(savepath,"noise_stats.mat"),"cc_col","slope_col","evk_cc_col","evk_slope_col")
+% Plot the pooled statistics across channel
+figure(15);clf;set(15,'position',[ 214         122        1587         856]);
+subplot(221)
+histogram(cc_col,30)
+xlabel("correlation coefficient");title(["Score (evoked rate - baseline rate)"]);
+subplot(222)
+histogram(slope_col,30)
+xlabel("slope");title(["Score (evoked rate - baseline rate)"]);
+subplot(223)
+histogram(evk_cc_col,30)
+xlabel("correlation coefficient");title(["Firing rate in 50-200 Evoked window"]);
+subplot(224)
+histogram(evk_slope_col,30)
+xlabel("slope");title(["Firing rate in 50-200 Evoked window"]);
+suptitle([sprintf("Manifold %s", Exp_label_str), "correlation and slope between std and mean"])
+saveas(15, fullfile(savepath, compose("noise_estim_summary.png")))
 end
+%%
 figure
 subplot(231)
 imagesc(score_mean)
