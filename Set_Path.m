@@ -18,4 +18,6 @@ switch Animal
         ExpRecord = ExpSpecTable_Aug_alfa;
     case "Beto"
         ExpRecord = ExpSpecTable_Aug;
+    case "Both"
+        ExpRecord = [ExpSpecTable_Aug; ExpSpecTable_Aug_alfa];
 end 
