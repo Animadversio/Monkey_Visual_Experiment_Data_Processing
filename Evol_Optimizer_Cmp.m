@@ -5,26 +5,18 @@ clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug ExpR
 
 % global block_arr gen_list color_seq row_gen row_nat
 % global evol_stim_fr evol_stim_sem meanscore_syn stdscore_syn meanscore_nat stdscore_nat
-Animal = "Beto"; Set_Path;
+Animal = "Alfa"; Set_Path;
 % result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Tuning";
-% expftr = contains(ExpSpecTable_Aug.expControlFN,"generate") & ...
-%      contains(ExpSpecTable_Aug.Exp_collection, "Optimizer_cmp");
-%  ExpSpecTable_Aug.Expi<=5 & ExpSpecTable_Aug.Expi>=4 & ...
-expftr = contains(ExpRecord.expControlFN,"generate") & ...
-      contains(ExpSpecTable_Aug.Exp_collection, "Optim_tuning");
+expftr = (contains(ExpRecord.expControlFN,"200317") | contains(ExpRecord.expControlFN,"200316")) &...
+         contains(ExpRecord.expControlFN,"generate") & ...
+       contains(ExpRecord.Exp_collection, "Optim_tuning");
 [meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr),Animal); %find(expftr)
 %% Prepare figure frames 
-h = figure(1);set(h,'position',[1          41        2560         963],'Visible','on');
-axs{1} = subplot(1,2,1);axs{2} = subplot(1,2,2);
-h2 = figure(2);h2.Visible='on';clf; h2.Position = [  19         235        1779         743];
-axs2 = {}; axs2{1} = subplot(1,2,1); axs2{2} = subplot(1,2,2);
-h3 = figure(3);h3.Visible='on';h3.Position = [  782          43        1779         743];
-axs3 = {}; axs3{1} = subplot(1,2,1); axs3{2} = subplot(1,2,2);
 % 
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Tuning";
 % result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
-for Triali = [4:6]
+for Triali = [1:11]
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
@@ -40,12 +32,25 @@ disp(ExpRecord.comments(exp_rowi))
 pref_chan = Trials.TrialRecord.User.prefChan;
 unit_in_pref_chan = cell2mat(Trials.TrialRecord.User.evoConfiguration(:,4))';
 thread_num = size(Trials.TrialRecord.User.evoConfiguration, 1);
-
-assert(pref_chan(1) == pref_chan(2))
+if thread_num == 2, assert(pref_chan(1) == pref_chan(2)); end
 Exp_label_str = sprintf("Exp%d pref chan %d", Expi, pref_chan(1));
 savepath = fullfile(result_dir, compose("%s_Evol%02d_chan%02d", Animal, Expi, pref_chan(1)));
 mkdir(savepath);
-
+if thread_num == 2
+    h = figure(1);set(h,'position',[1          41        2560         963],'Visible','on');
+    axs{1} = subplot(1,2,1);axs{2} = subplot(1,2,2);
+    h2 = figure(2);h2.Visible='on';clf; h2.Position = [  19         235        1779         743];
+    axs2 = {}; axs2{1} = subplot(1,2,1); axs2{2} = subplot(1,2,2);
+    h3 = figure(3);h3.Visible='on';h3.Position = [  782          43        1779         743];
+    axs3 = {}; axs3{1} = subplot(1,2,1); axs3{2} = subplot(1,2,2);
+elseif thread_num == 1
+    h = figure(1);set(h,'position',[134    46   949   904],'Visible','on');
+    axs{1} = subplot(1,1,1);
+    h2 = figure(2);h2.Visible='on';clf; h2.Position = [  76   110   899   774];
+    axs2 = {}; axs2{1} = subplot(1,1,1); 
+    h3 = figure(3);h3.Visible='on';h3.Position = [  76   110   899   774];
+    axs3 = {}; axs3{1} = subplot(1,1,1); 
+end
 unit_name_arr = generate_unit_labels(meta.spikeID);
 [activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
 for i = 1:thread_num
@@ -119,12 +124,14 @@ for threadi = 1:thread_num
 end
 % Montage the images
 set(0,'CurrentFigure',h); %clf; %
-set(gcf, "CurrentAxes", axs{1}); cla(axs{1},'reset'); 
-montage(imgColl(:,1))
-title([Exp_label_str, compose('Best Image per Generation'), compose("Optimizer %s", Optim_names(1))])
-set(gcf, "CurrentAxes", axs{2}); cla(axs{2},'reset'); 
-montage(imgColl(:,2))
-title([Exp_label_str, compose('Best Image per Generation'), compose("Optimizer %s", Optim_names(2))])
+for threadi = 1:thread_num
+set(gcf, "CurrentAxes", axs{threadi}); cla(axs{threadi},'reset'); 
+montage(imgColl(:,threadi))
+title([Exp_label_str, compose('Best Image per Generation'), compose("Optimizer %s", Optim_names(threadi))])
+end
+% set(gcf, "CurrentAxes", axs{2}); cla(axs{2},'reset'); 
+% montage(imgColl(:,2))
+% title([Exp_label_str, compose('Best Image per Generation'), compose("Optimizer %s", Optim_names(2))])
 saveas(h, fullfile(savepath, "EvolImageSeq_cmp.png"))
 %% Prepare color sequence 
 MAX_BLOCK_NUM = length(block_list); 
