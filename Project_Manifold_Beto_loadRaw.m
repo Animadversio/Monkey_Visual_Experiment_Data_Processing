@@ -1,6 +1,9 @@
-function [meta,rasters,lfps,Trials] = Project_Manifold_Beto_loadRaw(rowlist, animal)
+function [meta,rasters,lfps,Trials] = Project_Manifold_Beto_loadRaw(rowlist, animal, no_return)
 if nargin == 1
 animal = "Beto";
+no_return = false;
+elseif nargin == 2
+no_return = false;
 end
 switch animal 
     case "Beto"
@@ -23,7 +26,7 @@ for iExp = 1:numel(rowlist)
 end
 
 Project_General_copyMissingFiles(preMeta); % communicating and copying data from network to local 
-
+meta = {}; rasters = {}; lfps = {}; Trials = {};
 for iExp = 1:length(preMeta) 
     
     tMeta = preMeta(iExp);
@@ -31,11 +34,13 @@ for iExp = 1:length(preMeta)
     meta_merged = rmfield( tMeta, intersect(fieldnames(tMeta), fieldnames(meta_)) );
     names = [fieldnames(meta_merged); fieldnames(meta_)];
     meta_ = cell2struct([struct2cell(meta_merged); struct2cell(meta_)], names, 1);
-
+    if ~no_return % if true then don't return these things, only save to disk. 
+        % helpful when we don't want to take up all the memory! 
     meta{iExp} = meta_;
     rasters{iExp} = rasters_;
     lfps{iExp} = lfps_;
     Trials{iExp} = Trials_;
+    end
     clear meta_  rasters_ lpfs_ Trials_ names meta_merged tMeta
 end
 end

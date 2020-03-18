@@ -1,17 +1,21 @@
 clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug ExpRecord
+%%
+Animal = "Both";Set_Path;
+expftr = (contains(ExpRecord.expControlFN,"200318"));
+Project_Manifold_Beto_loadRaw(find(expftr),Animal,true);
 %% Analysis Code for Comparing Optimizers on a same unit. 
 % much adapted from Evol_Traj_Cmp code, inspired Evol_Traj_analysis code.
 % (it's kind of a multi-thread) version of Evol Traj analysis
 
 % global block_arr gen_list color_seq row_gen row_nat
 % global evol_stim_fr evol_stim_sem meanscore_syn stdscore_syn meanscore_nat stdscore_nat
-Animal = "Alfa"; Set_Path;
+Animal = "Both"; Set_Path;
 % result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Tuning";
-expftr = (contains(ExpRecord.expControlFN,"200317") | contains(ExpRecord.expControlFN,"200316")) &...
-         contains(ExpRecord.expControlFN,"generate") & ...
-       contains(ExpRecord.Exp_collection, "Optim_tuning");
-[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr),Animal); %find(expftr)
+expftr = (contains(ExpRecord.expControlFN,"200318") | contains(ExpRecord.expControlFN,"200316")) &...
+          contains(ExpRecord.expControlFN,"generate") & ...
+        contains(ExpRecord.Exp_collection, "Optim_tuning");
+[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr),Animal,true); %find(expftr)
 %% Prepare figure frames 
 % 
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Tuning";
