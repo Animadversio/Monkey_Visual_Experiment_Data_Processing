@@ -24,7 +24,8 @@ exp_rowi = find(contains(ExpRecord.ephysFN, meta.ephysFN));
 % Check the Expi match number
 Expi = ExpRecord.Expi(exp_rowi);
 fprintf("Processing  Exp %d:\n",Expi)
-disp(ExpRecord.comments(exp_rowi))
+fprintf([ExpRecord.comments{exp_rowi},'\n'])
+% disp(ExpRecord.comments(exp_rowi))
 % assert(Expi_tab == Expi, "Data Expi doesn't match that in exp record! Check your indexing or record.")
 %% Sort channel id
 % finding spike ID, note for multi-thread optimizer, we will have multiple
