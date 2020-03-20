@@ -28,7 +28,6 @@ end
 Project_General_copyMissingFiles(preMeta); % communicating and copying data from network to local 
 meta = {}; rasters = {}; lfps = {}; Trials = {};
 for iExp = 1:length(preMeta) 
-    
     tMeta = preMeta(iExp);
     [meta_,rasters_,lfps_,Trials_] = loadData(tMeta.ephysFN,'expControlFN',tMeta.expControlFN) ;
     meta_merged = rmfield( tMeta, intersect(fieldnames(tMeta), fieldnames(meta_)) );

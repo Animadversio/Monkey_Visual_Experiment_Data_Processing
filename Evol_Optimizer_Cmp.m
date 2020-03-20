@@ -1,7 +1,7 @@
 clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug ExpRecord
 %%
 Animal = "Both";Set_Path;
-expftr = (contains(ExpRecord.expControlFN,"200318"));
+expftr = (contains(ExpRecord.expControlFN,"200319"));
 Project_Manifold_Beto_loadRaw(find(expftr),Animal,true);
 %% Analysis Code for Comparing Optimizers on a same unit. 
 % much adapted from Evol_Traj_Cmp code, inspired Evol_Traj_analysis code.
@@ -9,18 +9,18 @@ Project_Manifold_Beto_loadRaw(find(expftr),Animal,true);
 
 % global block_arr gen_list color_seq row_gen row_nat
 % global evol_stim_fr evol_stim_sem meanscore_syn stdscore_syn meanscore_nat stdscore_nat
-Animal = "Both"; Set_Path;
+Animal = "Alfa"; Set_Path;
 % result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
-result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Tuning";
-expftr = (contains(ExpRecord.expControlFN,"200318") | contains(ExpRecord.expControlFN,"200316")) &...
+% result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Tuning";
+expftr = contains(ExpRecord.expControlFN,"200318") &...
           contains(ExpRecord.expControlFN,"generate") & ...
-        contains(ExpRecord.Exp_collection, "Optim_tuning");
-[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr),Animal,true); %find(expftr)
+        contains(ExpRecord.Exp_collection, "ReducDimen_Evol");
+[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr),Animal); %find(expftr)
 %% Prepare figure frames 
-% 
-result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Tuning";
+%result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Tuning";
 % result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
-for Triali = [1:11]
+result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evol_RedDim_sphere";
+for Triali = [1:length(meta_new)]
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
@@ -39,6 +39,7 @@ unit_in_pref_chan = cell2mat(Trials.TrialRecord.User.evoConfiguration(:,4))';
 thread_num = size(Trials.TrialRecord.User.evoConfiguration, 1);
 if thread_num == 2, assert(pref_chan(1) == pref_chan(2)); end
 Exp_label_str = sprintf("Exp%d pref chan %d", Expi, pref_chan(1));
+if contains(meta.ephysFN, "Beto"), Animal = "Beto"; elseif contains(meta.ephysFN, "Alfa"), Animal = "Alfa"; end
 savepath = fullfile(result_dir, compose("%s_Evol%02d_chan%02d", Animal, Expi, pref_chan(1)));
 mkdir(savepath);
 if thread_num == 2
@@ -113,11 +114,11 @@ for blocki = 1:length(block_list)
 end
 end
 %% Get image name array
-imgColl = repmat("", length(block_list), thread_num);
-scoreColl = zeros(length(block_list), thread_num);
+imgColl = repmat("", length(block_list)-1, thread_num);
+scoreColl = zeros(length(block_list)-1, thread_num);
 for threadi = 1:thread_num
     channel_j = pref_chan_id(threadi);
-    for blocki = min(block_arr):max(block_arr)
+    for blocki = min(block_arr):max(block_arr)-1 % exclude last gen if there is no max
         gen_msk = row_gen & block_arr == blocki & thread_msks{threadi}; 
         [maxScore, maxIdx] = max(scores_tsr(channel_j, gen_msk));
         tmpimgs = imgnm(gen_msk);
