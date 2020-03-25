@@ -65,6 +65,9 @@ G = FC6Generator("matlabGANfc6");
 % For each generation in the experiment 
 
 % get all codes in this gen, basis 
+for blocki = 1:max(block_arr)
+codes = codes_all(code_geni == blocki, :);
+cur_ids = img_ids(code_geni == blocki);
 
 % do local PCA on codes? Or norm ? 
 
