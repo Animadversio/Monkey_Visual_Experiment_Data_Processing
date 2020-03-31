@@ -12,11 +12,11 @@ Project_Manifold_Beto_loadRaw(find(expftr),Animal,true);
 Animal = "Alfa"; Set_Path;
 % result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
 % result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Tuning";
-expftr = contains(ExpRecord.expControlFN,"200318") &...
-          contains(ExpRecord.expControlFN,"generate") & ...
+
+expftr = contains(ExpRecord.expControlFN,"generate") & ...
         contains(ExpRecord.Exp_collection, "ReducDimen_Evol");
 [meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr),Animal); %find(expftr)
-%% Prepare figure frames 
+% Prepare figure frames 
 %result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Tuning";
 % result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evol_RedDim_sphere";

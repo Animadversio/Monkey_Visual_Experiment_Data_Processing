@@ -7,6 +7,8 @@ ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xlsx");
 ExpSpecTable_Aug_alfa = readtable("S:\Exp_Record_Alfa.xlsx");
 copyfile("S:\ExpSpecTable_Augment.xlsx", ".\ExpSpecTable_Augment.xlsx")
 copyfile("S:\Exp_Record_Alfa.xlsx", ".\Exp_Record_Alfa.xlsx")
+%winopen("S:\ExpSpecTable_Augment.xlsx")
+%winopen("S:\Exp_Record_Alfa.xlsx")
 addpath(".\utils")
 addpath(".\DNN")
 addpath(".\NMF")

@@ -98,6 +98,9 @@ def sort_merge_table(df_sort, addexplabel=None):
         id_col = []
         for idx in df_sort.index:
             name = df_sort.expControlFN[idx]
+            if name is np.nan:
+                print("%s Empty bhv file entry encountered" % df_sort.ephysFN[idx])
+                continue
             if animal in name:
                 if (df_old.expControlFN==name).any():
                     print("%s  has been recorded in the excel index %d, please check. Skipping."%(name, (df_old.expControlFN==name).nonzero()[0][0]))
