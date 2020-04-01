@@ -1,46 +1,36 @@
 clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug ExpRecord
 %%
-Animal = "alfa";Set_Path;
+Animal = "Beto";Set_Path;
 %expftr = (contains(ExpRecord.expControlFN,"200319"));
-expftr = (contains(ExpRecord.Exp_collection,"SUHash"));%find(expftr)
-Project_Manifold_Beto_loadRaw(137:180,Animal,true);
+expftr = contains(ExpRecord.expControlFN,"generate") & ...
+    (contains(ExpRecord.Exp_collection,"SUHash"));%find(expftr)
+Project_Manifold_Beto_loadRaw(find(expftr),Animal,false);
 %% Analysis Code for Comparing Optimizers on a same unit. 
 % much adapted from Evol_Traj_Cmp code, inspired Evol_Traj_analysis code.
 % (it's kind of a multi-thread) version of Evol Traj analysis
 
 % global block_arr gen_list color_seq row_gen row_nat
 % global evol_stim_fr evol_stim_sem meanscore_syn stdscore_syn meanscore_nat stdscore_nat
-Animal = "Alfa"; Set_Path;
+Animal = "Beto"; Set_Path;
+% result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
+% result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Tuning";
+
 expftr = contains(ExpRecord.expControlFN,"generate") & ...
-        contains(ExpRecord.Exp_collection, "SUHash");
-row_idx = find(expftr);
+    (contains(ExpRecord.Exp_collection,"SUHash"));
 [meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr),Animal); %find(expftr)
 %% Prepare figure frames 
-% result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Tuning";
+%result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Tuning";
 % result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
-% result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evol_RedDim_sphere";
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evol_SUHash";
-for Triali = [10:length(row_idx)]
-% meta = meta_new{Triali};
-% rasters = rasters_new{Triali};
-% Trials = Trials_new{Triali};
-% real time loading to save memory (but waste some time.)
-[meta,rasters,lfps,Trials] = Project_Manifold_Beto_loadRaw(row_idx(Triali),Animal); 
-meta = meta{1}; rasters = rasters{1}; Trials = Trials{1};
-if isempty(Trials.TrialRecord)
-    fprintf("======================================\n")
-    fprintf("Exp %d: Lack the Trial Record, Skipped\n",Expi)
-    fprintf([ExpRecord.comments{exp_rowi},'\n'])
-    fprintf("======================================\n")
-    continue
-end
+for Triali = [1:4,6:length(meta_new)]
+meta = meta_new{Triali};
+rasters = rasters_new{Triali};
+Trials = Trials_new{Triali};
 exp_rowi = find(contains(ExpRecord.ephysFN, meta.ephysFN));
 % Check the Expi match number
 Expi = ExpRecord.Expi(exp_rowi);
 fprintf("Processing  Exp %d:\n",Expi)
 fprintf([ExpRecord.comments{exp_rowi},'\n'])
-% disp(ExpRecord.comments(exp_rowi))
-% assert(Expi_tab == Expi, "Data Expi doesn't match that in exp record! Check your indexing or record.")
 %% Sort channel id
 % finding spike ID, note for multi-thread optimizer, we will have multiple
 % pref_chan for different optimizers 
@@ -52,30 +42,27 @@ Exp_label_str = sprintf("Exp%d pref chan %d", Expi, pref_chan(1));
 if contains(meta.ephysFN, "Beto"), Animal = "Beto"; elseif contains(meta.ephysFN, "Alfa"), Animal = "Alfa"; end
 savepath = fullfile(result_dir, compose("%s_Evol%02d_chan%02d", Animal, Expi, pref_chan(1)));
 mkdir(savepath);
-% Create subplot axis in the figure
-h = figure(1);clf; axs = axis_array(1, thread_num);
-h2 = figure(2);clf; axs2 = axis_array(1, thread_num);
-h3 = figure(3);clf; axs3 = axis_array(1, thread_num);
 if thread_num == 2
-    set(h,'position',[1          41        2560         963],'Visible','on');
-    h2.Visible='on';h2.Position = [  19         235        1779         743];
-    h3.Visible='on';h3.Position = [  782          43        1779         743];
+    h = figure(1);set(h,'position',[1          41        2560         963],'Visible','on');
+    axs{1} = subplot(1,2,1);axs{2} = subplot(1,2,2);
+    h2 = figure(2);h2.Visible='on';clf; h2.Position = [  19         235        1779         743];
+    axs2 = {}; axs2{1} = subplot(1,2,1); axs2{2} = subplot(1,2,2);
+    h3 = figure(3);h3.Visible='on';h3.Position = [  782          43        1779         743];
+    axs3 = {}; axs3{1} = subplot(1,2,1); axs3{2} = subplot(1,2,2);
 elseif thread_num == 1
-    set(h,'position',[134    46   949   904],'Visible','on');
-    h2.Visible='on';h2.Position = [  76   110   899   774];
-    h3.Visible='on';h3.Position = [  76   110   899   774];
-elseif thread_num == 3 || thread_num == 4
-    set(h,'position',[1          41        2560         963],'Visible','on');
-    h2.Visible='on';h2.Position = [19         160        1882         818];
-    h3.Visible='on';h3.Position = [19         160        1882         818];
+    h = figure(1);set(h,'position',[134    46   949   904],'Visible','on');
+    axs{1} = subplot(1,1,1);
+    h2 = figure(2);h2.Visible='on';clf; h2.Position = [  76   110   899   774];
+    axs2 = {}; axs2{1} = subplot(1,1,1); 
+    h3 = figure(3);h3.Visible='on';h3.Position = [  76   110   899   774];
+    axs3 = {}; axs3{1} = subplot(1,1,1); 
 end
 unit_name_arr = generate_unit_labels(meta.spikeID);
 [activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
-for i = 1:thread_num % note here we use the unit_num_arr which exclude the null channels.
+for i = 1:thread_num
     pref_chan_id(i) = find(meta.spikeID==pref_chan(i) & ... % the id in the raster and lfps matrix 
                     unit_num_arr==unit_in_pref_chan(i)); % match for unit number
 end
-% add the preferred channel for each thread to the name string
 Exp_label_str = sprintf("Exp%d pref chan %d", Expi, pref_chan(1));
 labstr = strcat(Exp_label_str,' (');
 for i = 1:thread_num
@@ -96,15 +83,11 @@ row_gen = contains(imgnm, "gen") & ... % contains gen
         cellfun(@(c) isempty(regexp(c(1:2), "\d\d")), imgnm) & ...% first 2 characters are not digits
         cellfun(@(c) ~contains(c(end-4:end), "_nat"), imgnm) ; % last 4 characters are not `_nat`
 row_nat = ~row_gen;%contains(imgnm, "nat") & cellfun(@(c) ~isempty(regexp(c(1:2), "\d\d")), imgnm);
-% seperate the thread 1 and 2 (and maybe thread 3 4)
-thread_msks = cell(1, thread_num);
-for threadi = 1:thread_num
-    msk = contains(imgnm, compose("thread%03d", threadi - 1));
-    thread_msks{threadi} = msk; % store masks in a structure for the ease to iterate
-end
-assert(sum(cellfun(@sum, thread_msks)) == length(imgnm)) % images comes from all these threads
-% row_thread0 = contains(imgnm, compose("thread%03d", 0));
-% row_thread1 = contains(imgnm, compose("thread%03d", 1));
+% seperate the thread 1 and 2 
+row_thread0 = contains(imgnm, compose("thread%03d", 0));
+row_thread1 = contains(imgnm, compose("thread%03d", 1));
+assert(sum(row_thread0)+sum(row_thread1) == length(imgnm))
+thread_msks = {row_thread0, row_thread1}; % store masks in a structure for the ease to iterate
 % get the generation number 
 block_arr = cell2mat(Trials.block);
 % if needed, analyze the image names to see the block and thread
@@ -165,12 +148,12 @@ end
 % set(gcf, "CurrentAxes", axs{2}); cla(axs{2},'reset'); 
 % montage(imgColl(:,2))
 % title([Exp_label_str, compose('Best Image per Generation'), compose("Optimizer %s", Optim_names(2))])
-saveas(h, fullfile(savepath, "EvolImageSeq_cmp.png"))
+% saveas(h, fullfile(savepath, "EvolImageSeq_cmp.png"))
 saveas(h, fullfile(result_dir, compose("%s_Evol%02d_EvolImageSeq.png", Animal, Expi)))
 %% Prepare color sequence 
 MAX_BLOCK_NUM = length(block_list); 
 color_seq = brewermap(MAX_BLOCK_NUM, 'spectral');
-for channel_j = 1:size(rasters, 1)%pref_chan_id%
+for channel_j = pref_chan_id%1:size(rasters, 1)%pref_chan_id%
 %% Plot Mean response compare figure
 %channel_j = pref_chan_id;
 % h1 = figure(1);clf
@@ -217,12 +200,10 @@ title([Exp_label_str, compose('Generation averaged PSTH , channel %s', unit_name
 end
 axs3 = AlignAxisLimits(axs3);
 %%
-saveas(h2, fullfile(savepath, compose("score_traj_cmp_chan%s.png", unit_name_arr{channel_j})))
-saveas(h3, fullfile(savepath, compose("Evolv_psth_cmp_chan%s.png", unit_name_arr{channel_j})))
-if ~isempty(find(pref_chan_id==channel_j, 1)) % if the channel is among the preferred channel list. 
+% saveas(h2, fullfile(savepath, compose("score_traj_cmp_chan%s.png", unit_name_arr{channel_j})))
+% saveas(h3, fullfile(savepath, compose("Evolv_psth_cmp_chan%s.png", unit_name_arr{channel_j})))
 saveas(h2, fullfile(result_dir, compose("%s_Evol%02d_score_traj_chan%s.png", Animal, Expi, unit_name_arr{channel_j})))
 saveas(h3, fullfile(result_dir, compose("%s_Evol%02d_Evolv_psth_chan%s.png", Animal, Expi, unit_name_arr{channel_j})))
-end
 end
 end
 %% Plot the Image Evolution Trajectory 
@@ -232,16 +213,4 @@ scores_thread1 = scores_tsr(pref_chan_id, row_gen & (block_arr > max(block_arr)-
 scores_thread2 = scores_tsr(pref_chan_id, row_gen & (block_arr > max(block_arr)-6) & thread_msks{2});
 [~,Pval,CI] = ttest2(scores_thread1, scores_thread2);
 
-function ax_arr = axis_array(nr, nc, tight)
-if nargin < 3
-    tight = true;
-end
-ax_arr = {};
-for i = 1:nr*nc
-    if tight
-        ax_arr{i} = subplottight(nr, nc, i, 0.07, 0.12);
-    else
-        ax_arr{i} = subplot(nr, nc, i);
-    end
-end
-end
+
