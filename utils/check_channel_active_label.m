@@ -8,8 +8,9 @@ else
     fmt = '%d';
 end
 
-EMPTYTHR = 1000;
-empty_msk = sum(rasters(:,:,1:10),[2,3]) < EMPTYTHR; 
+%EMPTYTHR = 800;
+EMPTYFRTHR = 0.25;
+empty_msk = mean(rasters(:,:,:),[2,3]) < EMPTYFRTHR; 
 empty_unit_tmp = find(empty_msk); % channel index in empty mask.
 for l = 1:numel(empty_unit_tmp) % if there is only one channel then it is not unsorted channel
     cur_chan = spikeID(empty_unit_tmp(l));

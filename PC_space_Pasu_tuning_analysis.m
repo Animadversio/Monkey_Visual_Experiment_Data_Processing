@@ -448,7 +448,6 @@ function [score_mat, bsl_mat, summary, stat_str] = get_gabor_tuning_stats() %nam
             'Modulation: All image, F=%.2f(%.3f)\n'...
             'Orient, F=%.2f(%.3f), SpatFreq, F=%.2f(%.3f), Interact, F=%.2f(%.3f)'],CI(1), CI(2), P, stats.F, stats.p, ...
             stats2.F(1),stats2.p(1), stats2.F(2),stats2.p(2),stats2.F(3),stats2.p(3));
-
 end
 
 % Plot the padded image montage 

@@ -10,7 +10,7 @@ Project_Manifold_Beto_loadRaw(137:180,Animal,true);
 
 % global block_arr gen_list color_seq row_gen row_nat
 % global evol_stim_fr evol_stim_sem meanscore_syn stdscore_syn meanscore_nat stdscore_nat
-Animal = "Alfa"; Set_Path;
+Animal = "Beto"; Set_Path;
 expftr = contains(ExpRecord.expControlFN,"generate") & ...
         contains(ExpRecord.Exp_collection, "SUHash");
 row_idx = find(expftr);
@@ -20,21 +20,23 @@ row_idx = find(expftr);
 % result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
 % result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evol_RedDim_sphere";
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evol_SUHash";
-for Triali = [10:length(row_idx)]
-% meta = meta_new{Triali};
-% rasters = rasters_new{Triali};
-% Trials = Trials_new{Triali};
+result_dir = "E:\Evol_SUHash";
+for Triali = [1:8]%[26:length(row_idx)]
+meta = meta_new{Triali};
+rasters = rasters_new{Triali};
+Trials = Trials_new{Triali};
 % real time loading to save memory (but waste some time.)
-[meta,rasters,lfps,Trials] = Project_Manifold_Beto_loadRaw(row_idx(Triali),Animal); 
-meta = meta{1}; rasters = rasters{1}; Trials = Trials{1};
+% [meta,rasters,lfps,Trials] = Project_Manifold_Beto_loadRaw(row_idx(Triali),Animal); 
+% meta = meta{1}; rasters = rasters{1}; Trials = Trials{1};
+exp_rowi = find(contains(ExpRecord.ephysFN, meta.ephysFN));
 if isempty(Trials.TrialRecord)
     fprintf("======================================\n")
     fprintf("Exp %d: Lack the Trial Record, Skipped\n",Expi)
     fprintf([ExpRecord.comments{exp_rowi},'\n'])
+    ExpRecord(exp_rowi, :)
     fprintf("======================================\n")
     continue
 end
-exp_rowi = find(contains(ExpRecord.ephysFN, meta.ephysFN));
 % Check the Expi match number
 Expi = ExpRecord.Expi(exp_rowi);
 fprintf("Processing  Exp %d:\n",Expi)
@@ -64,13 +66,20 @@ elseif thread_num == 1
     set(h,'position',[134    46   949   904],'Visible','on');
     h2.Visible='on';h2.Position = [  76   110   899   774];
     h3.Visible='on';h3.Position = [  76   110   899   774];
-elseif thread_num == 3 || thread_num == 4
+elseif thread_num == 3 
     set(h,'position',[1          41        2560         963],'Visible','on');
     h2.Visible='on';h2.Position = [19         160        1882         818];
     h3.Visible='on';h3.Position = [19         160        1882         818];
+elseif thread_num == 4
+    set(h, 'position',[1         155        1924         651],'Visible','on');
+    set(h2,'position',[19         160        1882         526],'Visible','on');
+    set(h3,'position',[19         160        1882         526],'Visible','on');
 end
+
 unit_name_arr = generate_unit_labels(meta.spikeID);
 [activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
+% note if the evolved channel is marked as null 0 then this can fail! 
+pref_chan_id = zeros(1, thread_num);
 for i = 1:thread_num % note here we use the unit_num_arr which exclude the null channels.
     pref_chan_id(i) = find(meta.spikeID==pref_chan(i) & ... % the id in the raster and lfps matrix 
                     unit_num_arr==unit_in_pref_chan(i)); % match for unit number
@@ -217,12 +226,15 @@ title([Exp_label_str, compose('Generation averaged PSTH , channel %s', unit_name
 end
 axs3 = AlignAxisLimits(axs3);
 %%
+
 saveas(h2, fullfile(savepath, compose("score_traj_cmp_chan%s.png", unit_name_arr{channel_j})))
 saveas(h3, fullfile(savepath, compose("Evolv_psth_cmp_chan%s.png", unit_name_arr{channel_j})))
 if ~isempty(find(pref_chan_id==channel_j, 1)) % if the channel is among the preferred channel list. 
 saveas(h2, fullfile(result_dir, compose("%s_Evol%02d_score_traj_chan%s.png", Animal, Expi, unit_name_arr{channel_j})))
 saveas(h3, fullfile(result_dir, compose("%s_Evol%02d_Evolv_psth_chan%s.png", Animal, Expi, unit_name_arr{channel_j})))
 end
+
+
 end
 end
 %% Plot the Image Evolution Trajectory 
