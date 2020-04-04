@@ -87,7 +87,8 @@ EStats(Expi).stim.thread_msks = thread_msks;
 block_arr = cell2mat(Trials.block);
 block_list = min(block_arr):max(block_arr);
 block_num = length(block_list);
-
+color_seq = brewermap(MAX_BLOCK_NUM, 'spectral');
+EStats(Expi).color_seq = color_seq;
 EStats(Expi).evol.block_arr = block_arr;
 EStats(Expi).evol.block_n = block_num;
 gen_idx_seq = cell(thread_num, block_num);

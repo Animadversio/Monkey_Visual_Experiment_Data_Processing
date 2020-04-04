@@ -10,7 +10,7 @@ Project_Manifold_Beto_loadRaw(137:180,Animal,true);
 
 % global block_arr gen_list color_seq row_gen row_nat
 % global evol_stim_fr evol_stim_sem meanscore_syn stdscore_syn meanscore_nat stdscore_nat
-Animal = "Beto"; Set_Path;
+Animal = "Alfa"; Set_Path;
 expftr = contains(ExpRecord.expControlFN,"generate") & ...
         contains(ExpRecord.Exp_collection, "SUHash");
 row_idx = find(expftr);
@@ -21,7 +21,8 @@ row_idx = find(expftr);
 % result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evol_RedDim_sphere";
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evol_SUHash";
 result_dir = "E:\Evol_SUHash";
-for Triali = [1:8]%[26:length(row_idx)]
+result_dir = "E:\Evolution_Exp";
+for Triali = 19:length(meta_new)%[1:8]%[26:length(row_idx)]
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
@@ -52,7 +53,7 @@ thread_num = size(Trials.TrialRecord.User.evoConfiguration, 1);
 if thread_num == 2, assert(pref_chan(1) == pref_chan(2)); end
 Exp_label_str = sprintf("Exp%d pref chan %d", Expi, pref_chan(1));
 if contains(meta.ephysFN, "Beto"), Animal = "Beto"; elseif contains(meta.ephysFN, "Alfa"), Animal = "Alfa"; end
-savepath = fullfile(result_dir, compose("%s_Evol%02d_chan%02d", Animal, Expi, pref_chan(1)));
+savepath = fullfile(result_dir, compose("Manifold_%s_Evol%02d_chan%02d", Animal, Expi, pref_chan(1)));
 mkdir(savepath);
 % Create subplot axis in the figure
 h = figure(1);clf; axs = axis_array(1, thread_num);
