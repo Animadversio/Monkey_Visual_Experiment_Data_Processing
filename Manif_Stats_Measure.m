@@ -1,21 +1,22 @@
 addpath D:\Github\Fit_Spherical_Tuning
-
+addpath e:/Github_Projects/Fit_Spherical_Tuning
 ft = fittype( @(theta, phi, psi, kappa, beta, A, x, y) KentFunc(theta, phi, psi, kappa, beta, A, x, y), ...
     'independent', {'x', 'y'},'dependent',{'z'});
+Animal = "Beto";
 %% Fit the Kent Distribution. Collect statistics
 tic
-Kent_stats = repmat(struct(), 1, length(meta_new));
+Kent_stats = repmat(struct(), 1, length(Stats));
 for i = 1:length(Stats)
 % there can be multiple units, or multiple subspace, so we have this cell
 % array
 stats_grid = cell(numel(Stats(i).units.pref_chan_id), Stats(i).manif.subsp_n);
 scr_stats_grid = cell(numel(Stats(i).units.pref_chan_id), Stats(i).manif.subsp_n);
-subsp_suff = {'PC23',"PC4950",'RND12'};
+subsp_str = ['PC23',"PC4950",'RND12'];
 subsp_axis = ["PC2","PC3";"PC49","PC50";"RND1","RND2"];
 for subsp_i = 1:Stats(i).manif.subsp_n
 imgnm_grid = cellfun(@(idx) unique([Stats(i).imageName(idx)]), Stats(i).manif.idx_grid{subsp_i});
 psths = Stats(i).manif.psth{subsp_i};
-fprintf(subsp_suff{subsp_i}+"\n")
+fprintf(subsp_str{subsp_i}+"\n")
 for uniti = 1:1:numel(Stats(i).units.pref_chan_id)
 channel_j = Stats(i).units.pref_chan_id(uniti);
 chan_label_str = sprintf("%s Exp%d Channel %s", Stats(i).Animal, Stats(i).Expi, ...
@@ -44,8 +45,51 @@ Kent_stats(i).scr_fit = scr_stats_grid;
 end
 toc % took 6.88s to run through! not intensive
 %%
-save('D:\Alfa_Manif_Kent_Fit.mat','Kent_stats')
-save(fullfile(savepath, 'Alfa_Manif_Kent_Fit.mat'),'Kent_stats')
+% save('D:\Alfa_Manif_Kent_Fit.mat','Kent_stats')
+% save(fullfile(savepath, 'Alfa_Manif_Kent_Fit.mat'),'Kent_stats')
+savepath = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Manif_SUHash\summary";
+save('E:\Beto_Manif_Kent_Fit.mat','Kent_stats')
+save(fullfile(savepath, 'Beto_Manif_Kent_Fit.mat'),'Kent_stats')
+%% Formulate it in a table format
+subsp_str = ['PC23',"PC4950",'RND12'];
+Kstat = repmat(struct("kappa", 0, "CI", [0,0], "Expi", 0, "unit", 0, "subspace", "PC23"), 0,0);
+Fit_strs = repmat("",numel(Stats),3);
+csr = 0;
+for Expi = 1:numel(Stats)
+ % index for SU and Ha within each struct
+for si = 1:size(Kent_stats(Expi).act_fit, 2)
+for ui = 1:size(Kent_stats(Expi).act_fit, 1)
+csr = csr + 1;
+Kstat(csr).kappa = Kent_stats(Expi).act_fit{ui,si}.coef(4);% consider subspace PC23 now
+Kstat(csr).CI = Kent_stats(Expi).act_fit{ui,si}.confint(:,4);
+Kstat(csr).theta = Kent_stats(Expi).act_fit{ui,si}.coef(1);% consider subspace PC23 now
+Kstat(csr).CI_th = Kent_stats(Expi).act_fit{ui,si}.confint(:,1);
+Kstat(csr).phi = Kent_stats(Expi).act_fit{ui,si}.coef(2);% consider subspace PC23 now
+Kstat(csr).CI_ph = Kent_stats(Expi).act_fit{ui,si}.confint(:,2);
+Kstat(csr).psi = Kent_stats(Expi).act_fit{ui,si}.coef(3);% consider subspace PC23 now
+Kstat(csr).CI_ps = Kent_stats(Expi).act_fit{ui,si}.confint(:,3);
+Kstat(csr).beta = Kent_stats(Expi).act_fit{ui,si}.coef(5);% consider subspace PC23 now
+Kstat(csr).CI_bt = Kent_stats(Expi).act_fit{ui,si}.confint(:,5);
+Kstat(csr).A = Kent_stats(Expi).act_fit{ui,si}.coef(6);% consider subspace PC23 now
+Kstat(csr).CI_A = Kent_stats(Expi).act_fit{ui,si}.confint(:,6);
+Kstat(csr).unit = ui;
+Kstat(csr).Expi = Expi;
+Kstat(csr).subspace = subsp_str(si);
+Kstat(csr).chan = Stats(Expi).units.pref_chan;
+Kstat(csr).chan_id = Stats(Expi).units.pref_chan_id(ui);
+Kstat(csr).R2 = Kent_stats(Expi).act_fit{ui,si}.rsquare;
+end
+Fit_strs(Expi, si) = sprintf("Ch%02d %s R2", Stats(Expi).units.pref_chan, subsp_str(si));
+for ui = 1:size(Kent_stats(Expi).act_fit, 1)
+    U_str = sprintf("\n %d: %.3f", Kent_stats(Expi).act_fit{ui, si}.rsquare);
+    Fit_strs(Expi, si) = Fit_strs(i) + U_str;
+end
+end
+end
+%%
+KstatTab = struct2table(Kstat);
+save(fullfile(savepath, compose("%s_Kstats.mat", Animal)), 'Kstat', 'Fit_strs')
+writetable(KstatTab, fullfile(savepath, compose("%s_Kstats.csv", Animal)))
 %% Plot the summary Scatter and line 
 Expi_col = [1,3,4,5,8,9,10,11,12,13,15,16,17,18,19,20,21,22];
 KSU_vec = [];

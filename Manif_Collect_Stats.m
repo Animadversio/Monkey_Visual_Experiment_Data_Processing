@@ -55,7 +55,7 @@ sphere_norm = infer_norm_from_imgnm(Trials.imageName);
 Stats(Expi).manif.sphere_norm = sphere_norm;
 Stats(Expi).manif.subsp_n = subsp_n;
 for subsp_i = 1:subsp_n
-name_pattern = subsp_templ{1};
+name_pattern = subsp_templ{subsp_i};
 [idx_grid, ~,~,~] = build_idx_grid(Trials.imageName, name_pattern, sphere_norm);
 %%
 psths_col = cellfun(@(idx) rasters(pref_chan_id, :, idx), idx_grid, ...
