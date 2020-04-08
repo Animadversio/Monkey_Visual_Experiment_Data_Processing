@@ -1,8 +1,14 @@
+%% This file is written to use the stats extracted from the formatted mat file 
+% and further do fitting, analysis and plotting for the key units. 
+mat_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
+Animal = "Alfa";
+load(fullfile(mat_dir, Animal+'_Evol_stats.mat'))
+load(fullfile(mat_dir, Animal+'_Manif_stats.mat'))
+%%
 addpath D:\Github\Fit_Spherical_Tuning
 addpath e:/Github_Projects/Fit_Spherical_Tuning
 ft = fittype( @(theta, phi, psi, kappa, beta, A, x, y) KentFunc(theta, phi, psi, kappa, beta, A, x, y), ...
     'independent', {'x', 'y'},'dependent',{'z'});
-Animal = "Beto";
 %% Fit the Kent Distribution. Collect statistics
 tic
 Kent_stats = repmat(struct(), 1, length(Stats));
@@ -29,7 +35,6 @@ scr_stats_grid{uniti, subsp_i} = gof;
 % CI = confint(Parameter);
 % param_str = sprintf("theta=%.2f (%.2f, %.2f)  phi=%.2f (%.2f, %.2f)\n psi=%.2f (%.2f, %.2f)  A=%.2f (%.2f, %.2f)\n kappa=%.2f (%.2f, %.2f)  beta=%.2f (%.2f, %.2f) ", ...
 %                 V(1), CI(1,1), CI(2,1), V(2), CI(1,2), CI(2,2), V(3), CI(1,3), CI(2,3), V(6), CI(1,6), CI(2,6), V(4), CI(1,4), CI(2,4), V(5), CI(1,5), CI(2,5));
-
 mean_act_map = cellfun(@(psth) mean(psth(uniti, 51:200, :),[2,3]), psths);
 [Parameter, gof] = fit_Kent(mean_act_map);
 stats_grid{uniti, subsp_i} = gof;
@@ -48,8 +53,8 @@ toc % took 6.88s to run through! not intensive
 % save('D:\Alfa_Manif_Kent_Fit.mat','Kent_stats')
 % save(fullfile(savepath, 'Alfa_Manif_Kent_Fit.mat'),'Kent_stats')
 savepath = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Manif_SUHash\summary";
-save('E:\Beto_Manif_Kent_Fit.mat','Kent_stats')
-save(fullfile(savepath, 'Beto_Manif_Kent_Fit.mat'),'Kent_stats')
+save(compose("E:\\%s_Manif_Kent_Fit.mat", Animal),'Kent_stats')
+save(fullfile(savepath, compose("%s_Manif_Kent_Fit.mat", Animal)),'Kent_stats')
 %% Formulate it in a table format
 subsp_str = ['PC23',"PC4950",'RND12'];
 Kstat = repmat(struct("kappa", 0, "CI", [0,0], "Expi", 0, "unit", 0, "subspace", "PC23"), 0,0);
@@ -77,6 +82,7 @@ Kstat(csr).Expi = Expi;
 Kstat(csr).subspace = subsp_str(si);
 Kstat(csr).chan = Stats(Expi).units.pref_chan;
 Kstat(csr).chan_id = Stats(Expi).units.pref_chan_id(ui);
+Kstat(csr).chan_name = Stats(Expi).units.unit_name_arr(Stats(Expi).units.pref_chan_id(ui));
 Kstat(csr).R2 = Kent_stats(Expi).act_fit{ui,si}.rsquare;
 end
 Fit_strs(Expi, si) = sprintf("Ch%02d %s R2", Stats(Expi).units.pref_chan, subsp_str(si));
@@ -87,9 +93,188 @@ end
 end
 end
 %%
-KstatTab = struct2table(Kstat);
+KstatTab = struct2table(Kstat); % Table is really good for doing statistics (filtering and ordering)
 save(fullfile(savepath, compose("%s_Kstats.mat", Animal)), 'Kstat', 'Fit_strs')
 writetable(KstatTab, fullfile(savepath, compose("%s_Kstats.csv", Animal)))
+%% Do some basic statistics and plotting
+% prefchan_arr = arrayfun(@(S) S.chan, Kstat);
+% unit_arr = arrayfun(@(S) S.unit, Kstat);
+% R2_arr = arrayfun(@(S) S.R2, Kstat);
+% IT_kappa = arrayfun(@(S) S.kappa, Kstat(prefchan_arr<=32 & unit_arr == 1 & R2_arr > 0.5))
+% V1_kappa = arrayfun(@(S) S.kappa, Kstat(prefchan_arr<=48 & prefchan_arr>=33 & unit_arr == 1 & R2_arr > 0.5))
+% V4_kappa = arrayfun(@(S) S.kappa, Kstat(prefchan_arr>=49 & unit_arr == 1 & R2_arr > 0.5))
+IT_kappa = KstatTab.kappa(KstatTab.chan<=32 & KstatTab.subspace=="PC23" & KstatTab.R2 >0.5)'
+V1_kappa = KstatTab.kappa(KstatTab.chan<=48 & KstatTab.chan>=33 & KstatTab.subspace=="PC23" & KstatTab.R2 >0.5)'
+V4_kappa = KstatTab.kappa(KstatTab.chan>=49 & KstatTab.subspace=="PC23" & KstatTab.R2 >0.5)'
+ttest2([IT_kappa, V4_kappa], V1_kappa)
+%%
+IT_kappa = KstatTab.kappa(KstatTab.chan<=32 & KstatTab.R2 >0.5)'
+V1_kappa = KstatTab.kappa(KstatTab.chan<=48 & KstatTab.chan>=33 & KstatTab.R2 >0.5)'
+V4_kappa = KstatTab.kappa(KstatTab.chan>=49 & KstatTab.R2 >0.5)'
+ttest2([IT_kappa, V4_kappa], V1_kappa)
+%%
+SUmsk = contains(KstatTab.chan_name,"A");
+if Animal == "Alfa"
+    SUmsk(KstatTab.Expi == 10 & KstatTab.unit == 2) = true;
+    SUmsk(KstatTab.Expi == 10 & KstatTab.unit == 1) = false;
+end
+ITmsk = KstatTab.chan<=32 & KstatTab.R2 >0.5;
+V1msk = KstatTab.chan<=48 & KstatTab.chan>=33 & KstatTab.R2 >0.5;
+V4msk = KstatTab.chan>=49 & KstatTab.R2 >0.5;
+figure(2);clf;hold on;set(2,'position',[680   354   439   624])
+scatter(1*ones(sum(V1msk),1), KstatTab.kappa(V1msk), (5*(1+SUmsk(V1msk))).^2)
+scatter(2*ones(sum(V4msk),1), KstatTab.kappa(V4msk), (5*(1+SUmsk(V4msk))).^2)
+scatter(3*ones(sum(ITmsk),1), KstatTab.kappa(ITmsk), (5*(1+SUmsk(ITmsk))).^2)
+xlim([0.5,3.5]);xticks([1, 2, 3])
+ylabel("kappa",'FontSize',14)
+title([Animal, "Manifold Tuning Peakedness Comparison", "Large o-SU, Small o-Hash"],'FontSize',14)
+set(gca,'xticklabels',["V1", "V4", "IT"],'fontsize',14)
+%%
+figure(3);clf;hold on;set(3,'position',[680   354   439   624])
+errorbar(1+0.1*randn(sum(V1msk),1), KstatTab.kappa(V1msk), ...
+         KstatTab.kappa(V1msk) - cellfun(@(c)c(1),KstatTab.CI(V1msk)), ...%negative error
+         cellfun(@(c)c(2),KstatTab.CI(V1msk)) - KstatTab.kappa(V1msk), ...%positive error
+         'o','Color',[     0    0.4470    0.7410])
+errorbar(2+0.1*randn(sum(V4msk),1), KstatTab.kappa(V4msk), ...
+         KstatTab.kappa(V4msk) - cellfun(@(c)c(1),KstatTab.CI(V4msk)), ...%negative error
+         cellfun(@(c)c(2),KstatTab.CI(V4msk)) - KstatTab.kappa(V4msk), ...%positive error
+         'o','Color',[0.8500    0.3250    0.0980])
+errorbar(3+0.1*randn(sum(ITmsk),1), KstatTab.kappa(ITmsk), ...
+         KstatTab.kappa(ITmsk) - cellfun(@(c)c(1),KstatTab.CI(ITmsk)), ...%negative error
+         cellfun(@(c)c(2),KstatTab.CI(ITmsk)) - KstatTab.kappa(ITmsk), ...%positive error
+         'o','Color',[0.9290    0.6940    0.1250])
+xlim([0.5,3.5]);xticks([1, 2, 3])
+ylabel("kappa",'FontSize',14)
+title([Animal, "Manifold Tuning Peakedness Comparison", "Large o-SU, Small o-Hash"],'FontSize',14)
+set(gca,'xticklabels',["V1", "V4", "IT"],'fontsize',14)
+%xticklabels(["V1", "V4", "IT"],'FontSize',14)
+%%
+saveas(2, fullfile(savepath, compose("%s_Manif_kappa.png",Animal)))
+savefig(2, fullfile(savepath, compose("%s_Manif_kappa.fig",Animal)))
+saveas(3, fullfile(savepath, compose("%s_Manif_kappa_werrbar.png",Animal)))
+savefig(3, fullfile(savepath, compose("%s_Manif_kappa_werrbar.fig",Animal)))
+%% among all the units 
+fprintf("Comparison pooling all experiment and units\n")
+[H,P,CI,tstat]=ttest2(KstatTab.kappa(ITmsk), KstatTab.kappa(V1msk));
+fprintf("IT~V1: t=%.3E, p=%.3E(%d)\n", tstat.tstat, P, tstat.df)
+[H,P,CI,tstat]=ttest2(KstatTab.kappa(ITmsk), KstatTab.kappa(V4msk));
+fprintf("IT~V4: t=%.3E, p=%.3E(%d)\n", tstat.tstat, P, tstat.df)
+[H,P,CI,tstat]=ttest2(KstatTab.kappa(V1msk), KstatTab.kappa(V4msk));
+fprintf("V4~V1: t=%.3E, p=%.3E(%d)\n", tstat.tstat, P, tstat.df)
+%% just among Hash units 
+fprintf("Comparison pooling all experiment, Hash units only\n")
+[H,P,CI,tstat]=ttest2(KstatTab.kappa(ITmsk & ~SUmsk), KstatTab.kappa(V1msk & ~SUmsk));
+fprintf("IT~V1: t=%.3E, p=%.3E(%d)\n", tstat.tstat, P, tstat.df)
+[H,P,CI,tstat]=ttest2(KstatTab.kappa(ITmsk & ~SUmsk), KstatTab.kappa(V4msk & ~SUmsk));
+fprintf("IT~V4: t=%.3E, p=%.3E(%d)\n", tstat.tstat, P, tstat.df)
+[H,P,CI,tstat]=ttest2(KstatTab.kappa(V1msk & ~SUmsk), KstatTab.kappa(V4msk & ~SUmsk));
+fprintf("V4~V1: t=%.3E, p=%.3E(%d)\n", tstat.tstat, P, tstat.df)
+%% just among SU units 
+fprintf("Comparison pooling all experiment, Single units only\n")
+[H,P,CI,tstat]=ttest2(KstatTab.kappa(ITmsk & SUmsk), KstatTab.kappa(V1msk & SUmsk));
+fprintf("IT~V1: t=%.3E, p=%.3E(%d)\n", tstat.tstat, P, tstat.df)
+[H,P,CI,tstat]=ttest2(KstatTab.kappa(ITmsk & SUmsk), KstatTab.kappa(V4msk & SUmsk));
+fprintf("IT~V4: t=%.3E, p=%.3E(%d)\n", tstat.tstat, P, tstat.df)
+[H,P,CI,tstat]=ttest2(KstatTab.kappa(V1msk & SUmsk), KstatTab.kappa(V4msk & SUmsk));
+fprintf("V4~V1: t=%.3E, p=%.3E(%d)\n", tstat.tstat, P, tstat.df)
+% Comparison pooling all experiment, Hash units only
+% IT~V1: t=4.449E+00, p=6.990E-05(39)
+% IT~V4: t=1.384E+00, p=1.754E-01(34)
+% V4~V1: t=-6.179E+00, p=1.839E-06(25)
+% Comparison pooling all experiment and units
+% IT~V1: t=4.340E+00, p=6.014E-05(56)
+% IT~V4: t=2.548E+00, p=1.365E-02(55)
+% V4~V1: t=-6.033E+00, p=1.453E-06(29)
+%% SU-HU paired comparison plot (vertically comparison)
+SUmsk = contains(KstatTab.chan_name,"A");
+HUmsk = contains(KstatTab.chan_name,"B");
+if Animal == "Alfa"
+    SUmsk(KstatTab.Expi == 10 & KstatTab.unit == 2) = true;
+    SUmsk(KstatTab.Expi == 10 & KstatTab.unit == 1) = false;
+end
+SUmsk = find(SUmsk); HUmsk = find(HUmsk);
+i_list = 1:length(SUmsk);
+figure(6);clf;hold on
+errorbar(i_list, KstatTab.kappa(SUmsk), ...
+         KstatTab.kappa(SUmsk) - cellfun(@(c)c(1),KstatTab.CI(SUmsk)), ...%negative error
+         cellfun(@(c)c(2),KstatTab.CI(SUmsk)) - KstatTab.kappa(SUmsk), ...%positive error
+         'o','Color',[     0    0.4470    0.7410])
+errorbar(i_list, KstatTab.kappa(HUmsk), ...
+         KstatTab.kappa(HUmsk) - cellfun(@(c)c(1),KstatTab.CI(HUmsk)), ...%negative error
+         cellfun(@(c)c(2),KstatTab.CI(HUmsk)) - KstatTab.kappa(HUmsk), ...%positive error
+         'o','Color',[0.8500    0.3250    0.0980])
+R2_str = arrayfun(@(ch,SU,HA)compose("Ch%02d R2\nSU:%.3f\nHA%.3f",ch,SU,HA),...
+    KstatTab.chan(SUmsk),KstatTab.R2(SUmsk),KstatTab.R2(HUmsk)); % form the annotation text by array function
+text(i_list, 3.5 * ones(1,length(SUmsk)), R2_str, 'FontSize', 11)
+ylim([-1.5,4]);xlim([0.5,max(i_list)+0.5])
+xlabel("Exp num");ylabel("kappa (Kentfun)");legend({"SU", "Hash"})
+xticks(i_list);xtickangle(-30)
+xticklabels(string(arrayfun(@(exp,sp)compose('%d-%s',exp,sp), KstatTab.Expi(SUmsk), KstatTab.subspace(SUmsk))))
+set(gca,'fontsize',12)
+title([Animal + " Manifold Exp Kappa Parameter Comparison","SU vs Hash, 95% CI on errorbar"])
+%%
+saveas(6,fullfile(savepath,Animal+"_Manif_SUHash_kappa.png"))
+saveas(6,fullfile(savepath,Animal+"_Manif_SUHash_kappa.fig"))
+%% Horizontal comparison
+jitter = sort(randn(1,length(SUmsk)) * 0.05);
+figure(7);clf;hold on;set(7,'position',[712   362   493   616])
+errorbar(1 * ones(1,length(SUmsk)) + jitter, KstatTab.kappa(SUmsk), ...
+         KstatTab.kappa(SUmsk) - cellfun(@(c)c(1),KstatTab.CI(SUmsk)), ...%negative error
+         cellfun(@(c)c(2),KstatTab.CI(SUmsk)) - KstatTab.kappa(SUmsk), ...%positive error
+         'o','Color',[     0    0.4470    0.7410])
+errorbar(2 * ones(1,length(SUmsk)) + jitter, KstatTab.kappa(HUmsk), ...
+         KstatTab.kappa(HUmsk) - cellfun(@(c)c(1),KstatTab.CI(HUmsk)), ...%negative error
+         cellfun(@(c)c(2),KstatTab.CI(HUmsk)) - KstatTab.kappa(HUmsk), ...%positive error
+         'o','Color',[0.8500    0.3250    0.0980])
+plot([1, 2]'*ones(1,length(SUmsk)) + jitter, [KstatTab.kappa(SUmsk),KstatTab.kappa(HUmsk)]','color',[0.5,0.5,0.5])
+ylim([-1,4]);xlim([0.8,2.2])
+ylabel("kappa (Kentfun)");
+xticks([1,2]);xtickangle(-0);xticklabels({"SU", "Hash"})
+set(gca,'fontsize',14)
+[P,H,STATS] = signrank(KstatTab.kappa(SUmsk),KstatTab.kappa(HUmsk));
+fprintf("SU~Hash (paired SignRank): z=%.3f, p=%.3E\n", STATS.zval, P)
+title([Animal + " Manifold Exp Kappa Parameter Comparison","SU vs Hash, 95% CI on errorbar",compose("SignRank: p=%.2E",P)])
+%%
+saveas(7,fullfile(savepath,Animal+"_Manif_SUHash_kappa_horiz.png"))
+savefig(7,fullfile(savepath,Animal+"_Manif_SUHash_kappa_horiz.fig"))
+%%
+[H,P,CI,tstat]=ttest(KstatTab.kappa(SUmsk),KstatTab.kappa(HUmsk));
+fprintf("SU~Hash (paired t): t=%.3E, p=%.3E(%d)\n", tstat.tstat, P, tstat.df)
+[P,H,STATS] = signrank(KstatTab.kappa(SUmsk),KstatTab.kappa(HUmsk));
+fprintf("SU~Hash (paired SignRank): z=%.3f, p=%.3E\n", STATS.zval, P)
+
+%% Plot the comparison and stats for subspaces (N.S) different (Only Beto has this. )
+PC23msk = find(contains(KstatTab.subspace,"PC23") & KstatTab.Expi <= 10);
+PC49msk = find(contains(KstatTab.subspace,"PC4950") & KstatTab.Expi <= 10);
+RND1msk = find(contains(KstatTab.subspace,"RND12") & KstatTab.Expi <= 10);
+jitter = sort(randn(1,length(PC23msk)) * 0.05);
+figure(8);clf;hold on;set(7,'position',[712   362   493   616])
+errorbar(1 * ones(1,length(PC23msk)) + jitter, KstatTab.kappa(PC23msk), ...
+         KstatTab.kappa(PC23msk) - cellfun(@(c)c(1),KstatTab.CI(PC23msk)), ...%negative error
+         cellfun(@(c)c(2),KstatTab.CI(PC23msk)) - KstatTab.kappa(PC23msk), ...%positive error
+         'o')
+errorbar(2 * ones(1,length(PC49msk)) + jitter, KstatTab.kappa(PC49msk), ...
+         KstatTab.kappa(PC49msk) - cellfun(@(c)c(1),KstatTab.CI(PC49msk)), ...%negative error
+         cellfun(@(c)c(2),KstatTab.CI(PC49msk)) - KstatTab.kappa(PC49msk), ...%positive error
+         'o')
+errorbar(3 * ones(1,length(RND1msk)) + jitter, KstatTab.kappa(RND1msk), ...
+         KstatTab.kappa(RND1msk) - cellfun(@(c)c(1),KstatTab.CI(RND1msk)), ...%negative error
+         cellfun(@(c)c(2),KstatTab.CI(RND1msk)) - KstatTab.kappa(RND1msk), ...%positive error
+         'o')
+plot([1, 2, 3]'*ones(1,length(PC23msk)) + jitter, [KstatTab.kappa(PC23msk),KstatTab.kappa(PC49msk),KstatTab.kappa(RND1msk)]','color',[0.5,0.5,0.5])
+ylim([-1.5,6]);xlim([0.7,3.3])
+ylabel("kappa (Kentfun)");
+xticks([1,2,3]);xtickangle(-0);xticklabels({"PC12", "PC4950", "RND12"})
+[P,ANOVATAB,Fstat] = anova1([KstatTab.kappa(PC23msk),KstatTab.kappa(PC49msk),KstatTab.kappa(RND1msk)],...
+                        ["PC23","PC4950","RND12"],'off');
+set(gca,'fontsize',14)
+title([Animal + " Manifold Exp Kappa Parameter Comparison","Different subspaces, 95% CI on errorbar",compose("p=%.3f, F=%.2f",P,ANOVATAB{2,5})])
+%%
+saveas(8,fullfile(savepath,Animal+"_Manif_subspace_kappa_horiz.png"))
+savefig(8,fullfile(savepath,Animal+"_Manif_subspace_kappa_horiz.fig"))
+%%
+[P,ANOVATAB,Fstat] = anova1([KstatTab.kappa(PC23msk),KstatTab.kappa(PC49msk),KstatTab.kappa(RND1msk)],...
+                        ["PC23","PC4950","RND12"],'off')
 %% Plot the summary Scatter and line 
 Expi_col = [1,3,4,5,8,9,10,11,12,13,15,16,17,18,19,20,21,22];
 KSU_vec = [];
