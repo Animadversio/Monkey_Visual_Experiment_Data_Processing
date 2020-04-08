@@ -1,4 +1,5 @@
 %% Evol_collect_Stats
+% Collect statisitcs from evolution experiments into a compressed compilation
 clearvars -except EStats Stats meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug  ExpSpecTable_Aug_alfa ExpRecord
 %%
 Animal = "Alfa";Set_Path;
