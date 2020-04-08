@@ -1,5 +1,15 @@
 import pandas as pd
 import numpy as np
+import os
+if os.environ['COMPUTERNAME'] == 'DESKTOP-9DDE2RH':  # PonceLab-Desktop 3
+    tmp_input = r"D:\ExpRecord_tmp.xlsx"
+    tmp_output = r"D:\ExpRecord_out.xlsx"
+    df_paths = [r"S:\Exp_Record_Alfa.xlsx", r"S:\ExpSpecTable_Augment.xlsx"]
+elif os.environ['COMPUTERNAME'] == 'DESKTOP-MENSD6S':  # Home_WorkStation
+    tmp_input = "E:\\Monkey_Data\\ExpRecord_tmp.xlsx"
+    tmp_output = "E:\\Monkey_Data\\ExpRecord_out.xlsx"
+    df_paths = ["E:\\Monkey_Data\\Exp_Record_Alfa.xlsx", "E:\\Monkey_Data\\ExpSpecTable_Augment.xlsx"]
+
 
 def process_concat_cells(df, out_excel, Animal):
     """Process the raw form excel copied from onenote to well formed excel
@@ -63,10 +73,13 @@ def process_concat_cells(df, out_excel, Animal):
                 print("Do aborted! No worry.")
     print(stimuli_miss_cnt, "stimuli missing")
     #%%
-    df_sort.to_excel(out_excel,index=False)
+    df_sort.to_excel(out_excel,index=False, engine='xlsxwriter')
+    # Use the 'xlsxwriter' engine will avoid some Illegal Character Error in openpyxl
+    # https://cooperluan.github.io/python/2015/01/08/pandas-daochu-excel-zhong-de-luan-ma-wen-ti/
     return df_sort
 
 def concat_table(df_old, df_new, addexplabel=None, out_path=None):
+    """Obsolete, use the function below instead"""
     if isinstance(df_old,str):
         out_path = df_old
         df_old = pd.read_excel(df_old)
@@ -88,7 +101,6 @@ def concat_table(df_old, df_new, addexplabel=None, out_path=None):
 
 def sort_merge_table(df_sort, addexplabel=None):
     Animal_strs = ["Alfa", "Beto"]
-    df_paths = [r"S:\Exp_Record_Alfa.xlsx", r"S:\ExpSpecTable_Augment.xlsx"]
     if isinstance(df_sort,str):
         df_sort = pd.read_excel(df_sort)
     # loop through animal name and sort corresponding exp to the collection
@@ -107,22 +119,28 @@ def sort_merge_table(df_sort, addexplabel=None):
                 else:
                     id_col.append(idx)
         if len(id_col) == 0:
-        	print("\nNo new experiments to add! Continue.")
-        	continue
+            print("\nNo new experiments to add! Continue.")
+            continue
         df_ftr = df_sort.iloc[id_col].copy()
         print(df_ftr.expControlFN)
         if addexplabel is not None:
             df_ftr.Exp_collection[:] = addexplabel
         df_cat = pd.concat([df_old, df_ftr], axis=0, ignore_index=True)
-        df_cat.to_excel(out_path,index=False) # write to the excel of all old experiments 
+        df_cat.to_excel(out_path,index=False, engine='xlsxwriter') # write to the excel of all old experiments 
     return
 
 if __name__ == '__main__':
-	Animal = input("Which animal to parse from D:\\ExpRecord_tmp.xlsx?")
-	if len(Animal) == 0:
-		Animal = "Both"#"Beto" # "Alfa" "ALfa"
-	df_sort = process_concat_cells(r"D:\ExpRecord_tmp.xlsx", r"D:\ExpRecord_out.xlsx", Animal=Animal)
-	Label = input("Add Exp labels to the new Exps?")
-	if len(Label) == 0:
-		Label = None # "ReducDimen_Evol"
-	sort_merge_table(df_sort, addexplabel=Label)
+    os.startfile(tmp_input)
+    Animal = input("Which animal to parse from %s?" % (tmp_input) )
+    if len(Animal) == 0:
+        Animal = "Both"#"Beto" # "Alfa" "ALfa"
+    df_sort = process_concat_cells(tmp_input, tmp_output, Animal=Animal)
+    try:
+        os.startfile(tmp_output)
+    except:
+        print("Open %s failed"%tmp_output)
+        pass
+    Label = input("Add Exp labels to the new Exps?")
+    if len(Label) == 0:
+        Label = None # "ReducDimen_Evol"
+    sort_merge_table(tmp_output, addexplabel=Label) # df_sort
