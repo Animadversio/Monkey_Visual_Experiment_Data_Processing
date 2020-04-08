@@ -1,7 +1,7 @@
 %% Evol_collect_Stats
 clearvars -except EStats Stats meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug  ExpSpecTable_Aug_alfa ExpRecord
 %%
-Animal = "Alfa";Set_Path;
+Animal = "Beto";Set_Path;
 %expftr = (contains(ExpRecord.expControlFN,"200319"));
 expftr = (contains(ExpRecord.Exp_collection,"Manifold") &...
             contains(ExpRecord.expControlFN, "generate"));
@@ -20,7 +20,7 @@ Trials = Trials_new{Triali};
 exp_rowi = find(contains(ExpRecord.ephysFN, meta.ephysFN));
 % Check the Expi match number
 Expi = ExpRecord.Expi(exp_rowi);
-fprintf("Processing  Exp %d:\n",Expi)
+fprintf("\nProcessing  Exp %d:\n",Expi)
 fprintf([ExpRecord.comments{exp_rowi},'\n'])
 % savepath = fullfile(result_dir, sprintf("%s_Exp%02d", Animal, Expi));
 % mkdir(savepath)
@@ -87,7 +87,7 @@ EStats(Expi).stim.thread_msks = thread_msks;
 block_arr = cell2mat(Trials.block);
 block_list = min(block_arr):max(block_arr);
 block_num = length(block_list);
-color_seq = brewermap(MAX_BLOCK_NUM, 'spectral');
+color_seq = brewermap(block_num, 'spectral');
 EStats(Expi).color_seq = color_seq;
 EStats(Expi).evol.block_arr = block_arr;
 EStats(Expi).evol.block_n = block_num;
@@ -112,4 +112,5 @@ EStats(Expi).ref.psth = nat_psth_col;
 
 end
 %%
-save("D:\Alfa_Evol_stats.mat", 'EStats')
+%save("D:\Alfa_Evol_stats.mat", 'EStats')
+save("D:\Beto_Evol_stats.mat", 'EStats')

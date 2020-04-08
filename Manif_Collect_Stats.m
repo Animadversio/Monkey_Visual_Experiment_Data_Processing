@@ -1,6 +1,6 @@
 %% Manif_Collect_Stats into mat
 %%
-Animal = "Beto";Set_Path;
+Animal = "Alfa";Set_Path;
 %expftr = (contains(ExpRecord.expControlFN,"200319"));
 expftr = (contains(ExpRecord.Exp_collection,"Manifold") &...
             contains(ExpRecord.expControlFN, "selectivity"));
@@ -12,13 +12,13 @@ rowis = find(expftr);
 %%
 Stats = repmat(struct(), 1, length(meta_new));
 %%
-for Triali = 35:length(meta_new)
+for Triali = 1:length(meta_new)
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
 exp_rowi = find(contains(ExpRecord.ephysFN, meta.ephysFN));
 % Check the Expi match number
-Expi = ExpRecord.Expi(exp_rowi);Expi=Expi(end);
+Expi = ExpRecord.Expi(exp_rowi);Expi=Expi(end); % hack this for beto exp 35
 fprintf("Processing  Exp %d:\n",Expi)
 fprintf([ExpRecord.comments{exp_rowi},'\n'])
 % savepath = fullfile(result_dir, sprintf("%s_Exp%02d", Animal, Expi));
@@ -84,7 +84,9 @@ Stats(Expi).ref.gab_psths = gab_psths_col;
 end
 end
 %%
-save("D:\Beto_Manif_stats.mat", 'Stats')
+savepath = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Mat_Statistics";
+save(compose("D:\\%s_Manif_stats.mat", Animal), 'Stats')
+save(fullfile(savepath, compose("%s_Manif_stats.mat", Animal)), 'Stats')
 %save("D:\Alfa_Manif_stats.mat", 'Stats')
 %%
 [pasu_idx_grid,id_grid,p1_grid,p2_grid] = build_Pasu_idx_grid(Trials.imageName);
