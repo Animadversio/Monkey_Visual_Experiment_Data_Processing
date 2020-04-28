@@ -1,9 +1,11 @@
 clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug ExpRecord
 %%
-Animal = "alfa";Set_Path;
-%expftr = (contains(ExpRecord.expControlFN,"200319"));
-expftr = (contains(ExpRecord.Exp_collection,"SUHash"));%find(expftr)
-Project_Manifold_Beto_loadRaw(137:180,Animal,true);
+Animal = "Both";Set_Path;
+%expftr = (contains(ExpRecord.ephysFN,"13042020"));
+expftr = (contains(ExpRecord.ephysFN,"15042020") | contains(ExpRecord.ephysFN,"16042020") |contains(ExpRecord.ephysFN,"17042020"));
+%expftr = (contains(ExpRecord.Exp_collection,"SUHash"));%find(expftr)
+fllist = find(expftr);
+Project_Manifold_Beto_loadRaw(fllist(1:end),Animal,true);%find(expftr)%find(expftr)
 %% Analysis Code for Comparing Optimizers on a same unit. 
 % much adapted from Evol_Traj_Cmp code, inspired Evol_Traj_analysis code.
 % (it's kind of a multi-thread) version of Evol Traj analysis

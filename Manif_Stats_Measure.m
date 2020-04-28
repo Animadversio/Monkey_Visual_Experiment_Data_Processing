@@ -53,6 +53,7 @@ toc % took 6.88s to run through! not intensive
 % save('D:\Alfa_Manif_Kent_Fit.mat','Kent_stats')
 % save(fullfile(savepath, 'Alfa_Manif_Kent_Fit.mat'),'Kent_stats')
 savepath = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Manif_SUHash\summary";
+savepath = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Manif_SUHash\summary";
 save(compose("E:\\%s_Manif_Kent_Fit.mat", Animal),'Kent_stats')
 save(fullfile(savepath, compose("%s_Manif_Kent_Fit.mat", Animal)),'Kent_stats')
 %% Formulate it in a table format

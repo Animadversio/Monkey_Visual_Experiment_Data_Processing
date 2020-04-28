@@ -30,7 +30,7 @@ figure(7);clf; set(7, 'position', [ 805         197        1559         781]); %
 figure(8);clf; set(8, 'position', [ 805         197        1559         781]); % neural response to manifold images RND 1 2 
 %%
 Reps = 15;
-for Triali = 4:length(meta_new) % universal manifold experiment identifier
+for Triali = 8:length(meta_new) % universal manifold experiment identifier
 % Load the dataset 
 % meta = storedStruct.meta{Expi};
 % rasters = storedStruct.rasters{Expi};
@@ -82,10 +82,10 @@ set(0,'CurrentFigure',1); %clf; %
 montage(img_list, 'Size', [4, 51]);
 saveas(1, fullfile(savepath, "pasupathy_images.jpg"))
 %% Load and visualize the Synthesized images
-if Expi ==18,  meta.stimuli ="N:\Stimuli\2019-Manifold\alfa-191209a-selectivity";  end
-if Expi ==19,  meta.stimuli ="N:\Stimuli\2019-Manifold\alfa-191210a-selectivity";  end
-if Expi ==20,  meta.stimuli ="N:\Stimuli\2019-Manifold\alfa-191211a-selectivity";  end
-if Expi ==21,  meta.stimuli ="N:\Stimuli\2019-Manifold\alfa-191212a-selectivity";  end
+% if Expi ==18,  meta.stimuli ="N:\Stimuli\2019-Manifold\alfa-191209a-selectivity";  end
+% if Expi ==19,  meta.stimuli ="N:\Stimuli\2019-Manifold\alfa-191210a-selectivity";  end
+% if Expi ==20,  meta.stimuli ="N:\Stimuli\2019-Manifold\alfa-191211a-selectivity";  end
+% if Expi ==21,  meta.stimuli ="N:\Stimuli\2019-Manifold\alfa-191212a-selectivity";  end
 img_dir = meta.stimuli; % image storage path online
 % if ~contains(img_dir, "N:\") && ~contains(img_dir, "\\storage1.ris.wustl.edu\crponce\Active\") && contains(img_dir(1:8), "Stimuli")
 %     img_dir = fullfile("N:\", img_dir);
@@ -158,6 +158,12 @@ title(sprintf("Exp%d pref chan%02d RND12 hemisphere", Expi, pref_chan))
 ylabel("RND2 axis");xlabel("RND1 axis");
 saveas(6, fullfile(savepath, sprintf("norm_%d_RND12.jpg", sphere_norm)))
 end
+
+
+did_Gabor = false;
+did_Pasu = false;
+if sum(contains(Trials.imageName, "pasu")) > 186, did_Pasu = true; end
+if sum(contains(Trials.imageName, "gab")) > 12, did_Gabor = true; end
 %%
 % Record the basic statisitcs or load them from the saved file. 
 Stat_summary = {};
@@ -183,6 +189,7 @@ montage(frame_img_list', 'Size', [11, 11]);
 set(ax2, 'Position', [0.5303    0.0500    0.4347    0.9049]);
 set(ax1, 'position', [0.0500    0.0700    0.4018    0.8050]);
 %% Pasupathy plot
+if did_Pasu
 [score_mat, bsl_mat, summary, stat_str] = get_pasu_tuning_stats();
 Stat_summary{channel, 2} = summary; % statistics of Pasu images
 % visualize the pasupathy tuning 
@@ -203,6 +210,7 @@ ax2 = subplot(2,1,2);
 montage(frame_img_list, 'Size', [4, 51]);
 set(ax1,'position',[0.0500    0.5038    0.9050    0.2977])
 set(ax2,'position',[0.0500    0.0800    0.9050    0.2977])
+end
 
 if did_PC49
 sphere_norm = infer_norm_from_imgname(Trials.imageName, "PC49");
@@ -244,7 +252,7 @@ end
 
 %
 saveas(3, fullfile(savepath, sprintf("PC23_tune_chan%s.png", unit_name_arr{channel})))
-saveas(4, fullfile(savepath, sprintf("Pasu_tune_chan%s.png", unit_name_arr{channel})))
+if did_Pasu, saveas(4, fullfile(savepath, sprintf("Pasu_tune_chan%s.png", unit_name_arr{channel}))); end
 if did_PC49, saveas(7, fullfile(savepath, sprintf("PC4950_tune_chan%s.png", unit_name_arr{channel}))); end
 if did_RND1, saveas(8, fullfile(savepath, sprintf("RND12_tune_chan%s.png", unit_name_arr{channel}))); end
 % Obsolete 

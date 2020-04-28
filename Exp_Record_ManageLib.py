@@ -62,7 +62,10 @@ def process_concat_cells(df, out_excel, Animal):
         df_sort.ephysFN[Expi] = df.ephysFN[rowi]
         df_sort.expControlFN[Expi] = df.expControlFN[rowi]
         if "Stimuli" in df.stimuli[rowi]:
-            df_sort.stimuli[Expi] = df.stimuli[rowi]
+            if "Stimuli" in df.stimuli[rowi][:8]:
+                df_sort.stimuli[Expi] = "N:\\" + df.stimuli[rowi] 
+            else:
+                df_sort.stimuli[Expi] = df.stimuli[rowi]
         else:
             df_sort.stimuli[Expi] = ""
             stimuli_miss_cnt += 1

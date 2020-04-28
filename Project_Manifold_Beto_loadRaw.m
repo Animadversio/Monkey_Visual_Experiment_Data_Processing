@@ -29,7 +29,15 @@ Project_General_copyMissingFiles(preMeta); % communicating and copying data from
 meta = {}; rasters = {}; lfps = {}; Trials = {};
 for iExp = 1:length(preMeta) 
     tMeta = preMeta(iExp);
+    try
     [meta_,rasters_,lfps_,Trials_] = loadData(tMeta.ephysFN,'expControlFN',tMeta.expControlFN) ;
+    catch err %e is an MException struct
+        fprintf('Error message:\n%s\n',err.message);
+        fprintf('Error trace:\n%s\n',err.getReport);
+        disp(tMeta)
+        keyboard
+        continue
+    end
     meta_merged = rmfield( tMeta, intersect(fieldnames(tMeta), fieldnames(meta_)) );
     names = [fieldnames(meta_merged); fieldnames(meta_)];
     meta_ = cell2struct([struct2cell(meta_merged); struct2cell(meta_)], names, 1);
