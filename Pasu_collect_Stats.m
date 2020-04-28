@@ -1,23 +1,17 @@
 %% Manif_Collect_Stats into mat
 %%
-Animal = "Alfa";Set_Path;
+Animal = "Beto";Set_Path;
 %expftr = (contains(ExpRecord.expControlFN,"200319"));
 expftr = (contains(ExpRecord.Exp_collection,"Manifold") &...
             contains(ExpRecord.expControlFN, "selectivity")&...
-            ExpRecord.Expi > 24);
+            ExpRecord.Expi > 10);
 rowis = find(expftr);
 % Expi_col = [1,2,3,6,7,10,11,12,19,27];
 % Expi_col = [1,3,4,5,8,9,10,11,12,13,15,16,17,18,19,20,21,22];
 % assert(all(ExpRecord.Expi(rowis(Expi_col))==Expi_col')) % assert you are getting what you want. 
 [meta_new,rasters_new,~,Trials_new] = Project_Manifold_Beto_loadRaw(rowis,Animal);
 %%
-Stats = repmat(struct(), 1, length(meta_new));
-%% If there is stats saved, load it! 
-mat_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
-mat_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Mat_Statistics";
-% Animal = "Alfa";
-% load(fullfile(mat_dir, Animal+'_Evol_stats.mat'))
-load(fullfile(mat_dir, Animal+'_Manif_stats.mat'))
+PasuStats = repmat(struct(), 1, 45);
 %%
 for Triali = 1:length(meta_new)
 meta = meta_new{Triali};
@@ -30,11 +24,10 @@ fprintf("Processing  Exp %d:\n",Expi)
 fprintf([ExpRecord.comments{exp_rowi},'\n'])
 % savepath = fullfile(result_dir, sprintf("%s_Exp%02d", Animal, Expi));
 % mkdir(savepath)
-% if Expi == 16, keyboard; end
-Stats(Expi).Animal = Animal;
-Stats(Expi).Expi = Expi;
-Stats(Expi).imageName = Trials.imageName;
-Stats(Expi).meta = meta;
+PasuStats(Expi).Animal = Animal;
+PasuStats(Expi).Expi = Expi;
+PasuStats(Expi).imageName = Trials.imageName;
+PasuStats(Expi).meta = meta;
 %%
 pref_chan = Trials.TrialRecord.User.prefChan;
 Exp_label_str = sprintf("Exp%d pref chan %d", Expi, pref_chan(1));
@@ -45,12 +38,12 @@ unit_name_arr = generate_unit_labels(meta.spikeID);
 pref_chan_id = find(meta.spikeID==pref_chan & ... % the id in the raster and lfps matrix 
                 unit_num_arr > 0); % match for unit number
 
-Stats(Expi).units.pref_chan = pref_chan;
-Stats(Expi).units.unit_name_arr = unit_name_arr;
-Stats(Expi).units.unit_num_arr = unit_num_arr;
-Stats(Expi).units.activ_msk = activ_msk;
-Stats(Expi).units.spikeID = meta.spikeID;
-Stats(Expi).units.pref_chan_id = pref_chan_id;
+PasuStats(Expi).units.pref_chan = pref_chan;
+PasuStats(Expi).units.unit_name_arr = unit_name_arr;
+PasuStats(Expi).units.unit_num_arr = unit_num_arr;
+PasuStats(Expi).units.activ_msk = activ_msk;
+PasuStats(Expi).units.spikeID = meta.spikeID;
+PasuStats(Expi).units.pref_chan_id = pref_chan_id;
 
 if Animal == "Beto"
     if Expi <= 10, subsp_n = 3; else, subsp_n = 1;end
@@ -59,37 +52,43 @@ elseif Animal == "Alfa"
 end
 subsp_templ = {'norm_%d_PC2_%d_PC3_%d', 'norm_%d_PC49_%d_PC50_%d','norm_%d_RND1_%d_RND2_%d'};
 sphere_norm = infer_norm_from_imgnm(Trials.imageName);
-Stats(Expi).manif.sphere_norm = sphere_norm;
-Stats(Expi).manif.subsp_n = subsp_n;
+PasuStats(Expi).manif.sphere_norm = sphere_norm;
+PasuStats(Expi).manif.subsp_n = subsp_n;
 for subsp_i = 1:subsp_n
 name_pattern = subsp_templ{subsp_i};
 [idx_grid, ~,~,~] = build_idx_grid(Trials.imageName, name_pattern, sphere_norm);
 %%
-psths_col = cellfun(@(idx) rasters(pref_chan_id, :, idx), idx_grid, ...
-                    'UniformOutput', false);
+psths_col = cellfun(@(idx) rasters(:, :, idx), idx_grid, 'UniformOutput', false);
+subsp_act = cellfun(@(psth) mean(psth(:, 51:200, :),2), psths_col,'UniformOutput',false);
+subsp_bsl = cellfun(@(psth) mean(psth(:, 1:40, :),2), psths_col,'UniformOutput',false);
 % activ_map = cellfun(@(c) mean(c(1,50:200,:), [2,3]), psths_col, 'UniformOutput', true);
-Stats(Expi).manif.idx_grid{subsp_i} = idx_grid;
-Stats(Expi).manif.psth{subsp_i} = psths_col;
+PasuStats(Expi).manif.idx_grid{subsp_i} = idx_grid;
+PasuStats(Expi).manif.act{subsp_i} = subsp_act;
+PasuStats(Expi).manif.bsl{subsp_i} = subsp_bsl;
 end
 %%
-Stats(Expi).ref.didGabor = false;
-Stats(Expi).ref.didPasu = false;
-if sum(contains(Trials.imageName, "pasu")) > 186
-Stats(Expi).ref.didPasu = true;
+PasuStats(Expi).ref.didGabor = false;
+PasuStats(Expi).ref.didPasu = false;
+if sum(contains(Trials.imageName, "pasu")) > 186 
+PasuStats(Expi).ref.didPasu = true;
 [pasu_idx_grid,~,~,~] = build_Pasu_idx_grid(Trials.imageName);
-pasu_psths_col = cellfun(@(idx) rasters(pref_chan_id, :, idx), pasu_idx_grid, ...
-                'UniformOutput', false);
-Stats(Expi).ref.pasu_psths = pasu_psths_col;
+pasu_psths_col = cellfun(@(idx) rasters(:, :, idx), pasu_idx_grid, ...
+                'UniformOutput', false); % record Pasu response in all channels
+PasuStats(Expi).ref.pasu_act = cellfun(@(psth) mean(psth(:, 51:200, :),2), pasu_psths_col,'UniformOutput',false);
+PasuStats(Expi).ref.pasu_bsl = cellfun(@(psth) mean(psth(:, 1:40, :),2), pasu_psths_col,'UniformOutput',false);
 end
-
 if sum(contains(Trials.imageName, "gab")) > 12
-Stats(Expi).ref.didGabor = true;
+PasuStats(Expi).ref.didGabor = true;
 [gab_idx_grid,~,~,~] = build_Pasu_idx_grid(Trials.imageName);
-gab_psths_col = cellfun(@(idx) rasters(pref_chan_id, :, idx), gab_idx_grid, ...
-                'UniformOutput', false);
-Stats(Expi).ref.gab_psths = gab_psths_col;
+gab_psths_col = cellfun(@(idx) rasters(:, :, idx), gab_idx_grid, ...
+                'UniformOutput', false); % record Gabor response in all channels
+PasuStats(Expi).ref.gab_act = cellfun(@(psth) mean(psth(:, 51:200, :),2), gab_psths_col,'UniformOutput',false);
+PasuStats(Expi).ref.gab_bsl = cellfun(@(psth) mean(psth(:, 1:40, :),2), gab_psths_col,'UniformOutput',false);
 end
 end
+%%
+save(compose("D:\\%s_Manif_PasuStats.mat", Animal), 'PasuStats')
+save(fullfile(savepath, compose("%s_Manif_PasuStats.mat", Animal)), 'PasuStats')
 %%
 savepath = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Mat_Statistics";
 save(compose("D:\\%s_Manif_stats.mat", Animal), 'Stats')
