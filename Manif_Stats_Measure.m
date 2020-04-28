@@ -1,7 +1,7 @@
 %% This file is written to use the stats extracted from the formatted mat file 
 % and further do fitting, analysis and plotting for the key units. 
 mat_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
-Animal = "Alfa";
+Animal = "Beto";
 load(fullfile(mat_dir, Animal+'_Evol_stats.mat'))
 load(fullfile(mat_dir, Animal+'_Manif_stats.mat'))
 %%
@@ -96,6 +96,8 @@ end
 KstatTab = struct2table(Kstat); % Table is really good for doing statistics (filtering and ordering)
 save(fullfile(savepath, compose("%s_Kstats.mat", Animal)), 'Kstat', 'Fit_strs')
 writetable(KstatTab, fullfile(savepath, compose("%s_Kstats.csv", Animal)))
+%%
+KstatTab = readtable(fullfile(savepath, compose("%s_Kstats.csv", Animal)));
 %% Do some basic statistics and plotting
 % prefchan_arr = arrayfun(@(S) S.chan, Kstat);
 % unit_arr = arrayfun(@(S) S.unit, Kstat);
@@ -308,9 +310,30 @@ errorbar(KSU_vec, KHash_vec, ...
 xlabel("kappa (SU)");ylabel("kappa (Hash)")
 line([0,2],[0,2])
 axis equal
-
-
-
+%%
+figure(4);clf;hold on
+Expi_arr = [29, 28, 31, 30, 32:45];
+imgsize = arrayfun(@(c)c.evol.imgsize, EStats(Expi_arr));%28:45
+Exp_pairs = reshape(Expi_arr, 2, [])';
+idx_pairs = [];labels = {};
+for pairi = 1:size(Exp_pairs,1)%28:45
+    Expi = Exp_pairs(pairi,:);
+    imgsize = arrayfun(@(c)c.evol.imgsize, EStats(Expi));
+    [idx,~] = find(KstatTab.Expi==Expi);
+    idx_pairs = [idx_pairs; idx'];
+    labels = [labels, arrayfun(@(expi,sz)compose("Exp%02d %d deg",expi,sz), Expi, imgsize)];
+    errorbar(pairi + [0, 0.5], KstatTab.kappa(idx),...
+        KstatTab.kappa(idx) - KstatTab.CI_1(idx),...
+        KstatTab.CI_2(idx) - KstatTab.kappa(idx),'o-')
+end
+R2_str = arrayfun(@(ch,deg1,deg3)compose("Ch%02d R2\ndeg1:%.3f\ndeg3:%.3f",ch,deg1,deg3),...
+    KstatTab.chan(idx_pairs(:,1)),KstatTab.R2(idx_pairs(:,1)),KstatTab.R2(idx_pairs(:,2))); % form the annotation text by array function
+text(1:size(idx_pairs,1), 0.9 * ones(1,size(idx_pairs,1)), R2_str, 'FontSize', 11)
+xlim([0.5,10]);ylim([-0.2,1.1])
+xticks(1:0.5:9.5);xticklabels(labels)
+[H,P,CI,tstat] = ttest(KstatTab.kappa(idx_pairs(:,1)),KstatTab.kappa(idx_pairs(:,2)))
+ylabel("kappa");
+title(["Compring peakedness of Manifold Exp",compose("with 1 deg and 3 deg image size t=%.2f(%.3f)",tstat.tstat, P)])
 %%
 errorbar(kap_SU, kapHash)
 %% Plot it with spherical plot 
