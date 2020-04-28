@@ -1,8 +1,8 @@
 clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug ExpRecord
 %%
 Animal = "Both";Set_Path;
-%expftr = (contains(ExpRecord.ephysFN,"13042020"));
-expftr = (contains(ExpRecord.ephysFN,"15042020") | contains(ExpRecord.ephysFN,"16042020") |contains(ExpRecord.ephysFN,"17042020"));
+expftr = (contains(ExpRecord.expControlFN,"20042"));
+%expftr = (contains(ExpRecord.ephysFN,"15042020") | contains(ExpRecord.ephysFN,"16042020") |contains(ExpRecord.ephysFN,"17042020"));
 %expftr = (contains(ExpRecord.Exp_collection,"SUHash"));%find(expftr)
 fllist = find(expftr);
 Project_Manifold_Beto_loadRaw(fllist(1:end),Animal,true);%find(expftr)%find(expftr)

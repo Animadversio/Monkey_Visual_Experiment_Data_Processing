@@ -14,6 +14,9 @@ rowis = find(expftr);
 %%
 EStats = repmat(struct(), 1, length(meta_new));
 %%
+MatStats_path = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Mat_Statistics";
+load(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
+%% 
 for Triali = 1:length(meta_new)
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
@@ -111,7 +114,19 @@ EStats(Expi).evol.psth = gen_psth_col;
 EStats(Expi).ref.idx_seq = nat_idx_seq;
 EStats(Expi).ref.psth = nat_psth_col;
 
+% Sort the reference images by name and find their psth. 
+nat_imgnm = unique(imgnm(row_nat)); % sorted names of reference images 
+nat_imgidx = cellfun(@(nm) find(contains(imgnm, nm)), nat_imgnm, 'UniformOutput', false);
+nat_psth = cellfun(@(idx) rasters(pref_chan_id, :, idx), nat_imgidx, 'UniformOutput', false);
+
+EStats(Expi).ref.imgnm = string(nat_imgnm);
+EStats(Expi).ref.idx_arr = nat_imgidx; % Save the idx of pref chan for reference image, by name
+EStats(Expi).ref.psth_arr = nat_psth; % Save the psth of pref chan for reference image, by name
 end
 %%
 %save("D:\Alfa_Evol_stats.mat", 'EStats')
-save("D:\Beto_Evol_stats.mat", 'EStats')
+MatStats_path = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Mat_Statistics";
+save(compose("D:\\%s_Evol_stats.mat", Animal), 'EStats')
+save(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
+%% Add the ref image stats to it
+

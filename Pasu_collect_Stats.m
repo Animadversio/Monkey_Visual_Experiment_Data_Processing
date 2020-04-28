@@ -1,4 +1,4 @@
-%% Manif_Collect_Stats into mat
+%% Collect Response of Pasupathy images and Manifold (time averaged to compress)
 %%
 Animal = "Beto";Set_Path;
 %expftr = (contains(ExpRecord.expControlFN,"200319"));
