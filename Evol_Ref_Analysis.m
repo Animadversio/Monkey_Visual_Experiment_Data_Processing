@@ -5,7 +5,7 @@ load(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
 %%
 figure(1);set(1,'position',[ 469   430   771   548])
 result_dir = "E:\Evolution_Exp";
-for Expi = 1:45
+for Expi = 3:45
 savedir = fullfile(result_dir,compose("Manifold_Evol%02d_chan%02d", ...
     Expi, EStats(Expi).units.pref_chan));
 mkdir(savedir)

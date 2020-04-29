@@ -1,3 +1,4 @@
+clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug ExpRecord ExpSpecTable_Aug_alfa
 %% Obsolete code to read Formatted data and put similar experiments into a compiled mat file locally. 
 ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xlsx");
 %%
@@ -6,9 +7,13 @@ ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xlsx");
 writetable(ExpSpecTable_Aug, "S:\ExpSpecTable_Augment.xlsx")
 %% Load exp file from certain entry 
 % [meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw([108:113]);
+% Animal = "Both";Set_Path;
+% expftr = (contains(ExpRecord.expControlFN,"200321") | contains(ExpRecord.expControlFN,"200322"));
+% Project_Manifold_Beto_loadRaw(find(expftr),Animal,true);
 Animal = "Both";Set_Path;
-expftr = (contains(ExpRecord.expControlFN,"200321") | contains(ExpRecord.expControlFN,"200322"));
-Project_Manifold_Beto_loadRaw(find(expftr),Animal,true);
+expftr = (contains(ExpRecord.expControlFN,"200428"));
+fllist = find(expftr);
+Project_Manifold_Beto_loadRaw(fllist(1:end),Animal,true);
 crp_sync_localMat_to_networkMat
 %% Load exp file by filtering the experimental record
 find(contains(ExpSpecTable_Aug.expControlFN,'generate_parallel'))';

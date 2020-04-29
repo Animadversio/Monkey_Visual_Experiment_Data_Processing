@@ -4,7 +4,7 @@ Animal = "Alfa";Set_Path;
 %expftr = (contains(ExpRecord.expControlFN,"200319"));
 expftr = (contains(ExpRecord.Exp_collection,"Manifold") &...
             contains(ExpRecord.expControlFN, "selectivity")&...
-            ExpRecord.Expi > 24);
+            ExpRecord.Expi > 40);
 rowis = find(expftr);
 % Expi_col = [1,2,3,6,7,10,11,12,19,27];
 % Expi_col = [1,3,4,5,8,9,10,11,12,13,15,16,17,18,19,20,21,22];
@@ -15,8 +15,7 @@ Stats = repmat(struct(), 1, length(meta_new));
 %% If there is stats saved, load it! 
 mat_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
 mat_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Mat_Statistics";
-% Animal = "Alfa";
-% load(fullfile(mat_dir, Animal+'_Evol_stats.mat'))
+Animal = "Alfa";
 load(fullfile(mat_dir, Animal+'_Manif_stats.mat'))
 %%
 for Triali = 1:length(meta_new)

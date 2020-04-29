@@ -1,4 +1,4 @@
-clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug ExpRecord
+clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug ExpRecord ExpSpecTable_Aug_alfa
 %% Visualizing Code Evolution Traj
 
 Animal = "Beto"; Set_Path;

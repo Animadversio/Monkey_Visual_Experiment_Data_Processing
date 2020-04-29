@@ -1,10 +1,10 @@
 %% Collect Response of Pasupathy images and Manifold (time averaged to compress)
 %%
-Animal = "Beto";Set_Path;
+Animal = "Alfa";Set_Path;
 %expftr = (contains(ExpRecord.expControlFN,"200319"));
 expftr = (contains(ExpRecord.Exp_collection,"Manifold") &...
-            contains(ExpRecord.expControlFN, "selectivity")&...
-            ExpRecord.Expi > 10);
+            contains(ExpRecord.expControlFN, "selectivity"));%&...
+            %ExpRecord.Expi > 10);
 rowis = find(expftr);
 % Expi_col = [1,2,3,6,7,10,11,12,19,27];
 % Expi_col = [1,3,4,5,8,9,10,11,12,13,15,16,17,18,19,20,21,22];

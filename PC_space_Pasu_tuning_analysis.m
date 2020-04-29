@@ -3,22 +3,17 @@ clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug  Exp
 % Code to do basic analysis on PC + Pasupathy patch manifold experiment
 % analysis
 global  Trials rasters channel ang_step Reps
+Reps = 15; % constant for maximum number of repetitions (as long as it's larger than the maximum, it's fine)
+%%
 %storedStruct = load("D:\\Manifold_Exps.mat");
 % Load code from "D:\Poncelab_Github\office-main\Project_Selectivity_Beto_loadRaw.m"
-Reps = 15; % constant for maximum number of repetitions (as long as it's larger than the maximum, it's fine)
 % Set_Exp_Specs; 
 Set_Path;
 Animal = "Alfa";
-switch Animal
-    case "Alfa"
-        ExpRecord = ExpSpecTable_Aug_alfa;
-    case "Beto"
-        ExpRecord = ExpSpecTable_Aug;
-end 
-expftr = ExpRecord.Expi<=24 & ExpRecord.Expi>=16 & ...
+expftr = ExpRecord.Expi>=34 & ...%ExpRecord.Expi<=40 & 
     contains(ExpRecord.expControlFN,"selectivity") & ...
      contains(ExpRecord.Exp_collection, "Manifold");
-[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr),Animal); 
+[meta_new,rasters_new,~,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr),Animal); 
 %%
 figure(1);clf; set(1,'position', [ 326         629        2089         254]); % all pasu images montage 
 figure(2);clf; set(2,'position', [ 1070          48         910         820]); % all manifold images montaged
@@ -57,7 +52,7 @@ unit_in_pref_chan = 1; % TODO find this number somewhere
 ang_step = 18;
 % Save basic info
 Exp_label_str = sprintf("Exp%d pref chan %d", Expi, pref_chan(1));
-savepath = sprintf("C:\\Users\\ponce\\OneDrive - Washington University in St. Louis\\PC_space_tuning\\Alfa_Exp%d_chan%02d", Expi, pref_chan);
+savepath = sprintf("C:\\Users\\ponce\\OneDrive - Washington University in St. Louis\\PC_space_tuning\\%s_Exp%d_chan%02d", Animal, Expi, pref_chan);
 mkdir(savepath);
 unit_name_arr = generate_unit_labels(meta.spikeID, savepath); % Generate readable labels for each channel
 [activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters, savepath);
@@ -260,6 +255,59 @@ if did_RND1, saveas(8, fullfile(savepath, sprintf("RND12_tune_chan%s.png", unit_
 % save_to_pdf(4, fullfile(savepath, sprintf("chan%02d_Pasu_tune.pdf", channel)))
 end
 save(fullfile(savepath, "Basic_Stats.mat"), 'Stat_summary')
+PC23Tab = struct2table([Stat_summary{:,1}]);
+PC23Tab.unit_name = unit_name_arr;
+PC23Tab.channel = meta.spikeID;
+PC23Tab.unit_num = unit_num_arr;
+writetable(PC23Tab, fullfile(savepath, "PC23_Stats.xlsx"))
+if did_Pasu
+PasuTab = struct2table([Stat_summary{:,2}]);
+PasuTab.unit_name = unit_name_arr;
+PasuTab.channel = meta.spikeID;
+PasuTab.unit_num = unit_num_arr;
+writetable(PasuTab, fullfile(savepath, "Pasu_Stats.xlsx"))
+end
+if did_PC49
+PC49Tab = struct2table([Stat_summary{:,3}]);
+PC49Tab.unit_name = unit_name_arr;
+PC49Tab.channel = meta.spikeID;
+PC49Tab.unit_num = unit_num_arr;
+writetable(PC49Tab, fullfile(savepath, "PC49_Stats.xlsx"))
+end
+if did_RND1
+RNDTab = struct2table([Stat_summary{:,4}]);
+RNDTab.unit_name = unit_name_arr;
+RNDTab.channel = meta.spikeID;
+RNDTab.unit_num = unit_num_arr;
+writetable(RNDTab, fullfile(savepath, "RND1_Stats.xlsx"))
+end
+end
+%%
+PC23Tab = struct2table([Stat_summary{:,1}]);
+PC23Tab.unit_name = unit_name_arr;
+PC23Tab.channel = meta.spikeID;
+PC23Tab.unit_num = unit_num_arr;
+writetable(PC23Tab, fullfile(savepath, "PC23_Stats.xlsx"))
+if did_Pasu
+PasuTab = struct2table([Stat_summary{:,2}]);
+PasuTab.unit_name = unit_name_arr;
+PasuTab.channel = meta.spikeID;
+PasuTab.unit_num = unit_num_arr;
+writetable(PasuTab, fullfile(savepath, "Pasu_Stats.xlsx"))
+end
+if did_PC49
+PC49Tab = struct2table([Stat_summary{:,3}]);
+PC49Tab.unit_name = unit_name_arr;
+PC49Tab.channel = meta.spikeID;
+PC49Tab.unit_num = unit_num_arr;
+writetable(PC49Tab, fullfile(savepath, "PC49_Stats.xlsx"))
+end
+if did_RND1
+RNDTab = struct2table([Stat_summary{:,4}]);
+RNDTab.unit_name = unit_name_arr;
+RNDTab.channel = meta.spikeID;
+RNDTab.unit_num = unit_num_arr;
+writetable(RNDTab, fullfile(savepath, "RND1_Stats.xlsx"))
 end
 % 
 % %% Modulate the contrast by the score of firing
