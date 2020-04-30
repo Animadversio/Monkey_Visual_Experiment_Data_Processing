@@ -5,13 +5,19 @@ ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xlsx");
 % ExpSpecTable = ExpSpecTable_Aug(:, ["ephysFN","expControlFN","stimuli","comments"]);
 % writetable(ExpSpecTable, "S:\ExpSpecTable.xlsx")
 writetable(ExpSpecTable_Aug, "S:\ExpSpecTable_Augment.xlsx")
+%%
+Animal = "Alfa"; Set_Path;
+expftr = ExpRecord.Expi>=44 & ...%ExpRecord.Expi<=40 & 
+    contains(ExpRecord.expControlFN,"selectivity") & ...
+     contains(ExpRecord.Exp_collection, "Manifold");
+[meta_new,rasters_new,~,Trials_new] = LoadRaw_and_Append_Coll(find(expftr), Animal, meta_new,rasters_new,[],Trials_new);
 %% Load exp file from certain entry 
 % [meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw([108:113]);
 % Animal = "Both";Set_Path;
 % expftr = (contains(ExpRecord.expControlFN,"200321") | contains(ExpRecord.expControlFN,"200322"));
 % Project_Manifold_Beto_loadRaw(find(expftr),Animal,true);
 Animal = "Both";Set_Path;
-expftr = (contains(ExpRecord.expControlFN,"200428"));
+expftr = (contains(ExpRecord.expControlFN,"200429"));
 fllist = find(expftr);
 Project_Manifold_Beto_loadRaw(fllist(1:end),Animal,true);
 crp_sync_localMat_to_networkMat

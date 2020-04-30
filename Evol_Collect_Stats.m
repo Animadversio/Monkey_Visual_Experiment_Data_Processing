@@ -2,10 +2,11 @@
 % Collect statisitcs from evolution experiments into a compressed compilation
 clearvars -except EStats Stats meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug  ExpSpecTable_Aug_alfa ExpRecord
 %%
-Animal = "Beto";Set_Path;
+Animal = "Alfa";Set_Path;
 %expftr = (contains(ExpRecord.expControlFN,"200319"));
-expftr = (contains(ExpRecord.Exp_collection,"Manifold") &...
-            contains(ExpRecord.expControlFN, "generate"));
+% expftr = (contains(ExpRecord.Exp_collection,"Manifold") &...
+%             contains(ExpRecord.expControlFN, "generate"));
+expftr = (contains(ExpRecord.expControlFN,"200429"));
 rowis = find(expftr);
 % Expi_col = [1,2,3,6,7,10,11,12,19,27];
 % Expi_col = [1,3,4,5,8,9,10,11,12,13,15,16,17,18,19,20,21,22];
@@ -24,6 +25,11 @@ Trials = Trials_new{Triali};
 exp_rowi = find(contains(ExpRecord.ephysFN, meta.ephysFN));
 % Check the Expi match number
 Expi = ExpRecord.Expi(exp_rowi);
+if isnan(Expi) || ~contains(ExpRecord.expControlFN{exp_rowi},'generate') ...
+        || ~contains(ExpRecord.Exp_collection{exp_rowi},'Manifold')
+    keyboard
+    continue
+end
 fprintf("\nProcessing  Exp %d:\n",Expi)
 fprintf([ExpRecord.comments{exp_rowi},'\n'])
 % savepath = fullfile(result_dir, sprintf("%s_Exp%02d", Animal, Expi));
@@ -53,7 +59,7 @@ EStats(Expi).units.unit_num_arr = unit_num_arr;
 EStats(Expi).units.activ_msk = activ_msk;
 EStats(Expi).units.spikeID = meta.spikeID;
 EStats(Expi).units.pref_chan_id = pref_chan_id;
-
+EStats(Expi).units.unit_in_pref_chan = unit_in_pref_chan;
 
 if size(Trials.TrialRecord.User.evoConfiguration,2) == 5
 Optim_names = [];

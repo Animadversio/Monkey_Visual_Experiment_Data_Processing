@@ -25,6 +25,12 @@ Trials = Trials_new{Triali};
 exp_rowi = find(contains(ExpRecord.ephysFN, meta.ephysFN));
 % Check the Expi match number
 Expi = ExpRecord.Expi(exp_rowi);Expi=Expi(end); % hack this for beto exp 35
+if isnan(Expi) || ~contains(ExpRecord.expControlFN{exp_rowi},'selectivity') ...
+        || ~contains(ExpRecord.Exp_collection{exp_rowi},'Manifold')
+    % add this filter to process a sequence of Trials_new 
+    keyboard
+    continue
+end
 fprintf("Processing  Exp %d:\n",Expi)
 fprintf([ExpRecord.comments{exp_rowi},'\n'])
 % savepath = fullfile(result_dir, sprintf("%s_Exp%02d", Animal, Expi));

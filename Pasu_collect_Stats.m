@@ -11,7 +11,9 @@ rowis = find(expftr);
 % assert(all(ExpRecord.Expi(rowis(Expi_col))==Expi_col')) % assert you are getting what you want. 
 [meta_new,rasters_new,~,Trials_new] = Project_Manifold_Beto_loadRaw(rowis,Animal);
 %%
-PasuStats = repmat(struct(), 1, 45);
+PasuStats = repmat(struct(), 1, length(meta_new));
+%load(compose("D:\\%s_Manif_PasuStats.mat", Animal), 'PasuStats')
+load(fullfile(savepath, compose("%s_Manif_PasuStats.mat", Animal)), 'PasuStats')
 %%
 for Triali = 1:length(meta_new)
 meta = meta_new{Triali};
@@ -20,6 +22,12 @@ Trials = Trials_new{Triali};
 exp_rowi = find(contains(ExpRecord.ephysFN, meta.ephysFN));
 % Check the Expi match number
 Expi = ExpRecord.Expi(exp_rowi);Expi=Expi(end); % hack this for beto exp 35
+if isnan(Expi) || ~contains(ExpRecord.expControlFN{exp_rowi},'selectivity') ...
+        || ~contains(ExpRecord.Exp_collection{exp_rowi},'Manifold')
+    % add this filter to process a sequence of Trials_new 
+    keyboard
+    continue
+end
 fprintf("Processing  Exp %d:\n",Expi)
 fprintf([ExpRecord.comments{exp_rowi},'\n'])
 % savepath = fullfile(result_dir, sprintf("%s_Exp%02d", Animal, Expi));
@@ -93,7 +101,7 @@ save(fullfile(savepath, compose("%s_Manif_PasuStats.mat", Animal)), 'PasuStats')
 savepath = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Mat_Statistics";
 save(compose("D:\\%s_Manif_stats.mat", Animal), 'Stats')
 save(fullfile(savepath, compose("%s_Manif_stats.mat", Animal)), 'Stats')
-%save("D:\Alfa_Manif_stats.mat", 'Stats')
+
 %%
 [pasu_idx_grid,id_grid,p1_grid,p2_grid] = build_Pasu_idx_grid(Trials.imageName);
 pasu_psths_col = cellfun(@(idx) rasters(pref_chan_id, :, idx), pasu_idx_grid, ...
