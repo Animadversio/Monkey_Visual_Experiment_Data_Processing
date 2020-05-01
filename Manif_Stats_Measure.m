@@ -1,7 +1,7 @@
 %% This file is written to use the stats extracted from the formatted mat file 
 % and further do fitting, analysis and plotting for the key units. 
 mat_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
-Animal = "Beto";
+Animal = "Alfa";
 load(fullfile(mat_dir, Animal+'_Evol_stats.mat'))
 load(fullfile(mat_dir, Animal+'_Manif_stats.mat'))
 %%
@@ -53,7 +53,7 @@ toc % took 6.88s to run through! not intensive
 % save('D:\Alfa_Manif_Kent_Fit.mat','Kent_stats')
 % save(fullfile(savepath, 'Alfa_Manif_Kent_Fit.mat'),'Kent_stats')
 savepath = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Manif_SUHash\summary";
-savepath = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Manif_SUHash\summary";
+% savepath = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Manif_SUHash\summary";
 save(compose("E:\\%s_Manif_Kent_Fit.mat", Animal),'Kent_stats')
 save(fullfile(savepath, compose("%s_Manif_Kent_Fit.mat", Animal)),'Kent_stats')
 %% Formulate it in a table format
@@ -63,8 +63,8 @@ Fit_strs = repmat("",numel(Stats),3);
 csr = 0;
 for Expi = 1:numel(Stats)
  % index for SU and Ha within each struct
-for si = 1:size(Kent_stats(Expi).act_fit, 2)
-for ui = 1:size(Kent_stats(Expi).act_fit, 1)
+for si = 1:size(Kent_stats(Expi).act_fit, 2) % space idx
+for ui = 1:size(Kent_stats(Expi).act_fit, 1) % unit idx
 csr = csr + 1;
 Kstat(csr).kappa = Kent_stats(Expi).act_fit{ui,si}.coef(4);% consider subspace PC23 now
 Kstat(csr).CI = Kent_stats(Expi).act_fit{ui,si}.confint(:,4);
@@ -98,7 +98,9 @@ KstatTab = struct2table(Kstat); % Table is really good for doing statistics (fil
 save(fullfile(savepath, compose("%s_Kstats.mat", Animal)), 'Kstat', 'Fit_strs')
 writetable(KstatTab, fullfile(savepath, compose("%s_Kstats.csv", Animal)))
 %%
-KstatTab = readtable(fullfile(savepath, compose("%s_Kstats.csv", Animal)));
+%%
+% KstatTab = readtable(fullfile(savepath, compose("%s_Kstats.csv", Animal)));
+KstatTab = readtable(fullfile(savepath, compose("%s_Kstats_drive.csv", Animal)));
 %% Do some basic statistics and plotting
 % prefchan_arr = arrayfun(@(S) S.chan, Kstat);
 % unit_arr = arrayfun(@(S) S.unit, Kstat);
@@ -156,6 +158,52 @@ saveas(2, fullfile(savepath, compose("%s_Manif_kappa.png",Animal)))
 savefig(2, fullfile(savepath, compose("%s_Manif_kappa.fig",Animal)))
 saveas(3, fullfile(savepath, compose("%s_Manif_kappa_werrbar.png",Animal)))
 savefig(3, fullfile(savepath, compose("%s_Manif_kappa_werrbar.fig",Animal)))
+%% Plot Figures for the driver units only. 
+KstatTab2 = struct2table(Kstat_drive); % Table is really good for doing statistics (filtering and ordering)
+save(fullfile(savepath, compose("%s_Kstats_drive.mat", Animal)), 'Kstat_drive')
+writetable(KstatTab2, fullfile(savepath, compose("%s_Kstats_drive.csv", Animal)))
+KstatTab = KstatTab2;
+
+SUmsk = contains(KstatTab.chan_name,"A");
+if Animal == "Alfa"
+    SUmsk(KstatTab.Expi == 10 & KstatTab.unit == 2) = true;
+    SUmsk(KstatTab.Expi == 10 & KstatTab.unit == 1) = false;
+end
+ITmsk = KstatTab.chan<=32 & KstatTab.R2 >0.5;
+V1msk = KstatTab.chan<=48 & KstatTab.chan>=33 & KstatTab.R2 >0.5;
+V4msk = KstatTab.chan>=49 & KstatTab.R2 >0.5;
+figure(2);clf;hold on;set(2,'position',[680   354   439   624])
+scatter(1*ones(sum(V1msk),1), KstatTab.kappa(V1msk), (5*(1+SUmsk(V1msk))).^2)
+scatter(2*ones(sum(V4msk),1), KstatTab.kappa(V4msk), (5*(1+SUmsk(V4msk))).^2)
+scatter(3*ones(sum(ITmsk),1), KstatTab.kappa(ITmsk), (5*(1+SUmsk(ITmsk))).^2)
+xlim([0.5,3.5]);xticks([1, 2, 3])
+ylabel("kappa",'FontSize',14)
+title([Animal, "Manifold Tuning Peakedness Comparison", "Large o-SU, Small o-Hash","Driver Unit Only"],'FontSize',14)
+set(gca,'xticklabels',["V1", "V4", "IT"],'fontsize',14)
+%%
+figure(3);clf;hold on;set(3,'position',[680   354   439   624])
+errorbar(1+0.1*randn(sum(V1msk),1), KstatTab.kappa(V1msk), ...
+         KstatTab.kappa(V1msk) - cellfun(@(c)c(1),KstatTab.CI(V1msk)), ...%negative error
+         cellfun(@(c)c(2),KstatTab.CI(V1msk)) - KstatTab.kappa(V1msk), ...%positive error
+         'o','Color',[     0    0.4470    0.7410])
+errorbar(2+0.1*randn(sum(V4msk),1), KstatTab.kappa(V4msk), ...
+         KstatTab.kappa(V4msk) - cellfun(@(c)c(1),KstatTab.CI(V4msk)), ...%negative error
+         cellfun(@(c)c(2),KstatTab.CI(V4msk)) - KstatTab.kappa(V4msk), ...%positive error
+         'o','Color',[0.8500    0.3250    0.0980])
+errorbar(3+0.1*randn(sum(ITmsk),1), KstatTab.kappa(ITmsk), ...
+         KstatTab.kappa(ITmsk) - cellfun(@(c)c(1),KstatTab.CI(ITmsk)), ...%negative error
+         cellfun(@(c)c(2),KstatTab.CI(ITmsk)) - KstatTab.kappa(ITmsk), ...%positive error
+         'o','Color',[0.9290    0.6940    0.1250])
+xlim([0.5,3.5]);xticks([1, 2, 3])
+ylabel("kappa",'FontSize',14)
+title([Animal, "Manifold Tuning Peakedness Comparison", "Large o-SU, Small o-Hash","Driver Unit Only"],'FontSize',14)
+set(gca,'xticklabels',["V1", "V4", "IT"],'fontsize',14)
+%xticklabels(["V1", "V4", "IT"],'FontSize',14)
+%%
+saveas(2, fullfile(savepath, compose("%s_Manif_kappa_driver.png",Animal)))
+savefig(2, fullfile(savepath, compose("%s_Manif_kappa_driver.fig",Animal)))
+saveas(3, fullfile(savepath, compose("%s_Manif_kappa_werrbar_driver.png",Animal)))
+savefig(3, fullfile(savepath, compose("%s_Manif_kappa_werrbar_driver.fig",Animal)))
 %% among all the units 
 fprintf("Comparison pooling all experiment and units\n")
 [H,P,CI,tstat]=ttest2(KstatTab.kappa(ITmsk), KstatTab.kappa(V1msk));

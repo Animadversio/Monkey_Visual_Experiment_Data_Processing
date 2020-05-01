@@ -1,4 +1,6 @@
 function [t,ax_arr] = Cortex_Channel_Tile_Layout(arr_name, figh)
+% This is obsolete partial file. Use Cortex_Channel_Tile_Layout_All
+% instead!
 Extract_Channel_Organization;
 ax_arr = {};
 if contains(arr_name,"IT")

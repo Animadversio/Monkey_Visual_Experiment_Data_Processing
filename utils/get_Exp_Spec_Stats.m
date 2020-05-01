@@ -1,5 +1,5 @@
 Set_Path;
-% Collect Manifold Experiments specs 
+% Count number of experiments for 2 monkeys.
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evolution_Exp";
 animal = "Alfa";
 switch animal 
