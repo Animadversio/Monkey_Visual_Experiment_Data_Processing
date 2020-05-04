@@ -15,7 +15,7 @@ rasters = rasters_new{Expi};
 imgnm = EStats(Expi).imageName;
 row_gen = EStats(Expi).stim.gen_msk;
 row_nat = ~row_gen;%contains(imgnm, "nat") & cellfun(@(c) ~isempty(regexp(c(1:2), "\d\d")), imgnm);
-all_gabor_ref = all(contains(EStats(Expi).ref.imgnm,"gab"));
+is_all_gabor_ref = all(contains(EStats(Expi).ref.imgnm,"gab"));
 
 nat_imgidx = EStats(Expi).ref.idx_arr;
 nat_psth_avg = cellfun(@(idx) mean(rasters(:, :, idx), 3), ...
@@ -31,7 +31,7 @@ for i = 1:length(EStats(Expi).ref.imgnm)
 end
 %set(gca, 'position', [0.05,0.05,0.9,0.9])
 xlabel("time (ms)")
-if all_gabor_ref
+if is_all_gabor_ref
     title(compose("%s Manifold Exp %d\n PSTH of unit %s to ref images (gabors)",Animal,Expi,EStats(Expi).units.unit_name_arr(ch_j)))
 else
     title(compose("%s Manifold Exp %d\n PSTH of unit %s to ref images",Animal,Expi,EStats(Expi).units.unit_name_arr(ch_j)))
