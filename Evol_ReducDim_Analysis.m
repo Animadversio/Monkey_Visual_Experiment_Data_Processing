@@ -3,13 +3,16 @@ clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug ExpR
 % much adapted from Evol_Traj_Cmp & Evol_Optimizer_Cmp code, inspired Evol_Traj_analysis code.
 % (it's kind of a multi-thread) version of Evol Traj analysis
 % Has to add support for more general analysis
-Animal = "Alfa"; Set_Path;
+Animal = "Beto"; Set_Path;
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evol_ReducDim";
-expftr = contains(ExpRecord.expControlFN,"200310");
+expftr = contains(ExpRecord.Exp_collection, "ReducDimen_Evol") & ...
+        contains(ExpRecord.expControlFN,"generate") & ...
+        ExpRecord.Expi>0;
+% contains(ExpRecord.expControlFN,"200310");
 % expftr = ExpRecord.Expi<=24 & ExpRecord.Expi>=16 & ...
 %     contains(ExpRecord.expControlFN,"selectivity") & ...
 %      contains(ExpRecord.Exp_collection, "Manifold");
-[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr),Animal); 
+[meta_new,rasters_new,~,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr),Animal); 
 %% Prepare figure frames 
 h = figure('Visible','on');set(h,'position',[1          41        2560         963]);
 axs{1} = subplot(1,2,1);axs{2} = subplot(1,2,2);
@@ -17,28 +20,34 @@ h2 = figure('Visible','on');clf; h2.Position = [  19         235        1779    
 axs2 = {}; axs2{1} = subplot(1,2,1); axs2{2} = subplot(1,2,2);
 h3 = figure('Visible','on');h3.Position = [  782          43        1779         743];
 axs3 = {}; axs3{1} = subplot(1,2,1); axs3{2} = subplot(1,2,2);
-% result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
+%% result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evol_ReducDim";
-for Triali = 1:6
+for Triali = 1:length(meta_new)
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
-exp_rowi = find(contains(ExpSpecTable_Aug.ephysFN, meta.ephysFN));
+exp_rowi = find(contains(ExpRecord.ephysFN, meta.ephysFN));
 % Check the Expi match number
-Expi = ExpSpecTable_Aug.Expi(exp_rowi);
+Expi = ExpRecord.Expi(exp_rowi);
 fprintf("Processing  Exp %d:\n",Expi)
-disp(ExpSpecTable_Aug.comments(exp_rowi))
+disp(ExpRecord.comments(exp_rowi))
+if Expi == 20
+    meta.stimuli = "N:\Stimuli\2019-12-Evolutions\2020-04-10-Beto-02\2020-04-10-14-54-53";
+end
 % assert(Expi_tab == Expi, "Data Expi doesn't match that in exp record! Check your indexing or record.")
 %% Sort channel id
 % finding spike ID, note for multi-thread optimizer, we will have multiple
 % pref_chan for different optimizers 
 pref_chan = Trials.TrialRecord.User.prefChan;
-unit_in_pref_chan = cell2mat(Trials_new{1}.TrialRecord.User.evoConfiguration(:,4))';
+unit_in_pref_chan = cell2mat(Trials.TrialRecord.User.evoConfiguration(:,4))';
 thread_num = size(Trials.TrialRecord.User.evoConfiguration, 1);
 Exp_label_str = sprintf("Exp%d pref chan %d", Expi, pref_chan(1));
-savepath = fullfile(result_dir, compose("Evol%02d_chan%02d", Expi, pref_chan(1)));
+savepath = fullfile(result_dir, compose("%s_Evol%02d_chan%02d", Animal, Expi, pref_chan(1)));
 mkdir(savepath);
-% 
+if thread_num ~= 2
+    fprintf("Single Thread evolution %d, skip for now\n", Expi)
+    continue
+end
 unit_name_arr = generate_unit_labels(meta.spikeID);
 [activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
 pref_chan_id = zeros(1, thread_num);
@@ -125,7 +134,7 @@ saveas(h, fullfile(savepath, "EvolImageSeq_cmp.png"))
 %% Prepare color sequence 
 MAX_BLOCK_NUM = length(block_list); 
 color_seq = brewermap(MAX_BLOCK_NUM, 'spectral');
-for channel_j = 1:size(rasters, 1)%pref_chan_id%
+for channel_j = pref_chan_id%1:size(rasters, 1)%pref_chan_id%
 %% Plot Mean response compare figure
 %channel_j = pref_chan_id;
 % h1 = figure(1);clf
@@ -175,8 +184,8 @@ axs3 = AlignAxisLimits(axs3);
 saveas(h2, fullfile(savepath, compose("score_traj_cmp_chan%s.png", unit_name_arr{channel_j})))
 saveas(h3, fullfile(savepath, compose("Evolv_psth_cmp_chan%s.png", unit_name_arr{channel_j})))
 if any(channel_j == pref_chan_id) % export to outside Folder if that is the preferred channel evolution
-saveas(h2, fullfile(result_dir, compose("Exp%02d_score_traj_cmp_chan%s.png", Expi, unit_name_arr{channel_j})))
-saveas(h3, fullfile(result_dir, compose("Exp%02d_Evolv_psth_cmp_chan%s.png", Expi, unit_name_arr{channel_j})))
+saveas(h2, fullfile(result_dir, compose("%s_Exp%02d_score_traj_cmp_chan%s.png", Animal, Expi, unit_name_arr{channel_j})))
+saveas(h3, fullfile(result_dir, compose("%s_Exp%02d_Evolv_psth_cmp_chan%s.png", Animal, Expi, unit_name_arr{channel_j})))
 end
 end
 end

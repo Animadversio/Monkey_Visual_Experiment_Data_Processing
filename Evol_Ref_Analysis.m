@@ -1,4 +1,5 @@
-%% Evol Ref Images Analysis
+%% Evol Ref Images Analysis 
+% Collect reference image reponse and plot the PSTH
 Animal = "Beto";
 MatStats_path = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Mat_Statistics";
 load(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
