@@ -3,6 +3,7 @@ clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug ExpR
 % much adapted from Evol_Traj_Cmp & Evol_Optimizer_Cmp code, inspired Evol_Traj_analysis code.
 % (it's kind of a multi-thread) version of Evol Traj analysis
 % Has to add support for more general analysis
+% Add code for visualize ref images PSTH. 
 Animal = "Beto"; Set_Path;
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evol_ReducDim";
 expftr = contains(ExpRecord.Exp_collection, "ReducDimen_Evol") & ...
@@ -19,7 +20,7 @@ h3 = figure('Visible','on');h3.Position = [  782          43        1779        
 axs3 = {}; axs3{1} = subplot(1,2,1); axs3{2} = subplot(1,2,2);
 %% result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evol_ReducDim";
-for Triali = 1:length(meta_new)
+for Triali = 24:length(meta_new)
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
@@ -141,13 +142,17 @@ saveas(h, fullfile(savepath, "EvolImageSeq_cmp.png"))
 %% Prepare color sequence 
 MAX_BLOCK_NUM = length(block_list); 
 color_seq = brewermap(MAX_BLOCK_NUM, 'spectral');
+
+MAX_ref_NUM = length(nat_imgidx); 
+ref_color_seq = brewermap(MAX_ref_NUM, 'spectral');
+
 for channel_j = 1:size(rasters, 1) % pref_chan_id(1)%pref_chan_id%
 %% Plot the reference response with shaded error bar single thread! 
 set(0, "CurrentFigure", h1);clf;hold on
 for i = 1:length(nat_imgidx)
     %plot(nat_psth_avg{i})
     shadedErrorBar([],nat_psth_avg{i}(channel_j,:),nat_psth_sem{i}(channel_j,:),...
-        'lineprops',{'markerfacecolor',color_seq(i,:)}, 'transparent',1);
+        'lineprops',{'markerfacecolor',ref_color_seq(i,:)}, 'transparent',1);
 end
 %set(gca, 'position', [0.05,0.05,0.9,0.9])
 xlabel("time (ms)")
