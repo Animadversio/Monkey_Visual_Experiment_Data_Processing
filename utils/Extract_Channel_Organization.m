@@ -2,7 +2,7 @@
 % Encode the array information! the relative coordinates of each channel.
 
 chan_dist = 400; % micron
-% IT Channels
+% IT Channels. The array is a 36 pin triagular grid. 
 % X axis goes posterior to anterior, Y axis goes dorsal to ventral
 pin36_IT_XY = zeros(36, 2);
 pin36_IT_L = zeros(36);
@@ -15,10 +15,10 @@ pin36_IT_XY(20:28, 2) = 2 * 400 * sin(pi/3);
 pin36_IT_XY([19, 29:36], 1) = 0:400:400*8;
 pin36_IT_XY([19, 29:36], 2) = 3 * 400 * sin(pi/3);
 
-IT_chan2pin = [20:28, 29:35, 2:8, 9:17];
+IT_chan2pin = [20:28, 29:35, 2:8, 9:17]; % this numbering is not in order. 
 IT_chan_XY = pin36_IT_XY(IT_chan2pin, :);
 
-% V4 Channels 49:64
+% V4 Channels 49:64. The V1 V4 array is a 18 pin triagular grid. 
 % X axis goes posterior to anterior, Y axis goes dorsal to ventral
 pin18_V4_XY = zeros(18, 2);
 pin18_V4_L = zeros(18);

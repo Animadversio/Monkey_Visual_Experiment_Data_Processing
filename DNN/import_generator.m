@@ -1,6 +1,7 @@
 %% Demo code to import caffe into matlab and then compare result with python
 %% Import GAN into matlab
-GANpath = "D:\Generator_DB_Windows\nets\upconv\fc6";
+% GANpath = "D:\Generator_DB_Windows\nets\upconv\fc6";
+GANpath = "E:\Monkey_Data\Generator_DB_Windows\nets\upconv\fc6";
 protofile = fullfile(GANpath, 'generator.prototxt');
 datafile = fullfile(GANpath, 'generator.caffemodel');
 % classNames = {'0','1','2','3','4','5','6','7','8','9'};
