@@ -1,3 +1,7 @@
+%% Analysis Code for Comparing Optimizers on a same unit. 
+% much adapted from Evol_Traj_Cmp code, inspired Evol_Traj_analysis Evol_ReducDim_Analysis code.
+% (it's kind of a multi-thread) version of Evol Traj analysis
+
 clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug ExpRecord
 %%
 Animal = "Both";Set_Path;
@@ -6,12 +10,7 @@ expftr = (contains(ExpRecord.expControlFN,"20042"));
 %expftr = (contains(ExpRecord.Exp_collection,"SUHash"));%find(expftr)
 fllist = find(expftr);
 Project_Manifold_Beto_loadRaw(fllist(1:end),Animal,true);%find(expftr)%find(expftr)
-%% Analysis Code for Comparing Optimizers on a same unit. 
-% much adapted from Evol_Traj_Cmp code, inspired Evol_Traj_analysis code.
-% (it's kind of a multi-thread) version of Evol Traj analysis
-
-% global block_arr gen_list color_seq row_gen row_nat
-% global evol_stim_fr evol_stim_sem meanscore_syn stdscore_syn meanscore_nat stdscore_nat
+%%
 Animal = "Alfa"; Set_Path;
 expftr = contains(ExpRecord.expControlFN,"generate") & ...
         contains(ExpRecord.Exp_collection, "SUHash");
@@ -24,7 +23,7 @@ row_idx = find(expftr);
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evol_SUHash";
 result_dir = "E:\Evol_SUHash";
 result_dir = "E:\Evolution_Exp";
-for Triali = 19:length(meta_new)%[1:8]%[26:length(row_idx)]
+for Triali = 6:length(meta_new)%[1:8]%[26:length(row_idx)]
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};

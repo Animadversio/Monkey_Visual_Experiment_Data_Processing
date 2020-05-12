@@ -1,4 +1,5 @@
-%% Collect Response of Pasupathy images and Manifold (time averaged to compress)
+%% Collect Response of Pasupathy images and Manifold 
+% (time averaged to compress, both in baseline and response period)
 %%
 Animal = "Alfa";Set_Path;
 %expftr = (contains(ExpRecord.expControlFN,"200319"));

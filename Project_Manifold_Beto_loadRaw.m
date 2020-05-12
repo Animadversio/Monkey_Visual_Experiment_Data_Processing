@@ -1,9 +1,13 @@
-function [meta,rasters,lfps,Trials] = Project_Manifold_Beto_loadRaw(rowlist, animal, no_return)
+function [meta,rasters,lfps,Trials] = Project_Manifold_Beto_loadRaw(rowlist, animal, no_return, no_lfp)
 if nargin == 1
 animal = "Beto";
 no_return = false;
+no_lfp = false;
 elseif nargin == 2
 no_return = false;
+no_lfp = true;
+elseif nargin == 3
+no_lfp = true;
 end
 switch animal 
     case "Beto"
@@ -49,7 +53,9 @@ for iExp = 1:length(preMeta)
         % helpful when we don't want to take up all the memory! 
     meta{iExp} = meta_;
     rasters{iExp} = rasters_;
+    if ~no_lfp
     lfps{iExp} = lfps_;
+    end
     Trials{iExp} = Trials_;
     end
     clear meta_  rasters_ lpfs_ Trials_ names meta_merged tMeta

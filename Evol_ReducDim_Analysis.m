@@ -3,42 +3,49 @@ clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug ExpR
 % much adapted from Evol_Traj_Cmp & Evol_Optimizer_Cmp code, inspired Evol_Traj_analysis code.
 % (it's kind of a multi-thread) version of Evol Traj analysis
 % Has to add support for more general analysis
-Animal = "Alfa"; Set_Path;
+% Add code for visualize ref images PSTH. 
+Animal = "Beto"; Set_Path;
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evol_ReducDim";
-expftr = contains(ExpRecord.expControlFN,"200310");
-% expftr = ExpRecord.Expi<=24 & ExpRecord.Expi>=16 & ...
-%     contains(ExpRecord.expControlFN,"selectivity") & ...
-%      contains(ExpRecord.Exp_collection, "Manifold");
-[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr),Animal); 
+expftr = contains(ExpRecord.Exp_collection, "ReducDimen_Evol") & ...
+        contains(ExpRecord.expControlFN,"generate") & ...
+        ExpRecord.Expi>0;
+[meta_new,rasters_new,~,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr),Animal); 
 %% Prepare figure frames 
 h = figure('Visible','on');set(h,'position',[1          41        2560         963]);
 axs{1} = subplot(1,2,1);axs{2} = subplot(1,2,2);
+h1 = figure('Visible','on'); clf; set(h1,'position',[ 469   430   771   548]);
 h2 = figure('Visible','on');clf; h2.Position = [  19         235        1779         743];
 axs2 = {}; axs2{1} = subplot(1,2,1); axs2{2} = subplot(1,2,2);
 h3 = figure('Visible','on');h3.Position = [  782          43        1779         743];
 axs3 = {}; axs3{1} = subplot(1,2,1); axs3{2} = subplot(1,2,2);
-% result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
+%% result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Evol_ReducDim";
-for Triali = 1:6
+for Triali = 24:length(meta_new)
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
-exp_rowi = find(contains(ExpSpecTable_Aug.ephysFN, meta.ephysFN));
+exp_rowi = find(contains(ExpRecord.ephysFN, meta.ephysFN));
 % Check the Expi match number
-Expi = ExpSpecTable_Aug.Expi(exp_rowi);
+Expi = ExpRecord.Expi(exp_rowi);
 fprintf("Processing  Exp %d:\n",Expi)
-disp(ExpSpecTable_Aug.comments(exp_rowi))
+disp(ExpRecord.comments(exp_rowi))
+if Expi == 20
+    meta.stimuli = "N:\Stimuli\2019-12-Evolutions\2020-04-10-Beto-02\2020-04-10-14-54-53";
+end
 % assert(Expi_tab == Expi, "Data Expi doesn't match that in exp record! Check your indexing or record.")
 %% Sort channel id
 % finding spike ID, note for multi-thread optimizer, we will have multiple
 % pref_chan for different optimizers 
 pref_chan = Trials.TrialRecord.User.prefChan;
-unit_in_pref_chan = cell2mat(Trials_new{1}.TrialRecord.User.evoConfiguration(:,4))';
+unit_in_pref_chan = cell2mat(Trials.TrialRecord.User.evoConfiguration(:,4))';
 thread_num = size(Trials.TrialRecord.User.evoConfiguration, 1);
 Exp_label_str = sprintf("Exp%d pref chan %d", Expi, pref_chan(1));
-savepath = fullfile(result_dir, compose("Evol%02d_chan%02d", Expi, pref_chan(1)));
+savepath = fullfile(result_dir, compose("%s_Evol%02d_chan%02d", Animal, Expi, pref_chan(1)));
 mkdir(savepath);
-% 
+if thread_num ~= 2
+    fprintf("Single Thread evolution %d, skip for now\n", Expi)
+    continue
+end
 unit_name_arr = generate_unit_labels(meta.spikeID);
 [activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
 pref_chan_id = zeros(1, thread_num);
@@ -47,7 +54,7 @@ for i = 1:thread_num
     pref_chan_id(i) = find(meta.spikeID==pref_chan(i) & ... % the id in the raster and lfps matrix 
                     unit_num_arr==unit_in_pref_chan(i)); % match for unit number
 end
-assert(pref_chan(1) == pref_chan(2))
+assert(all(pref_chan(1) == pref_chan)) % single thread friendly
 %% Optimizer Names 
 Optim_names = [];
 for i = 1:thread_num
@@ -92,13 +99,23 @@ end
 evol_stim_fr = nan(size(rasters, 1), size(rasters, 2), length(block_list), thread_num);
 evol_stim_sem = nan(size(rasters, 1), size(rasters, 2), length(block_list), thread_num);
 for threadi = 1:thread_num
-for blocki = 1:length(block_list)
-    gen_msk = row_gen & block_arr == blocki & thread_msks{threadi}; 
-    evol_stim_fr(:, :, blocki, threadi) = mean(rasters(:,:, gen_msk),3);
-    evol_stim_sem(:, :, blocki, threadi) = std(rasters(:,:, gen_msk),1,3) / sqrt(sum(gen_msk));
+    for blocki = 1:length(block_list)
+        gen_msk = row_gen & block_arr == blocki & thread_msks{threadi}; 
+        evol_stim_fr(:, :, blocki, threadi) = mean(rasters(:,:, gen_msk),3);
+        evol_stim_sem(:, :, blocki, threadi) = std(rasters(:,:, gen_msk),1,3) / sqrt(sum(gen_msk));
+    end
 end
-end
-%% Get image name array
+%% Compute average psth and sem for reference natural image. 
+nat_imgidx = RDStats(Expi).ref.idx_arr;
+is_all_gabor_ref = all(contains(RDStats(Expi).ref.imgnm,"gab"));
+% Here I choose to pool the identical ref images from 2 threads. If 2
+% threads use different ref images this won t work. 
+nat_imgidx = arrayfun(@(i)cat(1,RDStats(Expi).ref.idx_arr{i,:}),1:size(nat_imgidx,1),'UniformOutput',false)';
+nat_psth_avg = cellfun(@(idx) mean(rasters(:, :, idx), 3), ...
+        nat_imgidx, 'UniformOutput', false);
+nat_psth_sem = cellfun(@(idx) std(rasters(:, :, idx), 1, 3)/sqrt(length(idx)), ...
+        nat_imgidx, 'UniformOutput', false);
+%% Get evolution sequence image name array
 imgColl = repmat("", length(block_list), thread_num);
 scoreColl = zeros(length(block_list), thread_num);
 for threadi = 1:thread_num
@@ -125,17 +142,25 @@ saveas(h, fullfile(savepath, "EvolImageSeq_cmp.png"))
 %% Prepare color sequence 
 MAX_BLOCK_NUM = length(block_list); 
 color_seq = brewermap(MAX_BLOCK_NUM, 'spectral');
-for channel_j = 1:size(rasters, 1)%pref_chan_id%
-%% Plot Mean response compare figure
-%channel_j = pref_chan_id;
-% h1 = figure(1);clf
-% ax1{1} = subplot(1,2,1);hold on
-% plot(block_list, meanscore_syn(channel_j, :, 1), 'LineWidth',2,'Color','k')
-% plot(block_list, meanscore_nat(channel_j, :, 1),'LineWidth',2,'Color','g')
-% ax1{2} = subplot(1,2,2);hold on
-% plot(block_list, meanscore_syn(channel_j, :, 2), 'LineWidth',2,'Color','k')
-% plot(block_list, meanscore_nat(channel_j, :, 2),'LineWidth',2,'Color','g')
-% ax1 = AlignAxisLimits(ax1);
+
+MAX_ref_NUM = length(nat_imgidx); 
+ref_color_seq = brewermap(MAX_ref_NUM, 'spectral');
+
+for channel_j = 1:size(rasters, 1) % pref_chan_id(1)%pref_chan_id%
+%% Plot the reference response with shaded error bar single thread! 
+set(0, "CurrentFigure", h1);clf;hold on
+for i = 1:length(nat_imgidx)
+    %plot(nat_psth_avg{i})
+    shadedErrorBar([],nat_psth_avg{i}(channel_j,:),nat_psth_sem{i}(channel_j,:),...
+        'lineprops',{'markerfacecolor',ref_color_seq(i,:)}, 'transparent',1);
+end
+%set(gca, 'position', [0.05,0.05,0.9,0.9])
+xlabel("time (ms)")
+if is_all_gabor_ref
+    title([Exp_label_str, compose("PSTH of unit %s to ref images (gabors)",unit_name_arr(channel_j))])
+else
+    title([Exp_label_str, compose("PSTH of unit %s to ref images",unit_name_arr(channel_j))])
+end
 %% Plot Mean response with shaded error bar compare
 % channel_j = pref_chan_id;
 % h2 = figure('Visible','on');h2.Position = [  782          43        1779         743];
@@ -168,17 +193,21 @@ end
 axis tight
 % legend(["Generated img","Natural img"])
 xlabel("Post Stimulus Time (ms)")
-title([Exp_label_str, compose('Generation averaged PSTH , channel %s', unit_name_arr{channel_j}), compose("Optimizer %s", Optim_names(threadi))])
+title([Exp_label_str, compose('Generation averaged PSTH, channel %s', unit_name_arr{channel_j}), compose("Optimizer %s", Optim_names(threadi))])
 end
 axs3 = AlignAxisLimits(axs3);
 %%
 saveas(h2, fullfile(savepath, compose("score_traj_cmp_chan%s.png", unit_name_arr{channel_j})))
 saveas(h3, fullfile(savepath, compose("Evolv_psth_cmp_chan%s.png", unit_name_arr{channel_j})))
+saveas(h1, fullfile(savepath, compose("ref_psth_chan%s.png", unit_name_arr{channel_j})))
 if any(channel_j == pref_chan_id) % export to outside Folder if that is the preferred channel evolution
-saveas(h2, fullfile(result_dir, compose("Exp%02d_score_traj_cmp_chan%s.png", Expi, unit_name_arr{channel_j})))
-saveas(h3, fullfile(result_dir, compose("Exp%02d_Evolv_psth_cmp_chan%s.png", Expi, unit_name_arr{channel_j})))
+saveas(h2, fullfile(result_dir, compose("%s_Exp%02d_score_traj_cmp_chan%s.png", Animal, Expi, unit_name_arr{channel_j})))
+saveas(h3, fullfile(result_dir, compose("%s_Exp%02d_Evolv_psth_cmp_chan%s.png", Animal, Expi, unit_name_arr{channel_j})))
+saveas(h1, fullfile(savepath, compose("%s_Exp%02d_ref_psth_chan%s.png", Animal, Expi, unit_name_arr{channel_j})))
 end
+
 end
+
 end
 %% Plot the Image Evolution Trajectory 
 %% t test the last 5 generations 

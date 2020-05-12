@@ -2,6 +2,7 @@
 %% Really compelling visualization
 system("subst S: E:\Network_Data_Sync")
 mat_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
+mat_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Mat_Statistics";
 Animal = "Alfa";
 load(fullfile(mat_dir, Animal+'_Evol_stats.mat'))
 load(fullfile(mat_dir, Animal+'_Manif_stats.mat'))
@@ -9,21 +10,27 @@ load(fullfile(mat_dir, Animal+'_Manif_stats.mat'))
 % (no need to redo this for different channels. Just use the layout in ax_arr,tIT,tV1,tV4)
 tic
 savepath = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Pop_PSTH_Anim";
+savepath = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Pop_PSTH_Anim";
 mkdir(savepath)
 figIT = figure(2);
 figV1 = figure(3);
 figV4 = figure(4);
 [ax_arr,tIT,tV1,tV4] = Cortex_Channel_Tile_Layout_All(figIT, figV1, figV4);
 toc
-[chan_idxA, chan_idxB] = unit_id2_chan_idx(1:64, Stats(Expi).units.spikeID, Stats(Expi).units.activ_msk);
+%%
+tic
 % paint it once with fake data, so that the layout if correct. 
+imgsc_list = {};
 for arr_chan = 1:64 
-    plot_heatmap(ax_arr{arr_chan}, nan(11), [0,1],"nan")
+    imgsc_list{arr_chan} = plot_heatmap(ax_arr{arr_chan}, nan(11), [0,1],"nan");
 end
 toc
 %%
-Expi = 36;
-load(fullfile("S:\Data-Ephys-MAT",Stats(Expi).meta.ephysFN+"_formatted.mat"))
+savepath = "S:\Pop_PSTH_Anim";
+for Expi = 10:46
+%load(fullfile("S:\Data-Ephys-MAT",Stats(Expi).meta.ephysFN+"_formatted.mat"))
+rasters = rasters_new{Expi};
+fprintf("Processing Exp %d...\n",Expi)
 %
 si = 1;
 % manif_psth_all = cellfun(@(idx)rasters(:, :, idx), Stats(Expi).manif.idx_grid{si}, "UniformOutput", false);
@@ -41,7 +48,11 @@ end
 % Color limit for each channel through percentile, prctile(act_map_tsr,[2,98],[2,3,4]);
 CMIN_arr = prctile(act_map_tsr,2.5,[2,3,4]);
 CMAX_arr = prctile(act_map_tsr, 98,[2,3,4]);
-% Set up saving destination, title, label
+
+% split the channels into group a and group b to plot
+[chan_idxA, chan_idxB] = unit_id2_chan_idx(1:64, Stats(Expi).units.spikeID, Stats(Expi).units.activ_msk);
+
+% Set up saving destination, title, label for group A
 Exp_label = sprintf("%s Exp %d pref chan %d PC23 space", Animal, Expi, Stats(Expi).units.pref_chan);
 ITgif = fullfile(savepath,compose('%s_Exp%d_manif_IT_calign_A.gif',Animal,Expi));
 V4gif = fullfile(savepath,compose('%s_Exp%d_manif_V4_calign_A.gif',Animal,Expi));
@@ -49,7 +60,7 @@ V1gif = fullfile(savepath,compose('%s_Exp%d_manif_V1_calign_A.gif',Animal,Expi))
 % Set up title and color axis.
 tic
 for arr_chan = 1:64 % array channel! not number in the resulting array
-    ch_j = chan_idxB(arr_chan);
+    ch_j = chan_idxA(arr_chan);
     title_str = Stats(Expi).units.unit_name_arr(ch_j);
     set(get(ax_arr{arr_chan},"Title"),"string",title_str) % set axes title for this recording
     caxis(ax_arr{arr_chan}, [CMIN_arr(ch_j),CMAX_arr(ch_j)]) % set axes color limit for this recording
@@ -63,16 +74,18 @@ set(get(tIT,"title"),"string",compose(Exp_label+" IT array\nWindow: [%d,%d] ms",
 set(get(tV1,"title"),"string",compose(Exp_label+" V1V2 array\nWindow: [%d,%d] ms",wdw(1),wdw(end)))
 set(get(tV4,"title"),"string",compose(Exp_label+" V4 array\nWindow: [%d,%d] ms",wdw(1),wdw(end)))
 for arr_chan = 1:64 % update Color data for each channel.
-    ch_j = chan_idxB(arr_chan);
-    set(get(ax_arr{arr_chan},"Children"),"CData",squeeze(act_map_tsr(ch_j,:,:,fi)))
+    ch_j = chan_idxA(arr_chan);
+    imgsc_list{arr_chan}.CData = squeeze(act_map_tsr(ch_j,:,:,fi));
+    %set(get(ax_arr{arr_chan},"Children"),"CData",squeeze(act_map_tsr(ch_j,:,:,fi)))
 end
 drawnow
 write2gif(figIT,ITgif,fi); 
 write2gif(figV4,V4gif,fi); 
 write2gif(figV1,V1gif,fi); 
-toc
 end
-
+toc
+if Expi > 39
+% Set up destination for group B
 ITgif = fullfile(savepath,compose('%s_Exp%d_manif_IT_calign_B.gif',Animal,Expi));
 V4gif = fullfile(savepath,compose('%s_Exp%d_manif_V4_calign_B.gif',Animal,Expi));
 V1gif = fullfile(savepath,compose('%s_Exp%d_manif_V1_calign_B.gif',Animal,Expi));
@@ -94,15 +107,17 @@ set(get(tV1,"title"),"string",compose(Exp_label+" V1V2 array\nWindow: [%d,%d] ms
 set(get(tV4,"title"),"string",compose(Exp_label+" V4 array\nWindow: [%d,%d] ms",wdw(1),wdw(end)))
 for arr_chan = 1:64 % update Color data for each channel.
     ch_j = chan_idxB(arr_chan);
-    set(get(ax_arr{arr_chan},"Children"),"CData",squeeze(act_map_tsr(ch_j,:,:,fi)))
+    imgsc_list{arr_chan}.CData = squeeze(act_map_tsr(ch_j,:,:,fi));
+    %set(get(ax_arr{arr_chan},"Children"),"CData",squeeze(act_map_tsr(ch_j,:,:,fi)))
 end
 drawnow
 write2gif(figIT,ITgif,fi); 
 write2gif(figV4,V4gif,fi); 
-write2gif(figV1,V1gif,fi); 
+write2gif(figV1,V1gif,fi);
+end
 toc
 end
-
+end
 
 
 function write2gif(h,gifname,fi,Delay)
@@ -121,11 +136,11 @@ else
   imwrite(imind,cm,gifname,'gif', 'WriteMode','append','DelayTime',Delay); 
 end 
 end
-function plot_heatmap(ax, score_mat_avg, CLIM, title_str)
+function imgsc = plot_heatmap(ax, score_mat_avg, CLIM, title_str)
     % Given a averaged score matrix, plot a heatmap to certain axis! 
     set(0,"CurrentFigure",ancestor(ax,'figure'));
     set(ancestor(ax,'figure'),"CurrentAxes",ax); % set 
-    imagesc(squeeze(score_mat_avg), CLIM) % sum(score_mat,3)./cnt_mat -90:18:90, -90:18:90, 
+    imgsc = imagesc(squeeze(score_mat_avg), CLIM); % sum(score_mat,3)./cnt_mat -90:18:90, -90:18:90, 
     colormap('parula')
     title(title_str)
     %ylabel("PC 2 degree");xlabel("PC 3 degree")
