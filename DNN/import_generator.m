@@ -12,7 +12,7 @@ I = GAN.forward(Z); % doesn't work
 %%
 save('matlabGANfc6.mat','LinNet','DeconvNet','BGRMean')
 %%
-LinNet=dlnetwork(layerGraph(layers_1(1:7)));
+LinNet=dlnetwork(layerGraph(Layers(1:7)));
 hiddeninputlayer = imageInputLayer([4,4,256],'Name','hiddeninput','Normalization','none');
 DeconvNet=dlnetwork(layerGraph([hiddeninputlayer; Layers(9:25)]));
 BGRMean = reshape([123.0, 117.0, 104.0],[1,1,3,1]);

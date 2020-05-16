@@ -1,4 +1,4 @@
-%% Manifold PSTH analysis 
+%% Clustering PSTH dynamics for each channel
 
 %% Really compelling visualization
 mat_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
