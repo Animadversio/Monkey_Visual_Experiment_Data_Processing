@@ -1,8 +1,19 @@
 %% Collect the population neural dynamics on manifold stats into a struct array.
 %  it keeps every unit response psth to every manifold image. only mean
 %  over trials. So the resulting file will be large (300Mb)
-ManifDyn = repmat(struct(),1,46);
-for Expi = 1:46
+Animal = "Beto";Set_Path;
+%expftr = (contains(ExpRecord.expControlFN,"200319"));
+expftr = (contains(ExpRecord.Exp_collection,"Manifold") &...
+            contains(ExpRecord.expControlFN, "selectivity")&...
+            ExpRecord.Expi > 0);
+rowis = find(expftr);
+[meta_new,rasters_new,~,Trials_new] = Project_Manifold_Beto_loadRaw(rowis,Animal);
+%%
+mat_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Mat_Statistics";
+load(fullfile(mat_dir, Animal+'_Manif_stats.mat'))
+%%
+ManifDyn = repmat(struct(),1,length(meta_new));
+for Expi = 1:length(meta_new)
 %load(fullfile("S:\Data-Ephys-MAT",Stats(Expi).meta.ephysFN+"_formatted.mat"))
 rasters = rasters_new{Expi};
 %

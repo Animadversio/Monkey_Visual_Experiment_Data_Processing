@@ -3,7 +3,7 @@
 system("subst S: E:\Network_Data_Sync")
 mat_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
 mat_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Mat_Statistics";
-Animal = "Alfa";
+Animal = "Beto";
 load(fullfile(mat_dir, Animal+'_Evol_stats.mat'))
 load(fullfile(mat_dir, Animal+'_Manif_stats.mat'))
 %% Set up figure stage for the 3 arrays 
@@ -11,13 +11,14 @@ load(fullfile(mat_dir, Animal+'_Manif_stats.mat'))
 tic
 savepath = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Pop_PSTH_Anim";
 savepath = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Pop_PSTH_Anim";
+savepath = "S:\Pop_PSTH_Anim";
 mkdir(savepath)
 figIT = figure(2);
 figV1 = figure(3);
 figV4 = figure(4);
 [ax_arr,tIT,tV1,tV4] = Cortex_Channel_Tile_Layout_All(figIT, figV1, figV4);
 toc
-%%
+%
 tic
 % paint it once with fake data, so that the layout if correct. 
 imgsc_list = {};
@@ -27,12 +28,12 @@ end
 toc
 %%
 savepath = "S:\Pop_PSTH_Anim";
-for Expi = 10:46
+for Expi = 1:length(meta_new)
 %load(fullfile("S:\Data-Ephys-MAT",Stats(Expi).meta.ephysFN+"_formatted.mat"))
 rasters = rasters_new{Expi};
 fprintf("Processing Exp %d...\n",Expi)
 %
-si = 1;
+si = 1; % here we do subspace 1 first! There is subspace 2 and 3
 % manif_psth_all = cellfun(@(idx)rasters(:, :, idx), Stats(Expi).manif.idx_grid{si}, "UniformOutput", false);
 manif_psth_avg = cellfun(@(idx)mean(rasters(:, :, idx),3), Stats(Expi).manif.idx_grid{si}, "UniformOutput", false);
 manif_psth_avg_tsr = cell2mat(reshape(manif_psth_avg,1,1,11,11)); % reshape and transform, so size 86, 200, 11, 11, key data! 
@@ -54,6 +55,7 @@ CMAX_arr = prctile(act_map_tsr, 98,[2,3,4]);
 
 % Set up saving destination, title, label for group A
 Exp_label = sprintf("%s Exp %d pref chan %d PC23 space", Animal, Expi, Stats(Expi).units.pref_chan);
+if false
 ITgif = fullfile(savepath,compose('%s_Exp%d_manif_IT_calign_A.gif',Animal,Expi));
 V4gif = fullfile(savepath,compose('%s_Exp%d_manif_V4_calign_A.gif',Animal,Expi));
 V1gif = fullfile(savepath,compose('%s_Exp%d_manif_V1_calign_A.gif',Animal,Expi));
@@ -61,6 +63,7 @@ V1gif = fullfile(savepath,compose('%s_Exp%d_manif_V1_calign_A.gif',Animal,Expi))
 tic
 for arr_chan = 1:64 % array channel! not number in the resulting array
     ch_j = chan_idxA(arr_chan);
+    if isnan(ch_j), continue; end
     title_str = Stats(Expi).units.unit_name_arr(ch_j);
     set(get(ax_arr{arr_chan},"Title"),"string",title_str) % set axes title for this recording
     caxis(ax_arr{arr_chan}, [CMIN_arr(ch_j),CMAX_arr(ch_j)]) % set axes color limit for this recording
@@ -75,6 +78,7 @@ set(get(tV1,"title"),"string",compose(Exp_label+" V1V2 array\nWindow: [%d,%d] ms
 set(get(tV4,"title"),"string",compose(Exp_label+" V4 array\nWindow: [%d,%d] ms",wdw(1),wdw(end)))
 for arr_chan = 1:64 % update Color data for each channel.
     ch_j = chan_idxA(arr_chan);
+    if isnan(ch_j), continue; end
     imgsc_list{arr_chan}.CData = squeeze(act_map_tsr(ch_j,:,:,fi));
     %set(get(ax_arr{arr_chan},"Children"),"CData",squeeze(act_map_tsr(ch_j,:,:,fi)))
 end
@@ -84,7 +88,8 @@ write2gif(figV4,V4gif,fi);
 write2gif(figV1,V1gif,fi); 
 end
 toc
-if Expi > 39
+end
+if Expi <= 39
 % Set up destination for group B
 ITgif = fullfile(savepath,compose('%s_Exp%d_manif_IT_calign_B.gif',Animal,Expi));
 V4gif = fullfile(savepath,compose('%s_Exp%d_manif_V4_calign_B.gif',Animal,Expi));
@@ -93,6 +98,7 @@ V1gif = fullfile(savepath,compose('%s_Exp%d_manif_V1_calign_B.gif',Animal,Expi))
 tic
 for arr_chan = 1:64 % array channel! not number in the resulting array
     ch_j = chan_idxB(arr_chan);
+    if isnan(ch_j), continue; end
     title_str = Stats(Expi).units.unit_name_arr(ch_j);
     set(get(ax_arr{arr_chan},"Title"),"string",title_str) % set axes title for this recording
     caxis(ax_arr{arr_chan}, [CMIN_arr(ch_j),CMAX_arr(ch_j)]) % set axes color limit for this recording
@@ -107,6 +113,7 @@ set(get(tV1,"title"),"string",compose(Exp_label+" V1V2 array\nWindow: [%d,%d] ms
 set(get(tV4,"title"),"string",compose(Exp_label+" V4 array\nWindow: [%d,%d] ms",wdw(1),wdw(end)))
 for arr_chan = 1:64 % update Color data for each channel.
     ch_j = chan_idxB(arr_chan);
+    if isnan(ch_j), continue; end
     imgsc_list{arr_chan}.CData = squeeze(act_map_tsr(ch_j,:,:,fi));
     %set(get(ax_arr{arr_chan},"Children"),"CData",squeeze(act_map_tsr(ch_j,:,:,fi)))
 end
