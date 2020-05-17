@@ -5,6 +5,7 @@ system("subst N: E:\Network_Data_Sync")
 pe = pyenv('Version','C:\Users\binxu\.conda\envs\caffe36\python.exe'); % Note the python env could not be changed in a matlab session
 %%
 system("subst S: E:\Network_Data_Sync")
+system("subst N: E:\Network_Data_Sync")
 mat_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
 Animal = "Alfa";
 load(fullfile(mat_dir,"Alfa_ManifPopDynamics.mat"));
@@ -14,15 +15,15 @@ load(fullfile(mat_dir,"Alfa_Evol_stats.mat"));
 global G 
 G = FC6Generator("matlabGANfc6.mat");
 %%
-code = randn(1,4096);
-imgs = G.visualize(code);
-%%
+% code = randn(1,4096);
+% imgs = G.visualize(code);
+%% Dummy RF mask
 % mask = zeros(256);
 [XX, YY] = meshgrid(1:256,1:256);
 D = sqrt((XX-127).^2 + (YY-127).^2);
 mask = exp(-(D-40).^2/100);
 mask = max((mask ./ max(mask,[],'all')), D<40);
-%%
+%% Load the Basis vectors
 Expi = 3;
 basis_path = fullfile(Stats(Expi).meta.stimuli,"PC_vector_data.npz");
 %% Load the source data for Manifold Experiments from python
@@ -41,7 +42,7 @@ stdpsth = cellfun(@(psth)  std(psth(ui,:,:),0,3)/sqrt(size(psth,3)), Stats(Expi)
 psth_avg_tsr = cell2mat(reshape(meanpsth,1,1,11,11)); % reshape and transform, so size 86, 200, 11, 11, key data! 
 psth_std_tsr = cell2mat(reshape(stdpsth,1,1,11,11)); % reshape and transform, so size 86, 200, 11, 11, key data! 
 scoremap = squeeze(mean(psth_avg_tsr(1,50:200,:,:),[1,2]));
-%%
+%% True visualizatin GUI 
 figh = figure(3);clf;figh.Position = [28         524        1446         454];
 data = struct('basis', basis, 'norm', sphere_norm, 'mask', mask, ...
             'Addmask', 0, "Theta", 0, "Phi", 0, "curcode", basis(1,:), "scoremap", scoremap);
@@ -55,6 +56,9 @@ subplot("Position",[0.6694    0.1806    0.3036    0.6784])
 data.psthplot = plot(squeeze(psth_avg_tsr(1,:,6,6))); 
 ylim([min(psth_avg_tsr,[],'all'),max(psth_avg_tsr,[],'all')])
 data.timeL = line([1,1],ylim(),'Color','red','Visible',0);
+ST = suptitle(compose("%s Manif Exp %02d pref chan %s", Animal, Expi, EStats(Expi).units.unit_name_arr(EStats(Expi).units.pref_chan_id)));
+
+
 TheSLD = uicontrol(figh, 'Style', "slider", 'Position', [600 30 250 10], "String", "Theta", ...
             'Value', 0, "Callback", @(src, evt) ThetaSlider_Callback(src, evt));
 TheSLD.Min = -pi/2; TheSLD.Max = pi/2;TheSLD.SliderStep = [0.005 0.05];
@@ -72,14 +76,15 @@ TG = uicontrol(figh, 'Style', 'togglebutton', "String", "RF Mask",...
 CT = uicontrol(figh, 'Style', 'pushbutton', 'Position', [20 40 80 30], "String", "Set Image",...
     "Callback", @(src, evt) SetImage_Callback(src, evt));
 SA = uicontrol(figh, 'Style', 'pushbutton', 'Position', [20 70 80 30], "String", "Set Axis",...
-    "Callback", @(src, evt) SetAxis_Callback(src, evt));
+    "Callback", @(src, evt) SetAxis_Callback(src, evt)); % Set 
 PT = uicontrol(figh, 'Style', 'pushbutton', 'Position', [20 100 80 30], "String", "Play Tuning",...
     "Callback", @(src, evt) PlayTuning_Callback(src, evt));
-PD = uicontrol(figh, 'Style', 'togglebutton', 'Position', [20 130 80 30], "String", "Play Dynamics",...
+PD = uicontrol(figh, 'Style', 'pushbutton', 'Position', [20 160 80 30], "String", "Play Dynamics",...
     "Callback", @(src, evt) PlayDynamics_Callback(src, evt));
-
+TD = uicontrol(figh, 'Style', 'togglebutton', 'Position', [20 130 80 30], "String", "Toggle Time",...
+    "Callback", @(src, evt) toggleDynamics_Callback(src, evt));
 data.thetaSLD = TheSLD;data.phiSLD = PhiSLD;data.axisSLD = AxisSLD;data.timeSLD = TimeSLD;
-data.toggleMask=TG;data.setImage=CT;data.setAxis=SA;data.playDynamics=PD;
+data.toggleMask=TG;data.setImage=CT;data.setAxis=SA;data.playDynamics=PD;data.toggleDyn=TD;
 guidata(figh, data);
 %%
 figure()
@@ -148,13 +153,25 @@ drawfocal(data.focalpoint)
 pause(0.025)
 end
 end
-function PlayDynamics_Callback(hObj, evt)
+function toggleDynamics_Callback(hObj, evt)
 data = guidata(hObj);
 if hObj.Value
+    global psth_avg_tsr psth_std_tsr
+    caxis(data.tunemap.Parent, prctile(psth_avg_tsr,[2,98],'all'))
+    data.timeL.Visible=true;
+else
+    data.timeL.Visible=false;
+    data.tunemap.CData = data.scoremap;
+    caxis(data.tunemap.Parent, prctile(data.scoremap,[2,98],'all'))
+    draw(data.imax)
+    drawpsth(data.psthplot)
+    drawfocal(data.focalpoint)
+end
+end
+function PlayDynamics_Callback(hObj, evt)
+data = guidata(hObj);data.toggleDyn.Value=true;
 global psth_avg_tsr psth_std_tsr
-caxis(data.tunemap.Parent, prctile(psth_avg_tsr,[2,98],'all'))
-data.timeL.Visible=true;
-for t = 1:0
+toggleDynamics_Callback(data.toggleDyn, evt)
 for fi = 1:size(psth_avg_tsr,2)
 data.tunemap.CData = squeeze(psth_avg_tsr(1,fi,:,:));
 data.tunemap.Parent.Title.String = compose("%d ms",fi);
@@ -162,18 +179,9 @@ data.timeL.XData = [fi,fi];
 pause(0.025)
 end
 end
-else
-    data.timeL.Visible=false;
-data.tunemap.CData = data.scoremap;
-caxis(data.tunemap.Parent, prctile(data.scoremap,[2,98],'all'))
-draw(data.imax)
-drawpsth(data.psthplot)
-drawfocal(data.focalpoint)
-end
-end
 function TimeSlider_Callback(hObj, evt)
 data = guidata(hObj);
-if data.playDynamics.Value
+if data.toggleDyn.Value
 global psth_avg_tsr psth_std_tsr
 % caxis(data.tunemap.Parent, prctile(psth_avg_tsr,[2,98],'all'))
 fi = clip(round(hObj.Value),[1,200]);
