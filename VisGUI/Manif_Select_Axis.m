@@ -50,14 +50,13 @@ subplot('Position',[0.0913    0.1100    0.2144    0.7446]); hold on
 data.tunemap = imagesc(-90:18:90,-90:18:90,scoremap);data.cbar = colorbar();
 data.focalpoint = plot(data.Phi,data.Theta,"Color",'r','Marker','o');
 axis image;
-subplot(132)
+subplot("Position",[ 0.4108    0.1091    0.2134    0.7530])
 data.imax = imshow(G.visualize(sphere_norm*basis(1,:)));
 subplot("Position",[0.6694    0.1806    0.3036    0.6784])
 data.psthplot = plot(squeeze(psth_avg_tsr(1,:,6,6))); 
 ylim([min(psth_avg_tsr,[],'all'),max(psth_avg_tsr,[],'all')])
 data.timeL = line([1,1],ylim(),'Color','red','Visible',0);
-ST = suptitle(compose("%s Manif Exp %02d pref chan %s", Animal, Expi, EStats(Expi).units.unit_name_arr(EStats(Expi).units.pref_chan_id)));
-
+data.suptitle = suptitle(compose("%s Manif Exp %02d pref chan %s", Animal, Expi, EStats(Expi).units.unit_name_arr(EStats(Expi).units.pref_chan_id)));
 
 TheSLD = uicontrol(figh, 'Style', "slider", 'Position', [600 30 250 10], "String", "Theta", ...
             'Value', 0, "Callback", @(src, evt) ThetaSlider_Callback(src, evt));
@@ -87,8 +86,6 @@ data.thetaSLD = TheSLD;data.phiSLD = PhiSLD;data.axisSLD = AxisSLD;data.timeSLD 
 data.toggleMask=TG;data.setImage=CT;data.setAxis=SA;data.playDynamics=PD;data.toggleDyn=TD;
 guidata(figh, data);
 %%
-figure()
-tmplot = plot()
 %% Code for bilinear interpolation in nd array
 interpi = 6 + data.Theta / pi * 10;
 interpj = 6 + data.Phi / pi * 10;
