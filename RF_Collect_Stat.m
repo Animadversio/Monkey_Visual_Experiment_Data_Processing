@@ -1,4 +1,5 @@
-Animal = "Alfa";Set_Path;
+%% Collect the PSTH and Score in the more raw form
+Animal = "Alfa"; Set_Path;
 %expftr = (contains(ExpRecord.expControlFN,"200319"));
 expftr = (contains(ExpRecord.Exp_collection,"Manifold") &...
             contains(ExpRecord.expControlFN, "rf"));%&...
