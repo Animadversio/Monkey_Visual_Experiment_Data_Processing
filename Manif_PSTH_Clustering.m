@@ -1,4 +1,4 @@
-%% Clustering PSTH dynamics for each channel
+%% Clustering PSTH dynamics (the spatial temporal tensor) for each channel
 
 %% Really compelling visualization
 mat_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";

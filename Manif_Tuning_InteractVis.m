@@ -3,7 +3,7 @@ addpath utils
 system("subst N: E:\Network_Data_Sync")
 % addpath("C:\Users\binxu\OneDrive - Washington University in St. Louis\Matlab_add_on\npy-matlab-master\npy-matlab")
 pe = pyenv('Version','C:\Users\binxu\.conda\envs\caffe36\python.exe'); % Note the python env could not be changed in a matlab session
-%%
+%% 
 system("subst S: E:\Network_Data_Sync")
 mat_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
 Animal = "Alfa"; 

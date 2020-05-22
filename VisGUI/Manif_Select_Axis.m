@@ -1,33 +1,27 @@
 %% Evolution Experiment Visualization from a global Embedding
 addpath DNN
 addpath utils
+system("subst S: E:\Network_Data_Sync")
 system("subst N: E:\Network_Data_Sync")
 % addpath("C:\Users\binxu\OneDrive - Washington University in St. Louis\Matlab_add_on\npy-matlab-master\npy-matlab")
 pe = pyenv('Version','C:\Users\binxu\.conda\envs\caffe36\python.exe'); % Note the python env could not be changed in a matlab session
-%%
-system("subst S: E:\Network_Data_Sync")
-system("subst N: E:\Network_Data_Sync")
+%% Loading up Data and G
 mat_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
 Animal = "Alfa";
 load(fullfile(mat_dir,"Alfa_ManifPopDynamics.mat"));
 load(fullfile(mat_dir,"Alfa_Manif_stats.mat"));
 load(fullfile(mat_dir,"Alfa_Evol_stats.mat"));
-%%
+load(fullfile(mat_dir,"Alfa_Manif_RFMaps.mat"));
+%
 global G 
 G = FC6Generator("matlabGANfc6.mat");
 %%
 % code = randn(1,4096);
 % imgs = G.visualize(code);
-%% Dummy RF mask
-% mask = zeros(256);
-[XX, YY] = meshgrid(1:256,1:256);
-D = sqrt((XX-127).^2 + (YY-127).^2);
-mask = exp(-(D-40).^2/100);
-mask = max((mask ./ max(mask,[],'all')), D<40);
 %% Load the Basis vectors
 Expi = 3;
 basis_path = fullfile(Stats(Expi).meta.stimuli,"PC_vector_data.npz");
-%% Load the source data for Manifold Experiments from python
+%% Load the source basis data for Manifold Experiments from python
 py.importlib.import_module('numpy');
 f = py.numpy.load(basis_path);
 % "S:\Stimuli\2019-Manifold\alfa-191119a\backup_11_19_2019_11_58_11\PC_imgs\PC_vector_data.npz"
@@ -35,14 +29,47 @@ PC_Vec = f.get('PC_vecs').double;
 sphere_norm = f.get('sphere_norm').double;
 basis = [-1,1,1]' .* PC_Vec(1:3,:);% Note the final PC may need to reverse! not always the same dir!
 % f.close();
-%% Prepare data 
+%% Prepare neural response data 
 global psth_avg_tsr psth_std_tsr
-si=1;ui=1;
+si=1; ui=1; iCh=Stats(Expi).units.pref_chan_id(ui);
 meanpsth = cellfun(@(psth) mean(psth(ui,:,:),3), Stats(Expi).manif.psth{si}, "UniformOutput", false);
 stdpsth = cellfun(@(psth)  std(psth(ui,:,:),0,3)/sqrt(size(psth,3)), Stats(Expi).manif.psth{si}, "UniformOutput", false);
 psth_avg_tsr = cell2mat(reshape(meanpsth,1,1,11,11)); % reshape and transform, so size 86, 200, 11, 11, key data! 
 psth_std_tsr = cell2mat(reshape(stdpsth,1,1,11,11)); % reshape and transform, so size 86, 200, 11, 11, key data! 
 scoremap = squeeze(mean(psth_avg_tsr(1,50:200,:,:),[1,2]));
+%% RF Masks
+% Assume the Manifold and Evolution Exp happens at the same location
+imgsize = EStats(Expi).evol.imgsize;
+imgpos = EStats(Expi).evol.imgpos;
+x_ext = imgpos(1) + [- imgsize / 2, imgsize / 2];
+y_ext = imgpos(2) + [- imgsize / 2, imgsize / 2];
+x_grid = linspace(x_ext(1), x_ext(2), 256);
+y_grid = linspace(y_ext(1), y_ext(2), 256);
+[XX, YY] = meshgrid(x_grid,y_grid);
+% universal map grid. 
+ntick = 201;
+visualField = [-10 10]; 
+coli = linspace(visualField(1),visualField(2),ntick);
+rowi = linspace(visualField(1),visualField(2),ntick);
+[mapgridX,mapgridY]  = meshgrid(coli,rowi); 
+% Search for the closest exp % Find the RF map exp on the same day
+Mapi = 3;
+% Get the corresponding iCh
+target_ui = Stats(Expi).units.unit_num_arr(iCh);
+target_chi = Stats(Expi).units.spikeID(iCh);
+RF_iCh = find((MaskStats(Mapi).unit.unit_num_arr == target_ui) & (MaskStats(Mapi).unit.chan_num_arr == target_chi));
+% Get the mask
+interpmask = MaskStats(Mapi).interpmasks(:,:,RF_iCh);
+convmask = MaskStats(Mapi).convmasks(:,:,RF_iCh);
+mask_conv = griddata(mapgridX(:),mapgridY(:),double(convmask(:)),XX, YY); 
+mask_interp = griddata(mapgridX(:),mapgridY(:),double(interpmask(:)),XX, YY); 
+
+mask = mask_interp > max(mask_interp,[],'all') * 0.65;
+% %% Dummy RF mask
+% [XX, YY] = meshgrid(1:256,1:256);
+% D = sqrt((XX-127).^2 + (YY-127).^2);
+% mask = exp(-(D-40).^2/100);
+% mask = max((mask ./ max(mask,[],'all')), D<40);
 %% True visualizatin GUI 
 figh = figure(3);clf;figh.Position = [28         524        1446         454];
 data = struct('basis', basis, 'norm', sphere_norm, 'mask', mask, ...

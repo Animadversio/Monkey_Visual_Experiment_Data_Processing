@@ -9,9 +9,9 @@ rowis = find(expftr);
 %%
 % addpath D:\Lab_Codeshare\project_rfmap
 RFStats = repmat(struct(),length(meta_new),1);
-%%
+%% Go through the exps 
 tic
-Mapi = 1;
+Mapi = 1; % seperate the different size RFMapping exps from the start
 for Triali = 1:length(meta_new)
 Trials = Trials_new{Triali}; 
 rasters = rasters_new{Triali}; 
@@ -115,7 +115,7 @@ toc
 savepath = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Mat_Statistics";
 save(compose("D:\\%s_Manif_RFstats.mat", Animal), 'RFStats','-v6')
 save(fullfile(savepath, compose("%s_Manif_RFstats.mat", Animal)), 'RFStats','-v6')
-%%
+%% Carlos' original code
 % note seems this function doesn't take the image size into account 
 [allRFs,StatsRF] = Project_RfMap_computeRFs(Trials.TrialRecord.User.xy, rasters, meta);
 %%

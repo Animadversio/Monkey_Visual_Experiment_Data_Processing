@@ -10,6 +10,7 @@ coli = linspace(visualField(1),visualField(2),ntick);
 rowi = linspace(visualField(1),visualField(2),ntick);
 [gridX,gridY]  = meshgrid(coli,rowi);
 MaskStats = repmat(struct(),length(RFStats),1);
+
 for Mapi = 1:length(RFStats)
 uniqpos = RFStats(Mapi).stim.uniqpos;
 xpos = RFStats(Mapi).stim.xpos;
