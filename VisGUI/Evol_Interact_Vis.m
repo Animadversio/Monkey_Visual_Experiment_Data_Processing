@@ -1,4 +1,4 @@
-%% Evolution Select Axis
+%% Evolution Experiment Visualization from a global Embedding
 system("subst S: E:\Network_Data_Sync")
 system("subst N: E:\Network_Data_Sync")
 mat_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";

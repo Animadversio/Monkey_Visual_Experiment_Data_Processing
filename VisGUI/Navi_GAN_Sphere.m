@@ -1,4 +1,4 @@
-%% Navigate Manifold Hemisphere through theta phi scroll bar
+%% GUI for Navigate Manifold Hemisphere through theta phi scroll bar
 addpath DNN
 global G 
 G = FC6Generator("matlabGANfc6.mat");

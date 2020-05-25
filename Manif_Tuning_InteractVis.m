@@ -3,13 +3,13 @@ addpath utils
 system("subst N: E:\Network_Data_Sync")
 % addpath("C:\Users\binxu\OneDrive - Washington University in St. Louis\Matlab_add_on\npy-matlab-master\npy-matlab")
 pe = pyenv('Version','C:\Users\binxu\.conda\envs\caffe36\python.exe'); % Note the python env could not be changed in a matlab session
-%%
+%% 
 system("subst S: E:\Network_Data_Sync")
 mat_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
-Animal = "Alfa";
-load(fullfile(mat_dir,"Alfa_ManifPopDynamics.mat"));
-load(fullfile(mat_dir,"Alfa_Manif_stats.mat"));
-load(fullfile(mat_dir,"Alfa_Evol_stats.mat"));
+Animal = "Alfa"; 
+load(fullfile(mat_dir,"Alfa_ManifPopDynamics.mat")); 
+load(fullfile(mat_dir,"Alfa_Manif_stats.mat")); 
+load(fullfile(mat_dir,"Alfa_Evol_stats.mat")); 
 %%
 global G 
 G = FC6Generator("matlabGANfc6.mat");
@@ -45,7 +45,7 @@ scoremap = squeeze(mean(psth_avg_tsr(1,50:200,:,:),[1,2]));
 figh = figure(3);clf;figh.Position = [28         524        1446         454];
 subplot(131);hold on
 tunemap = imagesc(-90:18:90,-90:18:90,scoremap);
-focalpoint = plot(data.Phi,data.Theta,"Color",'r','Marker','o');
+focalpoint = plot(0,0,"Color",'r','Marker','o');
 axis image;
 subplot(132)
 imax = imshow(G.visualize(basis(1,:)));
