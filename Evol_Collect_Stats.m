@@ -16,7 +16,8 @@ rowis = find(expftr);
 %%
 EStats = repmat(struct(), 1, length(meta_new));
 %%
-MatStats_path = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Mat_Statistics";
+Animal = "Beto";
+MatStats_path = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
 load(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
 %% 
 for Triali = 1:length(meta_new)
@@ -138,4 +139,5 @@ MatStats_path = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Ma
 save(compose("D:\\%s_Evol_stats.mat", Animal), 'EStats')
 save(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
 %% Add the ref image stats to it
-
+MatStats_path = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
+save(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
