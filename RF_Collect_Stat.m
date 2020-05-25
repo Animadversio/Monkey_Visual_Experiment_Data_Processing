@@ -50,13 +50,15 @@ nrep = cellfun(@length, idx_grid);
 psth_mean = cellfun(@(idx) mean(rasters(:,:,idx),3), idx_grid, 'UniformOutput', false);
 psth_sem = cellfun(@(idx) std(rasters(:,:,idx),0,3) / sqrt(length(idx)), idx_grid, 'UniformOutput', false);
 %% Compute the score (psth time averaged)
-Windows.late = 1:49;
+Windows.early = 1:49;
 Windows.late = 50:200;
 score_all = cellfun(@(idx) squeeze(mean(rasters(:,Windows.late,idx),[2])), idx_grid, 'UniformOutput', false);
 idx_all_cat = cell2mat(reshape(iPos_grid,1,[]));
 score_all_cat = cell2mat(reshape(score_all,1,[]));
 score_mean = cellfun(@(idx) mean(rasters(:,Windows.late,idx),[2,3]), idx_grid, 'UniformOutput', false);
 score_mean = cell2mat(reshape(score_mean,[1,size(score_mean)]));
+bsl_mean = cellfun(@(idx) mean(rasters(:,Windows.early,idx),[2,3]), idx_grid, 'UniformOutput', false);
+bsl_mean = cell2mat(reshape(bsl_mean,[1,size(bsl_mean)]));
 score_sem = cellfun(@(idx) std(mean(rasters(:,Windows.late,idx),[2]),0,3)/sqrt(length(idx)), idx_grid, 'UniformOutput', false);
 score_sem = cell2mat(reshape(score_sem,[1,size(score_sem)]));
 %% Compute ANOVA F, T percentile
@@ -82,7 +84,14 @@ for iCh = 1:size(rasters,1) % Go through all channels see if there is some modul
     prctile_per_chan(iCh,:) = prctile(score_all_cat(iCh,:), allPercentiles)';
 end
 allP_sr = rowfun(@signrank,table(resp)) ;
+%%
+unit_name_arr = generate_unit_labels(meta.spikeID);
+[activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
 %% Save stats to the dict 
+RFStats(Mapi).unit.unit_name_arr = unit_name_arr;
+RFStats(Mapi).unit.activ_msk = activ_msk;
+RFStats(Mapi).unit.unit_num_arr = unit_num_arr;
+RFStats(Mapi).unit.chan_num_arr = meta.spikeID;
 RFStats(Mapi).stim.offset = Trials.TrialRecord.User.offsets;
 RFStats(Mapi).stim.nSize = nImSize;
 RFStats(Mapi).stim.imgsize = imgsize;
@@ -96,6 +105,7 @@ RFStats(Mapi).psth.psth_mean = psth_mean;
 RFStats(Mapi).psth.psth_sem = psth_sem;
 RFStats(Mapi).psth.score_mean = score_mean;
 RFStats(Mapi).psth.score_sem = score_sem;
+RFStats(Mapi).psth.baseline_mean = bsl_mean;
 RFStats(Mapi).stats.anovaP = allP;
 RFStats(Mapi).stats.F = allF;
 RFStats(Mapi).stats.T = allT;
@@ -112,8 +122,8 @@ end
 toc
 %%
 savepath = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Mat_Statistics";
-save(compose("D:\\%s_Manif_RFstats.mat", Animal), 'RFStats','-v6')
-save(fullfile(savepath, compose("%s_Manif_RFstats.mat", Animal)), 'RFStats','-v6')
+save(compose("D:\\%s_Manif_RFstats.mat", Animal), 'RFStats') 
+save(fullfile(savepath, compose("%s_Manif_RFstats.mat", Animal)), 'RFStats')
 %%
 % note seems this function doesn't take the image size into account 
 [allRFs,StatsRF] = Project_RfMap_computeRFs(Trials.TrialRecord.User.xy, rasters, meta);
