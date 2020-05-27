@@ -8,7 +8,7 @@ savedir = fullfile(result_dir,compose("%s_Evol_Exp%d",Animal,Expi));
 cc_tsr_sum.L1 = squeeze(mean(abs(cc_tsr),3));
 cc_tsr_sum.L2 = squeeze(sqrt(mean(cc_tsr.^2,3)));
 cc_tsr_sum.max = squeeze(max(cc_tsr,[],3));
-%%
+%% 
 % plot_tsr = cc_tsr_L1;Meanstr = "L1";
 for mean_meth = ["L1","L2","max"]
 plot_tsr = getfield(cc_tsr_sum, string(mean_meth));

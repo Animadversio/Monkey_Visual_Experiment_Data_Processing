@@ -1,4 +1,4 @@
-%% Manif_Animation
+%% Manif_Animation  
 %% Really compelling visualization
 mat_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
 Animal = "Alfa";
