@@ -1,7 +1,7 @@
 %% Demo of the ALS factorized fitting method for real neural data and evolved images.
 % the UI is improved then the ALS_demo etc. could be copied
 % 
-% Result 
+% # Result 
 % regenerate neural scoring is easy. 
 % But the mask is not easy to see. Adding Ridge regression will help make
 % the mask smoother. 

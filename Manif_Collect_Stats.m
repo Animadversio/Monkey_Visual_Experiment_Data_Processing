@@ -101,6 +101,9 @@ save(compose("D:\\%s_Manif_stats.mat", Animal), 'Stats')
 save(fullfile(savepath, compose("%s_Manif_stats.mat", Animal)), 'Stats')
 %save("D:\Alfa_Manif_stats.mat", 'Stats')
 %%
+savepath = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
+save(fullfile(savepath, compose("%s_Manif_stats.mat", Animal)), 'Stats','-v6')
+%%
 [pasu_idx_grid,id_grid,p1_grid,p2_grid] = build_Pasu_idx_grid(Trials.imageName);
 pasu_psths_col = cellfun(@(idx) rasters(pref_chan_id, :, idx), pasu_idx_grid, ...
                 'UniformOutput', false);

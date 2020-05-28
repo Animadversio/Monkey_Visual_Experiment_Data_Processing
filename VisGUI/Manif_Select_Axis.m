@@ -5,6 +5,7 @@ system("subst S: E:\Network_Data_Sync")
 system("subst N: E:\Network_Data_Sync")
 % addpath("C:\Users\binxu\OneDrive - Washington University in St. Louis\Matlab_add_on\npy-matlab-master\npy-matlab")
 pe = pyenv('Version','C:\Users\binxu\.conda\envs\caffe36\python.exe'); % Note the python env could not be changed in a matlab session
+py.importlib.import_module('numpy');
 %% Loading up Data and G
 mat_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
 Animal = "Alfa";
@@ -20,15 +21,23 @@ G = FC6Generator("matlabGANfc6.mat");
 % imgs = G.visualize(code);
 %% Load the Basis vectors
 Expi = 3;
-basis_path = fullfile(Stats(Expi).meta.stimuli,"PC_vector_data.npz");
 %% Load the source basis data for Manifold Experiments from python
-py.importlib.import_module('numpy');
+basis_path = fullfile(Stats(Expi).meta.stimuli,"PC_vector_data.npz");
 f = py.numpy.load(basis_path);
-% "S:\Stimuli\2019-Manifold\alfa-191119a\backup_11_19_2019_11_58_11\PC_imgs\PC_vector_data.npz"
 PC_Vec = f.get('PC_vecs').double;
 sphere_norm = f.get('sphere_norm').double;
-basis = [-1,1,1]' .* PC_Vec(1:3,:);% Note the final PC may need to reverse! not always the same dir!
-% f.close();
+f.close();
+% Get the mat containing all the codes of the last generation. 
+matfns = string(ls(fullfile(EStats(Expi).meta.stimuli,"*.mat")));
+code_tmp = load(fullfile(EStats(Expi).meta.stimuli,matfns(end)));
+proj_coord = mean(code_tmp.codes,1) * PC_Vec';
+if proj_coord(1)>0
+    basis = PC_Vec(1:3,:);
+else
+    fprintf("The evolution direction is inverse to the PC1 direction of PCA. Inverse PC1 as basis\n")
+    basis = [-1,1,1]' .* PC_Vec(1:3,:);% Note the final PC may need to reverse! not always the same dir!
+end
+clear code_tmp matfns
 %% Prepare neural response data 
 global psth_avg_tsr psth_std_tsr
 si=1; ui=1; iCh=Stats(Expi).units.pref_chan_id(ui);
@@ -144,6 +153,7 @@ draw(data.imax)
 drawpsth(data.psthplot)
 drawfocal(data.focalpoint)
 end
+
 function SetAxis_Callback(hObj, evt)
 [x,y] = ginput(2);
 fprintf("%d,%d\n",x,y)
@@ -164,6 +174,7 @@ guidata(hObj,data);
 draw(data.imax)
 drawAxis(guidata(hObj).focalpoint, x, y)
 end
+
 function PlayTuning_Callback(hObj, evt)
 data = guidata(hObj);
 for devAxis = [0:0.05:data.axisSLD.Max, data.axisSLD.Max:-0.05:data.axisSLD.Min, data.axisSLD.Min:0.05:0]
@@ -178,6 +189,7 @@ drawfocal(data.focalpoint)
 pause(0.025)
 end
 end
+
 function toggleDynamics_Callback(hObj, evt)
 data = guidata(hObj);
 if hObj.Value
@@ -193,6 +205,7 @@ else
     drawfocal(data.focalpoint)
 end
 end
+
 function PlayDynamics_Callback(hObj, evt)
 data = guidata(hObj);data.toggleDyn.Value=true;
 global psth_avg_tsr psth_std_tsr
@@ -204,6 +217,7 @@ data.timeL.XData = [fi,fi];
 pause(0.025)
 end
 end
+
 function TimeSlider_Callback(hObj, evt)
 data = guidata(hObj);
 if data.toggleDyn.Value
@@ -217,6 +231,7 @@ drawfocal(data.focalpoint)
 pause(0.02)
 end
 end
+
 function AxisSlider_Callback(hObj, evt)
 % hObj.Min = -pi/2;hObj.Max = pi/2;
 data = guidata(hObj);
@@ -229,6 +244,7 @@ draw(data.imax)
 drawpsth(data.psthplot)
 drawfocal(data.focalpoint)
 end
+
 function ThetaSlider_Callback(hObj, evt)
 % disp(hObj.Value)  
 data = guidata(hObj);
@@ -238,6 +254,7 @@ draw(data.imax)
 drawpsth(data.psthplot)
 drawfocal(data.focalpoint)
 end
+
 function PhiSlider_Callback(hObj, evt)
 data = guidata(hObj);
 data.Phi = hObj.Value;
@@ -246,6 +263,7 @@ draw(data.imax)
 drawpsth(data.psthplot)
 drawfocal(data.focalpoint)
 end
+
 function Mask_Callback(hObj, evt)
 data = guidata(hObj);
 data.Addmask = hObj.Value;
@@ -253,6 +271,7 @@ guidata(hObj,data);
 % guidata(hObj).Addmask = hObj.Value;
 draw(data.imax)
 end
+
 function draw(imax)
 global G 
 data = guidata(imax);
@@ -266,12 +285,16 @@ imax.Parent.Title.String = compose("%.1f, (%.1f, %.1f)",norm(data.curcode), data
 drawnow;
 guidata(imax,data);
 end
+
 function drawpsth(psthplot)
 global psth_avg_tsr psth_std_tsr
 data = guidata(psthplot);
+% nearest neighbor of interpolation 
 % interpi = 6 + data.Theta / pi * 10;
 % interpj = 6 + data.Phi / pi * 10;
 % psthplot.YData = squeeze(psth_avg_tsr(1,:,round(interpi),round(interpj)));
+
+% custom version of bilinear interpolation of the psth and sem tensor
 interpi = clip(6 + data.Theta / pi * 10, [1,11]);
 interpj = clip(6 + data.Phi   / pi * 10, [1,11]);
 i_grid = [floor(interpi), ceil(interpi)];
@@ -288,15 +311,17 @@ else
 end
 psth = sum(psth_avg_tsr(:,:,i_grid,j_grid) .* reshape(i_W'*j_W,[1,1,2,2]),[1,3,4]);
 err = sum(psth_std_tsr(:,:,i_grid,j_grid) .* reshape(i_W'*j_W,[1,1,2,2]),[1,3,4]);
-psthplot.YData = [psth,nan,psth+err,nan,psth-err];
+psthplot.YData = [psth,nan,psth+err,nan,psth-err]; % add nan to make 3 discontinuous lines
 psthplot.XData = [1:200,nan,1:200,nan,1:200];
 drawnow;
 end
+
 function drawAxis(focalpoint, X, Y)
 focalpoint.XData = X;
 focalpoint.YData = Y;
 drawnow;
 end
+
 function drawfocal(focalpoint)
 focalpoint.XData = guidata(focalpoint).Phi / pi * 180;
 focalpoint.YData = guidata(focalpoint).Theta / pi * 180;

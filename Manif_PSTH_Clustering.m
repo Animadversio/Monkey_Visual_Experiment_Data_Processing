@@ -1,5 +1,5 @@
 %% Clustering PSTH dynamics (the spatial temporal tensor) for each channel
-
+%  Add data tips to understand the clusters 
 %% Really compelling visualization
 mat_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
 Animal = "Alfa";
