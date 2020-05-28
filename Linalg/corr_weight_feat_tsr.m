@@ -1,15 +1,18 @@
 net = vgg16;
 %%
-Animal = "Beto";
+Animal = "Alfa";
 MatStats_path = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
+MatStats_path = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 load(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
 load(fullfile(MatStats_path, compose("%s_Manif_stats.mat", Animal)), 'Stats')
 %
-result_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\CNNFeatCorr";
+% result_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\CNNFeatCorr";
+result_dir = "E:\OneDrive - Washington University in St. Louis\CNNFeatCorr";
 %% Manifold Experiment
 imgN=121; %B=10;
-for Expi = 2:45
-fprintf("Processing Manif Exp %d pref chan %d\n",Expi,EStats(Expi).units.pref_chan)
+ExpType = "Manif";
+for Expi = 1:46
+fprintf("Processing %s Manif Exp %d pref chan %d\n",Animal,Expi,EStats(Expi).units.pref_chan)
 si=1;ui=1;%Window=50:200;
 % dlimg = randn(224,224,3,imgN);
 imgnm_grid = string(cellfun(@(idx) unique(Stats(Expi).imageName(idx)), Stats(Expi).manif.idx_grid{si}));
@@ -23,7 +26,10 @@ psth_all = cellfun(@(psth) reshape(mean(psth(ui,:,:),[3]),1,1,[]), Stats(Expi).m
 psth_all = reshape(cell2mat(psth_all),imgN,[]);
 score_vect = movmean(psth_all,20,2,'Endpoints','discard'); % short time window average 
 score_vect = score_vect(:,1:10:end); % subsample to decrease redunancy
-wdw_vect=[1, 20] + 10 * [0:18]';
+wdw_vect = [1, 20] + 10 * [0:18]';
+score_vect = [score_vect, mean(psth_all(:,1:50),2),mean(psth_all(:,51:100),2),...
+    mean(psth_all(:,101:150),2),mean(psth_all(:,151:200),2),mean(psth_all(:,51:200),2)]; % subsample to decrease redunancy
+wdw_vect = [wdw_vect; [1,50]+[0:50:150]'; [51,200]];
 %%
 tmpfn = ls(fullfile(Stats(Expi).meta.stimuli, imgnm_vect(1)+"*"));
 tmpparts = split(tmpfn,".");
@@ -35,7 +41,7 @@ dlimg = cell2mat(reshape(imgcol,1,1,1,[])); % put all the images along the 3rd d
 %% Correlation Coefficient Clearly shows a spatial structure there
 savedir = fullfile(result_dir,compose("%s_Manif_Exp%d",Animal,Expi));
 mkdir(savedir);
-for layername = ["conv3_1", "conv4_3", "conv5_3"]
+for layername = ["conv1_2","conv2_2","conv3_1", "conv4_3", "conv5_3"]
 % layername = 'conv4_3';
 T0 = tic;
 % dummy = activations(net, zeros(224,224,3), layername);
@@ -44,8 +50,8 @@ T0 = tic;
 T1 = toc(T0);
 feat_tsr = activations(net, dlimg, layername);
 T2 = toc(T0);
-corr_tsr = corr(reshape(feat_tsr,[],imgN)', score_vect);
-corr_tsr = reshape(corr_tsr, [size(feat_tsr, [1,2,3]), size(score_vect, 2)]);
+cc_tsr = corr(reshape(feat_tsr,[],imgN)', score_vect);
+cc_tsr = single(reshape(cc_tsr, [size(feat_tsr, [1,2,3]), size(score_vect, 2)]));
 MFeat = mean(feat_tsr,4);
 StdFeat = std(feat_tsr,0,4);
 T3 = toc(T0);
@@ -56,10 +62,10 @@ fprintf("Latencies: load img %.1f CNN proc %.1f compute innprod %.1f\n", T1, T2,
 % title(sprintf("Mean CorreCoef in with VGG16 %s feature", layername))
 % colorbar()
 outfn = fullfile(result_dir, compose("%s_Manif_Exp%d_%s.mat",Animal,Expi,layername)); % LW means long window
-save(outfn,'corr_tsr','MFeat','StdFeat','wdw_vect');
+save(outfn,'cc_tsr','MFeat','StdFeat','wdw_vect');
 %% Correlation Coefficient Clearly shows a spatial structure there
 figure(19);
-corr_tsr_L1 = squeeze(mean(abs(corr_tsr(:,:,:,:)),3)); % H, W, timefr
+corr_tsr_L1 = squeeze(mean(abs(cc_tsr(:,:,:,:)),3)); % H, W, timefr
 CLIM = prctile(corr_tsr_L1, [2.5, 98], 'all'); 
 for fi=1:size(corr_tsr,4)
 wdw = wdw_vect(fi,:);
@@ -70,7 +76,6 @@ caxis(CLIM);colorbar()
 saveas(19,fullfile(savedir, compose("%s_Manif_Exp%d_%s_wdw%d.png",Animal,Expi,layername,fi)))
 end
 end
-
 end
 %%
 
