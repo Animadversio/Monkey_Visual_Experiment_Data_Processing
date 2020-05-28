@@ -6,7 +6,9 @@ load(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
 load(fullfile(MatStats_path, compose("%s_Manif_stats.mat", Animal)), 'Stats')
 
 %% Evolution Exp 
+ExpType = "Evol";
 for Expi = 27:length(EStats)
+corr_feat_tsr_Animation;
 fprintf("Processing Evolution Exp %d\n",Expi)
 ui=1;
 Window = 50:200;
