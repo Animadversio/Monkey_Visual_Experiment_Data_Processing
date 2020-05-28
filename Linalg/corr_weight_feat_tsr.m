@@ -1,11 +1,11 @@
 net = vgg16;
 %%
-Animal = "Beto";
-MatStats_path = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
+Animal = "Alfa";
+MatStats_path = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Mat_Statistics";
 load(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
 load(fullfile(MatStats_path, compose("%s_Manif_stats.mat", Animal)), 'Stats')
 %
-result_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\CNNFeatCorr";
+result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\CNNFeatCorr";
 %% Manifold Experiment
 imgN=121; %B=10;
 for Expi = 2:45
@@ -75,12 +75,14 @@ end
 %%
 
 %%
-Animal = "Alfa";
-MatStats_path = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
+Animal = "Beto";
+MatStats_path = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Mat_Statistics";
 load(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
 load(fullfile(MatStats_path, compose("%s_Manif_stats.mat", Animal)), 'Stats')
 %%
 result_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\CNNFeatCorr";
+result_dir = "S:\CNNFeatCorr";
+mkdir(result_dir)
 %%
 if Animal == "Alfa"
 EStats(1).meta.stimuli = "N:\Stimuli\2019-Manifold\alfa-191119a\backup_11_19_2019_11_58_11";
@@ -113,7 +115,8 @@ for Expi = 1:length(Stats)
 end
 %% Evolution Experiment, far more images (>*30) more noisy! 
 %  Harder to find the pattern
-for Expi = 1:length(EStats) % Starts 14:16
+ExpType = "Evol";
+for Expi = 33:length(EStats) % Starts 14:16
 %%
 fprintf("Processing Evol Exp %d pref chan %d\n",Expi,EStats(Expi).units.pref_chan)
 % Formulate data 
@@ -127,7 +130,7 @@ score_vect = [score_vect, mean(psth_all(:,1:50),2),mean(psth_all(:,51:100),2),..
     mean(psth_all(:,101:150),2),mean(psth_all(:,151:200),2),mean(psth_all(:,51:200),2)]; % subsample to decrease redunancy
 wdw_vect = [wdw_vect; [1,50]+[0:50:150]'; [51,200]];
 % score_vect = mean(psth_all(:,80:200)); 
-imgN=length(index_vect); Bsz=100;
+imgN=length(index_vect); Bsz=128;
 %%  online calculation of mean and Sq to compute Correlation
 savedir = fullfile(result_dir,compose("%s_Evol_Exp%d",Animal,Expi));
 mkdir(savedir);
