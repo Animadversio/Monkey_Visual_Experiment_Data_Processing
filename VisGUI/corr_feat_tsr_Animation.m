@@ -29,7 +29,7 @@ figure(18);set(18,'Position',[0   435   552   543])
 IMS = imagesc(plot_tsr(:,:,1));axis image
 caxis([CMIN,CMAX]);colorbar;
 for fi = 1:size(plot_tsr,3)
-    wdw = [1, 20] + 10 * (fi - 1);
+    wdw = wdw_vect(fi,:); %[1, 20] + 10 * (fi - 1);
     IMS.CData = plot_tsr(:,:,fi);
     IMS.Parent.Title.String = sprintf("Exp %d Pref chan %d\n %s CorreCoef in of VGG16 %s feature\n with [%d,%d] ms firing rate", ...
             Expi, EStats(Expi).units.pref_chan, Meanstr, layername, wdw(1), wdw(2));
