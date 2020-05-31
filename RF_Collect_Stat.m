@@ -3,7 +3,7 @@ Animal = "Alfa"; Set_Path;
 %expftr = (contains(ExpRecord.expControlFN,"200319"));
 expftr = (contains(ExpRecord.Exp_collection,"Manifold") &...
             contains(ExpRecord.expControlFN, "rf"));%&...
-            %ExpRecord.Expi > 0);
+            %ExpRecord.Expi > 0); 
 rowis = find(expftr);
 [meta_new,rasters_new,~,Trials_new] = Project_Manifold_Beto_loadRaw(rowis,Animal);
 %%
