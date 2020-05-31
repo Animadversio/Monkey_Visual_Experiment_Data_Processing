@@ -1,6 +1,7 @@
 %% Evolution Experiment Visualization from a global Embedding
 addpath DNN
 addpath utils
+addpath VisGUI
 system("subst S: E:\Network_Data_Sync")
 system("subst N: E:\Network_Data_Sync")
 % addpath("C:\Users\binxu\OneDrive - Washington University in St. Louis\Matlab_add_on\npy-matlab-master\npy-matlab")
@@ -9,10 +10,10 @@ py.importlib.import_module('numpy');
 %% Loading up Data and G
 mat_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
 Animal = "Alfa";
-load(fullfile(mat_dir,"Alfa_ManifPopDynamics.mat"));
-load(fullfile(mat_dir,"Alfa_Manif_stats.mat"));
-load(fullfile(mat_dir,"Alfa_Evol_stats.mat"));
-load(fullfile(mat_dir,"Alfa_Manif_RFMaps.mat"));
+load(fullfile(mat_dir,Animal+"_ManifPopDynamics.mat"));
+load(fullfile(mat_dir,Animal+"_Manif_stats.mat"));
+load(fullfile(mat_dir,Animal+"_Evol_stats.mat"));
+load(fullfile(mat_dir,Animal+"_Manif_RFMaps.mat"));
 %
 global G 
 G = FC6Generator("matlabGANfc6.mat");
@@ -22,7 +23,7 @@ G = FC6Generator("matlabGANfc6.mat");
 %% Load the Basis vectors
 Expi = 3;
 %% Load the source basis data for Manifold Experiments from python
-basis_path = fullfile(Stats(Expi).meta.stimuli,"PC_vector_data.npz");
+basis_path = fullfile(EStats(Expi).meta.stimuli,"PC_imgs","PC_vector_data.npz");
 f = py.numpy.load(basis_path);
 PC_Vec = f.get('PC_vecs').double;
 sphere_norm = f.get('sphere_norm').double;
@@ -46,7 +47,7 @@ stdpsth = cellfun(@(psth)  std(psth(ui,:,:),0,3)/sqrt(size(psth,3)), Stats(Expi)
 psth_avg_tsr = cell2mat(reshape(meanpsth,1,1,11,11)); % reshape and transform, so size 86, 200, 11, 11, key data! 
 psth_std_tsr = cell2mat(reshape(stdpsth,1,1,11,11)); % reshape and transform, so size 86, 200, 11, 11, key data! 
 scoremap = squeeze(mean(psth_avg_tsr(1,50:200,:,:),[1,2]));
-%% RF Masks
+%% Heatmap Masks
 % Assume the Manifold and Evolution Exp happens at the same location
 imgsize = EStats(Expi).evol.imgsize;
 imgpos = EStats(Expi).evol.imgpos;
@@ -123,22 +124,6 @@ data.thetaSLD = TheSLD;data.phiSLD = PhiSLD;data.axisSLD = AxisSLD;data.timeSLD 
 data.toggleMask=TG;data.setImage=CT;data.setAxis=SA;data.playDynamics=PD;data.toggleDyn=TD;
 guidata(figh, data);
 %%
-%% Code for bilinear interpolation in nd array
-interpi = 6 + data.Theta / pi * 10;
-interpj = 6 + data.Phi / pi * 10;
-i_grid = [floor(interpi), ceil(interpi)];
-j_grid = [floor(interpj), ceil(interpj)];
-if interpi == floor(interpi)
-    i_W = [1, 0];
-else
-    i_W = [i_grid(2) - interpi, interpi - i_grid(1)];
-end
-if interpj == floor(interpj)
-    j_W = [1, 0];
-else
-    j_W = [j_grid(2) - interpj, interpj - j_grid(1)];
-end
-sum(psth_avg_tsr(:,:,i_grid,j_grid) .* reshape(i_W'*j_W,[1,1,2,2]),[1,3,4])
 %%
 function SetImage_Callback(hObj, evt)
 [x,y] = ginput(1);
@@ -294,7 +279,7 @@ data = guidata(psthplot);
 % interpj = 6 + data.Phi / pi * 10;
 % psthplot.YData = squeeze(psth_avg_tsr(1,:,round(interpi),round(interpj)));
 
-% custom version of bilinear interpolation of the psth and sem tensor
+% custom version of bilinear interpolation of the psth and sem tensor (see utils)
 interpi = clip(6 + data.Theta / pi * 10, [1,11]);
 interpj = clip(6 + data.Phi   / pi * 10, [1,11]);
 i_grid = [floor(interpi), ceil(interpi)];

@@ -123,7 +123,6 @@ end
 toc
 %%
 savepath = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Mat_Statistics";
-
 save(compose("D:\\%s_Manif_RFstats.mat", Animal), 'RFStats','-v6')
 save(fullfile(savepath, compose("%s_Manif_RFstats.mat", Animal)), 'RFStats','-v6')
 %% Carlos' original code
