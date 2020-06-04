@@ -12,9 +12,9 @@ load(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
 load(fullfile(MatStats_path, compose("%s_Manif_stats.mat", Animal)), 'Stats')
 load(fullfile(MatStats_path, compose("%s_Manif_RFstats.mat", Animal)), 'RFStats')
 %% 
-Expi = 10;
+Expi = 33;
 ExpType = "Evol";
-option = struct("")
+% option = struct("")
 corrFeatTsr_Anim_fun(EStats,ExpType,Animal, Expi)
 Evol_Stats_Anim_fun(Stats, EStats,  Animal, Expi)
 pause;
