@@ -13,7 +13,7 @@ rowis = find(expftr);
 %%
 Stats = repmat(struct(), 1, length(meta_new));
 %% If there is stats saved, load it! 
-mat_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
+mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 mat_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Mat_Statistics";
 Animal = "Alfa";
 load(fullfile(mat_dir, Animal+'_Manif_stats.mat'))

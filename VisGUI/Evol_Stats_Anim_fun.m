@@ -2,7 +2,8 @@ function Evol_Stats_Anim_fun(Stats, EStats, Animal, Expi, option)
 global G
 if nargin==4
     option = struct("save",true);
-    option.result_dir = "E:\OneDrive - Washington University in St. Louis\Evol_Manif_Movies";
+%     option.result_dir = "E:\OneDrive - Washington University in St. Louis\Evol_Manif_Movies";
+    option.result_dir = "S:\Evol_Manif_Movies";
     option.cent = []; % can be used to specify the centor of exploration. 
 end
 mvWdL = 10;

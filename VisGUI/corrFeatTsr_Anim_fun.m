@@ -1,15 +1,20 @@
-%% 
+%% The wrapped function to produce different version of the animation of correlation coefficient.
 function corrFeatTsr_Anim_fun(EStats,ExpType,Animal,Expi,option)
 if nargin==4
     option = struct("save",true);
-    option.result_dir = "E:\OneDrive - Washington University in St. Louis\Evol_Manif_Movies";
-    option.cent = []; % can be used to specify the centor of exploration. 
+    option.sum_method = ["L1"];
 end
 
-layerlist = ["conv1_2","conv2_2","conv3_1", "conv4_3", "conv5_3"];
+layerlist = ["conv3_1", "conv4_3", "conv5_3"];%"conv1_2","conv2_2",
 sum_method = ["L1"];%,"L2","max"];
+if isfield("sum_method",option), sum_method = option.sum_method; end
 
+if Animal=="Beto" && ExpType=="Evol"
+ccmat_dir = "S:\CNNFeatCorr";
+else
 ccmat_dir = "E:\OneDrive - Washington University in St. Louis\CNNFeatCorr";
+% ccmat_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\CNNFeatCorr";
+end
 for layername = layerlist%["conv3_1", "conv4_3", "conv5_3"] %"conv5_3";
 outfn = fullfile(ccmat_dir, compose("%s_%s_Exp%d_%s.mat",Animal,ExpType,Expi,layername));
 variableInfo = who('-file', outfn);
@@ -45,7 +50,7 @@ figure(18);set(18,'Position',[0   435   552   543])
 IMS = imagesc(plot_tsr(:,:,1));axis image
 caxis([CMIN,CMAX]);colorbar;
 for fi = 1:size(plot_tsr,3)
-    wdw = wdw_vect(fi,:); %[1, 20] + 10 * (fi - 1);
+    wdw = wdw_vect(fi,:); % [1, 20] + 10 * (fi - 1); 
     IMS.CData = plot_tsr(:,:,fi);
     IMS.Parent.Title.String = sprintf("%s %s Exp %d Pref chan %d\n %s CorreCoef in of VGG16 %s feature\n with [%d,%d] ms firing rate", ...
             Animal, ExpType, Expi, EStats(Expi).units.pref_chan, Meanstr, layername, wdw(1), wdw(2));
