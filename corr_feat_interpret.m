@@ -32,9 +32,40 @@ save("N:\vgg16W.mat","vggmatW","-v6")
 outtmp = squeeze(activations(matvgg,ones(224,224,3,1),'fc8'));
 corr(pyact,outtmp)
 %%
+pyact = py.numpy.load("S:\fc8out.npy").single';
+%%
+
+%%
 catimg = imread("E:\Monkey_Data\Generator_DB_Windows\nets\upconv\Cat.jpg");
 cattsr = catimg(39:end-38,39:end-38,:);
 outtmp = squeeze(activations(matvgg,cattsr,'fc8'));
 corr(pyact,outtmp)
 %%
+midtmp = squeeze(activations(matvgg,cattsr,'pool5'));
+pyactp5 = py.numpy.load("S:\poo5out.npy").single';
+pool5_cc = corr(reshape(permute(pyactp5,[3,4,2,1]),[],1), reshape(midtmp,[],1));
+fprintf("%.8f",pool5_cc)
+%% fc6
+fc6tmp = squeeze(activations(matvgg,cattsr,'fc6'));
+pyactfc6 = py.numpy.load("S:\fc6out.npy").single';
+fc6_cc = corr(reshape(permute(pyactfc6,[3,4,2,1]),[],1), reshape(fc6tmp,[],1));
+fc6_L1 = mean(abs(pyactfc6-fc6tmp));
+fprintf("%.8f, %.3f\n",fc6_cc,fc6_L1)
+%%
+pyorgfc6 = py.numpy.load("S:\fc6out_orig.npy").single';
+%%
+figure(1);clf;hold on;plot(pyorgfc6);plot(fc6tmp);plot(pyactfc6);
+title(compose("VGG fc6 output\nCorrCoef %.3f L1 %.3f\nOriginal CorrCoef %.3f L1 %.3f",fc6_cc,fc6_L1,...
+    corr(pyorgfc6,fc6tmp),mean(abs(pyorgfc6-fc6tmp))))
+legend(["pytorch original VGG","matlab VGG","pytorch VGG"])
+%%
 figure;hold on;plot(outtmp);plot(pyact)
+title(compose("VGG fc8 output\nCorrCoef %.3f",corr(pyact,outtmp)))
+legend(["matlab VGG","pytorch VGG"])
+%%
+figure;hold on;
+plot(pyact-outtmp);plot(pyact)
+%%
+
+%%
+figure;hist(pyact-outtmp)
