@@ -10,7 +10,7 @@ load(fullfile(MatStats_path, compose("%s_Manif_stats.mat", Animal)), 'Stats')
 load(fullfile(MatStats_path, compose("%s_Manif_RFstats.mat", Animal)), 'RFStats')
 %%
 ExpType = "Manif";
-Expi = 12;
+Expi = 11;
 si=1;ui=1;
 imgnm_grid = string(cellfun(@(idx) unique(Stats(Expi).imageName(idx)), Stats(Expi).manif.idx_grid{si}));
 imgnm_vect = reshape(imgnm_grid, [], 1);
@@ -50,6 +50,9 @@ clear code_tmp matfns
 anglemap = cat(3, cosd(theta).* cosd(phi), sind(theta).* cosd(phi), sind(phi));
 codes_all = sphere_norm * einsum(anglemap, basis, 'ijk,kl->ijl');
 %%
+figure(3);
+imshow(G.visualize(squeeze(codes_all(6,6,:))))
+%%
 layername = 'relu_conv3_1';%'relu_deconv2';%'conv3_1';
 acts_tsr = G.activations(reshape(codes_all,[],4096),layername);
 ft_shape = size(acts_tsr,[1,2,3]);
@@ -58,21 +61,45 @@ ntpnt = size(score_vect,2);
 Gcc_tsr = corr(reshape(acts_tsr, [], imgN)', score_vect);
 Gcc_tsr = reshape(Gcc_tsr, [ft_shape, ntpnt]);
 %%
+
+%%
 shuffleN = 100;
 score_shuffle = [];
 for i = 1:shuffleN
     score_shuffle = [score_shuffle, score_vect(randperm(imgN),:)];
 end
-cc_tsr_ref = corr(reshape(acts_tsr,nfeat,imgN)', score_shuffle);
-cc_tsr_ref = single(reshape(cc_tsr_ref, [ft_shape, ntpnt, shuffleN]));
-%%
-figure(2);
-imshow(G.visualize(squeeze(codes_all(6,6,:))))
+Gcc_tsr_ref = corr(reshape(acts_tsr,nfeat,imgN)', score_shuffle);
+Gcc_tsr_ref = single(reshape(Gcc_tsr_ref, [ft_shape, ntpnt, shuffleN]));
+Gcc_refM = mean(Gcc_tsr_ref,5);
+Gcc_refS = std(Gcc_tsr_ref,0,5);
+t_signif_tsr = (Gcc_tsr - Gcc_refM) ./ Gcc_refS;
 %%
 figure(1);
 for fi=1:size(Gcc_tsr,4)
 wdw = wdw_vect(fi,:);
 imagesc(mean(abs(Gcc_tsr(:,:,:,fi)),3)); axis image
+title(sprintf("Exp %d Pref chan %d\nMean CorreCoef in of fc6 GAN %s feature\n with [%d,%d] ms firing rate", ...
+    Expi, EStats(Expi).units.pref_chan, layername, wdw(1), wdw(2)))
+colorbar()
+pause
+% saveas(17,fullfile(savedir, compose("%s_Evol_Exp%d_%s_wdw%d.png",Animal,Expi,layername,fi)))
+end
+%%
+figure(4);fi=11;
+for ci=1:size(Gcc_tsr,3)
+wdw = wdw_vect(fi,:);
+imagesc(Gcc_tsr(:,:,ci,fi)); axis image
+title(sprintf("Exp %d Pref chan %d\nMean CorreCoef in of fc6 GAN %s feature %d\n with [%d,%d] ms firing rate", ...
+    Expi, EStats(Expi).units.pref_chan, layername, ci, wdw(1), wdw(2)))
+colorbar()
+pause(0.3)
+% saveas(17,fullfile(savedir, compose("%s_Evol_Exp%d_%s_wdw%d.png",Animal,Expi,layername,fi)))
+end
+%%
+figure(2);
+for fi=1:size(Gcc_tsr,4)
+wdw = wdw_vect(fi,:);
+imagesc(mean(abs(t_signif_tsr(:,:,:,fi)),3)); axis image
 title(sprintf("Exp %d Pref chan %d\nMean CorreCoef in of fc6 GAN %s feature\n with [%d,%d] ms firing rate", ...
     Expi, EStats(Expi).units.pref_chan, layername, wdw(1), wdw(2)))
 colorbar()
