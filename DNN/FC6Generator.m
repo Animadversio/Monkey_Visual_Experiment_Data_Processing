@@ -11,6 +11,17 @@ classdef FC6Generator
          G.DeconvNet = data.DeconvNet;
          G.LinNet = data.LinNet;
       end
+      function acts = activations(G, codes, layername)
+        if size(codes,2)==4096 
+            codes = codes';
+        end
+        assert(size(codes,1)==4096, "Code shape error")%
+        Z = dlarray(reshape(codes,1,1,4096,size(codes,2)), 'SSCB');
+        hiddenout = G.LinNet.predict(Z);
+        hiddenout_r = dlarray(hiddenout.reshape(4,4,256,[]).permute([2,1,3,4]),"SSCB"); % Note to flip your hiddenoutput
+        acts = forward(G.DeconvNet, hiddenout_r, 'Outputs', layername);
+        acts = extractdata(acts);
+      end
       function imgs = visualize(G, codes)
         if size(codes,2)==4096 
             codes = codes';

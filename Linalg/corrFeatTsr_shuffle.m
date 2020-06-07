@@ -6,7 +6,8 @@ Animal = "Beto";
 MatStats_path = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 load(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
 load(fullfile(MatStats_path, compose("%s_Manif_stats.mat", Animal)), 'Stats')
-
+%%
+BatchCC = true;
 %% 
 ExpType = "Evol";
 Expi = 11;
@@ -22,14 +23,15 @@ wdw_vect = [1, 20] + 10 * [0:18]';
 score_vect = [score_vect, mean(psth_all(:,1:50),2),mean(psth_all(:,51:100),2),...
     mean(psth_all(:,101:150),2),mean(psth_all(:,151:200),2),mean(psth_all(:,51:200),2)]; % [Trials, nTimeWindows]
 wdw_vect = [wdw_vect; [1,50]+[0:50:150]'; [51,200]]; % [nTimeWindows, 2]
-%% Get Image suffix (Assume all evolved images use the same suffix)
+% Get Image suffix (Assume all evolved images use the same suffix)
 tmpfn = ls(fullfile(EStats(Expi).meta.stimuli, imgnm_vect(1)+"*"));
 tmpparts = split(tmpfn,".");
 suffix = "."+tmpparts{2};% suffix = ".bmp";
-%%
+%% Batch computation of correlation coefficient. 
+%% Need to have the scores first
 imgN=length(index_vect); Bsz=128;
 score_shuffle = [];
-shuffleN = 50;
+shuffleN = 100;
 for i = 1:shuffleN
     score_shuffle = [score_shuffle, score_vect(randperm(imgN),:)];
 end
@@ -39,11 +41,11 @@ dummy = activations(net, zeros(224,224,3), layername);
 ft_shape = size(dummy); % size(feat_tsr,[1,2,3]);
 nfeat = prod(ft_shape); % number of feature predictors in total
 ntpnt = size(score_vect,2);
-SSqFeat = zeros(nfeat,1);
-SFeat = zeros(nfeat,1);
-SSqrsp = zeros(ntpnt,1);
-Srsp = zeros(ntpnt,1);
-InnProd = zeros(nfeat, ntpnt);
+SSqFeat = zeros(nfeat,1,'single');
+SFeat = zeros(nfeat,1,'single');
+SSqrsp = zeros(ntpnt*shuffleN,1,'single');
+Srsp = zeros(ntpnt*shuffleN,1,'single');
+InnProd = zeros(nfeat, ntpnt*shuffleN,'single');
 %% batch computation of correlation coefficient tensor. 
 curN = 0;
 csr = 1; 
@@ -77,10 +79,9 @@ MFeat = SFeat / curN;
 Stdrsp = sqrt(SSqrsp / curN - Mrsp.^2);
 StdFeat = sqrt(SSqFeat / curN - MFeat.^2);
 cc_tsr = (InnProd./curN - MFeat * Mrsp') ./ (StdFeat * Stdrsp');
-cc_tsr = reshape(cc_tsr, [ft_shape, ntpnt]);
+cc_tsr = single(reshape(cc_tsr, [ft_shape, ntpnt, shuffleN]));
 MFeat = reshape(MFeat, ft_shape);
 StdFeat = reshape(StdFeat, ft_shape);
-
 %% Correlation Coefficient Clearly shows a spatial structure there
 figure(19);
 corr_tsr_L1 = squeeze(mean(abs(cc_tsr(:,:,:,:)),3)); % H, W, timefr
@@ -94,13 +95,14 @@ caxis(CLIM);colorbar()
 pause(0.05)
 % saveas(19,fullfile(savedir, compose("%s_Manif_Exp%d_%s_wdw%d.png",Animal,Expi,layername,fi)))
 end
-%%
+%% Directly computing feature tensor 
 tic
 imgcol = cellfun(@(imgnm) imresize(imread(fullfile(EStats(Expi).meta.stimuli, imgnm+suffix)),[224,224]), ...
         imgnm_vect, 'UniformOutput', false);
 dlimg = cell2mat(reshape(imgcol,1,1,1,[]));
+toc
 feat_tsr_tmp = activations(net, dlimg, layername);
-toc % Directly computing feature tensor takes 103sec in total, but 37 sec in CNN processing, 60+ sec in loading images.
+toc % takes 103sec in total, but 37 sec in CNN processing, 60+ sec in loading images.
 %%
 T0 = tic;
 imgcol = cellfun(@(imgnm) imresize(imread(fullfile(EStats(Expi).meta.stimuli, imgnm+suffix)),[224,224]), ...
