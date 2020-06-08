@@ -35,7 +35,7 @@ imgcol = cellfun(@(imgnm) imresize(imread(fullfile(EStats(Expi).meta.stimuli, im
         imgnm_vect, 'UniformOutput', false);
 dlimg = cell2mat(reshape(imgcol,1,1,1,[]));
 toc(T0); 
-%%
+%% Load image name and firing data
 ExpType = "Manif";
 Expi = 11;
 fprintf("Processing Manif Exp %d pref chan %d\n",Expi,EStats(Expi).units.pref_chan)
@@ -64,18 +64,26 @@ imgcol = cellfun(@(imgnm) imresize(imread(fullfile(Stats(Expi).meta.stimuli, img
         imgnm_vect, 'UniformOutput', false);
 dlimg = cell2mat(reshape(imgcol,1,1,1,[]));
 toc(T0); 
-%% 
-layernames = ["fc8","fc7","fc6","conv5_3"];%,"conv4_3","conv3_3"];
-% layername = "conv2_2"; % 
-sig_vox_num = zeros(24,[]);
-sig_vox_pct = zeros(24,[]);
+
+%% Significantly correlated "pixels" across hierachy
+T0 = tic;
+imgcol = cellfun(@(imgnm) imresize(imread(fullfile(strrep(Stats(Expi).meta.stimuli,"N:\","S:\"), imgnm+suffix)),[224,224]), ...
+        imgnm_vect, 'UniformOutput', false);
+dlimg = cell2mat(reshape(imgcol,1,1,1,[]));
+toc(T0); 
+%% Prepare to collect statistics
+corr_vox_num = zeros(24,[]);
+corr_vox_prct = zeros(24,[]);
+med_pos_cc = zeros(24,[]);
+med_neg_cc = zeros(24,[]);
 mean_pos_t = zeros(24,[]);
 mean_neg_t = zeros(24,[]);
-med_pos_cc = zeros(24,[]);
-med_neg_cc = zeros(24,[]); 
+layernames = ["fc8", "fc7", "fc6", "conv5_3", "conv4_3", "conv3_3"]%,"conv2_2"]; 
+%% 
+Bsz = 60;
 for iLayer = 1:length(layernames)
-layername = layernames(iLayer);
-Bsz = 20;
+layername = layernames(iLayer); % 
+% Shuffle the thing first and then compute
 shuffleN = 100;
 score_shuffle = [score_vect]; % put the real scores at first place in the trials, to compute correlation together. 
 for i = 1:shuffleN
@@ -149,7 +157,7 @@ StdFeat = std(feat_tsr,0,4);
 T3 = toc(T0);
 fprintf("Latencies: load img %.1f CNN proc %.1f compute innprod %.1f\n", T1, T2, T3);
 end
-%% Compute the t-value tensor
+% Compute the t-value tensor
 cc_refM = mean(cc_tsr_ref,5);
 cc_refS = std(cc_tsr_ref,0,5);
 t_signif_tsr = (cc_tsr - cc_refM) ./ cc_refS;
@@ -164,12 +172,13 @@ signif_n = sum(tcol > 5 | tcol<-5,'all');
 fprintf("Firing rate in [%d, %d] ms Signif corr voxel num %d (%.1f), pos corr median %.3f (t=%.2f), neg corr median %.3f (t=%.2f)\n",...
     wdw(1),wdw(2),signif_n,signif_n/nfeat*100,median(cc_tmp(tcol>5)),mean(tcol(tcol>5)),...
     median(cc_tmp(tcol<-5)),mean(tcol(tcol<-5)))
-sig_vox_num(fi, iLayer) = signif_n;
-sig_vox_pct = signif_n/nfeat;
-mean_pos_t = mean(tcol(tcol>5));
-mean_neg_t = mean(tcol(tcol<-5));
-med_pos_cc = median(cc_tmp(tcol>5));
-med_neg_cc = median(cc_tmp(tcol<-5)); 
+
+corr_vox_num(fi,iLayer) = signif_n;
+corr_vox_prct(fi, iLayer) = signif_n/nfeat;
+med_pos_cc(fi,iLayer) = median(cc_tmp(tcol>5));
+med_neg_cc(fi,iLayer) = median(cc_tmp(tcol<-5));
+mean_pos_t(fi,iLayer) = mean(tcol(tcol>5));
+mean_neg_t(fi,iLayer) = mean(tcol(tcol<-5));
 end
 end
 % signif_n = 0;
@@ -207,3 +216,36 @@ title(compose("%s corrcoef VS shuffled corrcoef distribution\n x=%d,y=%d,chan=%d
 pause
 end
 fprintf("Significantly correlated voxel num %d\n",signif_n)
+
+%%
+figure(2);clf;hold on 
+nLayer = length(layernames);
+suptitle(compose("Beto Evol Exp11 VGG16 Correlation Percent and cc Distribution"))
+subplot(131)
+plot([1:19,NaN,20:23,NaN,24],[corr_vox_prct(1:19,:);nan(1,nLayer);corr_vox_prct(20:23,:);nan(1,nLayer);corr_vox_prct(24,:)], "-o")
+legend(layernames, 'Location',"Best")
+title("Correlated Voxel Percents")
+subplot(132)
+plot([1:19,NaN,20:23,NaN,24],[med_pos_cc(1:19,:);nan(1,nLayer);med_pos_cc(20:23,:);nan(1,nLayer);med_pos_cc(24,:)], "-o")
+legend(layernames, 'Location',"Best")
+title("Median Positive Correlated Coefficient")
+subplot(133)
+plot([1:19,NaN,20:23,NaN,24],[med_neg_cc(1:19,:);nan(1,nLayer);med_neg_cc(20:23,:);nan(1,nLayer);med_neg_cc(24,:)], "-o")
+legend(layernames, 'Location',"Best")
+title("Median Negative Correlated Coefficient")
+saveas(2, fullfile(savedir,compose("Beto_Manif_Exp11_VGG16_cc.jpg")))
+%%
+savedir = "E:\OneDrive - Washington University in St. Louis\corrFeatTsr_Hierarchy";
+save(fullfile(savedir, compose("Beto_Evol_Exp11_VGG16.mat")),"layernames","wdw_vect","totl_vox_num","corr_vox_num","corr_vox_prct","med_pos_cc","med_neg_cc");
+%%
+save(fullfile(savedir, compose("Beto_Manif_Exp11_VGG16.mat")),"layernames","wdw_vect","totl_vox_num","corr_vox_num","corr_vox_prct","med_pos_cc","med_neg_cc");
+
+%% significantly correlated voxel number calculated from text file
+% corr_vox_num = [];
+% corr_vox_prct = [];
+% layernames = ["fc8", "fc7", "fc6", "conv5-3", "conv4-3", "conv3-3", "conv2-2"];
+% totl_vox_num = [1000, 4096, 4096, 100352, 401408, 802816, 1605632];
+% corr_vox_num = reshape(corr_vox_num,24,[]);
+% corr_vox_prct = corr_vox_num ./ totl_vox_num;
+% med_pos_cc = reshape(med_pos_cc,24,[]);
+% med_neg_cc = reshape(med_neg_cc,24,[]);

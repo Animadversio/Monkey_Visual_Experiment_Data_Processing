@@ -4,18 +4,19 @@
 ExpType = "Manif";
 Animal = "Beto";
 MatStats_path = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
+MatStats_path = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 load(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
 load(fullfile(MatStats_path, compose("%s_Manif_stats.mat", Animal)), 'Stats')
-
 %% Prepare tools
 global G 
 G = FC6Generator("matlabGANfc6.mat");
 pe = pyenv('Version','C:\Users\binxu\.conda\envs\caffe36\python.exe'); % Note the python env could not be changed in a matlab session
+pe = pyenv('Version','C:\ProgramData\Anaconda3\envs\tf\python.exe'); % Office 3 
 py.importlib.import_module('numpy');
 %% Manifold Exp Movies
-for Expi = 1:length(Stats)
+for Expi = 5:length(Stats)
 fprintf("Playing RF inference for Manifold Exp %d\n",Expi)
-corr_feat_tsr_Animation;
+% corr_feat_tsr_Animation;
 
 fprintf("Processing Manifold Exp %d\n",Expi)
 ui=1;si=1;
@@ -47,6 +48,7 @@ else
 end
 clear code_tmp matfns
 %%
+Window = 51:200;
 % set up trajectory for the focal point
 scoremap = squeeze(mean(manif_psth_avg(:,Window,:,:),[1,2]));
 [~,peakidx]=max(scoremap,[],'all','linear');

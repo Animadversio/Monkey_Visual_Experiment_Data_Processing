@@ -3,12 +3,13 @@ ccmat_dir = "E:\OneDrive - Washington University in St. Louis\CNNFeatCorr";
 % ExpType = "Evol"
 for layername = ["conv3_1", "conv4_3", "conv5_3"] %"conv5_3";
 outfn = fullfile(ccmat_dir, compose("%s_%s_Exp%d_%s.mat",Animal,ExpType,Expi,layername));
-if ExpType=="Evol"
 load(outfn,'cc_tsr','MFeat','StdFeat');
-elseif ExpType=="Manif"
-load(outfn,'corr_tsr','MFeat','StdFeat');
-cc_tsr = corr_tsr;
-end
+% if ExpType=="Evol"
+% load(outfn,'cc_tsr','MFeat','StdFeat');
+% elseif ExpType=="Manif"
+% load(outfn,'corr_tsr','MFeat','StdFeat');
+% cc_tsr = corr_tsr;
+% end
 variableInfo = who('-file', outfn);
 if ismember('wdw_vect', variableInfo), load(outfn,'wdw_vect'); end
 savedir = fullfile(ccmat_dir,compose("%s_%s_Exp%d",Animal,ExpType,Expi));

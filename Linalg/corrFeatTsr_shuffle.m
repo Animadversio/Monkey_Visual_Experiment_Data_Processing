@@ -17,9 +17,9 @@ fprintf("Processing Evol Exp %d pref chan %d\n",Expi,EStats(Expi).units.pref_cha
 index_vect = cell2mat(EStats(Expi).evol.idx_seq');
 imgN=length(index_vect); 
 imgnm_vect = EStats(Expi).imageName(index_vect); % reshape(imgnm_grid, [], 1);
-psth_all = squeeze(cell2mat(reshape(EStats(Expi).evol.psth,1,1,[])))'; % imgN by 200
 % Compute the score(firing rate at different time slices) 
 % the time window info in recorded in `wdw_vect` and saved to disk. 
+psth_all = squeeze(cell2mat(reshape(EStats(Expi).evol.psth,1,1,[])))'; % imgN by 200
 score_vect = movmean(psth_all,20,2,'Endpoints','discard'); % short time window 20ms average 
 score_vect = score_vect(:, 1:10:end); % subsample to decrease redunancy
 wdw_vect = [1, 20] + 10 * [0:18]';
