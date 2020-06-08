@@ -29,15 +29,53 @@ wdw_vect = [wdw_vect; [1,50]+[0:50:150]'; [51,200]]; % [nTimeWindows, 2]
 tmpfn = ls(fullfile(EStats(Expi).meta.stimuli, imgnm_vect(1)+"*"));
 tmpparts = split(tmpfn,".");
 suffix = "."+tmpparts{2}; % suffix = ".bmp";
-%% Significantly correlated "pixels" across hierachy
+% Significantly correlated "pixels" across hierachy
 T0 = tic;
 imgcol = cellfun(@(imgnm) imresize(imread(fullfile(EStats(Expi).meta.stimuli, imgnm+suffix)),[224,224]), ...
         imgnm_vect, 'UniformOutput', false);
 dlimg = cell2mat(reshape(imgcol,1,1,1,[]));
 toc(T0); 
+%%
+ExpType = "Manif";
+Expi = 11;
+fprintf("Processing Manif Exp %d pref chan %d\n",Expi,EStats(Expi).units.pref_chan)
+si=1;ui=1;%Window=50:200;
+imgnm_grid = string(cellfun(@(idx) unique(Stats(Expi).imageName(idx)), Stats(Expi).manif.idx_grid{si}));
+imgnm_vect = reshape(imgnm_grid, [], 1);
+imgN=length(imgnm_vect); 
+% The score(firing rate at different time slices) the time window info in
+% recorded in `wdw_vect`
+psth_all = cellfun(@(psth) reshape(mean(psth(ui,:,:),[3]),1,1,[]), Stats(Expi).manif.psth{si}, ...
+    'UniformOutput', false);
+psth_all = reshape(cell2mat(psth_all),imgN,[]);
+score_vect = movmean(psth_all,20,2,'Endpoints','discard'); % short time window average 
+score_vect = score_vect(:,1:10:end); % subsample to decrease redunancy
+wdw_vect = [1, 20] + 10 * [0:18]';
+score_vect = [score_vect, mean(psth_all(:,1:50),2),mean(psth_all(:,51:100),2),...
+    mean(psth_all(:,101:150),2),mean(psth_all(:,151:200),2),mean(psth_all(:,51:200),2)]; % subsample to decrease redunancy
+wdw_vect = [wdw_vect; [1,50]+[0:50:150]'; [51,200]];
+% Get Image suffix (Assume all evolved images use the same suffix)
+tmpfn = ls(fullfile(Stats(Expi).meta.stimuli, imgnm_vect(1)+"*"));
+tmpparts = split(tmpfn,".");
+suffix = "."+tmpparts{2}; % suffix = ".bmp";
+% Significantly correlated "pixels" across hierachy
+T0 = tic;
+imgcol = cellfun(@(imgnm) imresize(imread(fullfile(Stats(Expi).meta.stimuli, imgnm+suffix)),[224,224]), ...
+        imgnm_vect, 'UniformOutput', false);
+dlimg = cell2mat(reshape(imgcol,1,1,1,[]));
+toc(T0); 
 %% 
-layername = "conv2_2"; % 
-Bsz = 60;
+layernames = ["fc8","fc7","fc6","conv5_3"];%,"conv4_3","conv3_3"];
+% layername = "conv2_2"; % 
+sig_vox_num = zeros(24,[]);
+sig_vox_pct = zeros(24,[]);
+mean_pos_t = zeros(24,[]);
+mean_neg_t = zeros(24,[]);
+med_pos_cc = zeros(24,[]);
+med_neg_cc = zeros(24,[]); 
+for iLayer = 1:length(layernames)
+layername = layernames(iLayer);
+Bsz = 20;
 shuffleN = 100;
 score_shuffle = [score_vect]; % put the real scores at first place in the trials, to compute correlation together. 
 for i = 1:shuffleN
@@ -126,8 +164,14 @@ signif_n = sum(tcol > 5 | tcol<-5,'all');
 fprintf("Firing rate in [%d, %d] ms Signif corr voxel num %d (%.1f), pos corr median %.3f (t=%.2f), neg corr median %.3f (t=%.2f)\n",...
     wdw(1),wdw(2),signif_n,signif_n/nfeat*100,median(cc_tmp(tcol>5)),mean(tcol(tcol>5)),...
     median(cc_tmp(tcol<-5)),mean(tcol(tcol<-5)))
+sig_vox_num(fi, iLayer) = signif_n;
+sig_vox_pct = signif_n/nfeat;
+mean_pos_t = mean(tcol(tcol>5));
+mean_neg_t = mean(tcol(tcol<-5));
+med_pos_cc = median(cc_tmp(tcol>5));
+med_neg_cc = median(cc_tmp(tcol<-5)); 
 end
-
+end
 % signif_n = 0;
 % tcol = [];
 % for ci = 1:size(cc_tsr_ref,3)
