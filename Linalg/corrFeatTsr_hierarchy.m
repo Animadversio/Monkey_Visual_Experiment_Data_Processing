@@ -71,14 +71,14 @@ imgcol = cellfun(@(imgnm) imresize(imread(fullfile(strrep(Stats(Expi).meta.stimu
         imgnm_vect, 'UniformOutput', false);
 dlimg = cell2mat(reshape(imgcol,1,1,1,[]));
 toc(T0); 
-%% Prepare to collect statistics
+%% Prepare to collect statistics across the hierarchy.
 corr_vox_num = zeros(24,[]);
 corr_vox_prct = zeros(24,[]);
 med_pos_cc = zeros(24,[]);
 med_neg_cc = zeros(24,[]);
 mean_pos_t = zeros(24,[]);
 mean_neg_t = zeros(24,[]);
-layernames = ["fc8", "fc7", "fc6", "conv5_3", "conv4_3", "conv3_3"]%,"conv2_2"]; 
+layernames = ["fc8", "fc7", "fc6", "conv5_3", "conv4_3", "conv3_3"];%,"conv2_2"]; 
 %% 
 Bsz = 60;
 for iLayer = 1:length(layernames)
