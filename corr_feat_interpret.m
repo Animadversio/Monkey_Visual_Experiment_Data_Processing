@@ -1,9 +1,9 @@
 % compare the vgg16 in matlab vs that in python, to make the network
 % weights uniform. 
 %% Corr_interpretation (Kinda obsolete.... use python interface)
-exportONNXNetwork(net,"N:\vgg16mat.onnx")
+% exportONNXNetwork(net,"N:\vgg16mat.onnx")
 %% Python interface building
-
+% pe = pyenv('Version','C:\Users\binxu\.conda\envs\tf\python.exe');
 pe = pyenv('Version','C:\ProgramData\Anaconda3\envs\tf-torch\python.exe'); % Set up the python executable
 py.importlib.import_module('torch');
 py.importlib.import_module('torchvision');
@@ -11,6 +11,12 @@ py.importlib.import_module('torchvision.models'); % Load some deep learning fram
 pyvgg = py.torchvision.models.vgg16(pyargs("pretrained",1)); % Load a pretrained neural net 
 % out = SNet.forward(py.torch.rand(py.int(1),py.int(3),py.int(224),py.int(224))); % process sth in python torch framework
 % out.data.numpy().double();
+py.importlib.import_module('lucent');
+py.importlib.import_module('pytorch_pretrained_biggan');
+%%
+pyPATH = py.sys.path;
+pyPATH.append("E:\Github_Projects\pytorch-pretrained-BigGAN")
+py.sys.path = pyPATH;
 %%
 matvgg = vgg16;
 % matlab doesn't have std rescale, only 0 mean centered
