@@ -13,20 +13,24 @@ cfg = py.pytorch_pretrained_biggan.BigGANConfig();
 cfg = cfg.from_json_file("C:\Users\binxu\.pytorch_pretrained_biggan\biggan-deep-256-config.json");
 BGAN = BigGAN(cfg);
 BGAN.load_state_dict(py.torch.load("C:\Users\binxu\.pytorch_pretrained_biggan\biggan-deep-256-pytorch_model.bin"))
-BGAN.eval()
+BGAN.to('cuda');BGAN.eval()
+py.torch.set_grad_enabled(false)
 % BGAN.from_pretrained("biggan-deep-128")
 %%
-noise = 0.7*randn(4,128);%randn(1,128);
-onehot = zeros(4,1000);onehot(:,950)=1;
+classn = 602;690;579;%366;374;
+noise = 0.7*randn(20,128);%randn(1,128);
+onehot = zeros(20,1000);onehot(:,classn)=1;
+tic
 % py.torch.zeros(py.tuple([int32(1),int32(1000)]))%view(int32(-1),int32(128))
 % py.torch.randn(py.tuple([int32(1),int32(128)]))%view(int32(-1),int32(1000))
-img = BGAN(py.torch.tensor(py.numpy.array(noise)).float().view(int32(-1),int32(128)),...
-    py.torch.tensor(py.numpy.array(onehot)).float().view(int32(-1),int32(1000)),0.7);
-matimg = img.detach.numpy().single;
+img = BGAN(py.torch.tensor(py.numpy.array(noise)).view(int32(-1),int32(128)).float().cuda(),...
+    py.torch.tensor(py.numpy.array(onehot)).view(int32(-1),int32(1000)).float().cuda(),0.7);
+toc
+matimg = img.detach.cpu().numpy().single;
 matimg = permute((matimg + 1) / 2.0,[3,4,2,1]);
 figure;
 montage(matimg)
-title(950)
+title(classn)
 % model = BigGAN.from_pretrained('biggan-deep-256')
 % model.to('cuda')
 % 
