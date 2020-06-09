@@ -29,7 +29,7 @@ wdw_vect = [wdw_vect; [1,50]+[0:50:150]'; [51,200]]; % [nTimeWindows, 2]
 tmpfn = ls(fullfile(EStats(Expi).meta.stimuli, imgnm_vect(1)+"*"));
 tmpparts = split(tmpfn,".");
 suffix = "."+tmpparts{2}; % suffix = ".bmp";
-%% Significantly correlated "pixels" across hierachy
+% Significantly correlated "pixels" across hierachy
 T0 = tic;
 imgcol = cellfun(@(imgnm) imresize(imread(fullfile(EStats(Expi).meta.stimuli, imgnm+suffix)),[224,224]), ...
         imgnm_vect, 'UniformOutput', false);
@@ -38,26 +38,33 @@ toc(T0);
 %% Load image name and firing data
 ExpType = "Manif";
 Expi = 11;
-si=1;ui=1;
 fprintf("Processing Manif Exp %d pref chan %d\n",Expi,EStats(Expi).units.pref_chan)
+si=1;ui=1;%Window=50:200;
 imgnm_grid = string(cellfun(@(idx) unique(Stats(Expi).imageName(idx)), Stats(Expi).manif.idx_grid{si}));
 imgnm_vect = reshape(imgnm_grid, [], 1);
 imgN=length(imgnm_vect); 
+% The score(firing rate at different time slices) the time window info in
+% recorded in `wdw_vect`
 psth_all = cellfun(@(psth) reshape(mean(psth(ui,:,:),[3]),1,1,[]), Stats(Expi).manif.psth{si}, ...
     'UniformOutput', false);
 psth_all = reshape(cell2mat(psth_all),imgN,[]);
-% Compute the score(firing rate at different time slices) 
-% the time window info in recorded in `wdw_vect` and saved to disk. 
-score_vect = movmean(psth_all,20,2,'Endpoints','discard'); % short time window 20ms average 
-score_vect = score_vect(:, 1:10:end); % subsample to decrease redunancy
+score_vect = movmean(psth_all,20,2,'Endpoints','discard'); % short time window average 
+score_vect = score_vect(:,1:10:end); % subsample to decrease redunancy
 wdw_vect = [1, 20] + 10 * [0:18]';
 score_vect = [score_vect, mean(psth_all(:,1:50),2),mean(psth_all(:,51:100),2),...
-    mean(psth_all(:,101:150),2),mean(psth_all(:,151:200),2),mean(psth_all(:,51:200),2)]; % [Trials, nTimeWindows]
-wdw_vect = [wdw_vect; [1,50]+[0:50:150]'; [51,200]]; % [nTimeWindows, 2]
+    mean(psth_all(:,101:150),2),mean(psth_all(:,151:200),2),mean(psth_all(:,51:200),2)]; % subsample to decrease redunancy
+wdw_vect = [wdw_vect; [1,50]+[0:50:150]'; [51,200]];
 % Get Image suffix (Assume all evolved images use the same suffix)
 tmpfn = ls(fullfile(Stats(Expi).meta.stimuli, imgnm_vect(1)+"*"));
 tmpparts = split(tmpfn,".");
 suffix = "."+tmpparts{2}; % suffix = ".bmp";
+% Significantly correlated "pixels" across hierachy
+T0 = tic;
+imgcol = cellfun(@(imgnm) imresize(imread(fullfile(Stats(Expi).meta.stimuli, imgnm+suffix)),[224,224]), ...
+        imgnm_vect, 'UniformOutput', false);
+dlimg = cell2mat(reshape(imgcol,1,1,1,[]));
+toc(T0); 
+
 %% Significantly correlated "pixels" across hierachy
 T0 = tic;
 imgcol = cellfun(@(imgnm) imresize(imread(fullfile(strrep(Stats(Expi).meta.stimuli,"N:\","S:\"), imgnm+suffix)),[224,224]), ...
@@ -66,16 +73,17 @@ dlimg = cell2mat(reshape(imgcol,1,1,1,[]));
 toc(T0); 
 %% Prepare to collect statistics across the hierarchy.
 corr_vox_num = zeros(24,[]);
+corr_vox_prct = zeros(24,[]);
 med_pos_cc = zeros(24,[]);
 med_neg_cc = zeros(24,[]);
 mean_pos_t = zeros(24,[]);
 mean_neg_t = zeros(24,[]);
 layernames = ["fc8", "fc7", "fc6", "conv5_3", "conv4_3", "conv3_3"];%,"conv2_2"]; 
 %% 
-for iLayer = 1:length(layernames)
-layername = layernames(iLayer);% 
-% Shuffle the thing first and then compute
 Bsz = 60;
+for iLayer = 1:length(layernames)
+layername = layernames(iLayer); % 
+% Shuffle the thing first and then compute
 shuffleN = 100;
 score_shuffle = [score_vect]; % put the real scores at first place in the trials, to compute correlation together. 
 for i = 1:shuffleN
@@ -164,7 +172,9 @@ signif_n = sum(tcol > 5 | tcol<-5,'all');
 fprintf("Firing rate in [%d, %d] ms Signif corr voxel num %d (%.1f), pos corr median %.3f (t=%.2f), neg corr median %.3f (t=%.2f)\n",...
     wdw(1),wdw(2),signif_n,signif_n/nfeat*100,median(cc_tmp(tcol>5)),mean(tcol(tcol>5)),...
     median(cc_tmp(tcol<-5)),mean(tcol(tcol<-5)))
+
 corr_vox_num(fi,iLayer) = signif_n;
+corr_vox_prct(fi, iLayer) = signif_n/nfeat;
 med_pos_cc(fi,iLayer) = median(cc_tmp(tcol>5));
 med_neg_cc(fi,iLayer) = median(cc_tmp(tcol<-5));
 mean_pos_t(fi,iLayer) = mean(tcol(tcol>5));
@@ -208,58 +218,19 @@ end
 fprintf("Significantly correlated voxel num %d\n",signif_n)
 
 %%
-corr_vox_num = [];
-corr_vox_prct = [];
-%% significantly correlated voxel number
-layernames = ["fc8", "fc7", "fc6", "conv5-3", "conv4-3", "conv3-3", "conv2-2"];
-totl_vox_num = [1000, 4096, 4096, 100352, 401408, 802816, 1605632];
-corr_vox_num = reshape(corr_vox_num,24,[]);
-corr_vox_prct = corr_vox_num ./ totl_vox_num;
-med_pos_cc = reshape(med_pos_cc,24,[]);
-med_neg_cc = reshape(med_neg_cc,24,[]);
-%%
 figure(2);clf;hold on 
-subplot(131)
-plot(1:24,corr_vox_prct(1:24,:))
-legend(layernames, 'Location',"Best")
-title("Correlated Voxel Percents")
-subplot(132)
-plot(1:24,med_pos_cc(1:24,:))
-title("Median Positive Correlated Coefficient")
-subplot(133)
-plot(1:24,med_neg_cc(1:24,:))
-title("Median Negative Correlated Coefficient")
-%%
-figure(2);clf;hold on 
-
+nLayer = length(layernames);
 suptitle(compose("Beto Evol Exp11 VGG16 Correlation Percent and cc Distribution"))
 subplot(131)
-plot([1:19,NaN,20:23,NaN,24],[corr_vox_prct(1:19,:);nan(1,7);corr_vox_prct(20:23,:);nan(1,7);corr_vox_prct(24,:)], "-o")
+plot([1:19,NaN,20:23,NaN,24],[corr_vox_prct(1:19,:);nan(1,nLayer);corr_vox_prct(20:23,:);nan(1,nLayer);corr_vox_prct(24,:)], "-o")
 legend(layernames, 'Location',"Best")
 title("Correlated Voxel Percents")
 subplot(132)
-plot([1:19,NaN,20:23,NaN,24],[med_pos_cc(1:19,:);nan(1,7);med_pos_cc(20:23,:);nan(1,7);med_pos_cc(24,:)], "-o")
+plot([1:19,NaN,20:23,NaN,24],[med_pos_cc(1:19,:);nan(1,nLayer);med_pos_cc(20:23,:);nan(1,nLayer);med_pos_cc(24,:)], "-o")
 legend(layernames, 'Location',"Best")
 title("Median Positive Correlated Coefficient")
 subplot(133)
-plot([1:19,NaN,20:23,NaN,24],[med_neg_cc(1:19,:);nan(1,7);med_neg_cc(20:23,:);nan(1,7);med_neg_cc(24,:)], "-o")
-legend(layernames, 'Location',"Best")
-title("Median Negative Correlated Coefficient")
-saveas(fullfile(savedir,compose("Beto_Evol_Exp11_VGG16_cc.jpg")))
-%%
-figure(2);clf;hold on 
-
-suptitle(compose("Beto Evol Exp11 VGG16 Correlation Percent and cc Distribution"))
-subplot(131)
-plot([1:19,NaN,20:23,NaN,24],[corr_vox_prct(1:19,:);nan(1,6);corr_vox_prct(20:23,:);nan(1,6);corr_vox_prct(24,:)], "-o")
-legend(layernames, 'Location',"Best")
-title("Correlated Voxel Percents")
-subplot(132)
-plot([1:19,NaN,20:23,NaN,24],[med_pos_cc(1:19,:);nan(1,6);med_pos_cc(20:23,:);nan(1,6);med_pos_cc(24,:)], "-o")
-legend(layernames, 'Location',"Best")
-title("Median Positive Correlated Coefficient")
-subplot(133)
-plot([1:19,NaN,20:23,NaN,24],[med_neg_cc(1:19,:);nan(1,6);med_neg_cc(20:23,:);nan(1,6);med_neg_cc(24,:)], "-o")
+plot([1:19,NaN,20:23,NaN,24],[med_neg_cc(1:19,:);nan(1,nLayer);med_neg_cc(20:23,:);nan(1,nLayer);med_neg_cc(24,:)], "-o")
 legend(layernames, 'Location',"Best")
 title("Median Negative Correlated Coefficient")
 saveas(2, fullfile(savedir,compose("Beto_Manif_Exp11_VGG16_cc.jpg")))
@@ -268,3 +239,13 @@ savedir = "E:\OneDrive - Washington University in St. Louis\corrFeatTsr_Hierarch
 save(fullfile(savedir, compose("Beto_Evol_Exp11_VGG16.mat")),"layernames","wdw_vect","totl_vox_num","corr_vox_num","corr_vox_prct","med_pos_cc","med_neg_cc");
 %%
 save(fullfile(savedir, compose("Beto_Manif_Exp11_VGG16.mat")),"layernames","wdw_vect","totl_vox_num","corr_vox_num","corr_vox_prct","med_pos_cc","med_neg_cc");
+
+%% significantly correlated voxel number calculated from text file
+% corr_vox_num = [];
+% corr_vox_prct = [];
+% layernames = ["fc8", "fc7", "fc6", "conv5-3", "conv4-3", "conv3-3", "conv2-2"];
+% totl_vox_num = [1000, 4096, 4096, 100352, 401408, 802816, 1605632];
+% corr_vox_num = reshape(corr_vox_num,24,[]);
+% corr_vox_prct = corr_vox_num ./ totl_vox_num;
+% med_pos_cc = reshape(med_pos_cc,24,[]);
+% med_neg_cc = reshape(med_neg_cc,24,[]);

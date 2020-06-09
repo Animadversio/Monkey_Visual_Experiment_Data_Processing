@@ -95,14 +95,48 @@ colorbar()
 pause(0.3)
 % saveas(17,fullfile(savedir, compose("%s_Evol_Exp%d_%s_wdw%d.png",Animal,Expi,layername,fi)))
 end
+%% Plot the mean t value for thresholded tensor
+threshold = 5;
+t_thresh = t_signif_tsr;
+t_thresh(abs(t_signif_tsr) < threshold) = 0;
 %%
-figure(2);
+savedir = "E:\OneDrive - Washington University in St. Louis\corrGANTsr";
+v = VideoWriter(fullfile(savedir,compose("%s_%s_Exp%d_fc6GAN%s_T_thresh%.1f.avi",Animal,ExpType,Expi,layername,threshold)));
+v.FrameRate = 2;open(v);
+plot_tsr = mean(abs(t_thresh),3);
+CLIM = prctile(plot_tsr, [2,98], 'all'); 
+figure(1);
 for fi=1:size(Gcc_tsr,4)
 wdw = wdw_vect(fi,:);
-imagesc(mean(abs(t_signif_tsr(:,:,:,fi)),3)); axis image
+imagesc(plot_tsr(:,:,:,fi)); caxis(CLIM);axis image
 title(sprintf("Exp %d Pref chan %d\nMean CorreCoef in of fc6 GAN %s feature\n with [%d,%d] ms firing rate", ...
     Expi, EStats(Expi).units.pref_chan, layername, wdw(1), wdw(2)))
 colorbar()
-pause
+Fs = getframe(1);
+writeVideo(v,Fs);
+pause(0.1)
 % saveas(17,fullfile(savedir, compose("%s_Evol_Exp%d_%s_wdw%d.png",Animal,Expi,layername,fi)))
 end
+close(v);
+%%
+threshold = 1;
+plot_tsr = Gcc_tsr;
+plot_tsr(abs(t_signif_tsr) < threshold) = 0;
+plot_tsr = mean(abs(plot_tsr),3);
+%% Plot the mean correlation value for the thresholded tensor.
+v = VideoWriter(fullfile(savedir,compose("%s_%s_Exp%d_fc6GAN%s_cc_thresh%.1f.avi",Animal,ExpType,Expi,layername,threshold)));
+v.FrameRate = 2;open(v);
+CLIM = prctile(plot_tsr, [2,98], 'all'); 
+figure(3);
+for fi=1:size(Gcc_tsr,4)
+wdw = wdw_vect(fi,:);
+imagesc(plot_tsr(:,:,1,fi)); caxis(CLIM);axis image
+title(sprintf("Exp %d Pref chan %d\nMean CorreCoef in of fc6 GAN %s feature\n with [%d,%d] ms firing rate", ...
+    Expi, EStats(Expi).units.pref_chan, layername, wdw(1), wdw(2)))
+colorbar()
+Fs = getframe(3);
+writeVideo(v,Fs);
+pause(0.1)
+% saveas(17,fullfile(savedir, compose("%s_Evol_Exp%d_%s_wdw%d.png",Animal,Expi,layername,fi)))
+end
+close(v);
