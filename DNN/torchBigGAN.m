@@ -1,4 +1,6 @@
-% pe = pyenv('Version','C:\ProgramData\Anaconda3\envs\tf-torch\python.exe'); % Set up the python executable
+% pe =
+% pyenv('Version','C:\ProgramData\Anaconda3\envs\tf-torch\python.exe'); %
+% Set up the python executable before usage
 classdef torchBigGAN
    % Usage 
    % BGAN = torchBigGAN("biggan-deep-512")
