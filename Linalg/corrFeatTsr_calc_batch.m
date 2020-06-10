@@ -3,11 +3,16 @@ net = vgg16;
 savedir = "E:\OneDrive - Washington University in St. Louis\CNNFeatCorr";
 hier_savedir = "E:\OneDrive - Washington University in St. Louis\corrFeatTsr_Hierarchy";
 %%
-Animal="Beto"; ExpType="Manif"; 
+Animal="Alfa"; 
+MatStats_path = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
+load(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
+load(fullfile(MatStats_path, compose("%s_Manif_stats.mat", Animal)), 'Stats')
+%%
+Animal="Alfa"; ExpType="Manif"; 
 flags = struct("batch",50,"online_compute",0,"load_all_img",1,"shuffleN",100);
 wdw_vect = [[1, 20] + 10 * [0:18]'; [1,50]+[0:50:150]'; [51,200]];
 % Expi = 11; 
-for Expi = 1:45
+for Expi = 2:46
 T00 = tic;
 [imgfn, score_vect] = loadManifData(Stats, EStats, Animal, ExpType, Expi, flags);
 toc(T00)
@@ -31,7 +36,8 @@ nfeat = prod(size(t_signif_tsr,[1,2,3]));
 totl_vox_num(iLayer) = nfeat;
 % View the number of signicantly correlated voxels as a function of time window.
 fprintf("Correlation layer %s (vox # %d)\n",layername,nfeat)
-fid = fopen('Evol_VGG.log','w+');fprintf(fid,"Correlation layer %s (vox # %d)\n",layername,nfeat);fclose(fid);
+fid = fopen(fullfile(hier_savedir,Animal+"_Manif_all_VGG.log"),'w+');
+fprintf(fid,"Correlation layer %s (vox # %d)\n",layername,nfeat);
 fi = 24; wdw = wdw_vect(fi,:);%ci=6; 
 for fi = 1:24
 wdw = wdw_vect(fi,:);
@@ -43,7 +49,7 @@ fprintf("Firing rate in [%d, %d] ms Signif corr voxel num %d (%.1f), pos corr me
     median(cc_tmp(tcol<-5)),mean(tcol(tcol<-5)))
 fprintf(fid, "Firing rate in [%d, %d] ms Signif corr voxel num %d (%.1f), pos corr median %.3f (t=%.2f), neg corr median %.3f (t=%.2f)\n",...
     wdw(1),wdw(2),signif_n,signif_n/nfeat*100,median(cc_tmp(tcol>5)),mean(tcol(tcol>5)),...
-    median(cc_tmp(tcol<-5)),mean(tcol(tcol<-5)))
+    median(cc_tmp(tcol<-5)),mean(tcol(tcol<-5)));
 corr_vox_num(fi,iLayer) = signif_n;
 med_pos_cc(fi,iLayer) = median(cc_tmp(tcol>5));
 med_neg_cc(fi,iLayer) = median(cc_tmp(tcol<-5));
@@ -59,12 +65,12 @@ save(fullfile(hier_savedir, compose("%s_%s_Exp%d_VGG16.mat",Animal,ExpType,Expi)
     "layernames","wdw_vect","totl_vox_num","corr_vox_num","corr_vox_prct","med_pos_cc","med_neg_cc","mean_pos_t","mean_neg_t");
 end
 %%
-%%
-Animal="Beto"; ExpType="Evol"; 
+%
+Animal="Alfa"; ExpType="Evol"; 
 flags = struct("batch",60,"online_compute",1,"load_all_img",1,"shuffleN",100);
 wdw_vect = [[1, 20] + 10 * [0:18]'; [1,50]+[0:50:150]'; [51,200]];
 % Expi = 11; 
-for Expi = 1:45
+for Expi = 1:46
 T00 = tic;
 [imgfn, score_vect] = loadManifData(Stats, EStats, Animal, ExpType, Expi, flags);
 toc(T00)
@@ -87,7 +93,7 @@ t_signif_tsr = (cc_tsr - cc_refM) ./ cc_refS;
 nfeat = prod(size(t_signif_tsr,[1,2,3]));
 totl_vox_num(iLayer) = nfeat;
 % View the number of signicantly correlated voxels as a function of time window.
-fid = fopen(fullfile(hier_savedir,'Beto_Evol_all_VGG.log'),'w+');
+fid = fopen(fullfile(hier_savedir,Animal + "_Evol_all_VGG.log"),'w+');
 fprintf("Correlation layer %s (vox # %d)\n",layername,nfeat)
 fprintf(fid,"Correlation layer %s (vox # %d)\n",layername,nfeat);
 fi = 24; wdw = wdw_vect(fi,:);%ci=6; 
@@ -116,6 +122,8 @@ end
 save(fullfile(hier_savedir, compose("%s_%s_Exp%d_VGG16.mat",Animal,ExpType,Expi)),...
     "layernames","wdw_vect","totl_vox_num","corr_vox_num","corr_vox_prct","med_pos_cc","med_neg_cc","mean_pos_t","mean_neg_t");
 end
+%%
+
 %%
 function dlimg = loadimges(images)
 imgcol = cellfun(@(imgnm) imresize(imread(fullfile(imgnm)),[224,224]), images, 'UniformOutput', false);
