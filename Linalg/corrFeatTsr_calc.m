@@ -1,4 +1,5 @@
 %% The major Computational work horse of Correlation Coefficient Method.
+%  The func function will work in place of this! 
 net = vgg16;
 %%
 Animal = "Alfa";
