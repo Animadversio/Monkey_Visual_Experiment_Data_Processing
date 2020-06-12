@@ -1,3 +1,4 @@
+% FC6Generator under native matlab deeplearning framework 
 classdef FC6Generator
    properties
       BGRMean = reshape([104.0, 117.0, 123.0],[1,1,3,1]);

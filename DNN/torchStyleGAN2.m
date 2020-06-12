@@ -7,6 +7,7 @@ classdef torchStyleGAN2
    properties
        Generator
        config
+       mean_latent
    end
    methods
    function G = torchStyleGAN2(ckpt, config)
@@ -36,19 +37,24 @@ classdef torchStyleGAN2
        G.Generator.to('cuda');G.Generator.eval();
        py.torch.set_grad_enabled(false)
        G.config = config;
+       G.mean_latent = G.Generator.mean_latent(int32(4096));
    end
    
    function matimg = visualize_codes(G, style, truncation)
        if nargin == 2, truncation=0.7;end
        assert(size(style,2)==G.config.latent)
-       if truncation < 1
-       mean_latent = G.Generator.mean_latent(int32(4096));
-       else
-       mean_latent = py.None;
-       end
        tic
+       if truncation < 1
+           meanlatent = G.Generator.mean_latent(int32(4096));
+       else
+           meanlatent = py.None;
+       end
        imgs = G.Generator(py.torch.tensor(py.numpy.array(style)).view(py.tuple(int32([1,size(style)]))).float().cuda(),...
-           pyargs("truncation",truncation,"truncation_latent",mean_latent));
+           pyargs("truncation",truncation,"truncation_latent",meanlatent));
+%        else
+%        imgs = G.Generator(py.torch.tensor(py.numpy.array(style)).view(py.tuple(int32([1,size(style)]))).float().cuda(),...
+%            pyargs("truncation",truncation,"truncation_latent",py.None));
+%        end
        toc
        imgs = imgs{1}; % discard the 2nd term in tuple
        matimg = imgs.detach.cpu().numpy().single; % note range in -1, 1
