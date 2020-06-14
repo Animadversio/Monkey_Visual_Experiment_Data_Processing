@@ -1,4 +1,5 @@
 %% cc_hierarchy_summary
+%  Produce the summary plot for correlation across hierarchy (WiP)
 hier_savedir = "E:\OneDrive - Washington University in St. Louis\corrFeatTsr_Hierarchy";
 moviedir = "E:\OneDrive - Washington University in St. Louis\Evol_Manif_Movies"; 
 Animal = "Alfa";

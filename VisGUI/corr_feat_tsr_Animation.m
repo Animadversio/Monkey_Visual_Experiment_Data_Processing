@@ -13,7 +13,7 @@ load(outfn,'cc_tsr','MFeat','StdFeat');
 variableInfo = who('-file', outfn);
 if ismember('wdw_vect', variableInfo), load(outfn,'wdw_vect'); end
 savedir = fullfile(ccmat_dir,compose("%s_%s_Exp%d",Animal,ExpType,Expi));
-%%
+%% Different methods of summarizing correlation coefficient 
 cc_tsr_sum.L1 = squeeze(mean(abs(cc_tsr),3));
 cc_tsr_sum.L2 = squeeze(sqrt(mean(cc_tsr.^2,3)));
 cc_tsr_sum.max = squeeze(max(cc_tsr,[],3));

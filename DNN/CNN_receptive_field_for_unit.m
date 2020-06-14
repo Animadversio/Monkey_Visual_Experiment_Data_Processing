@@ -28,6 +28,6 @@ else
     UB = min(UB, inputSize(1:2));
 end 
 RF = [LB; UB];
-disp(RF)
+disp(RF);
     
 

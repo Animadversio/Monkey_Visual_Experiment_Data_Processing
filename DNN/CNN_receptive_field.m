@@ -49,6 +49,6 @@ for i = 1:length(net.Layers)
     result(i).Name = net.Layers(i).Name;
 end
 result=struct2table(result);
-disp(result)
+% disp(result);
 end
 %%

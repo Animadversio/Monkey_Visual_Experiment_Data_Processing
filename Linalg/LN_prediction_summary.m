@@ -1,5 +1,5 @@
 %% Plot the summary figure for predictability of manifold to Evolution and vice versa.
-Animal = "Alfa";layername = "conv4-3";
+Animal = "Beto";layername = "conv4-3";
 predsavedir = "E:\OneDrive - Washington University in St. Louis\corrFeatTsr_Predict";
 MatStats_path = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 load(fullfile(predsavedir,Animal+"_FeatTsrPredStats.mat"),'predStats')
