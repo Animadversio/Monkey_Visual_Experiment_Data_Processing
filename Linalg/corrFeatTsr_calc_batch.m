@@ -65,12 +65,14 @@ save(fullfile(hier_savedir, compose("%s_%s_Exp%d_VGG16.mat",Animal,ExpType,Expi)
     "layernames","wdw_vect","totl_vox_num","corr_vox_num","corr_vox_prct","med_pos_cc","med_neg_cc","mean_pos_t","mean_neg_t");
 end
 %%
+[imgfn, score_vect] = loadManifData(Stats, EStats, Animal, ExpType, Expi, flags);
+%%
 %
 Animal="Alfa"; ExpType="Evol"; 
 flags = struct("batch",60,"online_compute",1,"load_all_img",1,"shuffleN",100);
 wdw_vect = [[1, 20] + 10 * [0:18]'; [1,50]+[0:50:150]'; [51,200]];
 % Expi = 11; 
-for Expi = 1:46
+for Expi = 19:46
 T00 = tic;
 [imgfn, score_vect] = loadManifData(Stats, EStats, Animal, ExpType, Expi, flags);
 toc(T00)
@@ -123,7 +125,7 @@ save(fullfile(hier_savedir, compose("%s_%s_Exp%d_VGG16.mat",Animal,ExpType,Expi)
     "layernames","wdw_vect","totl_vox_num","corr_vox_num","corr_vox_prct","med_pos_cc","med_neg_cc","mean_pos_t","mean_neg_t");
 end
 %%
-
+% EStats(19).meta.stimuli = "N:\Stimuli\2019-Manifold\alfa-191210a\backup_12_10_2019_13_07_57";
 %%
 function dlimg = loadimges(images)
 imgcol = cellfun(@(imgnm) imresize(imread(fullfile(imgnm)),[224,224]), images, 'UniformOutput', false);

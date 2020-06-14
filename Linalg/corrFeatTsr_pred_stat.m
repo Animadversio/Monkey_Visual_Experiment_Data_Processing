@@ -1,26 +1,31 @@
-Expi%% corrFeatTsr 
+%% corrFeatTsr 
 global net
 net = vgg16;
 %% 
 %  use the Evolution to predict manifold experiments and vice versa.
 %  Use the correlated voxels to predict 
 %  Fit a model on Evolution experiment and test on manifold
-
 savedir = "E:\OneDrive - Washington University in St. Louis\CNNFeatCorr";
 hier_savedir = "E:\OneDrive - Washington University in St. Louis\corrFeatTsr_Hierarchy";
 predsavedir = "E:\OneDrive - Washington University in St. Louis\corrFeatTsr_Predict";
+Animal="Alfa"; 
+MatStats_path = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
+load(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
+load(fullfile(MatStats_path, compose("%s_Manif_stats.mat", Animal)), 'Stats')
 %%
 predStats = repmat(struct("E2M",struct(),"M2E",struct()),1,length(Stats));
 %%
-ft = fittype( 'max(0, a*x - b)+c', 'independent', 'x', 'dependent', 'y' );
+ft = fittype( 'max(0, a*(x-b))+c', 'independent', 'x', 'dependent', 'y' );
 opts = fitoptions( 'Method', 'NonlinearLeastSquares' );
 opts.Lower = [0    -10000 0];
 opts.Upper = [10000 10000 10000];
+%%
+EStats(19).meta.stimuli = "N:\Stimuli\2019-Manifold\alfa-191210a\backup_12_10_2019_13_07_57";
 %% 
-Animal="Beto"; Expi = 11; layername = "conv4_3"; 
-for Expi = 1:45
-[imgfullnm_Evol, score_Evol] = loadManifData(Stats, EStats, Animal, "Evol", Expi, flags);
-[imgfullnm_Manif, score_Manif] = loadManifData(Stats, EStats, Animal, "Manif", Expi, flags);
+Animal="Alfa"; Expi = 11; layername = "fc6"; 
+for Expi = 1:46
+[imgfullnm_Evol, score_Evol] = loadManifData(Stats, EStats, Animal, "Evol", Expi, struct());
+[imgfullnm_Manif, score_Manif] = loadManifData(Stats, EStats, Animal, "Manif", Expi, struct());
 predStats(Expi).score_Evol = score_Evol;
 predStats(Expi).score_Manif = score_Manif;
 %% Manifold to Evol 
@@ -29,10 +34,13 @@ tic
 fprintf("Fitting Manif to Evol nonlinearity\n")
 [cc_tsr, t_signif_tsr] = load_cc_tsr(Animal, "Manif", Expi, layername); % correlation coefficient for manifold experiments
 ccWeight = cc_tsr;
-ccWeight(abs(t_signif_tsr) < 5) = 0;
+ccWeight(abs(t_signif_tsr) < 5) = 0;%threshold and get a weight tensor to do prediction
 lfitscore_manif = LinPredictImgs(ccWeight, layername, imgfullnm_Manif);
 % Fit a thresholding bias and a scaling at manifold exp
-[relufit, gof,out] = fit(lfitscore_manif(:,end), score_Manif(:,end), ft, opts);
+opts = fitoptions( 'Method', 'NonlinearLeastSquares',...
+        'Lower',[0, min(lfitscore_manif(:,end)), 0],...
+        'Upper',[10000, max(lfitscore_manif(:,end)), max(score_Manif(:,end))]);
+[relufit, gof, out] = fit(lfitscore_manif(:,end), score_Manif(:,end), ft, opts);
 % fit the bias on 
 NLpred = relufit(lfitscore_manif);
 NLpred = reshape(NLpred, size(lfitscore_manif));
@@ -80,18 +88,18 @@ suptitle(compose("%s Manif Exp%d Goodness of NL Fit",Animal, Expi))
 
 figure(5);clf;hold on
 subtightplot(1,2,1,[0.03,0.07],0.08,0.07)
-imagesc(10:10:190,1:size(score_Evol,1),NLpred_evol(:,1:end-5));
+imagesc(10:10:190,1:size(score_Evol,1),NLpred_evol(:,1:end-5));% non-linearly predicted evolution score
 title(compose("L-N model\n cc=%.3f r2=%.3f", nlpredcorr, nlpredrsquare))
 subtightplot(1,2,2,[0.03,0.07],0.08,0.07)
-imagesc(10:10:190,1:size(score_Evol,1),score_Evol(:,1:end-5))
+imagesc(10:10:190,1:size(score_Evol,1),score_Evol(:,1:end-5));% neural score
 title(compose("real psth (20ms mean rate)"))
 suptitle(compose("%s Evol Exp%d (Manif2Evol) Prediction",Animal, Expi))
 
 figure(4);clf
 subtightplot(1,1,1,[0.02,0.02],0.08,0.03);hold on
-plot(NLpred_evol(:,end));
-plot(score_Evol(:,end));
-plot(pred_evol_rsp(:,end));
+plot(NLpred_evol(:,end)); % non-linearly predicted response
+plot(score_Evol(:,end)); % Original score
+plot(pred_evol_rsp(:,end)); % linearly predicted response
 legend(["L-N Prediction", "Real FR", "L Prediction"])
 xlim([0,size(score_Evol,1)])
 suptitle(compose("%s Evol Exp%d (Manif2Evol) Prediction (50-200ms rate)\n L-N model cc=%.3f r2=%.3f, L model cc=%.3f",Animal, Expi, nlpredcorr, nlpredrsquare, lpredcorr))
@@ -107,10 +115,13 @@ ccWeight = cc_tsr;
 ccWeight(abs(t_signif_tsr) < 5) = 0;
 lfitscore_evol = LinPredictImgs(ccWeight, layername, imgfullnm_Evol); % linearly predicted response
 % Fit a thresholding bias and a scaling at manifold exp
+opts = fitoptions( 'Method', 'NonlinearLeastSquares',...
+        'Lower',[0, min(lfitscore_evol(:,end)), 0],...
+        'Upper',[10000, max(lfitscore_evol(:,end)), max(score_Evol(:,end))]);
 [relufit, gof, out] = fit(lfitscore_evol(:,end), score_Evol(:,end), ft, opts); % fit the bias on evolution data
-NLpred = relufit(lfitscore_evol);
-NLpred = reshape(NLpred, size(lfitscore_evol));
-nlfitcorr = corr(NLpred(:,end), score_Evol(:,end));
+nlfitscore_evol = relufit(lfitscore_evol);
+nlfitscore_evol = reshape(nlfitscore_evol, size(lfitscore_evol));
+nlfitcorr = corr(nlfitscore_evol(:,end), score_Evol(:,end));
 lfitcorr = corr(lfitscore_evol(:,end), score_Evol(:,end));
 toc
 %%
@@ -126,7 +137,7 @@ toc
 %%
 predStats(Expi).E2M.nlfunc = relufit;
 predStats(Expi).E2M.lfitscore = lfitscore_evol;
-predStats(Expi).E2M.nlfitscore = NLpred;
+predStats(Expi).E2M.nlfitscore = nlfitscore_evol;
 predStats(Expi).E2M.nlfitcorr = nlfitcorr;
 predStats(Expi).E2M.lfitcorr = lfitcorr;
 predStats(Expi).E2M.gof = gof;
@@ -137,7 +148,7 @@ predStats(Expi).E2M.lpredcorr = lpredcorr;
 predStats(Expi).E2M.nlpredrsquare = nlpredrsquare;
 %%
 %% Visualization
-figure(1);clf;
+figure(1);clf;%set(1,'position',[40         187        1904         595])
 subtightplot(1,3,1,[0.02,0.02],0.08,0.03)
 imagesc(reshape(score_Manif(:,end),[11,11]));
 axis image;colorbar();CLIM=caxis();
@@ -147,35 +158,34 @@ imagesc(reshape(NLpred_manif(:,end),[11,11]));
 axis image;colorbar();caxis(CLIM);
 title(compose("L-N model\ncc=%.3f r2=%.3f",nlpredcorr,nlpredrsquare))
 subtightplot(1,3,3,[0.02,0.02],0.08,0.03)
-imagesc(reshape(lfitscore_manif(:,end),[11,11]));
+imagesc(reshape(pred_manif_rsp(:,end),[11,11]));%lfitscore_manif there is a bug before
 axis image;colorbar();
 title(compose("L model on VGG %s\ncc=%.3f",layername,lpredcorr))
-suptitle(compose("%s Manif Exp%d Prediction",Animal, Expi))
+suptitle(compose("%s Manif Exp%d (pref chan %s) Prediction",Animal, Expi, prefchan_lab))
 
-figure(5);clf;hold on
+figure(5);clf;hold on;%set(5,'position',[718   199   513   766])
 subtightplot(1,2,1,[0.03,0.07],0.08,0.07)
-imagesc(10:10:190,1:size(score_Evol,1),NLpred_evol(:,1:end-5));
+imagesc(10:10:190,1:size(score_Evol,1),nlfitscore_evol(:,1:end-5));
 title(compose("L-N model\n cc=%.3f r2=%.3f", nlfitcorr, gof.rsquare))
 subtightplot(1,2,2,[0.03,0.07],0.08,0.07)
 imagesc(10:10:190,1:size(score_Evol,1),score_Evol(:,1:end-5))
 title(compose("real psth (20ms mean rate)"))
-suptitle(compose("%s Evol Exp%d (Manif2Evol) Goodness of NL Fit",Animal, Expi))
+suptitle(compose("%s Evol Exp%d (pref chan %s)\n(Manif2Evol) Goodness of NL Fit",Animal, Expi, prefchan_lab))
 
-figure(4);clf
+figure(4);clf;%set(4,'position',[332         297        1557         444])
 subtightplot(1,1,1,[0.02,0.02],0.08,0.03);hold on
-plot(NLpred_evol(:,end));
-plot(score_Evol(:,end))
-plot(lfitscore_evol(:,end))
+plot(nlfitscore_evol(:,end)); % fit 
+plot(score_Evol(:,end)) % real neural score
+plot(lfitscore_evol(:,end)) % linearly fit evolution response
 legend(["L-N Prediction", "Real FR", "L Prediction"])
 xlim([0,size(score_Evol,1)])
-suptitle(compose("%s Evol Exp%d (Manif2Evol) Goodness of NL Fit (50-200ms rate)\n L-N model cc=%.3f r2=%.3f, L model cc=%.3f",Animal, Expi, nlfitcorr, gof.rsquare, lfitcorr))
+suptitle(compose("%s Evol Exp%d (pref chan %s) (Manif2Evol) Goodness of NL Fit (50-200ms rate)\n L-N model cc=%.3f r2=%.3f, L model cc=%.3f",Animal, Expi, prefchan_lab, nlfitcorr, gof.rsquare, lfitcorr))
 saveas(1,fullfile(predsavedir,compose("%s_Exp%d_E2M_%s_ManifPred.jpg",Animal,Expi,layername)));
 saveas(5,fullfile(predsavedir,compose("%s_Exp%d_E2M_%s_EvolPSTHFit.jpg",Animal,Expi,layername)));
 saveas(4,fullfile(predsavedir,compose("%s_Exp%d_E2M_%s_EvolFit.jpg",Animal,Expi,layername)));
-
 end
 %%
-save(fullfile(predsavedir,Animal+"_FeatTsrPredStats.mat"),'predStats')
+save(fullfile(predsavedir,compose("%s_FeatTsrPredStats_%s.mat",Animal,layername)),'predStats')
 %%
 function [pred_rsp] = LinPredictImgs(weight_tsr, layername, imgfullnms)
 global net
