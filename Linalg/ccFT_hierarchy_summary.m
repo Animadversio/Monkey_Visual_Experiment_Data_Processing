@@ -21,10 +21,12 @@ toc
 %%
 save(fullfile(hier_savedir,Animal+"_ccHierStats.mat"),"ccHierStats")
 %%
-Animal = "Beto";
-load(fullfile(hier_savedir,Animal+"_ccHierStats.mat"),"ccHierStats")
+
 %%
 MatStats_path = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
+hier_savedir = "E:\OneDrive - Washington University in St. Louis\corrFeatTsr_Hierarchy";
+Animal = "Beto";
+load(fullfile(hier_savedir,Animal+"_ccHierStats.mat"),"ccHierStats")
 load(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
 load(fullfile(MatStats_path, compose("%s_Manif_stats.mat", Animal)), 'Stats')
 %% 
@@ -32,6 +34,8 @@ prefchan_arr = arrayfun(@(S)S.units.pref_chan,EStats);
 V1msk = prefchan_arr <=48 & prefchan_arr>=33;
 V4msk = prefchan_arr <=64 & prefchan_arr>=49;
 ITmsk = prefchan_arr <=32 & prefchan_arr>=1;
+wdw_vect = [1, 20] + 10 * [0:18]';
+wdw_vect = [wdw_vect; [1,50]+[0:50:150]'; [51,200]]; 
 %%
 for fi = 1:24
 EvolCorrVoxPrct = arrayfun(@(H)H.Evol.corr_vox_prct(fi,:),ccHierStats,'UniformOutput',false);
@@ -40,7 +44,7 @@ ManifCorrVoxPrct = arrayfun(@(H)H.Manif.corr_vox_prct(fi,:),ccHierStats,'Uniform
 ManifCorrVoxPrct = cell2mat(ManifCorrVoxPrct');
 YLIM = [min(EvolCorrVoxPrct,[],'all'), max(EvolCorrVoxPrct,[],'all')];
 %
-figure(6);clf
+figure(7);clf
 subtightplot(1,3,1,0.05,0.07,0.12);hold on
 plot(EvolCorrVoxPrct(ITmsk,:)',"-.o","color",[0,0,1]);ylim(YLIM)
 xticks([1:6]);xticklabels(["fc8","fc7","fc6","conv5-3","conv4-3","conv3-3"])
@@ -62,6 +66,8 @@ title("Evol V1");ylabel("Correlated Voxel Percentage");xlabel("VGG Layer")
 suptitle(compose("%s [%d, %d] ms",Animal,wdw_vect(fi,1),wdw_vect(fi,2)))
 pause
 end
+%%
+
 %% Visualize Individual Experiment
 Animal = "Beto";
 for Expi = 14:45

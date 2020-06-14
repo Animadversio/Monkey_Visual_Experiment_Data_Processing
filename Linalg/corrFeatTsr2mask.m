@@ -69,25 +69,58 @@ end
 %%
 save(fullfile(MatStats_path,compose("%s_Evol_ccFtMask.mat",Animal)),'ccMskStats')
 % end
-%% Refactor the structure of ccMskStats object. 
-ccMskStats_cmb = repmat(struct(),1,length(EStats));
-ExpType = "Evol";
-for Expi = 1:length(EStats)
-    ccMskStats_cmb(Expi).(ExpType).units = ccMskStats(Expi).units;
-    for layername = ["conv3_3", "conv4_3", "conv5_3"]
-        ccMskStats_cmb(Expi).(ExpType).(layername) = ccMskStats(Expi).(layername);
-    end
-end
-ccMskStats = ccMskStats_cmb;
+
 %%
 Animal = "Alfa";
-load(fullfile(MatStats_path,compose("%s_Evol_ccFtMask.mat",Animal)),'ccMskStats')
+MatStats_path = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
+load(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
+load(fullfile(MatStats_path, compose("%s_Manif_stats.mat", Animal)), 'Stats')
+load(fullfile(MatStats_path, compose("%s_Evol_ccFtMask.mat",Animal)),'ccMskStats')
+load(fullfile(MatStats_path, compose("%s_ImageRepr.mat",Animal)),'ReprStats')
 %%
-Expi = 29; ExpType = "Evol"; layername = "conv3_3"; sum_method = "L1";
-ccMskStats(Expi).(ExpType).(layername).(sum_method)
+Expi = 29; ExpType = "Manif"; layername = "conv5_3"; sum_method = "L1";
+sup_boundary = true;bdr = 0;
+MskMap = ccMskStats(Expi).(ExpType).(layername).(sum_method);
+CNNRF = CNN_receptive_field(net);
+idx = find(contains(CNNRF.Name,layername));
+startpix = CNNRF.start(idx,:);
+jumppix = CNNRF.jump(idx,:);
+H = size(MskMap,1);W = size(MskMap,2);
+[centGridX, centGridY] = meshgrid(startpix(1)+jumppix(1)*(0:H-1),startpix(2)+jumppix(2)*(0:W-1));
 % ccMskStats(Expi).Evol.conv3_3.L1;
+if sup_boundary 
+padMap = nan(size(MskMap));
+padMap(bdr+1:end-bdr,bdr+1:end-bdr) = MskMap(bdr+1:end-bdr,bdr+1:end-bdr);
+else
+padMap = MskMap;
+end
+CLIM = prctile(padMap,[0,98],'all')';
+% figure(6);
+% imagesc(padMap);
+% axis image;colorbar();caxis(CLIM)
+[interpX, interpY] = meshgrid(linspace(1,224,256), linspace(1,224,256));
+interpMsk = griddata(centGridX, centGridY, double(padMap), interpX, interpY);
+alphaMsk = clip((interpMsk - CLIM(1)) ./ (CLIM(2) - CLIM(1)) *0.9,0,1);
+alphaMsk(isnan(alphaMsk)) = 0;
+figure(12);
+subplot(141)
+imshow(ReprStats(Expi).Evol.BestImg)
+subplot(142)
+imshow(double(ReprStats(Expi).Evol.BestImg) / 255 .* alphaMsk)
+subplot(143)
+imshow(alphaMsk)
+subplot(144)
+imagesc(padMap);
+axis image;colorbar();caxis(CLIM)
+%%
 
+%%
 
+%%
+
+moviedir = "E:\OneDrive - Washington University in St. Louis\Evol_Manif_Movies";
+% winopen(fullfile(moviedir, compose("%s_Evol_Exp%02d_Best_PSTH.mov.avi",Animal,Expi)))
+winopen(fullfile(moviedir, compose("%s_Manif_Exp%02d_Avg_PSTH.mov.avi",Animal,Expi)))
 %%
 CNNRF = CNN_receptive_field(net);
 idx = find(contains(CNNRF.Name,layername));
@@ -100,3 +133,14 @@ H = size(cc_tsr,1);W = size(cc_tsr,2);
 interpMsk = griddata(centGridX, centGridY, double(L1plotTsr(:,:,end)), interpX, interpY);
 %%
 figure;imagesc(interpMsk)
+
+%% Refactor the structure of ccMskStats object. 
+% ccMskStats_cmb = repmat(struct(),1,length(EStats));
+% ExpType = "Evol";
+% for Expi = 1:length(EStats)
+%     ccMskStats_cmb(Expi).(ExpType).units = ccMskStats(Expi).units;
+%     for layername = ["conv3_3", "conv4_3", "conv5_3"]
+%         ccMskStats_cmb(Expi).(ExpType).(layername) = ccMskStats(Expi).(layername);
+%     end
+% end
+% ccMskStats = ccMskStats_cmb;
