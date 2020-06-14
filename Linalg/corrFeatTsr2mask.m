@@ -70,16 +70,22 @@ end
 save(fullfile(MatStats_path,compose("%s_Evol_ccFtMask.mat",Animal)),'ccMskStats')
 % end
 
-%%
-Animal = "Alfa";
+%% Reload the computed mask
+Animal = "Beto";
 MatStats_path = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 load(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
 load(fullfile(MatStats_path, compose("%s_Manif_stats.mat", Animal)), 'Stats')
 load(fullfile(MatStats_path, compose("%s_Evol_ccFtMask.mat",Animal)),'ccMskStats')
 load(fullfile(MatStats_path, compose("%s_ImageRepr.mat",Animal)),'ReprStats')
-%%
-Expi = 29; ExpType = "Manif"; layername = "conv5_3"; sum_method = "L1";
-sup_boundary = true;bdr = 0;
+%% Interpolate and Visualize masks Together with images.
+savedir = "E:\OneDrive - Washington University in St. Louis\Repr_with_Mask";
+
+Expi = 29; ExpType = "Evol"; layername = "conv5_3"; sum_method = "L1";
+sup_boundary = true;bdr = 1;
+cut_bdr = struct("conv3_3",3,"conv4_3",2,"conv5_3",1);
+for Expi = 1:45
+for layername = ["conv3_3","conv4_3","conv5_3"]
+bdr = cut_bdr.(layername);
 MskMap = ccMskStats(Expi).(ExpType).(layername).(sum_method);
 CNNRF = CNN_receptive_field(net);
 idx = find(contains(CNNRF.Name,layername));
@@ -102,16 +108,23 @@ CLIM = prctile(padMap,[0,98],'all')';
 interpMsk = griddata(centGridX, centGridY, double(padMap), interpX, interpY);
 alphaMsk = clip((interpMsk - CLIM(1)) ./ (CLIM(2) - CLIM(1)) *0.9,0,1);
 alphaMsk(isnan(alphaMsk)) = 0;
-figure(12);
-subplot(141)
+%
+figure(12);clf
+subtightplot(1,4,1,0.02,[0.02,0.12],0.05)
 imshow(ReprStats(Expi).Evol.BestImg)
-subplot(142)
+subtightplot(1,4,2,0.02,[0.02,0.12],0.05)
 imshow(double(ReprStats(Expi).Evol.BestImg) / 255 .* alphaMsk)
-subplot(143)
+subtightplot(1,4,3,0.02,[0.02,0.12],0.05)
 imshow(alphaMsk)
-subplot(144)
+subtightplot(1,4,4,0.02,[0.02,0.12],0.05)
 imagesc(padMap);
 axis image;colorbar();caxis(CLIM)
+suptitle(compose("\n%s %s Exp%d Corr Coef Mask. rate in [%d,%d]ms with VGG16 %s\n Channel compressed with %s threshold %s",...
+    Animal,ExpType,Expi,50,200,strrep(layername,"_","-"),"bi-sided",sum_method))
+pause(0.2)
+saveas(12,fullfile(savedir, compose("%s_%s_Exp%d_%s-%s.jpg",Animal,ExpType,Expi,layername,sum_method)))
+end
+end
 %%
 
 %%
