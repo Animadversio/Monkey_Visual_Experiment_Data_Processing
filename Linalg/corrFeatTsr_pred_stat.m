@@ -5,16 +5,20 @@ net = vgg16;
 %  use the Evolution to predict manifold experiments and vice versa.
 %  Use the correlated voxels to predict 
 %  Fit a model on Evolution experiment and test on manifold
+%  
+Animal="Alfa";
 savedir = "E:\OneDrive - Washington University in St. Louis\CNNFeatCorr";
 hier_savedir = "E:\OneDrive - Washington University in St. Louis\corrFeatTsr_Hierarchy";
-predsavedir = "E:\OneDrive - Washington University in St. Louis\corrFeatTsr_Predict";
-Animal="Alfa"; 
 MatStats_path = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
+predsavedir = "E:\OneDrive - Washington University in St. Louis\corrFeatTsr_Predict";
+load(fullfile(predsavedir, Animal+"_FeatTsrPredStats.mat"),'predStats')
 load(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
 load(fullfile(MatStats_path, compose("%s_Manif_stats.mat", Animal)), 'Stats')
 %%
 predStats = repmat(struct("E2M",struct(),"M2E",struct()),1,length(Stats));
-%%
+
+%% This is the least square fit. For Poisson fit see the poisson_curv_fit demo
+% ft = fittype( 'max(0, a*x - b)+c', 'independent', 'x', 'dependent', 'y' );
 ft = fittype( 'max(0, a*(x-b))+c', 'independent', 'x', 'dependent', 'y' );
 opts = fitoptions( 'Method', 'NonlinearLeastSquares' );
 opts.Lower = [0    -10000 0];

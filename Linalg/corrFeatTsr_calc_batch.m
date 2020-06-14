@@ -3,7 +3,7 @@ net = vgg16;
 savedir = "E:\OneDrive - Washington University in St. Louis\CNNFeatCorr";
 hier_savedir = "E:\OneDrive - Washington University in St. Louis\corrFeatTsr_Hierarchy";
 %%
-Animal="Alfa"; 
+Animal="Beto"; 
 MatStats_path = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 load(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
 load(fullfile(MatStats_path, compose("%s_Manif_stats.mat", Animal)), 'Stats')
@@ -126,6 +126,68 @@ save(fullfile(hier_savedir, compose("%s_%s_Exp%d_VGG16.mat",Animal,ExpType,Expi)
 end
 %%
 % EStats(19).meta.stimuli = "N:\Stimuli\2019-Manifold\alfa-191210a\backup_12_10_2019_13_07_57";
+%% %%%%%%%%%%%%%%%%%%%
+%% Visualize Voxel numbers in a plot
+hier_savedir = "E:\OneDrive - Washington University in St. Louis\corrFeatTsr_Hierarchy";
+moviedir = "E:\OneDrive - Washington University in St. Louis\Evol_Manif_Movies"; 
+Animal = "Beto";
+ExpType = "Manif";
+for Expi = 14:45
+prefchanlab = EStats(Expi).units.unit_name_arr(EStats(Expi).units.pref_chan_id);
+ExpType = "Manif";
+load(fullfile(hier_savedir, compose("%s_%s_Exp%d_VGG16.mat",Animal,ExpType,Expi)),...
+    "layernames","wdw_vect","totl_vox_num","corr_vox_num","corr_vox_prct","med_pos_cc","med_neg_cc","mean_pos_t","mean_neg_t");
+corr_vox_prct = corr_vox_num./totl_vox_num;
+%
+figure(4);clf;hold on 
+nLayer = length(layernames);
+subtightplot(1,3,1,0.04,0.07,0.03)
+plot([1:19,NaN,20:23,NaN,24],[corr_vox_prct(1:19,:);nan(1,nLayer);corr_vox_prct(20:23,:);nan(1,nLayer);corr_vox_prct(24,:)], "-o"...
+    ,"LineWidth",1.5)
+legend(layernames, 'Location',"Best");xlim([.5,24.5])
+title("Correlated Voxel Percents")
+subtightplot(1,3,2,0.04,0.07,0.03)
+plot([1:19,NaN,20:23,NaN,24],[med_pos_cc(1:19,:);nan(1,nLayer);med_pos_cc(20:23,:);nan(1,nLayer);med_pos_cc(24,:)], "-o"...
+    ,"LineWidth",1.5)
+legend(layernames, 'Location',"Best"); xlim([.5,24.5])
+title("Median Positive Correlated Coefficient")
+subtightplot(1,3,3,0.04,0.07,0.03)
+plot([1:19,NaN,20:23,NaN,24],[med_neg_cc(1:19,:);nan(1,nLayer);med_neg_cc(20:23,:);nan(1,nLayer);med_neg_cc(24,:)], "-o"...
+    ,"LineWidth",1.5)
+legend(layernames, 'Location',"Best");xlim([.5,24.5])
+title("Median Negative Correlated Coefficient")
+suptitle(compose("%s %s Exp%d VGG16 Pref Chan %s\nCorrelation Percent and cc Distribution", Animal, ExpType, Expi, prefchanlab))
+saveas(4, fullfile(hier_savedir,compose(Animal+compose("_%s_Exp%d_VGG16_cc.jpg", ExpType, Expi))))
+
+ExpType = "Evol";
+load(fullfile(hier_savedir, compose("%s_%s_Exp%d_VGG16.mat",Animal,ExpType,Expi)),...
+    "layernames","wdw_vect","totl_vox_num","corr_vox_num","corr_vox_prct","med_pos_cc","med_neg_cc","mean_pos_t","mean_neg_t");
+corr_vox_prct = corr_vox_num./totl_vox_num;
+
+figure(5);clf;hold on 
+nLayer = length(layernames);
+subtightplot(1,3,1,0.04,0.07,0.03)
+plot([1:19,NaN,20:23,NaN,24],[corr_vox_prct(1:19,:);nan(1,nLayer);corr_vox_prct(20:23,:);nan(1,nLayer);corr_vox_prct(24,:)], "-o"...
+    ,"LineWidth",1.5)
+legend(layernames, 'Location',"Best");xlim([.5,24.5])
+title("Correlated Voxel Percents")
+subtightplot(1,3,2,0.04,0.07,0.03)
+plot([1:19,NaN,20:23,NaN,24],[med_pos_cc(1:19,:);nan(1,nLayer);med_pos_cc(20:23,:);nan(1,nLayer);med_pos_cc(24,:)], "-o"...
+    ,"LineWidth",1.5)
+legend(layernames, 'Location',"Best"); xlim([.5,24.5])
+title("Median Positive Correlated Coefficient")
+subtightplot(1,3,3,0.04,0.07,0.03)
+plot([1:19,NaN,20:23,NaN,24],[med_neg_cc(1:19,:);nan(1,nLayer);med_neg_cc(20:23,:);nan(1,nLayer);med_neg_cc(24,:)], "-o"...
+    ,"LineWidth",1.5)
+legend(layernames, 'Location',"Best");xlim([.5,24.5])
+title("Median Negative Correlated Coefficient")
+suptitle(compose("%s %s Exp%d VGG16 Pref Chan %s\nCorrelation Percent and cc Distribution", Animal, ExpType, Expi, prefchanlab))
+saveas(5, fullfile(hier_savedir,compose(Animal+compose("_%s_Exp%d_VGG16_cc.jpg", ExpType, Expi))))
+
+winopen(fullfile(moviedir, compose("%s_Evol_Exp%02d_Best_PSTH.mov.avi",Animal,Expi)))
+winopen(fullfile(moviedir, compose("%s_Manif_Exp%02d_Avg_PSTH.mov.avi",Animal,Expi)))
+pause;
+end
 %%
 function dlimg = loadimges(images)
 imgcol = cellfun(@(imgnm) imresize(imread(fullfile(imgnm)),[224,224]), images, 'UniformOutput', false);
