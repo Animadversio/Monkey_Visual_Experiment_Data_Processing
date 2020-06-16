@@ -1,3 +1,4 @@
+%% Code to create mask and merge on images from the masks stored in the correlation. 
 ccmat_dir = "E:\OneDrive - Washington University in St. Louis\CNNFeatCorr";
 MatStats_path = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 Animal = "Beto"; Expi = 29;  %thresh = "neg"; sum_method="max"; %"both"
@@ -5,6 +6,7 @@ load(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
 load(fullfile(MatStats_path, compose("%s_Manif_stats.mat", Animal)), 'Stats')
 ccMskStats = repmat(struct(),1,length(EStats));
 %% Review the ccFeatTsr with respect to the evolution of the psth and images. 
+%  Actually this is the newer version of the visualization function
 ExpType = "Manif";
 doPlot = true; doSave = true;
 thresh = "both"; 
@@ -37,13 +39,12 @@ L1plotTsr = squeeze(sum(abs(plotTsr),3)./(sum(maskTsr,3)));
 elseif sum_method=="max"
 L1plotTsr = squeeze(max(abs(plotTsr),[],3));
 end
-%% Calculate the CLIM
+%% Calculate the CLIM for each time bin (keep it the same for bins of same length for cmp)
 if doPlot
 CLIM_arr = zeros(24,2);
 CLIM_arr(1:19,:) = CLIM_arr(1:19,:) + prctile(L1plotTsr(:,:,1:19),[2,98],'all')' + [0, 1E-4];
 CLIM_arr(20:23,:) = CLIM_arr(20:23,:) + prctile(L1plotTsr(:,:,20:23),[2,98],'all')'+ [0, 1E-4];
 CLIM_arr(24,:) = CLIM_arr(24,:) + prctile(L1plotTsr(:,:,24),[2,98],'all')'+ [0, 1E-4];
-%
 CLIM_arr(isnan(CLIM_arr)) = 0; % put 0 in the nan place (if there is no activated voxel. then prctile will be all nan)
 
 if doSave
