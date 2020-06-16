@@ -8,6 +8,7 @@ if strcmp(getenv('COMPUTERNAME'), "DESKTOP-MENSD6S")
     keyboard;
     ExpSpecTable_Aug = readtable("ExpSpecTable_Augment.xlsx");
 	ExpSpecTable_Aug_alfa = readtable("Exp_Record_Alfa.xlsx");
+    system("subst N: E:\Network_Data_Sync")
 % 	copyfile("E:\Monkey_Data\ExpSpecTable_Augment.xlsx", ".\ExpSpecTable_Augment.xlsx")
 % 	copyfile("E:\Monkey_Data\Exp_Record_Alfa.xlsx", ".\Exp_Record_Alfa.xlsx")
 elseif exist("S:\",'dir') % Currently I set up S:\ at home as well, so everything should match
@@ -25,6 +26,7 @@ end
 addpath(".\utils")
 addpath(".\DNN")
 addpath(".\NMF")
+addpath CorrFeatTsr
 % Depends on 
 % - brewermap
 % - shadedErrorBar

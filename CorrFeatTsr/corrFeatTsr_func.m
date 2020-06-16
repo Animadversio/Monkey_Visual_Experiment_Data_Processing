@@ -1,7 +1,23 @@
 %% Wrapper for the correlation method. 
 %  
-%  Input: Images (path or ), Response vectors, net, Layer, flag to see if shuffle or not
-%  Output: correlation tensor, mean feat value
+%  Input: Images (path or 4d number array), Response vectors, net, Layer, flag to see if shuffle or not
+%         So the net could be a untrained net or a trained one see
+%         `getUntrainedNet`
+%  flags: 
+%       batch: batch size to feed in images. Cannot be too large for higher
+%         layers. ~40 for fc8. Can be 128 for conv4
+%       shuffleN: number of shuffling to compute the thing. =0, to not
+%         compute score shuffled correlation. =100 to shuffle 100 times.
+%         and compute the shuffled mean and std. 
+%       online_compute: if true, online compute correlation coefficients,
+%         doesn't store all the activations. If false, try to store all the
+%         correlation coefficients. will memory overflow for lower layers. 
+%       load_all_img: load all images at start. Suitable for large memory
+%         computer, esp. for those that IO takes a lot of time. 
+%  Output: correlation tensor, mean feat value. 
+%         if the shuffleN > 0, then there will be 2 extra outputs
+%       cc_refM: Mean for the N shuffles
+%       cc_refS: Std for the N shuffles
 function [cc_tsr, MFeat, StdFeat, varargout] = corrFeatTsr_func(images, score_vect, net, layername, flags)
 Bsz = flags.batch;
 if ~isfield(flags,"shuffleN"), flags.shuffleN=100; end
