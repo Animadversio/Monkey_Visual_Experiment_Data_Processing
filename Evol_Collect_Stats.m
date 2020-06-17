@@ -17,7 +17,7 @@ rowis = find(expftr);
 EStats = repmat(struct(), 1, length(meta_new));
 %%
 Animal = "Beto";
-MatStats_path = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
+MatStats_path = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 load(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
 %% 
 for Triali = 1:length(meta_new)

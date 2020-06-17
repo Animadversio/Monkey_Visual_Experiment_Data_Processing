@@ -13,9 +13,9 @@ rowis = find(expftr);
 %%
 Stats = repmat(struct(), 1, length(meta_new));
 %% If there is stats saved, load it! 
+% mat_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Mat_Statistics";
 mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
-mat_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Mat_Statistics";
-Animal = "Alfa";
+Animal = "Beto";
 load(fullfile(mat_dir, Animal+'_Manif_stats.mat'))
 %%
 for Triali = 1:length(meta_new)
@@ -85,18 +85,20 @@ Stats(Expi).ref.didPasu = true;
 pasu_psths_col = cellfun(@(idx) rasters(pref_chan_id, :, idx), pasu_idx_grid, ...
                 'UniformOutput', false);
 Stats(Expi).ref.pasu_psths = pasu_psths_col;
+Stats(Expi).ref.pasu_idx_grid = pasu_idx_grid;
 end
 
 if sum(contains(Trials.imageName, "gab")) > 12
 Stats(Expi).ref.didGabor = true;
-[gab_idx_grid,~,~,~] = build_Pasu_idx_grid(Trials.imageName);
+[gab_idx_grid,~,~,~] = build_Gabor_idx_grid(Trials.imageName);
 gab_psths_col = cellfun(@(idx) rasters(pref_chan_id, :, idx), gab_idx_grid, ...
                 'UniformOutput', false);
 Stats(Expi).ref.gab_psths = gab_psths_col;
+Stats(Expi).ref.gab_idx_grid = gab_idx_grid;
 end
 end
 %%
-savepath = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Mat_Statistics";
+savepath = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 save(compose("D:\\%s_Manif_stats.mat", Animal), 'Stats')
 save(fullfile(savepath, compose("%s_Manif_stats.mat", Animal)), 'Stats')
 %save("D:\Alfa_Manif_stats.mat", 'Stats')

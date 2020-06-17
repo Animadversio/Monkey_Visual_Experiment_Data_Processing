@@ -18,6 +18,7 @@
 %         if the shuffleN > 0, then there will be 2 extra outputs
 %       cc_refM: Mean for the N shuffles
 %       cc_refS: Std for the N shuffles
+%   Jun. 16, 2020
 function [cc_tsr, MFeat, StdFeat, varargout] = corrFeatTsr_func(images, score_vect, net, layername, flags)
 Bsz = flags.batch;
 if ~isfield(flags,"shuffleN"), flags.shuffleN=100; end
