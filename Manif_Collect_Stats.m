@@ -1,6 +1,6 @@
 %% Manif_Collect_Stats into mat
 %%
-Animal = "Beto";Set_Path;
+Animal = "Alfa";Set_Path;
 %expftr = (contains(ExpRecord.expControlFN,"200319"));
 expftr = (contains(ExpRecord.Exp_collection,"Manifold") &...
             contains(ExpRecord.expControlFN, "selectivity")&...
@@ -15,7 +15,7 @@ Stats = repmat(struct(), 1, length(meta_new));
 %% If there is stats saved, load it! 
 % mat_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Mat_Statistics";
 mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
-Animal = "Beto";
+Animal = "Alfa";
 load(fullfile(mat_dir, Animal+'_Manif_stats.mat'))
 %%
 for Triali = 1:length(meta_new)
@@ -25,8 +25,8 @@ Trials = Trials_new{Triali};
 exp_rowi = find(contains(ExpRecord.ephysFN, meta.ephysFN));
 % Check the Expi match number
 Expi = ExpRecord.Expi(exp_rowi);Expi=Expi(end); % hack this for beto exp 35
-if isnan(Expi) || ~contains(ExpRecord.expControlFN{exp_rowi},'selectivity') ...
-        || ~contains(ExpRecord.Exp_collection{exp_rowi},'Manifold')
+if isnan(Expi) || ~all(contains(ExpRecord.expControlFN(exp_rowi),'selectivity')) ...
+        || ~all(contains(ExpRecord.Exp_collection(exp_rowi),'Manifold'))
     % add this filter to process a sequence of Trials_new 
     keyboard
     continue
