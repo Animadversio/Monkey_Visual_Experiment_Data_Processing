@@ -3,7 +3,7 @@ system("subst S: E:\Network_Data_Sync") % set this alias! so that copying and sy
 %result_dir = "C:\\Users\\ponce\\OneDrive - Washington University in St. Louis\\PC_space_tuning";
 % it will load the newest version of ExpSpecTable and compute pref_chan_arr
 % and norm_arr from it! 
-if strcmp(getenv('COMPUTERNAME'), "DESKTOP-MENSD6S") 
+if strcmp(getenv('COMPUTERNAME'), "DESKTOP-MENSD6S")  % At home
 	fprintf("At home, check the date and version of your experiment Record table.(The one in folder may be the most recent. Loading from it)\n")
     keyboard;
     ExpSpecTable_Aug = readtable("ExpSpecTable_Augment.xlsx");
@@ -18,6 +18,7 @@ elseif exist("S:\",'dir') % Currently I set up S:\ at home as well, so everythin
 	copyfile("S:\Exp_Record_Alfa.xlsx", ".\Exp_Record_Alfa.xlsx")
 else
     fprintf("load local exprecord in folder %s instead\n", pwd)
+    keyboard;
 	ExpSpecTable_Aug = readtable("ExpSpecTable_Augment.xlsx");
 	ExpSpecTable_Aug_alfa = readtable("Exp_Record_Alfa.xlsx");
 end

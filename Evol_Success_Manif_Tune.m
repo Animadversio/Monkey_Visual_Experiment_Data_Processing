@@ -6,12 +6,15 @@ load(fullfile(MatStats_path, compose("%s_Manif_stats.mat", Animal)), 'Stats')
 Kent_path = "E:\OneDrive - Washington University in St. Louis\Manif_SUHash\summary";
 load(fullfile(Kent_path, Animal+"_Manif_Kent_Fit.mat"),"Kent_stats")
 
-%% Evolution
+%% Evolution Statistics Extraction
 EvolSuccStats = repmat(struct(),1,length(EStats));
 for Expi = 1:length(Stats)
 blockn = EStats(Expi).evol.block_n;
+block_mean_score = cellfun(@(psth)mean(psth(1,51:200,:),'all'),EStats(Expi).evol.psth(1:blockn-1));
+[~,peakBlock]=max(block_mean_score);
+if peakBlock == blockn-1, peakBlock = blockn-2; end % avoid the last generation.
+endspsths = cell2mat(reshape(EStats(Expi).evol.psth(peakBlock:peakBlock+1),1,1,[]));
 initpsths = cell2mat(reshape(EStats(Expi).evol.psth(2:3),1,1,[]));
-endspsths = cell2mat(reshape(EStats(Expi).evol.psth(blockn-2:blockn-1),1,1,[]));
 window = [51:200];
 initacts = squeeze(mean(initpsths(1,window,:),2));
 endsacts = squeeze(mean(endspsths(1,window,:),2));
@@ -19,6 +22,9 @@ endsacts = squeeze(mean(endspsths(1,window,:),2));
 EvolSuccStats(Expi).tstat = STATS.tstat;
 EvolSuccStats(Expi).DAOA = (mean(endsacts) - mean(initacts)) / mean(initacts);
 end
+DAOA_arr = arrayfun(@(E)E.DAOA, EvolSuccStats)';
+tstat_arr = arrayfun(@(E)E.tstat, EvolSuccStats)';
+
 %% Get the Kappa fit for the Manifold data.
 drivechan_tune_kappa = zeros(length(Stats),1);
 for Expi = 1:length(Stats)
@@ -31,13 +37,11 @@ kappa = Kent_stats(Expi).act_fit{ui,si}.coef(4);
 drivechan_tune_kappa(Expi) = kappa;
 end
 %%
-DAOA_arr = arrayfun(@(E)E.DAOA, EvolSuccStats)';
-tstat_arr = arrayfun(@(E)E.tstat, EvolSuccStats)';
 corr(DAOA_arr,  drivechan_tune_kappa) 
 corr(tstat_arr, drivechan_tune_kappa) 
+%%
 prefchan_arr = arrayfun(@(E) E.units.pref_chan,EStats);
 prefname_arr = arrayfun(@(E) E.units.unit_name_arr(E.units.pref_chan_id),EStats);
-%%
 V1msk = prefchan_arr <=48 & prefchan_arr>=33;
 V4msk = prefchan_arr <=64 & prefchan_arr>=49;
 ITmsk = prefchan_arr <=32 & prefchan_arr>=1;
