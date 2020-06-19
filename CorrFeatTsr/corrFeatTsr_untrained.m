@@ -1,3 +1,4 @@
+%% Use untrained NN to do correlation. 
 addpath CorrFeatTsr
 %% untrained Corr Feature Tensor
 Animal = "Alfa";
