@@ -55,6 +55,28 @@ classdef torchBigGAN
        matimg = imgs.detach.cpu().numpy().single;
        matimg = permute((matimg + 1) / 2.0,[3,4,2,1]);
    end
+   
+   function matimgs = visualize_latent(G, latent, truncation)
+       if nargin == 2, truncation=0.7;end
+       batchsize = 10;samplen = size(latent,1);csr = 1;
+       tic
+       matimgs = [];
+       while csr <= samplen
+       cnd = min(samplen,csr+batchsize);
+       imgs = G.Generator(py.torch.tensor(py.numpy.array(latent(csr:cnd,:))).view(int32(-1),int32(256)).float().cuda(), truncation);
+       matimg = imgs.detach.cpu().numpy().single;
+       matimg = permute((matimg + 1) / 2.0,[3,4,2,1]);
+       matimgs = cat(4, matimgs, matimg);
+       csr = cnd + 1;
+       end
+       toc
+       
+   end
+   
+   function EmbedVects_mat = get_embedding(G)
+       EmbedVects = py.list(G.Embeddings.parameters());
+       EmbedVects_mat = EmbedVects{1}.data.cpu().numpy().double;
+   end
    end
 end
 %%
