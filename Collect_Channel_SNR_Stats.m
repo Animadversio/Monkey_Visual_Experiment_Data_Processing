@@ -133,7 +133,7 @@ end
 %%
 varNames = ["kappa","DAOA","evolT","SUidx","evolRefF","evolRefT","manifGabF","manifGabT","manifPasuF","manifPasuT"];
 save(fullfile(savedir, Animal+"_ChanQualcorrMatrix.mat"),'rho_mats', 'PVal_mats', 'varNames', 'QualTab', 'drivechan_tune_kappa', 'DAOA_arr', 'tstat_arr', 'SU_index')
-%% What should be the criterion to exclude a channel.
+%% What should be the criterion to exclude a channel. Make several different masks
 msk.good =~((arrayfun(@(C)C.manif.pasu.t_P,ChanQualStats) > 0.01) & ...
             (arrayfun(@(C)C.manif.gabor.t_P,ChanQualStats) > 0.01) & ...
             (arrayfun(@(C)C.evol.ref.t_P,ChanQualStats) > 0.01));%find()

@@ -5,7 +5,7 @@ expftr = (contains(ExpRecord.Exp_collection,"Manifold") &...
             contains(ExpRecord.expControlFN, "rf"));%&...
             %ExpRecord.Expi > 0); 
 rowis = find(expftr);
-[meta_new,rasters_new,~,Trials_new] = Project_Manifold_Beto_loadRaw(rowis,Animal);
+[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(rowis,Animal,false,true);
 %%
 % addpath D:\Lab_Codeshare\project_rfmap
 RFStats = repmat(struct(),length(meta_new),1);
