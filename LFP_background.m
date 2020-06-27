@@ -10,3 +10,8 @@
 % trial. 
 
 %% 
+meta.pathRAW = 'S:\Data-Ephys-Raw';
+meta.ephysFN = 'Alfa-25062020-002';
+meta.sdf = 'sdf'; % 'sdf' for convolved, 'raster' otherwise
+%  [spikeChans,lfpChans,timeline,spikeID] = plxread_fullExperiment_v2(meta);
+[spikeChans,lfpChans,timeline,spikeID] = plxread_fullExperiment_vcrp(meta);

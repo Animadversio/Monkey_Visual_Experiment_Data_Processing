@@ -4,7 +4,7 @@ Animal = "Alfa";Set_Path;
 % ftr = contains(ExpRecord.ephysFN, "25062020") ;%| contains(ExpRecord.ephysFN, "25062020");
 ftr = contains(ExpRecord.Exp_collection, "Hessian");
 rowlist = find(ftr);
-[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(rowlist, Animal, false, true);
+[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(rowlist, Animal, false, false);
 %%
 Triali = 2;
 meta = meta_new{Triali};
@@ -15,7 +15,7 @@ Trials = Trials_new{Triali};
 unit_name_arr = generate_unit_labels(meta.spikeID);
 [activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
 
-%%
+%% Sort the image name using re
 imgname_uniq = unique(Trials.imageName); 
 namepart_uniq = regexp(imgname_uniq,"norm(?<norm>\d*)_PC(?<pc_id>\d*)_ang(?<angle>[-\d]*)",'names');
 namepart_uniq = namepart_uniq(~cellfun(@isempty,namepart_uniq));
@@ -41,19 +41,20 @@ for i = 1:length(pc_id_arr)
     end
 end
 %%
-iCh = 5;
+savedir = "E:\OneDrive - Washington University in St. Louis\HessTune";
+for iCh = 1:size(rasters,1)
 psth_arr = cellfun(@(idx)rasters(iCh, :, idx),idx_arr,'UniformOutput',false);
 mean_psth_arr = cellfun(@(psth)mean(psth,3), psth_arr,'UniformOutput',false);
 score_arr = cellfun(@(psth)mean(psth(:,51:200,:),[2,3]), psth_arr);
 %
-figure(1);
-imagesc(score_arr);
-axis image
-title(compose("Alfa Channel %s Tuning",unit_name_arr(iCh)))
-ylabel("Numbering of PC vector");xlabel("angle");
-yticks(1:length(pc_id_arr));yticklabels(pc_id_arr)
-xticks(1:2:11);xticklabels(angle_arr(1:2:11))
-colorbar()
+% figure(1);
+% imagesc(score_arr);
+% axis image
+% title(compose("Alfa Channel %s Tuning",unit_name_arr(iCh)))
+% ylabel("Numbering of PC vector");xlabel("angle");
+% yticks(1:length(pc_id_arr));yticklabels(pc_id_arr)
+% xticks(1:2:11);xticklabels(angle_arr(1:2:11))
+% colorbar()
 %%
 wdw_vect = [1, 20] + 10 * [0:18]';% subsample to decrease redunancy
 wdw_vect = [wdw_vect; [1,50]+[0:50:150]'; [51,200]];
@@ -65,8 +66,11 @@ CLIM_arr = [ones(19,1)*prctile(score_arr(:,:,1:19),[1,99],'all')';...
             ones(1, 1)*prctile(score_arr(:,:,24),[1,99],'all')'];
     
 %%
+Animal = "Alfa"; Expi = 0; ExpType = "Hess"; 
 Save = true;
 figure(3);set(3,'position',[1000         270         560         700])
+v = VideoWriter(fullfile(savedir,compose("%s_%s_Exp%d_tune_ch%s.avi",Animal,ExpType,Expi,unit_name_arr(iCh))));
+v.FrameRate = 4;open(v);
 IMS = imagesc(score_arr(:,:,1));
 axis image
 TIT = title(compose("Alfa Hessian Exp Channel %s Tuning",unit_name_arr(iCh)));
@@ -79,8 +83,11 @@ for fi = 1:size(wdw_vect,1)
     TIT.String = compose("Alfa Hessian Exp Channel %s Tuning\nwindow [%d,%d] ms",unit_name_arr(iCh),wdw_vect(fi,1),wdw_vect(fi,2));
     caxis(CLIM_arr(fi,:));
     pause(0.5)
+    Fs = getframe(3);
+	writeVideo(v,Fs);
 end
-
+close(v);
+end
 %
 % figure(2); 
 % plot(cell2mat(mean_psth_arr(1,:)')')
