@@ -1,15 +1,17 @@
 % Hessian Analaysis
 % open myPaths
 Animal = "Alfa";Set_Path;
-% ftr = contains(ExpRecord.ephysFN, "25062020") ;%| contains(ExpRecord.ephysFN, "25062020");
-ftr = contains(ExpRecord.Exp_collection, "Hessian");
-rowlist = find(ftr);
-[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(rowlist, Animal, false, false);
+ftr = contains(ExpRecord.ephysFN, "26062020") | contains(ExpRecord.ephysFN, "25062020");
+% ftr = contains(ExpRecord.Exp_collection, "Hessian");
+rowlist = find(ftr); 
+[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(rowlist, Animal, true, true); 
+%%
+
 %%
 Triali = 2;
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
-% lfps = lfps_new{Triali};
+lfps = lfps_new{Triali};
 Trials = Trials_new{Triali};
 
 unit_name_arr = generate_unit_labels(meta.spikeID);
@@ -40,6 +42,8 @@ for i = 1:length(pc_id_arr)
     imgnm_arr(i,j) = imgnm;
     end
 end
+%%
+lfps
 %%
 savedir = "E:\OneDrive - Washington University in St. Louis\HessTune";
 for iCh = 1:size(rasters,1)
