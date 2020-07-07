@@ -1,4 +1,5 @@
-% Hessian Analaysis
+%% Hessian Analaysis
+%  For the 
 % open myPaths
 Animal = "Alfa";Set_Path;
 ftr = contains(ExpRecord.ephysFN, "26062020") | contains(ExpRecord.ephysFN, "25062020");

@@ -27,6 +27,6 @@ if ( maxVal < minVal )
 end
 
 res = im;
-res(find(im < minVal)) = minVal;
-res(find(im > maxVal)) = maxVal;
+res((im < minVal)) = minVal;
+res((im > maxVal)) = maxVal;
 
