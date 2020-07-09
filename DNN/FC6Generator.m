@@ -24,7 +24,7 @@ classdef FC6Generator
         acts = extractdata(acts);
       end
       function acts = dlforward(G, codes)%, layername)
-        % assume codes are dlarray with n by 4096 shape
+        % assume codes are dlarray with 4096 by n shape
         if size(codes,2)==4096 
             codes = codes';
         end
