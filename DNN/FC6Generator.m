@@ -7,7 +7,8 @@ classdef FC6Generator
    end
    methods
       function G = FC6Generator(loadpath)
-         %D:\Github\Monkey_Visual_Experiment_Data_Processing
+         %D:\Github\Monkey_Visual_Experiment_Data_Processing\DNN\matlabGANfc6.mat
+         %E:\Github_Projects\Monkey_Visual_Experiment_Data_Processing\DNN\matlabGANfc6.mat
          data = load(loadpath,'DeconvNet','LinNet','BGRMean');
          G.DeconvNet = data.DeconvNet;
          G.LinNet = data.LinNet;
@@ -33,7 +34,7 @@ classdef FC6Generator
         hiddenout_r = dlarray(hiddenout.reshape(4,4,256,[]).permute([2,1,3,4]),"SSCB"); % Note to flip your hiddenoutput
         out = G.DeconvNet.predict(hiddenout_r);
         imgs = extractdata(out(:,:,:,:));
-        imgs = uint8(clip(imgs + G.BGRMean, 0, 255));
+        imgs = uint8(min(max(imgs + G.BGRMean, 0), 255));
         imgs = imgs(:,:,[3,2,1],:);
       end
    end
