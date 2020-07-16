@@ -1,5 +1,6 @@
-% pe =
-% pyenv('Version','C:\ProgramData\Anaconda3\envs\tf-torch\python.exe'); %
+% pe = pyenv('Version','C:\ProgramData\Anaconda3\envs\tf-torch\python.exe'); %
+% pe = pyenv('Version','C:\Users\ponce\.conda\envs\caffe36\python.exe'); %
+% lab machine
 % Set up the python executable before usage
 classdef torchBigGAN
    % Usage 
@@ -19,6 +20,7 @@ classdef torchBigGAN
         % resolved_config_file = "https://s3.amazonaws.com/models.huggingface.co/biggan/biggan-deep-256-config.json";
         % resolved_model_file = "https://s3.amazonaws.com/models.huggingface.co/biggan/biggan-deep-256-pytorch_model.bin";
        savedir = "C:\Users\binxu\.pytorch_pretrained_biggan";
+       savedir = "C:\Users\ponce\.pytorch_pretrained_biggan";
        % install the torch 1.3.x and the biggan package like below.
        py.importlib.import_module('torch');
        py.importlib.import_module('pytorch_pretrained_biggan');

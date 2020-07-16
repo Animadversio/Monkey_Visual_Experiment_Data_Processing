@@ -1,6 +1,7 @@
 clearvars -except PasuStats
 %%
 mat_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
+mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 Animal = "Beto";
 load(fullfile(mat_dir, Animal+'_Evol_stats.mat'))
 load(fullfile(mat_dir, Animal+'_Manif_stats.mat'))

@@ -38,7 +38,6 @@ totl_vox_num(iLayer) = nfeat;
 fprintf("Correlation layer %s (vox # %d)\n",layername,nfeat)
 fid = fopen(fullfile(hier_savedir,Animal+"_Manif_all_VGG.log"),'w+');
 fprintf(fid,"Correlation layer %s (vox # %d)\n",layername,nfeat);
-fi = 24; wdw = wdw_vect(fi,:);%ci=6; 
 for fi = 1:24
 wdw = wdw_vect(fi,:);
 tcol = t_signif_tsr(:,:,:,fi);%yi,xi,
