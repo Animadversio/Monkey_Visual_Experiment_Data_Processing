@@ -1,4 +1,4 @@
-%% GAN forward Hessian computation demo (translated from the Python code)
+%% GAN forward Hessian computation demo (translated from the Python code) Doable but slower than python... 
 ref_code = randn(1, 4096);
 tar_img = G.visualize(ref_code);
 dltarget = dlarray(single(tar_img));

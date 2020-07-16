@@ -8,6 +8,9 @@ classdef FC6Generator
    methods
       function G = FC6Generator(loadpath)
          %D:\Github\Monkey_Visual_Experiment_Data_Processing
+         if nargin == 0
+             loadpath = "matlabGANfc6.mat";
+         end
          data = load(loadpath,'DeconvNet','LinNet','BGRMean');
          G.DeconvNet = data.DeconvNet;
          G.LinNet = data.LinNet;
