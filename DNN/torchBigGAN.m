@@ -1,29 +1,31 @@
-% pe = pyenv('Version','C:\ProgramData\Anaconda3\envs\tf-torch\python.exe'); %
-% pe = pyenv('Version','C:\Users\ponce\.conda\envs\caffe36\python.exe'); %
-% lab machine
-% Set up the python executable before usage
 classdef torchBigGAN
-   % Usage 
+   % Usage: setup the python env that have torch in it  `pyenv("Version","C:\Anaconda3\python.exe")`  
    % BGAN = torchBigGAN("biggan-deep-512")
    % matimgs = BGAN.visualize_class(0.6*randn(5,128),729);figure;montage(matimgs)
    properties
        BGAN
        Embeddings
        Generator
+       space % a variable preset to 
+       fix_noise_vec
+       fix_class_vec
    end
    methods
    function G = torchBigGAN(modelname)
        if nargin == 0
            modelname = "biggan-deep-256";
        end
+       % download the code from https://github.com/huggingface/pytorch-pretrained-BigGAN.git
+        % 
        % download these weights and definitions and put them in savedir.
         % resolved_config_file = "https://s3.amazonaws.com/models.huggingface.co/biggan/biggan-deep-256-config.json";
         % resolved_model_file = "https://s3.amazonaws.com/models.huggingface.co/biggan/biggan-deep-256-pytorch_model.bin";
        savedir = "C:\Users\binxu\.pytorch_pretrained_biggan";
-       savedir = "C:\Users\ponce\.pytorch_pretrained_biggan";
+       savedir = "C:\Users\Poncelab-ML2a\Documents\Python\pytorch-pretrained-BigGAN\weights";
        % install the torch 1.3.x and the biggan package like below.
-       py.importlib.import_module('torch');
-       py.importlib.import_module('pytorch_pretrained_biggan');
+        py.importlib.import_module("torch")
+        py.importlib.import_module("numpy")
+        py.importlib.import_module('pytorch_pretrained_biggan');
 %        import py.pytorch_pretrained_biggan.BigGAN
 %        import py.pytorch_pretrained_biggan.BigGANConfig
        cfg = py.pytorch_pretrained_biggan.BigGANConfig();
@@ -35,6 +37,63 @@ classdef torchBigGAN
        tmp = py.list(G.BGAN.named_children);
        G.Embeddings = tmp{1}{2};
        G.Generator = tmp{2}{2};
+   end
+   function G = select_space(G, space, setting)
+       % Set the space majorly to configure the `visualize` function
+       if nargin == 1
+           G.space = "noise";
+       else
+       
+       if contains(space, "noise")
+           EmbedVects_mat = get_embedding(G);
+           G.space = "noise";
+           if nargin == 2 % default to the goldfish class
+               setting = 2;
+           end
+           if numel(setting) == 1 % setting is a class id
+               G.fix_class_vec = EmbedVects_mat(:,int32(setting))';
+           elseif numel(setting) == 128 % setting is an 128D hidden vect
+               G.fix_class_vec = setting;
+           elseif numel(setting) == 1000 % setting is an one hot vector
+               G.fix_class_vec = reshape(setting, 1, []) * EmbedVects_mat';
+           else
+               error("Second argument not understood...")
+           end
+           G.fix_noise_vec = nan(1,128); % set the other half of the code to nan
+       elseif contains(space, "class")
+           truncnorm = truncate(makedist("Normal"),-2,2);
+           G.space = "class";
+           if nargin == 2
+               setting = 0.7;
+           end
+           if numel(setting) == 1 % setting is an scaler specifying **norm** of latent code
+               G.fix_noise_vec = truncnorm.random([1,128]) * setting;
+           elseif numel(setting) == 128 % setting is an 128D hidden vect
+               G.fix_noise_vec = setting;
+           else
+               error("Second argument not understood...")
+           end
+           G.fix_class_vec = nan(1,128); % set the other half of the code to nan
+       else
+           G.space = "all";
+           G.fix_noise_vec = nan(1,128);
+           G.fix_class_vec = nan(1,128);
+       end
+       end
+   end
+   
+   function matimgs = visualize(G, code)
+       % interface with generate integrated code, cmp to FC6GAN
+       switch G.space % depending on the space concatenate the hidden vectors in certain way
+           case "class"
+               code_cat = cat(2, repmat(G.fix_noise_vec, size(code, 1), 1), code);
+               matimgs = G.visualize_latent(code_cat);
+           case "noise"
+               code_cat = cat(2, code, repmat(G.fix_class_vec, size(code, 1), 1));
+               matimgs = G.visualize_latent(code_cat);
+           case "all"
+               matimgs = G.visualize_latent(code);
+       end
    end
    
    function matimg = visualize_codes(G, noise, onehot, truncation)
@@ -81,19 +140,3 @@ classdef torchBigGAN
    end
    end
 end
-%%
-
-% model = BigGAN.from_pretrained('biggan-deep-256')
-% model.to('cuda')
-% 
-% def BigGAN_render(class_vector, noise_vector, truncation):
-%     if class_vector.shape[0] == 1:
-%         class_vector = np.tile(class_vector, [noise_vector.shape[0], 1])
-%     if noise_vector.shape[0] == 1:
-%         noise_vector = np.tile(noise_vector, [class_vector.shape[0], 1])
-%     class_vector = torch.from_numpy(class_vector.astype(np.float32)).to('cuda')
-%     noise_vector = torch.from_numpy(noise_vector.astype(np.float32)).to('cuda')
-%     with torch.no_grad():
-%         output = model(noise_vector, class_vector, truncation)
-%     imgs = convert_to_images(output.cpu())
-%     return imgs
