@@ -1,6 +1,9 @@
 %% Hess_Frame_Evol_Analysis_batch
-Animal="Alfa"; Set_Path;
+Animal="Beto"; Set_Path;
 evol_ids = find(contains(ExpRecord.expControlFN,"generate_integrated") & ExpRecord.Exp_collection=="ReducDimen_Evol") ;
+%%
+evol_ids = find(contains(ExpRecord.expControlFN,"generate_integrated") & ExpRecord.Exp_collection=="Seq_Evol") ;
+[meta_new,rasters_new,~,Trials_new] = Project_Manifold_Beto_loadRaw(evol_ids,"Beto",true,false);
 %%
 G = FC6Generator();
 %% load the Hessian Matrices

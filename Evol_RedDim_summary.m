@@ -1,13 +1,13 @@
 %% Create the summary plots for Compare evolution scores for Beto.
 %  See if the Evolution works
-Animal = "Beto"; Set_Path
+Animal = "Alfa"; Set_Path
 %%
-Animal = "Beto";
+Animal = "Alfa";
 MatStats_path = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 load(fullfile(MatStats_path, Animal+"_RDEvol_stats.mat"), 'RDStats')
 %% summary stats
 ExpType = "RDEvol";
-for Expi = 1
+for Expi = 1:length(RDStats)
 fprintf("Processing Reduced Dimension Evolution Exp %d\n",Expi)
 thread_n = RDStats(Expi).evol.thread_num;
 % the following snippet is to get rid of 0 unit (null channel)
@@ -26,7 +26,7 @@ score_sem = cellfun(@(psth)std(squeeze(mean(psth(:,51:200,:),[1,2])))...
     /sqrt(size(psth,3)),RDStats(Expi).evol.psth); 
 
 end
-%%
+%% Get the prefer channel and unitnumbering array
 prefchan_arr = arrayfun(@(R)R.evol.pref_chan(1),RDStats);
 unitnum_arr = zeros(1,length(RDStats));
 for Expi = 1:length(RDStats)

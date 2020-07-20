@@ -3,7 +3,7 @@ Animal = "Alfa"; Set_Path;
 result_dir = "E:\OneDrive - Washington University in St. Louis\Evol_ReducDim";
 expftr = contains(ExpRecord.Exp_collection, "ReducDimen_Evol") & ...
         contains(ExpRecord.expControlFN,"generate") &...
-        ExpRecord.Expi>19;
+        ExpRecord.Expi>0;
 rowis = find(expftr);
 % [meta_new,rasters_new,~,Trials_new] = Project_Manifold_Beto_loadRaw(find(expftr),Animal);
 [meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(rowis,Animal,false,true);
@@ -12,7 +12,7 @@ RDStats = repmat(struct(), 1, length(meta_new));
 %%
 % The key analysis is how a unit responds to both optimizer thread
 MatStats_path = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
-for Triali = 14:length(meta_new)
+for Triali = 1:length(meta_new)
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
@@ -137,6 +137,6 @@ RDStats(Expi).ref.psth_arr = nat_psth; % Save the psth of pref chan for referenc
 end
 %%
 %save("D:\Alfa_Evol_stats.mat", 'EStats')
-MatStats_path = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Mat_Statistics";
+MatStats_path = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 save(compose("D:\\%s_RDEvol_stats.mat", Animal), 'RDStats')
 save(fullfile(MatStats_path, compose("%s_RDEvol_stats.mat", Animal)), 'RDStats')
