@@ -18,8 +18,18 @@
 %   Binxu July.20th, 2020. 
 classdef torchBigGAN
    % Usage: 
-   % BGAN = torchBigGAN("biggan-deep-256");
-   % matimgs = BGAN.visualize_class(0.6*randn(5,128),729);figure;montage(matimgs)
+   % Visualizing a certian class 
+   %  BGAN = torchBigGAN("biggan-deep-256");
+   %  matimgs = G.visualize_class(0.6*randn(5,128),729);figure;montage(matimgs)
+   % 
+   % Visualizing 256d latent code  
+   %  BGAN = torchBigGAN("biggan-deep-256");
+   %  truncnorm = truncate(makedist("Normal"),-2,2);
+   %  matimgs = G.visualize_latent([truncnorm.random(5,128), randn(5,128)*0.06]); figure;montage(matimgs)
+   % 
+   % Fix part of the code and Visualizing the other half
+   %  G = G.select_space("class", noise_vec);
+   %  G.visualize(0.06 * randn(5,128))
    properties
        BGAN
        Embeddings
@@ -40,7 +50,7 @@ classdef torchBigGAN
             savedir = "C:\Users\binxu\.pytorch_pretrained_biggan";
            case 'PONCELAB-ML2A' % MLa machine 
             savedir = "C:\Users\Poncelab-ML2a\Documents\Python\pytorch-pretrained-BigGAN\weights";
-           case 'PONCELAB-ML2B' % MLa machine 
+           case 'PONCELAB-ML2B' % MLb machine 
             savedir = "????";
            otherwise
             savedir = "C:\Users\Poncelab-ML2a\Documents\Python\pytorch-pretrained-BigGAN\weights";
@@ -54,8 +64,8 @@ classdef torchBigGAN
        cfg = cfg.from_json_file(fullfile(savedir,compose("%s-config.json",modelname)));
        G.BGAN = py.pytorch_pretrained_biggan.BigGAN(cfg);
        G.BGAN.load_state_dict(py.torch.load(fullfile(savedir,compose("%s-pytorch_model.bin",modelname))));
-       G.BGAN.to('cuda');G.BGAN.eval()
-       py.torch.set_grad_enabled(false)
+       G.BGAN.to('cuda');G.BGAN.eval();
+       py.torch.set_grad_enabled(false);
        tmp = py.list(G.BGAN.named_children);
        G.Embeddings = tmp{1}{2};
        G.Generator = tmp{2}{2};
