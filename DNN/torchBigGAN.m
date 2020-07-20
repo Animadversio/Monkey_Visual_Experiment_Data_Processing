@@ -1,13 +1,31 @@
+% First Time Setup: 
+%    download the code from https://github.com/huggingface/pytorch-pretrained-BigGAN.git
+%    download these weights and definitions and put them in savedir
+%    specified in the class definition below. You can add your computer's
+%    name to that 
+        % resolved_config_file = "https://s3.amazonaws.com/models.huggingface.co/biggan/biggan-deep-256-config.json";
+        % resolved_model_file = "https://s3.amazonaws.com/models.huggingface.co/biggan/biggan-deep-256-pytorch_model.bin";
+%
+% Before use: setup the python env that have pytorch with version < 1.4.0 in it (1.3.1 and 1.1.0 have been proved)  
+%   check which conda env is good by `conda activate xxx` `conda list`  and
+%   copy the directory for the proper env list in `conda env list` to the
+%   `pyenv` command below
+%   
+%   NOTE: THIS SHOULD BE RUN BEFORE YOU USE THIS CLASS
+%   on ML2b `pyenv("Version","C:\Anaconda3\python.exe")`  
+%   on Office 3 `pyenv("Version","C:\Users\ponce\.conda\envs\caffe36\python.exe")`
+%   
+%   Binxu July.20th, 2020. 
 classdef torchBigGAN
-   % Usage: setup the python env that have torch in it  `pyenv("Version","C:\Anaconda3\python.exe")`  
-   % BGAN = torchBigGAN("biggan-deep-512")
+   % Usage: 
+   % BGAN = torchBigGAN("biggan-deep-256");
    % matimgs = BGAN.visualize_class(0.6*randn(5,128),729);figure;montage(matimgs)
    properties
        BGAN
        Embeddings
        Generator
-       space % a variable preset to 
-       fix_noise_vec
+       space % a variable preset to specify which space to use in visualize
+       fix_noise_vec % internal state that can be fix to visualize the other half of space. 
        fix_class_vec
    end
    methods
@@ -15,19 +33,23 @@ classdef torchBigGAN
        if nargin == 0
            modelname = "biggan-deep-256";
        end
-       % download the code from https://github.com/huggingface/pytorch-pretrained-BigGAN.git
-        % 
-       % download these weights and definitions and put them in savedir.
-        % resolved_config_file = "https://s3.amazonaws.com/models.huggingface.co/biggan/biggan-deep-256-config.json";
-        % resolved_model_file = "https://s3.amazonaws.com/models.huggingface.co/biggan/biggan-deep-256-pytorch_model.bin";
-       savedir = "C:\Users\binxu\.pytorch_pretrained_biggan";
-       savedir = "C:\Users\Poncelab-ML2a\Documents\Python\pytorch-pretrained-BigGAN\weights";
+       switch getenv('COMPUTERNAME')
+           case 'DESKTOP-9DDE2RH' % Office 3 Binxu's 
+            savedir = "C:\Users\ponce\.pytorch_pretrained_biggan";
+           case 'DESKTOP-MENSD6S' % Binxu's home work station
+            savedir = "C:\Users\binxu\.pytorch_pretrained_biggan";
+           case 'PONCELAB-ML2A' % MLa machine 
+            savedir = "C:\Users\Poncelab-ML2a\Documents\Python\pytorch-pretrained-BigGAN\weights";
+           case 'PONCELAB-ML2B' % MLa machine 
+            savedir = "????";
+           otherwise
+            savedir = "C:\Users\Poncelab-ML2a\Documents\Python\pytorch-pretrained-BigGAN\weights";
+        end
        % install the torch 1.3.x and the biggan package like below.
         py.importlib.import_module("torch")
         py.importlib.import_module("numpy")
         py.importlib.import_module('pytorch_pretrained_biggan');
-%        import py.pytorch_pretrained_biggan.BigGAN
-%        import py.pytorch_pretrained_biggan.BigGANConfig
+        
        cfg = py.pytorch_pretrained_biggan.BigGANConfig();
        cfg = cfg.from_json_file(fullfile(savedir,compose("%s-config.json",modelname)));
        G.BGAN = py.pytorch_pretrained_biggan.BigGAN(cfg);
@@ -39,7 +61,11 @@ classdef torchBigGAN
        G.Generator = tmp{2}{2};
    end
    function G = select_space(G, space, setting)
-       % Set the space majorly to configure the `visualize` function
+       % Set the space to configure the `visualize` function. Interface to
+       % ML2 experiments where we want to preset the space at the start of
+       % exp. 
+       % Default settings are 
+       %    G.select_space() % "noise" space, 
        if nargin == 1
            G.space = "noise";
        else
