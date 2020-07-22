@@ -1,9 +1,8 @@
 %% BigGAN Evolution Geometry
 pyenv("Version","C:\Users\ponce\.conda\envs\caffe36\python.exe")
-
-%%
 G = torchBigGAN("biggan-deep-256");
 Embed_mat = G.get_embedding();
+%% Get the codes there 
 [BGcodes_all, ~, BGcode_geni] = load_codes_all("N:\Stimuli\2020-BigGAN\2020-07-20-Beto-01\2020-07-20-12-40-51",1);
 [data,MLConfig,TrialRecord,~] = mlread("N:\Data-Behavior (BHV2)\200720_Beto_generate_BigGAN(1).bhv2");
 space = TrialRecord.User.space_cfg{1};
@@ -31,8 +30,8 @@ fprintf("\n%02d ", 1 + rowi - min(find(BGcode_geni==geni)))
 for i = 1:5
     fprintf("%s %.1f\t\t",NNClass(rowi,i),sort_dist(rowi,i))
 end
-fprintf("\n")
 end
+fprintf("\n")
 imgs = G.visualize(BGcodes_all(BGcode_geni==geni,:));
 figure(8);montage(imgs)
 pause;
