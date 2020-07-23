@@ -51,7 +51,7 @@ classdef torchBigGAN
            case 'PONCELAB-ML2A' % MLa machine 
             savedir = "C:\Users\Poncelab-ML2a\Documents\Python\pytorch-pretrained-BigGAN\weights";
            case 'PONCELAB-ML2B' % MLb machine 
-            savedir = "????";
+            savedir = "C:\Users\Ponce lab\Documents\Python\pytorch-pretrained-BigGAN\weights";
            otherwise
             savedir = "C:\Users\Poncelab-ML2a\Documents\Python\pytorch-pretrained-BigGAN\weights";
         end
