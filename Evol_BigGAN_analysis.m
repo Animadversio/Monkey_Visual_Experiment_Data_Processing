@@ -1,0 +1,6 @@
+%% Evol BigGAN Analysis
+Animal = "Beto";Set_Path;
+expftr = contains(ExpRecord.Exp_collection,"BigGAN") & contains(ExpRecord.expControlFN,"generate");
+fllist = find(expftr);
+[meta_new,rasters_new,~,Trials_new] = Project_Manifold_Beto_loadRaw(fllist(1:end),Animal,false);%find(expftr)%find(expftr)
+%%

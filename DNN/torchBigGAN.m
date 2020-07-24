@@ -56,8 +56,8 @@ classdef torchBigGAN
             savedir = "C:\Users\Poncelab-ML2a\Documents\Python\pytorch-pretrained-BigGAN\weights";
         end
        % install the torch 1.3.x and the biggan package like below.
-        py.importlib.import_module("torch")
-        py.importlib.import_module("numpy")
+        py.importlib.import_module("torch");
+        py.importlib.import_module("numpy");
         py.importlib.import_module('pytorch_pretrained_biggan');
         
        cfg = py.pytorch_pretrained_biggan.BigGANConfig();
@@ -73,9 +73,26 @@ classdef torchBigGAN
    function G = select_space(G, space, setting)
        % Set the space to configure the `visualize` function. Interface to
        % ML2 experiments where we want to preset the space at the start of
-       % exp. 
+       % exp. For in silico evolution, also use this to configure which
+       % space to optimize in. 
+       % Note this function changes inner variables of G, so need to assign it back to G.
+       % 
        % Default settings are 
-       %    G.select_space() % "noise" space, 
+       % G=G.select_space() % "noise" space, 
+       % G=G.select_space("noise") % "noise" space, in golden fish class. 
+       % G=G.select_space("noise", 374) % "noise" space, with class vector
+       %                                 %  fixed as macaque 374 class
+       % G=G.select_space("noise", rand(1000)) % "noise" space, with class vector
+       %                      %  fixed as a projection of a 1000d vector
+       % G=G.select_space("noise", 0.06*randn(128)) % "noise" space, with class vector
+       %            %  fixed as a random 128d vector with proper norm
+       % G=G.select_space("class") % "class" space, with noise vector
+       %            %  fixed as a random 128d vector with proper norm
+       % G=G.select_space("class", scaling) % "class" space, with noise vector
+       %            %  fixed as a random 128d vector with proper norm * scaling
+       % G=G.select_space("class", truncnorm.random(1,128)) % "class" space, with noise vector
+       %            %  fixed as a random 128d vector sampled from truncated normal
+       % 
        if nargin == 1
            G.space = "noise";
        else
