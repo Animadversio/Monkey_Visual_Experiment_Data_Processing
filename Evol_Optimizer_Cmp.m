@@ -227,15 +227,13 @@ xlabel("Post Stimulus Time (ms)")
 title([Exp_label_str, compose('Generation averaged PSTH , channel %s', unit_name_arr{channel_j}), compose("Optimizer %s", Optim_names(threadi))])
 end
 axs3 = AlignAxisLimits(axs3);
-%%
-
+%% 
 saveas(h2, fullfile(savepath, compose("score_traj_cmp_chan%s.png", unit_name_arr{channel_j})))
 saveas(h3, fullfile(savepath, compose("Evolv_psth_cmp_chan%s.png", unit_name_arr{channel_j})))
 if ~isempty(find(pref_chan_id==channel_j, 1)) % if the channel is among the preferred channel list. 
 saveas(h2, fullfile(result_dir, compose("%s_Evol%02d_score_traj_chan%s.png", Animal, Expi, unit_name_arr{channel_j})))
 saveas(h3, fullfile(result_dir, compose("%s_Evol%02d_Evolv_psth_chan%s.png", Animal, Expi, unit_name_arr{channel_j})))
 end
-
 
 end
 end
