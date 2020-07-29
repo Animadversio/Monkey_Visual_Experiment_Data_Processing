@@ -1,3 +1,4 @@
+%% Get video from Freeviewing BhV2 file with webcam data
 BHV_fn = 'D:\Alfa_freeviewing\190628_Alfa_freeViewing_basic.bhv2'; % 'C:\Users\ponce\OneDrive\Desktop\OneDrive_Binxu\OneDrive\190628_Beto_generate_parallel.bhv2';
 output_dir = 'D:\Alfa_freeviewing\190628_Alfa_freeViewing_basic_webcam';
 concat_fn = 'D:\Alfa_freeviewing\190628_Alfa_freeViewing_basic_webcam.avi';

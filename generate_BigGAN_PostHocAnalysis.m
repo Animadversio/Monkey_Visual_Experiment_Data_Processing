@@ -2,12 +2,12 @@
 %  This will empty the GPU resources for other programs. Crucial for
 %  Hessian computation which requires space on GPU
 py.torch.cuda.empty_cache()
-%% Not necessary
+%% Experiment Visualization
 bhvfn = "200728_Beto_generate_BigGAN.bhv2";
 [data,MLConfig,TrialRecord] = mlread(bhvfn);
 space_opts = TrialRecord.User.space_opts;
 optim_names = TrialRecord.User.evoConfiguration(:,5);
-save(fullfile(TrialRecord.User.newPicsHome, "space_opts.mat"), "space_opts");
+% save(fullfile(TrialRecord.User.newPicsHome, "space_opts.mat"), "space_opts");
 backupdir = TrialRecord.User.newPicsHome;
 %% Visualize the experiments using scores and images
 % imgext = ".bmp";

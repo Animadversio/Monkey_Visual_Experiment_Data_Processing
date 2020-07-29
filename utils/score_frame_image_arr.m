@@ -3,7 +3,7 @@ function frame_img_list = score_frame_image_arr(img_list, score_mat, clim, cmap,
 % for corresponding image in the img_list. 
 % 
 % Arguments 
-% img_list is a image cell array, same shape as hl_mat. 
+% img_list is a image cell array, same shape as score_mat. 
 %           Now support image file path (string array) as well, the images
 %           will be read and padded. @Feb.4th
 % score_mat is a score matrix, with nan is images with no observation.
@@ -11,6 +11,16 @@ function frame_img_list = score_frame_image_arr(img_list, score_mat, clim, cmap,
 % cmap is a K-by-3 matrix coding the RGB values in 1:64. e.g. `jet`,
 %           `parula` will return colormap in these formats s
 % LineWidth control the width of padding
+%
+% Returns
+%   frame_img_list: Cell array of framed images
+if nargin <= 4 % default parameters
+LineWidth = 10;
+if nargin <= 3
+cmap = parula;
+if nargin == 2
+clim = [min(score_mat,[],'all'), max(score_mat,[],'all')];
+end;end;end
 Cmin = clim(1); Cmax = clim(2);
 assert(all(size(img_list) == size(score_mat)), ...
     "Score matrix and image cell array size doesn't matach")

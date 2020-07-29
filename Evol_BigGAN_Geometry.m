@@ -2,6 +2,10 @@
 pyenv("Version","C:\Users\ponce\.conda\envs\caffe36\python.exe")
 G = torchBigGAN("biggan-deep-256");
 Embed_mat = G.get_embedding();
+%%
+net = alexnet;
+ImgNetLabel = net.Layers(end).Classes;
+clear net
 %% Get the codes there 
 [BGcodes_all, ~, BGcode_geni] = load_codes_all("N:\Stimuli\2020-BigGAN\2020-07-20-Beto-01\2020-07-20-12-40-51",1);
 [data,MLConfig,TrialRecord,~] = mlread("N:\Data-Behavior (BHV2)\200720_Beto_generate_BigGAN(1).bhv2");
@@ -10,10 +14,6 @@ if strcmp(space, 'BigGAN_class')
 noise_vec = TrialRecord.User.space_cfg{2};
 end
 truncnorm = truncate(makedist("Normal"),-2,2);
-%%
-net = alexnet;
-ImgNetLabel = net.Layers(end).Classes;
-clear net
 %%
 noise_vec = truncnorm.random([1,128]);
 %%
