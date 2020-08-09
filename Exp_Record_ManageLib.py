@@ -1,7 +1,9 @@
 import pandas as pd
 import numpy as np
 import os
+
 if os.environ['COMPUTERNAME'] == 'DESKTOP-9DDE2RH':  # PonceLab-Desktop 3
+    os.system(r"subst S:  E:\Network_Data_Sync") # alias the disk if it has not been mounted.
     tmp_input = r"D:\ExpRecord_tmp.xlsx"
     tmp_output = r"D:\ExpRecord_out.xlsx"
     df_paths = [r"S:\Exp_Record_Alfa.xlsx", r"S:\ExpSpecTable_Augment.xlsx"]
@@ -59,13 +61,13 @@ def process_concat_cells(df, out_excel, Animal):
         else:
             nextrow = row_num
         df_sort.comments[Expi] = df.comments[rowi:nextrow].str.cat(sep="\n")
-        df_sort.ephysFN[Expi] = df.ephysFN[rowi]
-        df_sort.expControlFN[Expi] = df.expControlFN[rowi]
+        df_sort.ephysFN[Expi] = df.ephysFN[rowi].strip() # use strip to get rid of leading and ending space ' '
+        df_sort.expControlFN[Expi] = df.expControlFN[rowi].strip()
         if "Stimuli" in df.stimuli[rowi]:
             if "Stimuli" in df.stimuli[rowi][:8]:
-                df_sort.stimuli[Expi] = "N:\\" + df.stimuli[rowi] 
+                df_sort.stimuli[Expi] = "N:\\" + df.stimuli[rowi].strip()
             else:
-                df_sort.stimuli[Expi] = df.stimuli[rowi]
+                df_sort.stimuli[Expi] = df.stimuli[rowi].strip()
         else:
             df_sort.stimuli[Expi] = ""
             stimuli_miss_cnt += 1
@@ -135,9 +137,12 @@ def sort_merge_table(df_sort, addexplabel=None):
 if __name__ == '__main__':
     os.startfile(tmp_input)
     Animal = input("Which animal to parse from %s?" % (tmp_input) )
-    if len(Animal) == 0:
-        Animal = "Both"#"Beto" # "Alfa" "ALfa"
-    df_sort = process_concat_cells(tmp_input, tmp_output, Animal=Animal)
+    if not Animal == "out":
+        if len(Animal) == 0:
+            Animal = "Both"#"Beto" # "Alfa" "ALfa"
+        df_sort = process_concat_cells(tmp_input, tmp_output, Animal=Animal)
+    else: # try to open the tempory output directly and parse from it.
+        pass
     try:
         os.startfile(tmp_output)
     except:
