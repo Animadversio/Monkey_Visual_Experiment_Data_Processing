@@ -12,6 +12,7 @@
 %   `pyenv` command below
 %   
 %   NOTE: THIS SHOULD BE RUN BEFORE YOU USE THIS CLASS
+%   on Binxu home `pyenv('Version','C:\ProgramData\Anaconda3\envs\tf-torch\python.exe')`  
 %   on ML2b `pyenv("Version","C:\Anaconda3\python.exe")`  
 %   on Office 3 `pyenv("Version","C:\Users\ponce\.conda\envs\caffe36\python.exe")`
 %   
