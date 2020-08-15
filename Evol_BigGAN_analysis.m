@@ -1,7 +1,7 @@
 %% Evol BigGAN Analysis
 Animal = "Both";Set_Path;
 %"200803","200804","200805"
-expftr = contains(ExpRecord.expControlFN,["200806"]); %& contains(ExpRecord.Exp_collection,"BigGAN_Hessian");% & contains(ExpRecord.Exp_collection,"BigGAN");
+expftr = contains(ExpRecord.expControlFN,["200807","200810"]); %& contains(ExpRecord.Exp_collection,"BigGAN_Hessian");% & contains(ExpRecord.Exp_collection,"BigGAN");
 fllist = find(expftr);no_return=false;
 [meta_new,rasters_new,~,Trials_new] = Project_Manifold_Beto_loadRaw(fllist(1:end),Animal,no_return);%find(expftr)%find(expftr)
 %%
