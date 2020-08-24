@@ -1,10 +1,13 @@
 %% Adapted from Hess_Tune_Analysis
+%  Generate figures for Selectivity experiments for tuning along Hessian
+%  eigen-axes. Compatible for different versions of the naming convention. 
+%  Tested. 
 Animal = "Both";Set_Path;
-expftr = contains(ExpRecord.expControlFN,["200814"]);%& contains(ExpRecord.expControlFN, "selectivity");; %& ,"200812"contains(ExpRecord.Exp_collection,"BigGAN_Hessian");% & contains(ExpRecord.Exp_collection,"BigGAN");
+expftr = contains(ExpRecord.expControlFN,["200817"]);%& contains(ExpRecord.expControlFN, "selectivity");; %& ,"200812"contains(ExpRecord.Exp_collection,"BigGAN_Hessian");% & contains(ExpRecord.Exp_collection,"BigGAN");
 % expftr = contains(ExpRecord.Exp_collection,"BigGAN_Hessian") & contains(ExpRecord.expControlFN, "selectivity");
 fllist = find(expftr);no_return=false;
 [meta_new,rasters_new,~,Trials_new] = loadExperiments(fllist(1:end),Animal,no_return);
-%%
+%% Load the experiments
 Animal = "Both";Set_Path;
 % expftr = contains(ExpRecord.expControlFN,["200813"]); %& ,"200812"contains(ExpRecord.Exp_collection,"BigGAN_Hessian");% & contains(ExpRecord.Exp_collection,"BigGAN");
 expftr = contains(ExpRecord.Exp_collection,"BigGAN_Hessian") & contains(ExpRecord.expControlFN, "selectivity");
@@ -40,9 +43,9 @@ unit_name_arr = generate_unit_labels(meta.spikeID);
 imgname_uniq = unique(Trials.imageName); 
 keyboard
 %% Load the images in the class space and noise space
-% Identify the naming convention used in this Exp
+% Identify the naming convention used in this Exp. (Different version of py code)
 [noise_pattern, noise_imgnm, class_pattern, class_imgnm] = parse_naming_convention(imgname_uniq);
-% Extract parameters of images in noise space
+% Extract parameters of images in noise space from img name
 namepart_uniq = regexp(imgname_uniq, noise_pattern, 'names');
 namepart_uniq = namepart_uniq(~cellfun(@isempty,namepart_uniq));
 eig_id_arr_nos = unique(cellfun(@(U)str2num(U.eig_id),namepart_uniq));
@@ -54,13 +57,13 @@ for i = 1:length(eig_id_arr_nos)
     eig_id = eig_id_arr_nos(i);
     for j = 1:length(dist_arr_nos)
     dist = dist_arr_nos(j);
-    imgnm = compose(noise_imgnm,eig_id,dist); % "noise_eig%d_lin%.1f"
+    imgnm = compose(noise_imgnm,eig_id,dist); % e.g. "noise_eig%d_lin%.1f"
     idx_arr_nos{i,j} = find(contains(Trials.imageName, imgnm));
     imgnm_arr_nos(i,j) = imgnm;
     end
 end
 img_noise = arrayfun(@(imgnm)imread(fullfile(meta.stimuli, imgnm+".jpg")),imgnm_arr_nos,"Un",false);
-% Extract parameters of images in class space
+% Extract parameters of images in class space from img name
 namepart_uniq = regexp(imgname_uniq,class_pattern,'names');
 namepart_uniq = namepart_uniq(~cellfun(@isempty,namepart_uniq));
 eig_id_arr_cls = unique(cellfun(@(U)str2num(U.eig_id),namepart_uniq));

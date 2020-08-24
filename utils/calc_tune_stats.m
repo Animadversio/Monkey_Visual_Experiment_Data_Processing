@@ -2,7 +2,7 @@ function reportStats = calc_tune_stats(psth_cells, wdw_vect)
 % similar function to calc_tuning_stats, but simpler just input an cell
 % array of psth and it can compute T and F for you. 
 % If you want, `wdw_vect` can input an array of time windows to compute the
-% F stats
+% F stats for each time window
 if nargin == 1
     wdw_vect = [];
     MovF = false;
