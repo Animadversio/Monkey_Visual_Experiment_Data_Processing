@@ -1,13 +1,18 @@
-function [meta,rasters,lfps,Trials] = loadExperiments(rowlist, animal, no_return, no_lfp)
+function [meta,rasters,lfps,Trials] = loadExperiments(rowlist, animal, no_return, no_lfp, no_conv)
 if nargin == 1
 animal = "Beto";
 no_return = false;
 no_lfp = false;
+no_conv = true;
 elseif nargin == 2
 no_return = false;
 no_lfp = true;
+no_conv = true;
 elseif nargin == 3
 no_lfp = true;
+no_conv = true;
+elseif nargin == 4
+no_conv = true;
 end
 switch animal 
     case "Beto"
@@ -27,6 +32,7 @@ for iExp = 1:numel(rowlist)
     preMeta(iExp).expControlFN = ExpRecord.expControlFN{rowi}; % 
     preMeta(iExp).stimuli = ExpRecord.stimuli{rowi} ;
     preMeta(iExp).comments = ExpRecord.comments{rowi};
+    if no_conv, preMeta(iExp).sdf = 'raster'; else, preMeta(iExp).sdf = 'sdf'; end
 end
 
 Project_General_copyMissingFiles(preMeta); % communicating and copying data from network to local 
@@ -34,7 +40,11 @@ meta = {}; rasters = {}; lfps = {}; Trials = {};
 for iExp = 1:length(preMeta) 
     tMeta = preMeta(iExp);
     try
-    [meta_,rasters_,lfps_,Trials_] = loadData(tMeta.ephysFN,'expControlFN',tMeta.expControlFN) ;
+    if ~no_conv
+        [meta_,rasters_,lfps_,Trials_] = loadData(tMeta.ephysFN,'expControlFN',tMeta.expControlFN) ;
+    else
+        [meta_,rasters_,lfps_,Trials_] = loadData(tMeta.ephysFN,'expControlFN',tMeta.expControlFN, 'sdf', 'raster') ;
+    end
     catch err %e is an MException struct
         fprintf('Error message:\n%s\n',err.message);
         fprintf('Error trace:\n%s\n',err.getReport);
