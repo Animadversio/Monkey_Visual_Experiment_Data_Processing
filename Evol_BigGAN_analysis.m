@@ -9,7 +9,7 @@ median(param,1)
 mean(param,1)
 %%
 % all -1.0000   -0.5000   -2.4374   -4.6619   -3.2552    0.4563
-%%
+%% Examine the experiment tabel of inverting BigGAN
 expnm = "E:\Cluster_Backup\BigGAN_invert\cute_cat_rsz_all";
 expresult = readtable(fullfile(expnm,"BigGAN_Hess_Adam_optim_BO_tune600.csv"));
 %
