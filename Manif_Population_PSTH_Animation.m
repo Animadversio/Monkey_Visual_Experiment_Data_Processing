@@ -9,8 +9,8 @@ load(fullfile(mat_dir, Animal+'_Manif_stats.mat'))
 %% Set up figure stage for the 3 arrays 
 % (no need to redo this for different channels. Just use the layout in ax_arr,tIT,tV1,tV4)
 tic
-savepath = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Pop_PSTH_Anim";
-savepath = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Pop_PSTH_Anim";
+% savepath = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Pop_PSTH_Anim";
+% savepath = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Pop_PSTH_Anim";
 savepath = "S:\Pop_PSTH_Anim";
 mkdir(savepath)
 figIT = figure(2);
