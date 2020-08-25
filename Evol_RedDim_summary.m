@@ -24,7 +24,9 @@ evol_stim_sem = cell2mat(reshape(evol_stim_sem',1,1,[],thread_n));
 score_avg = cellfun(@(psth)mean(psth(:,51:200,:),'all') - mean(psth(:,1:50,:),'all'),RDStats(Expi).evol.psth);
 score_sem = cellfun(@(psth)std(squeeze(mean(psth(:,51:200,:),[1,2])))...
     /sqrt(size(psth,3)),RDStats(Expi).evol.psth); 
-
+% Generation number of 50% progress
+perct = .5;
+gen50 = sum(score_avg < ( perct * max(score_avg,[],2) + (1-perct) * score_avg(:,1)),2);
 end
 %% Get the prefer channel and unit numbering array
 prefchan_arr = arrayfun(@(R)R.evol.pref_chan(1),RDStats);
@@ -49,6 +51,11 @@ threadn = RDStats(Expi).evol.thread_num;
 
 unit_psth = cellfun(@(psth)psth(ui,:,:), RDStats(Expi).evol.psth, 'Uni', false);
 window = [51:200];
+score_avg = cellfun(@(psth)mean(psth(:,window,:),'all') - mean(psth(:,1:50,:),'all'), unit_psth);
+% Generation number of 50%, 65%, 80% progress
+perct = .50; RDThreadStats(Expi).gen50 = sum(score_avg < ( perct * max(score_avg,[],2) + (1-perct) * score_avg(:,1)),2)';
+perct = .65; RDThreadStats(Expi).gen65 = sum(score_avg < ( perct * max(score_avg,[],2) + (1-perct) * score_avg(:,1)),2)';
+perct = .80; RDThreadStats(Expi).gen80 = sum(score_avg < ( perct * max(score_avg,[],2) + (1-perct) * score_avg(:,1)),2)';
 for thr_i = 1:threadn % collect activation data for each thread.
 block_mean_score = cellfun(@(psth)mean(psth(1,window,:),'all'),unit_psth(thr_i,1:blockn-1));
 [~,peakBlock]=max(block_mean_score,[],2);
@@ -106,6 +113,9 @@ if ~all(RDStats(Expi).evol.optim_names == ["ZOHA Sphere lr euclid", "ZOHA Sphere
         RDEvolCmpStats(ipair).text_cmp_p = P;
         RDEvolCmpStats(ipair).text_mean = [mean(RDThreadStats(Expi-1).textacts{1}), mean(RDThreadStats(Expi).textacts{thr_i})];
         RDEvolCmpStats(ipair).text_sem = [sem(RDThreadStats(Expi-1).textacts{1}), sem(RDThreadStats(Expi).textacts{thr_i})];
+        RDEvolCmpStats(ipair).gen50 = [RDThreadStats(Expi-1).gen50(1), RDThreadStats(Expi).gen50(thr_i)];
+        RDEvolCmpStats(ipair).gen65 = [RDThreadStats(Expi-1).gen65(1), RDThreadStats(Expi).gen65(thr_i)];
+        RDEvolCmpStats(ipair).gen80 = [RDThreadStats(Expi-1).gen80(1), RDThreadStats(Expi).gen80(thr_i)];
         ipair = ipair + 1;
     end
 else
@@ -125,6 +135,9 @@ else
     RDEvolCmpStats(ipair).text_cmp_p = P;
     RDEvolCmpStats(ipair).text_mean = cellfun(@mean, RDThreadStats(Expi).textacts);
     RDEvolCmpStats(ipair).text_sem = cellfun(@sem, RDThreadStats(Expi).textacts);
+    RDEvolCmpStats(ipair).gen50 = RDThreadStats(Expi).gen50;
+    RDEvolCmpStats(ipair).gen65 = RDThreadStats(Expi).gen65;
+    RDEvolCmpStats(ipair).gen80 = RDThreadStats(Expi).gen80;
     ipair = ipair + 1;
 end
 end
@@ -210,6 +223,50 @@ suptitle(compose("%s activation comparison for all experiments",Animal))
 legend(["init rate full", "init rate 50D", "peak rate full", "peak rate 50D"],'location','best')
 saveas(2, fullfile(savedir,compose("%s_ActivDiff_lines_area.jpg",Animal)))
 savefig(2, fullfile(savedir,compose("%s_ActivDiff_lines_area.fig",Animal)))
+%% Evolution time
+figure(3);clf
+subtightplot(1,3,1,0.05, 0.1, 0.05);hold on
+plot([1:sum(msk.V1)]'+[0  ], RDEvolCmpTable.gen50(msk.V1,1), 'Marker','o','color','red','LineStyle','none')
+plot([1:sum(msk.V1)]'+[0.7], RDEvolCmpTable.gen50(msk.V1,2), 'Marker','o','color','blue','LineStyle','none')
+% plot([1:sum(msk.V1)]'+[0, 0.7], RDEvolCmpTable.gen65(msk.V1,:), 'Marker','o','color','magenta','LineStyle','none')
+% plot([1:sum(msk.V1)]'+[0, 0.7], RDEvolCmpTable.gen80(msk.V1,:), 'Marker','o','color','k','LineStyle','none')
+line([1:sum(msk.V1)]+[0,0.7]', [ RDEvolCmpTable.gen50(msk.V1,1)';...
+                                 RDEvolCmpTable.gen50(msk.V1,2)'],'color', 'k')
+% line([1:sum(msk.V1)]+[0,0.7]', [ RDEvolCmpTable.gen65(msk.V1,1)';...
+%                                  RDEvolCmpTable.gen65(msk.V1,2)'],'color', 'k')
+% line([1:sum(msk.V1)]+[0,0.7]', [ RDEvolCmpTable.gen80(msk.V1,1)';...
+%                                  RDEvolCmpTable.gen80(msk.V1,2)'],'color', 'k')
+ylabel("Convergence Time");xlabel("pref chan");title("V1 Exps");xticks([1:sum(msk.V1)]);xticklabels(RDEvolCmpTable.pref_chan(V1msk))
+subtightplot(1,3,2,0.05, 0.1, 0.05);hold on
+plot([1:sum(msk.V4)]'+[0  ], RDEvolCmpTable.gen50(msk.V4,1), 'Marker','o','color','red','LineStyle','none')
+plot([1:sum(msk.V4)]'+[0.7], RDEvolCmpTable.gen50(msk.V4,2), 'Marker','o','color','blue','LineStyle','none')
+% plot([1:sum(msk.V4)]'+[0, 0.7], RDEvolCmpTable.gen65(msk.V4,:), 'Marker','o','color','magenta','LineStyle','none')
+% plot([1:sum(msk.V4)]'+[0, 0.7], RDEvolCmpTable.gen80(msk.V4,:), 'Marker','o','color','k','LineStyle','none')
+line([1:sum(msk.V4)]+[0,0.7]', [ RDEvolCmpTable.gen50(msk.V4,1)';...
+                                 RDEvolCmpTable.gen50(msk.V4,2)'],'color', 'k')
+% line([1:sum(msk.V4)]+[0,0.7]', [ RDEvolCmpTable.gen65(msk.V4,1)';...
+%                                  RDEvolCmpTable.gen65(msk.V4,2)'],'color', 'k')
+% line([1:sum(msk.V4)]+[0,0.7]', [ RDEvolCmpTable.gen80(msk.V4,1)';...
+%                                  RDEvolCmpTable.gen80(msk.V4,2)'],'color', 'k')
+ylabel("Convergence Time");xlabel("pref chan");title("V4 Exps");xticks([1:sum(msk.V4)]);xticklabels(RDEvolCmpTable.pref_chan(V4msk))
+subtightplot(1,3,3,0.05, 0.1, 0.05);hold on
+plot([1:sum(msk.IT)]'+[0  ], RDEvolCmpTable.gen50(msk.IT,1), 'Marker','o','color','red','LineStyle','none')
+plot([1:sum(msk.IT)]'+[0.7], RDEvolCmpTable.gen50(msk.IT,2), 'Marker','o','color','blue','LineStyle','none')
+% plot([1:sum(msk.IT)]'+[0, 0.7], RDEvolCmpTable.gen65(msk.IT,:), 'Marker','o','color','magenta','LineStyle','none')
+% plot([1:sum(msk.IT)]'+[0, 0.7], RDEvolCmpTable.gen80(msk.IT,:), 'Marker','o','color','k','LineStyle','none')
+line([1:sum(msk.IT)]+[0,0.7]', [ RDEvolCmpTable.gen50(msk.IT,1)';...
+                                 RDEvolCmpTable.gen50(msk.IT,2)'],'color', 'k')
+% line([1:sum(msk.IT)]+[0,0.7]', [ RDEvolCmpTable.gen65(msk.IT,1)';...
+%                                  RDEvolCmpTable.gen65(msk.IT,2)'],'color', 'k')
+% line([1:sum(msk.IT)]+[0,0.7]', [ RDEvolCmpTable.gen80(msk.IT,1)';...
+%                                  RDEvolCmpTable.gen80(msk.IT,2)'],'color', 'k')
+ylabel("Convergence Time");xlabel("pref chan");title("IT Exps");xticks([1:sum(msk.IT)]);xticklabels(RDEvolCmpTable.pref_chan(ITmsk))
+suptitle(compose("%s activation comparison for all experiments",Animal))
+% legend(["Iter 50% 4096D", "Iter 50% 50D", "Iter 65% 4096D", "Iter 65% 50D", "Iter 80% 4096D", "Iter 80% 50D"],'location','best')
+legend(["Iter 50% 4096D", "Iter 50% 50D"],'location','best')
+saveas(3, fullfile(savedir,compose("%s_EvolTime_lines_area.jpg",Animal)))
+savefig(3, fullfile(savedir,compose("%s_EvolTime_lines_area.fig",Animal)))
+
 %%
 figure(1);clf
 ax = subtightplot(1,1,1,0.05, 0.1, 0.05);hold on 
