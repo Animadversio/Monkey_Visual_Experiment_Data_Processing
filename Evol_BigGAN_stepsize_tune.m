@@ -1,4 +1,5 @@
-%% Evol BigGAN Geometry
+%% Visualize Evol BigGAN Geometry
+%  
 Animal="Beto";Set_Path;
 rowidx = find(contains(ExpRecord.expControlFN,"BigGAN"));
 ExpRecord(find(contains(ExpRecord.expControlFN,"BigGAN")),:)
