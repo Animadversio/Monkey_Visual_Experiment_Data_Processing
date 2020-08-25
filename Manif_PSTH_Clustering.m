@@ -1,12 +1,13 @@
 %% Clustering PSTH dynamics (the spatial temporal tensor) for each channel
 %  Add data tips to understand the clusters 
 %% Really compelling visualization
-mat_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
+mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 Animal = "Alfa";
-load(fullfile(mat_dir, Animal+'_Evol_stats.mat'))
-load(fullfile(mat_dir, Animal+'_Manif_stats.mat'))
+load(fullfile(mat_dir, Animal+'_Evol_stats.mat'),'EStats')
+load(fullfile(mat_dir, Animal+'_Manif_stats.mat'),'Stats')
+load(fullfile(mat_dir, Animal+'_ManifPopDynamics.mat'),'ManifDyn')
 %%
-savepath = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Manif_PSTH_clster";
+savepath = "E:\OneDrive - Washington University in St. Louis\Manif_PSTH_clster";
 mkdir(savepath)
 %% Only those tuned channel
 lab_arr = [];
