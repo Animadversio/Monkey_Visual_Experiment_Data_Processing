@@ -84,5 +84,24 @@ classdef torchImDist
        dists = G.D.forward(im1_tsr, im2_tsr).squeeze().cpu().detach().numpy().double;
    end
    
+   function distMat = distmat(G, imgs, B)
+       if nargin==2, B = 100;end
+       if max(imgs,[],'all')>1.2, imgs = single(imgs) / 255.0; end
+       % interface with generate integrated code, cmp to FC6GAN
+       imgn = size(imgs,4);
+       distMat = zeros(imgn,imgn);
+       for i=1:imgn
+           csr=1;
+           dist_row = [];
+           while csr <= imgn
+           csr_end = min(imgn, csr+B-1);
+           dists = G.distance(imgs(:,:,:,i), imgs(:,:,:,csr:csr_end));
+           dist_row = cat(2, dist_row, dists);
+           csr = csr_end+1;
+           end
+           distMat(i, :) = dist_row;
+       end
+   end
+   
    end
 end
