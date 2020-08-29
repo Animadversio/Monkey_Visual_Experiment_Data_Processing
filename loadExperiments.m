@@ -3,16 +3,16 @@ if nargin == 1
 animal = "Beto";
 no_return = false;
 no_lfp = false;
-no_conv = true;
+no_conv = false;
 elseif nargin == 2
 no_return = false;
 no_lfp = true;
-no_conv = true;
+no_conv = false;
 elseif nargin == 3
 no_lfp = true;
-no_conv = true;
+no_conv = false;
 elseif nargin == 4
-no_conv = true;
+no_conv = false;
 end
 switch animal 
     case "Beto"
@@ -61,12 +61,12 @@ for iExp = 1:length(preMeta)
     meta_ = cell2struct([struct2cell(meta_merged); struct2cell(meta_)], names, 1);
     if ~no_return % if true then don't return these things, only save to disk. 
         % helpful when we don't want to take up all the memory! 
-    meta{iExp} = meta_;
-    rasters{iExp} = rasters_;
-    if ~no_lfp
-    lfps{iExp} = lfps_;
-    end
-    Trials{iExp} = Trials_;
+        meta{iExp} = meta_;
+        rasters{iExp} = rasters_;
+        if ~no_lfp
+            lfps{iExp} = lfps_;
+        end
+        Trials{iExp} = Trials_;
     end
     clear meta_  rasters_ lpfs_ Trials_ names meta_merged tMeta
 end
