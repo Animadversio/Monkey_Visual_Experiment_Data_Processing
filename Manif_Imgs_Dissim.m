@@ -83,7 +83,7 @@ Expi=1;si=1;
 imnm_grid = string(cellfun(@(idx)Stats(Expi).imageName{idx(1)},Stats(Expi).manif.idx_grid{si},'UniformOutput',false));
 manif_imgrid = arrayfun(@(nm)imread(fullfile(Stats(Expi).meta.stimuli,nm+".jpg")),imnm_grid,"Uni",0);
 manif_img_tsr = cell2mat(reshape(manif_imgrid,1,1,1,[]));
-%%
+%% Demo
 tic
 D.select_metric("squeeze");
 manif_imdist.squ = D.distmat(manif_img_tsr);
@@ -96,7 +96,7 @@ manif_imdist.L2 = D.distmat(manif_img_tsr);
 toc% 
 %%
 save("manif_imdist.mat",'manif_imdist')
-%% Get the image distance function of all Images on manifold
+%% Compute the image distance function of all Images on manifold
 ManifImDistStat = repmat(struct(),1,numel(Stats));
 for Expi=1:numel(Stats)
 tic;

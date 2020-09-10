@@ -1,6 +1,7 @@
 classdef torchImDist
    % Usage: 
-   % Compute dissimilarity between 2 images of the same size. 
+   % Compute dissimilarity between 2 images of the same size. Using
+   % PerceptualSimilarity Metric from Pytorch
    % 
    % To compute a scalar difference of images
    %    D = torchImDist("squeeze")
