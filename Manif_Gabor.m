@@ -1,4 +1,6 @@
-for Triali = 25%1:length(meta_new)
+load(fullfile(mat_dir,Animal+"_Manif_stats.mat"),'Stats')
+%%
+for Triali = 1:length(meta_new)
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};

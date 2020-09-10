@@ -84,7 +84,6 @@ for chan_j = 1:length(PasuStats(Expi).units.spikeID)
     saveas(11, fullfile(savedir, sprintf("Pasu_tSNE_chan%s.png", PasuStats(Expi).units.unit_name_arr{chan_j})))
     
 end
-
 end
 %%
 idx_mat = reshape(1:4*51,51,4);
@@ -101,7 +100,7 @@ idx_vec = cat(1, idx_cell{:});
 %%
 frame_img_list = score_frame_image_arr(pasuimg_list, act_mat, CLIM, colormap(gca), 50);
 %%
-[summary, stat_str] = calc_pasu_tuning_stats(act_cell, bsl_cell)
+[summary, stat_str] = calc_pasu_tuning_stats(act_cell, bsl_cell);
 %%
 idx_mat = reshape(1:4*51,51,4);
 idx_mat = arrayfun(@(idx){idx},idx_mat);

@@ -1,7 +1,7 @@
 %% Collect Response of Pasupathy images and Manifold 
 % (time averaged to compress, both in baseline and response period)
 %%
-Animal = "Beto";Set_Path;
+Animal = "Alfa";Set_Path;
 %expftr = (contains(ExpRecord.expControlFN,"200319"));
 expftr = (contains(ExpRecord.Exp_collection,"Manifold") &...
             contains(ExpRecord.expControlFN, "selectivity"));%&...
@@ -10,17 +10,18 @@ rowis = find(expftr);
 % Expi_col = [1,2,3,6,7,10,11,12,19,27];
 % Expi_col = [1,3,4,5,8,9,10,11,12,13,15,16,17,18,19,20,21,22];
 % assert(all(ExpRecord.Expi(rowis(Expi_col))==Expi_col')) % assert you are getting what you want. 
-[meta_new,rasters_new,~,Trials_new] = Project_Manifold_Beto_loadRaw(rowis,Animal);
+[meta_new,rasters_new,~,Trials_new] = loadExperiments(rowis,Animal);
 %%
+mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 PasuStats = repmat(struct(), 1, length(meta_new));
 %load(compose("D:\\%s_Manif_PasuStats.mat", Animal), 'PasuStats')
-load(fullfile(savepath, compose("%s_Manif_PasuStats.mat", Animal)), 'PasuStats')
+load(fullfile(mat_dir, compose("%s_Manif_PasuStats.mat", Animal)), 'PasuStats')
 %%
 for Triali = 1:length(meta_new)
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
-exp_rowi = find(contains(ExpRecord.ephysFN, meta.ephysFN));
+exp_rowi = find(contains(ExpRecord.ephysFN, meta.ephysFN) & ExpRecord.Exp_collection=="Manifold");
 % Check the Expi match number
 Expi = ExpRecord.Expi(exp_rowi);Expi=Expi(end); % hack this for beto exp 35
 if isnan(Expi) || ~contains(ExpRecord.expControlFN{exp_rowi},'selectivity') ...
@@ -88,20 +89,47 @@ PasuStats(Expi).ref.pasu_bsl = cellfun(@(psth) mean(psth(:, 1:40, :),2), pasu_ps
 end
 if sum(contains(Trials.imageName, "gab")) > 12
 PasuStats(Expi).ref.didGabor = true;
-[gab_idx_grid,~,~,~] = build_Pasu_idx_grid(Trials.imageName);
+[gab_idx_grid,~,~,~] = build_Gabor_idx_grid(Trials.imageName);
 gab_psths_col = cellfun(@(idx) rasters(:, :, idx), gab_idx_grid, ...
-                'UniformOutput', false); % record Gabor response in all channels
-PasuStats(Expi).ref.gab_act = cellfun(@(psth) mean(psth(:, 51:200, :),2), gab_psths_col,'UniformOutput',false);
-PasuStats(Expi).ref.gab_bsl = cellfun(@(psth) mean(psth(:, 1:40, :),2), gab_psths_col,'UniformOutput',false);
+                'Uni', false); % record Gabor response in all channels
+PasuStats(Expi).ref.gab_act = cellfun(@(psth) mean(psth(:, 51:200, :),2), gab_psths_col,'Uni',false);
+PasuStats(Expi).ref.gab_bsl = cellfun(@(psth) mean(psth(:, 1:40, :),2), gab_psths_col,'Uni',false);
+end
+end
+%%
+% For Alfa From 34 to 46 the gabors have only 4 images, so very small power
+%% Compute summary statistics for these. 
+summary = struct('anova_F',nan,'anova_p',nan,'anova_F_bsl',nan,'anova_p_bsl',nan,'t',nan,'t_p',nan,'t_CI',nan(2,1));
+for Expi = 1:numel(meta_new)
+fprintf("Processing  Exp %d:\n",Expi)
+PasuStats(Expi).ref.pasu_stats = repmat(summary,0,0);
+PasuStats(Expi).ref.pasu_strs =  repmat("",0,0);
+PasuStats(Expi).ref.gab_stats = repmat(summary,0,0);
+PasuStats(Expi).ref.gab_strs =  repmat("",0,0);
+for chan_j = 1:length(PasuStats(Expi).units.spikeID)
+    if PasuStats(Expi).ref.didPasu
+    act_cell = cellfun(@(c)squeeze(c(chan_j,:,:)),PasuStats(Expi).ref.pasu_act,'Uni',false);
+    bsl_cell = cellfun(@(c)squeeze(c(chan_j,:,:)),PasuStats(Expi).ref.pasu_bsl,'Uni',false);
+    [summary, stat_str] = calc_tuning_stats(act_cell, bsl_cell);
+    PasuStats(Expi).ref.pasu_stats(chan_j) = summary;
+    PasuStats(Expi).ref.pasu_strs(chan_j) = stat_str;
+    end
+    if PasuStats(Expi).ref.didGabor
+    act_cell = cellfun(@(c)squeeze(c(chan_j,:,:)),PasuStats(Expi).ref.gab_act,'Uni',false);
+    bsl_cell = cellfun(@(c)squeeze(c(chan_j,:,:)),PasuStats(Expi).ref.gab_bsl,'Uni',false);
+    [summary, stat_str] = calc_tuning_stats(act_cell, bsl_cell);
+    PasuStats(Expi).ref.gab_stats(chan_j) = summary;
+    PasuStats(Expi).ref.gab_strs(chan_j) = stat_str;
+    end
 end
 end
 %%
 save(compose("D:\\%s_Manif_PasuStats.mat", Animal), 'PasuStats')
-save(fullfile(savepath, compose("%s_Manif_PasuStats.mat", Animal)), 'PasuStats')
+save(fullfile(mat_dir, compose("%s_Manif_PasuStats.mat", Animal)), 'PasuStats')
 %%
-savepath = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Mat_Statistics";
+mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 save(compose("D:\\%s_Manif_stats.mat", Animal), 'Stats')
-save(fullfile(savepath, compose("%s_Manif_stats.mat", Animal)), 'Stats')
+save(fullfile(mat_dir, compose("%s_Manif_stats.mat", Animal)), 'Stats')
 
 %%
 [pasu_idx_grid,id_grid,p1_grid,p2_grid] = build_Pasu_idx_grid(Trials.imageName);
@@ -193,6 +221,38 @@ for i = 1:numel(sf)
     end
 end
 end
+
+
+function [summary, stat_str] = calc_tuning_stats(act_cell, bsl_cell) 
+    idx_mat = reshape(1:numel(act_cell),size(act_cell));
+    idx_mat = arrayfun(@(idx){idx},idx_mat);   
+    idx_cell = cellfun(@(idx,act)repmat(idx,length(act),1),idx_mat,act_cell,'Uni',false); % create the idx cell array of same size
+    act_vec = cat(1, act_cell{:});
+    bsl_vec = cat(1, bsl_cell{:});
+    idx_vec = cat(1, idx_cell{:});
+    % Do statistics
+    [p,tbl,stats] = anova1(act_vec,idx_vec,'off');
+    stats.F = tbl{2,5};
+    stats.p = p;
+    summary.anova_F = stats.F;
+    summary.anova_p = stats.p; 
+    
+    [p,tbl,stats_bsl] = anova1(bsl_vec,idx_vec,'off');
+    stats_bsl.F = tbl{2,5};
+    stats_bsl.p = p;
+    summary.anova_F_bsl = tbl{2,5};
+    summary.anova_p_bsl = p; 
+    %
+    [~,P,CI,STATS] = ttest(act_vec, bsl_vec);
+    summary.t = STATS.tstat;
+    summary.t_p = P;
+    summary.t_CI = CI;
+    % visualize
+    stat_str = sprintf(['Evoked vs bsl(50ms) CI[%.1f,%.1f] t=%.2f(%.2e)\n' ...
+            'Evoked Modulation: All image, F=%.2f(%.2e)\n' ...
+            'Baseline Modulation: All image, F=%.2f(%.2e)'],CI(1), CI(2), STATS.tstat, P, stats.F, stats.p,stats_bsl.F,stats_bsl.p);
+end
+
 
 
 function [score_mat, bsl_mat, summary, stat_str] = get_stats_from_result(name_pattern, sphere_norm)
