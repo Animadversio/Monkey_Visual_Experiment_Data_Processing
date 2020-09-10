@@ -1,18 +1,29 @@
 classdef torchImDist
    % Usage: 
-   % Visualizing a certian class 
+   % Compute dissimilarity between 2 images of the same size. 
    % 
-   % Fix part of the code and Visualizing the other half
-   %  G = G.select_space("class", noise_vec);
-   %  G.visualize(0.06 * randn(5,128))
+   % To compute a scalar difference of images
+   %    D = torchImDist("squeeze")
+   %    dsim = D.distance(img1, img2); % 0.525
+   % 
+   % To compute a spatial map of difference
+   %    D = torchImDist("squeeze",1)
+   %    dmap = D.distance(img1, img2); % 256 by 256 scalar mask
+   %    figure;montage({img1, img2, dmap},'size',[1,3])
+   % Change the distance metric use 
+   %    D = D.select_metric("alex",1);
    properties
        D
        metric % a variable preset to specify which metric to use
+       spatial % boolean for whether analyze spatial distribution of difference or not.
    end
    methods
-   function G = torchImDist(metric)
+   function G = torchImDist(metric, spatial)
        if nargin == 0
            metric = "squeeze";
+           spatial = 0;
+       elseif nargin == 1
+           spatial = 0;
        end
        switch getenv('COMPUTERNAME')
            case 'DESKTOP-9DDE2RH' % Office 3 Binxu's 
@@ -33,45 +44,50 @@ classdef torchImDist
         py.importlib.import_module("models");
         py.importlib.import_module("torch");
         py.importlib.import_module("numpy");
-       
+       G.spatial = spatial;
        G.metric = metric;
        switch metric
            case "SSIM"
-               G.D = py.models.PerceptualLoss(pyargs("model", "SSIM"));
+               G.D = py.models.PerceptualLoss(pyargs("model", "SSIM", "spatial", spatial));
            case "L2"
-               G.D = py.models.PerceptualLoss(pyargs("model", "L2"));
+               G.D = py.models.PerceptualLoss(pyargs("model", "L2", "spatial", spatial));
            case "alex"
-               G.D = py.models.PerceptualLoss(pyargs("model", "net-lin", "net", "alex"));
+               G.D = py.models.PerceptualLoss(pyargs("model", "net-lin", "net", "alex", "spatial", spatial));
            case "vgg"
-               G.D = py.models.PerceptualLoss(pyargs("model", "net-lin", "net", "vgg"));
+               G.D = py.models.PerceptualLoss(pyargs("model", "net-lin", "net", "vgg", "spatial", spatial));
            case "squeeze"
-               G.D = py.models.PerceptualLoss(pyargs("model", "net-lin", "net", "squeeze"));
+               G.D = py.models.PerceptualLoss(pyargs("model", "net-lin", "net", "squeeze", "spatial", spatial));
            otherwise
                fprintf("Metric unrecognized, use squeeze-net linear weighted image metric.\n")
-               G.D = py.models.PerceptualLoss(pyargs("model", "net-lin", "net", "squeeze"));
+               G.D = py.models.PerceptualLoss(pyargs("model", "net-lin", "net", "squeeze", "spatial", spatial));
                G.metric = "squeeze";
        end
        G.D.requires_grad_(false);
        G.D.eval();%G.BGAN.to('cuda');
        py.torch.set_grad_enabled(false);
    end
-   function G = select_metric(G, metric)
+   function G = select_metric(G, metric, spatial)
+       if nargin == 1
+           spatial = 0;
+       end
+       G.spatial = spatial;
        G.metric = metric;
        switch metric
            case "SSIM"
-               G.D = py.models.PerceptualLoss(pyargs("model", "SSIM"));
+               G.D = py.models.PerceptualLoss(pyargs("model", "SSIM", "spatial", spatial));
            case "L2"
-               G.D = py.models.PerceptualLoss(pyargs("model", "L2"));
+               G.D = py.models.PerceptualLoss(pyargs("model", "L2", "spatial", spatial));
            case "alex"
-               G.D = py.models.PerceptualLoss(pyargs("model", "net-lin", "net", "alex"));
+               G.D = py.models.PerceptualLoss(pyargs("model", "net-lin", "net", "alex", "spatial", spatial));
            case "vgg"
-               G.D = py.models.PerceptualLoss(pyargs("model", "net-lin", "net", "vgg"));
+               G.D = py.models.PerceptualLoss(pyargs("model", "net-lin", "net", "vgg", "spatial", spatial));
            case "squeeze"
-               G.D = py.models.PerceptualLoss(pyargs("model", "net-lin", "net", "squeeze"));
+               G.D = py.models.PerceptualLoss(pyargs("model", "net-lin", "net", "squeeze", "spatial", spatial));
            otherwise
                fprintf("Metric unrecognized, use squeeze-net linear weighted image metric.\n")
                G.D = py.models.PerceptualLoss(pyargs("model", "net-lin", "net", "squeeze"));
                G.metric = "squeeze";
+               G.spatial = 0;
        end
    end
    
@@ -82,6 +98,15 @@ classdef torchImDist
        im1_tsr = py.torch.tensor(py.numpy.array(permute(im1,[4,3,1,2])));
        im2_tsr = py.torch.tensor(py.numpy.array(permute(im2,[4,3,1,2])));
        dists = G.D.forward(im1_tsr, im2_tsr).squeeze().cpu().detach().numpy().double;
+   end
+   
+   function dists = distance_op(G, im1, im2)
+       if max(im1,[],'all')>1.2, im1 = single(im1) / 255.0; end
+       if max(im2,[],'all')>1.2, im2 = single(im2) / 255.0; end
+       % interface with generate integrated code, cmp to FC6GAN
+       im1_tsr = py.torch.tensor(py.numpy.array(permute(im1,[4,3,1,2])));
+       im2_tsr = py.torch.tensor(py.numpy.array(permute(im2,[4,3,1,2])));
+       dists = G.D.forward(im1_tsr, im2_tsr, pyargs("distmat",true)).squeeze().cpu().detach().numpy().double;
    end
    
    function distMat = distmat(G, imgs, B)
@@ -100,6 +125,27 @@ classdef torchImDist
            csr = csr_end+1;
            end
            distMat(i, :) = dist_row;
+       end
+   end
+   
+   function distMat = distmat_B(G, imgs, B)
+       if nargin==2, B = 70;end
+       if max(imgs,[],'all')>1.2, imgs = single(imgs) / 255.0; end
+       % interface with generate integrated code, cmp to FC6GAN
+       imgn = size(imgs,4);
+       distMat = zeros(imgn,imgn);
+       csr_i = 1;
+       while csr_i <= imgn
+           csr_eni = min(imgn, csr_i+B-1);
+           csr_j=csr_i;
+           while csr_j <= imgn
+               csr_end = min(imgn, csr_j+B-1);
+               dists = G.distance_op(imgs(:,:,:,csr_i:csr_eni), imgs(:,:,:,csr_j:csr_end));
+               distMat(csr_i:csr_eni, csr_j:csr_end) = dists';
+               distMat(csr_j:csr_end, csr_i:csr_eni) = dists;
+               csr_j = csr_end+1;
+           end
+           csr_i = csr_eni+1;
        end
    end
    
