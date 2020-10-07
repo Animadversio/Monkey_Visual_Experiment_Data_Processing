@@ -185,7 +185,6 @@ classdef torchBigGAN
        csr = cnd + 1;
        end
        toc
-       
    end
    
    function EmbedVects_mat = get_embedding(G)
