@@ -1,9 +1,39 @@
 classdef torchStyleGAN2
-   % Usage 
+   % Usage: 
    % G = torchStyleGAN2("model.ckpt-533504.pt");
    % matimg = visualize_codes(G,randn(4,512));
    %   > Elapsed time is 0.820856 seconds.
    % figure;montage(matimg)
+   % 
+   % First Time Setup Instruction:
+   % 
+   % # Get a python env with suitable pytorch version
+   % Note for Python environment, Pytorch 1.3.1 is recommended. 
+   % Pytorch 1.1.0 cannot compile the StyleGAN operators... >1.4.0 will not
+   % work with matlab. 
+   % assume the name of it is [envname]
+   % 
+   % # Compile model code (CUDA, C++ code of operators)
+   % 1. Open an Anaconda Prompt, activate that env: conda activate [envname]
+   % 2. cd to ...\stylegan2-pytorch\op
+   % 3. Compile the source code and install the operators as py package `python setup.py install` 
+   % 3.1. This is really easy to fail spectacularly... So finger crossed. 
+   % 3.2. Make sure you have a Visual Studio 2017 or 2019. VS2015 compiler
+   %      will not work
+   % 4. Check compilation: cd to ...\stylegan2-pytorch
+   % python
+   % > from model import Generator
+   % 
+   % If it succeed you are done on python side! The compilation is successful, 
+   % you are half way there. If you have some checkpoints stored there you
+   % can generate some pretty images in command line through
+   % > 
+   % 
+   % # Setup Python env in Matlab
+   % 
+   % For ML2A machine, setup the python env before first time use like this
+   % >  setenv('path',['C:\Anaconda3\envs\torch\Library\bin;', getenv('path')]);
+   % >  pyenv("Version","C:\Anaconda3\envs\torch\python.exe");
    properties
        Generator
        config
@@ -37,14 +67,6 @@ classdef torchStyleGAN2
        elseif nargin == 1
            config = configMap(ckpt); % struct("latent",int32(512),"n_mlp",int32(8),"channel_multiplier",int32(2));
        end
-       % switch ckpt
-       %     case "stylegan2-ffhq-config-f.pt"
-       %         config.size = int32(1024);
-       %     case {"model.ckpt-533504.pt", "2020-01-11-skylion-stylegan2-animeportraits.pt"}
-       %         config.size = int32(512);
-       %     otherwise
-       %         config.size = int32(512);
-       % end
        % Use the torch 1.3.x and the stylegan2 package like below.
        py.importlib.import_module('torch');
        syspath = py.sys.path(); % add the official stylegan2 repo. 
@@ -56,7 +78,8 @@ classdef torchStyleGAN2
             syspath.append("E:\DL_Projects\Vision\stylegan2-pytorch"); 
             savedir = "E:\DL_Projects\Vision\stylegan2-pytorch\checkpoint"; 
            case 'PONCELAB-ML2A' % MLa machine 
-            % savedir = "C:\Users\Poncelab-ML2a\Documents\Python\pytorch-pretrained-BigGAN\weights";
+            syspath.append("C:\Users\Poncelab-ML2a\Documents\Python\stylegan2-pytorch"); 
+            savedir = "C:\Users\Poncelab-ML2a\Documents\Python\stylegan2-pytorch\checkpoint"; 
            case 'PONCELAB-ML2B' % MLb machine 
             % savedir = "C:\Users\Ponce lab\Documents\Python\pytorch-pretrained-BigGAN\weights";
            otherwise
