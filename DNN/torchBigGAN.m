@@ -10,9 +10,16 @@
 %   check which conda env is good by `conda activate xxx` `conda list`  and
 %   copy the directory for the proper env list in `conda env list` to the
 %   `pyenv` command below
+% 
+% Note, sometimes import numpy and torch can fail, then we need to add some path
+% to the PATH env variable. E.g.
+%   setenv('path',['C:\Anaconda3\envs\torch\Library\bin;', getenv('path')]); % this gives the path to the dll and binary files. Or import will fail.
+%   % WHEN IMPORT FAILS, RUN THIS LINE ABOVE
+%    %
 %   
 %   NOTE: THIS SHOULD BE RUN BEFORE YOU USE THIS CLASS
-%   on Binxu home `pyenv('Version','C:\ProgramData\Anaconda3\envs\tf-torch\python.exe')`  
+%   on Binxu home `pyenv('Version','C:\ProgramData\Anaconda3\envs\tf-torch\python.exe')` 
+%   on ML2a `pyenv("Version", "C:\Anaconda3\envs\torch\python.exe");`
 %   on ML2b `pyenv("Version","C:\Anaconda3\python.exe")`  
 %   on Office 3 `pyenv("Version","C:\Users\ponce\.conda\envs\caffe36\python.exe")`
 %   
@@ -51,8 +58,14 @@ classdef torchBigGAN
             savedir = "C:\Users\binxu\.pytorch_pretrained_biggan";
            case 'PONCELAB-ML2A' % MLa machine 
             savedir = "C:\Users\Poncelab-ML2a\Documents\Python\pytorch-pretrained-BigGAN\weights";
+            setenv('path',['C:\Anaconda3\envs\torch\Library\bin;', getenv('path')]); % this gives the path to the dll and binary files. Or import will fail.
+            % WHEN IMPORT FAILS, RUN THIS LINE.
+            % pyenv("Version", "C:\Anaconda3\envs\torch\python.exe"); %
            case 'PONCELAB-ML2B' % MLb machine 
             savedir = "C:\Users\Ponce lab\Documents\Python\pytorch-pretrained-BigGAN\weights";
+            setenv('path',['C:\Anaconda3\envs\torch\Library\bin;', getenv('path')]); % this gives the path to the dll and binary files. Or import will fail.
+            % WHEN IMPORT FAILS, RUN THIS LINE.
+            % pyenv("Version", "C:\Anaconda3\envs\torch\python.exe"); %
            otherwise
             savedir = "C:\Users\Poncelab-ML2a\Documents\Python\pytorch-pretrained-BigGAN\weights";
         end
