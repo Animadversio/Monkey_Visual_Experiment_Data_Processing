@@ -7,6 +7,17 @@ classdef torchStyleGAN2
    % 
    % # First Time Setup Instruction:
    % 
+
+   % ## Download StyleGAN2 and add to Path 
+   %
+   %    Get stylegan2-pytorch  from  
+   %    https://github.com/rosinality/stylegan2-pytorch 
+   %
+   %    Get Weights (.pt files) from Network folder.  
+   %    Or Download the Tensorflow version .pkl file from 
+   %    https://github.com/justinpinkney/awesome-pretrained-stylegan2
+   %    And convert them in python code.... I've done that once. 
+   %
    % ## Get a python env with suitable pytorch version
    % Note for Python environment, Pytorch 1.3.1 is recommended. 
    % Pytorch 1.1.0 cannot compile the StyleGAN operators... >1.4.0 will not
@@ -48,6 +59,7 @@ classdef torchStyleGAN2
    % This is in `[envpath]\Library\bin` 
    % 
    %   setenv('path',['C:\Anaconda3\envs\torch\Library\bin;', getenv('path')]);
+   % 
    % Binxu Oct. 9, 2020
    properties
        Generator
