@@ -34,6 +34,9 @@ classdef torchStyleGAN2
    % For ML2A machine, setup the python env before first time use like this
    % >  setenv('path',['C:\Anaconda3\envs\torch\Library\bin;', getenv('path')]);
    % >  pyenv("Version","C:\Anaconda3\envs\torch\python.exe");
+   % For ML2B machine, setup the python env before first time use like this
+   % >  setenv('path',['C:\Users\Ponce lab\.conda\envs\torch\Library\bin;', getenv('path')]);
+   % >  pyenv("Version","C:\Users\Ponce lab\.conda\envs\torch\python.exe");
    properties
        Generator
        config
@@ -81,7 +84,8 @@ classdef torchStyleGAN2
             syspath.append("C:\Users\Poncelab-ML2a\Documents\Python\stylegan2-pytorch"); 
             savedir = "C:\Users\Poncelab-ML2a\Documents\Python\stylegan2-pytorch\checkpoint"; 
            case 'PONCELAB-ML2B' % MLb machine 
-            % savedir = "C:\Users\Ponce lab\Documents\Python\pytorch-pretrained-BigGAN\weights";
+            syspath.append("C:\Users\Ponce lab\Documents\Python\stylegan2-pytorch"); 
+            savedir = "C:\Users\Ponce lab\Documents\Python\stylegan2-pytorch\checkpoint"; 
            otherwise
             % savedir = "C:\Users\Poncelab-ML2a\Documents\Python\pytorch-pretrained-BigGAN\weights";
         end
