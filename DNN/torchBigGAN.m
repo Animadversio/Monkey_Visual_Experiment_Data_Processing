@@ -1,29 +1,38 @@
-% First Time Setup: 
-%    download the code from https://github.com/huggingface/pytorch-pretrained-BigGAN.git
+% First Time Setup on New Machines: 
+%    download the python code from https://github.com/huggingface/pytorch-pretrained-BigGAN.git
 %    download these weights and definitions and put them in savedir
 %    specified in the class definition below. You can add your computer's
 %    name to that 
         % resolved_config_file = "https://s3.amazonaws.com/models.huggingface.co/biggan/biggan-deep-256-config.json";
         % resolved_model_file = "https://s3.amazonaws.com/models.huggingface.co/biggan/biggan-deep-256-pytorch_model.bin";
 %
-% Before use: setup the python env that have pytorch with version < 1.4.0 in it (1.3.1 and 1.1.0 have been proved)  
-%   check which conda env is good by `conda activate xxx` `conda list`  and
-%   copy the directory for the proper env list in `conda env list` to the
-%   `pyenv` command below
+% Setup Python Env For Matlab and PyTorch to Get Along: 
+%   setup the python env that have pytorch with version < 1.4.0 in it (1.3.1 and 1.1.0 have been proved)  
+%   check which conda env is good by 
+%    `conda activate xxx` 
+%    `conda list`  and
+%   copy the directory [envpath] for the proper env list in `conda env list` to the
+%   `pyenv` command, e.g. 
+%     `pyenv('Version','[envpath]\python.exe')` 
+%   and run this FIRST when you start matlab.(usually only need to run once,
+%   then matlab remember your environment. 
 % 
-% Note, sometimes import numpy and torch can fail, then we need to add some path
-% to the PATH env variable. E.g.
-%   setenv('path',['C:\Anaconda3\envs\torch\Library\bin;', getenv('path')]); % this gives the path to the dll and binary files. Or import will fail.
-%   % WHEN IMPORT FAILS, RUN THIS LINE ABOVE
-%    %
-%   
-%   NOTE: THIS SHOULD BE RUN BEFORE YOU USE THIS CLASS
+% Environments that have been tested to work are these. 
 %   on Binxu home `pyenv('Version','C:\ProgramData\Anaconda3\envs\tf-torch\python.exe')` 
-%   on ML2a `pyenv("Version", "C:\Anaconda3\envs\torch\python.exe");`
-%   on ML2b `pyenv("Version","C:\Anaconda3\python.exe")`  
 %   on Office 3 `pyenv("Version","C:\Users\ponce\.conda\envs\caffe36\python.exe")`
+%   on ML2a `pyenv("Version", "C:\Anaconda3\envs\torch\python.exe");`
+%   on ML2b `pyenv("Version", "C:\Users\Ponce lab\.conda\envs\torch\python.exe")`  
+% 
+% Note, sometimes import numpy and torch can fail, then we need to add the
+% path of binary of the Library to the PATH env variable. E.g.
+% This is in `[envpath]\Library\bin` 
+% 
+%   setenv('path',['C:\Anaconda3\envs\torch\Library\bin;', getenv('path')]);
+%   % WHEN IMPORT FAILS, RUN THIS LINE ABOVE
+% 
+% This add to path should be run each time. So I add it to init code
 %   
-%   Binxu July.20th, 2020. 
+%   Binxu July.20th, 2020. Updated Oct. 9th
 classdef torchBigGAN
    % Usage: 
    % Visualizing a certian class 
@@ -63,9 +72,9 @@ classdef torchBigGAN
             % pyenv("Version", "C:\Anaconda3\envs\torch\python.exe"); %
            case 'PONCELAB-ML2B' % MLb machine 
             savedir = "C:\Users\Ponce lab\Documents\Python\pytorch-pretrained-BigGAN\weights";
-            setenv('path',['C:\Anaconda3\envs\torch\Library\bin;', getenv('path')]); % this gives the path to the dll and binary files. Or import will fail.
-            % WHEN IMPORT FAILS, RUN THIS LINE.
-            % pyenv("Version", "C:\Anaconda3\envs\torch\python.exe"); %
+            setenv('path',['C:\Users\Ponce lab\.conda\envs\torch\Library\bin;', getenv('path')]); % this gives the path to the dll and binary files. Or import will fail.
+            % WHEN IMPORT FAILS, RUN THIS LINE to RESET ENVIRONMENT
+            % pyenv("Version", "C:\Users\Ponce lab\.conda\envs\torch\python.exe"); %
            otherwise
             savedir = "C:\Users\Poncelab-ML2a\Documents\Python\pytorch-pretrained-BigGAN\weights";
         end

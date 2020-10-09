@@ -5,15 +5,15 @@ classdef torchStyleGAN2
    %   > Elapsed time is 0.820856 seconds.
    % figure;montage(matimg)
    % 
-   % First Time Setup Instruction:
+   % # First Time Setup Instruction:
    % 
-   % # Get a python env with suitable pytorch version
+   % ## Get a python env with suitable pytorch version
    % Note for Python environment, Pytorch 1.3.1 is recommended. 
    % Pytorch 1.1.0 cannot compile the StyleGAN operators... >1.4.0 will not
    % work with matlab. 
    % assume the name of it is [envname]
    % 
-   % # Compile model code (CUDA, C++ code of operators)
+   % ## Compile model code (CUDA, C++ code of operators)
    % 1. Open an Anaconda Prompt, activate that env: conda activate [envname]
    % 2. cd to ...\stylegan2-pytorch\op
    % 3. Compile the source code and install the operators as py package `python setup.py install` 
@@ -23,20 +23,32 @@ classdef torchStyleGAN2
    % 4. Check compilation: cd to ...\stylegan2-pytorch
    % python
    % > from model import Generator
-   % 
    % If it succeed you are done on python side! The compilation is successful, 
    % you are half way there. If you have some checkpoints stored there you
    % can generate some pretty images in command line through
    % > 
    % 
    % # Setup Python env in Matlab
-   % 
+   % Environments that have been tested to work are these. 
    % For ML2A machine, setup the python env before first time use like this
    % >  setenv('path',['C:\Anaconda3\envs\torch\Library\bin;', getenv('path')]);
    % >  pyenv("Version","C:\Anaconda3\envs\torch\python.exe");
    % For ML2B machine, setup the python env before first time use like this
    % >  setenv('path',['C:\Users\Ponce lab\.conda\envs\torch\Library\bin;', getenv('path')]);
    % >  pyenv("Version","C:\Users\Ponce lab\.conda\envs\torch\python.exe");
+   % on Binxu home 
+   %  `pyenv('Version','C:\ProgramData\Anaconda3\envs\tf-torch\python.exe')` 
+   % on Office 3 
+   %  `pyenv("Version","C:\Users\ponce\.conda\envs\caffe36\python.exe")`
+   % run this FIRST when you start matlab.(usually only need to run once,
+   %   then matlab remember your environment. 
+   %
+   % Note, sometimes import numpy and torch can fail, then we need to add the
+   % path of binary of the Library to the PATH env variable. E.g.
+   % This is in `[envpath]\Library\bin` 
+   % 
+   %   setenv('path',['C:\Anaconda3\envs\torch\Library\bin;', getenv('path')]);
+   % Binxu Oct. 9, 2020
    properties
        Generator
        config
@@ -83,9 +95,11 @@ classdef torchStyleGAN2
            case 'PONCELAB-ML2A' % MLa machine 
             syspath.append("C:\Users\Poncelab-ML2a\Documents\Python\stylegan2-pytorch"); 
             savedir = "C:\Users\Poncelab-ML2a\Documents\Python\stylegan2-pytorch\checkpoint"; 
+            setenv('path',['C:\Anaconda3\envs\torch\Library\bin;', getenv('path')]);
            case 'PONCELAB-ML2B' % MLb machine 
             syspath.append("C:\Users\Ponce lab\Documents\Python\stylegan2-pytorch"); 
             savedir = "C:\Users\Ponce lab\Documents\Python\stylegan2-pytorch\checkpoint"; 
+            setenv('path',['C:\Users\Ponce lab\.conda\envs\torch\Library\bin;', getenv('path')]); 
            otherwise
             % savedir = "C:\Users\Poncelab-ML2a\Documents\Python\pytorch-pretrained-BigGAN\weights";
         end
