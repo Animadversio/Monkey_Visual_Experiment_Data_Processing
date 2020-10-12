@@ -43,8 +43,8 @@ classdef FC6Generator
       end
       function imgs = visualize(G, codes)
         if size(codes,2)==4096 
-            codes = codes';
-        end
+            codes = codes'; 
+        end 
         assert(size(codes,1)==4096, "Code shape error")% first dimension should have size 4096, second the batch
         Z = dlarray(reshape(codes,1,1,4096,size(codes,2)), 'SSCB');
         hiddenout = G.LinNet.predict(Z);

@@ -5,7 +5,7 @@ if nargin == 1, threadi = 1; loadblocks=[]; end
 if nargin == 2, loadblocks=[]; end
 data_fn  = ls(fullfile(stim_path, sprintf("*_thread%03d_code.mat", threadi - 1)));
 data_fn = sort(string(data_fn)); 
-if contains(data_fn{1}, "block000"), offset = -1; elseif contains(data_fn{1}, "block001"), offset = 0; else keyboard; end
+if contains(data_fn{1}, "block000"), offset = -1; elseif contains(data_fn{1}, "block001"), offset = 0; else error; end
 % note older version starts from block000
 codes_all = [];
 code_geni = [];
