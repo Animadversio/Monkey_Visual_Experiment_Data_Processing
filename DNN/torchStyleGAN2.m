@@ -94,8 +94,6 @@ classdef torchStyleGAN2
        elseif nargin == 1
            config = configMap(ckpt); % struct("latent",int32(512),"n_mlp",int32(8),"channel_multiplier",int32(2));
        end
-       % Use the torch 1.3.x and the stylegan2 package like below.
-       py.importlib.import_module('torch');
        syspath = py.sys.path(); % add the official stylegan2 repo. 
        switch getenv('COMPUTERNAME')
            case 'DESKTOP-9DDE2RH' % Office 3 Binxu's 
@@ -114,7 +112,9 @@ classdef torchStyleGAN2
             setenv('path',['C:\Users\Ponce lab\.conda\envs\torch\Library\bin;', getenv('path')]); 
            otherwise
             % savedir = "C:\Users\Poncelab-ML2a\Documents\Python\pytorch-pretrained-BigGAN\weights";
-        end
+       end
+       % Use the torch 1.3.x and the stylegan2 package like below.
+       py.importlib.import_module('torch');
        py.importlib.import_module('model');
        G.Generator = py.model.Generator(config.size, config.latent, config.n_mlp, config.channel_multiplier);
        SD = py.torch.load(fullfile(savedir, ckpt));
