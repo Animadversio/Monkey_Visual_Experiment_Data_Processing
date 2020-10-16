@@ -1,6 +1,7 @@
 function [codes_all, img_ids, code_geni] = load_codes_all(stim_path, threadi, loadblocks)
 % stim_path = "N:\Stimuli\2019-12-Evolutions\2020-03-10-Alfa-01\2020-03-10-13-50-57";
 % threadi = 1;
+% Note threadi starts from 1, so 2nd thread is threadi=2
 if nargin == 1, threadi = 1; loadblocks=[]; end
 if nargin == 2, loadblocks=[]; end
 data_fn  = ls(fullfile(stim_path, sprintf("*_thread%03d_code.mat", threadi - 1)));
