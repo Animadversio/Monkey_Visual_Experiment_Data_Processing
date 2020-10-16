@@ -10,7 +10,7 @@ ftrrows = find(contains(ExpRecord.expControlFN,"generate_") & (ExpRecord.Exp_col
                ExpRecord.Exp_collection=="BigGAN_FC6")) ;
 %%
 [codes_all, img_ids, generations] = load_codes_all(ExpRecord.stimuli{ftrrows(1)}, 2);
-%%
+%% Load up Hessian matrix
 Hdata = py.numpy.load("E:\OneDrive - Washington University in St. Louis\Hessian_summary\BigGAN\H_avg_1000cls.npz");
 eva_all = Hdata.get('eigvals_avg').double;
 evc_all = Hdata.get('eigvects_avg').double;
@@ -26,7 +26,7 @@ evc_nos = evc_nos(:,end:-1:1);
 eva_nos = eva_nos(end:-1:1);
 evc_nos_ag = [evc_nos;zeros(128)];
 evc_cls_ag = [zeros(128);evc_cls];
-%%
+%% Go through all the evolutions using BigGAN.
 tic
 gen_num_col = [];
 last_gen_col = {};

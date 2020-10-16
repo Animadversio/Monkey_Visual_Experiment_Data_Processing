@@ -1,6 +1,7 @@
 %% Evol_collect_Stats (for Manifold Exp mainly)
 % Collect statisitcs from evolution experiments into a compressed compilation
 % Trealy well designed, Note this code support multi-thread well! 
+% Really succint and well written code! 
 clearvars -except EStats Stats meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug  ExpSpecTable_Aug_alfa ExpRecord
 %%
 Animal = "Alfa";Set_Path;
@@ -105,7 +106,7 @@ color_seq = brewermap(block_num, 'spectral');
 EStats(Expi).color_seq = color_seq;
 EStats(Expi).evol.block_arr = block_arr;
 EStats(Expi).evol.block_n = block_num;
-gen_idx_seq = cell(thread_num, block_num);
+gen_idx_seq = cell(thread_num, block_num); % generated image idx cell as a horizontal array. 
 nat_idx_seq = cell(thread_num, block_num);
 for threadi = 1:thread_num 
     for blocki = min(block_arr):max(block_arr)
@@ -115,10 +116,8 @@ for threadi = 1:thread_num
         nat_idx_seq{threadi, blocki} = find(nat_msk);
     end
 end
-gen_psth_col = cellfun(@(idx) rasters(pref_chan_id, :, idx), gen_idx_seq, ...
-                'UniformOutput', false);
-nat_psth_col = cellfun(@(idx) rasters(pref_chan_id, :, idx), nat_idx_seq, ...
-                'UniformOutput', false);
+gen_psth_col = cellfun(@(idx) rasters(pref_chan_id, :, idx), gen_idx_seq, 'Uni', 0);
+nat_psth_col = cellfun(@(idx) rasters(pref_chan_id, :, idx), nat_idx_seq, 'Uni', 0);
 EStats(Expi).evol.idx_seq = gen_idx_seq;
 EStats(Expi).evol.psth = gen_psth_col;
 EStats(Expi).ref.idx_seq = nat_idx_seq;
@@ -126,8 +125,8 @@ EStats(Expi).ref.psth = nat_psth_col;
 
 % Sort the reference images by name and find their psth. 
 nat_imgnm = unique(imgnm(row_nat)); % sorted names of reference images 
-nat_imgidx = cellfun(@(nm) find(contains(imgnm, nm)), nat_imgnm, 'UniformOutput', false);
-nat_psth = cellfun(@(idx) rasters(pref_chan_id, :, idx), nat_imgidx, 'UniformOutput', false);
+nat_imgidx = cellfun(@(nm) find(contains(imgnm, nm)), nat_imgnm, 'Uni', 0);
+nat_psth = cellfun(@(idx) rasters(pref_chan_id, :, idx), nat_imgidx, 'Uni', 0);
 
 EStats(Expi).ref.imgnm = string(nat_imgnm);
 EStats(Expi).ref.idx_arr = nat_imgidx; % Save the idx of pref chan for reference image, by name
