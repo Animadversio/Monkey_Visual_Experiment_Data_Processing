@@ -8,9 +8,6 @@ D = torchImDist();
 net = alexnet;
 %%
 mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
-Animal = "Beto";
-load(fullfile(mat_dir, Animal+'_Evol_stats.mat'), 'EStats') 
-load(fullfile(mat_dir, Animal+'_Manif_stats.mat'), 'Stats') 
 %% Pasu Distance metric
 pasu_path = "N:\Stimuli\2019-Manifold\pasupathy-wg-f-4-ori";
 imlist = dir(fullfile(pasu_path,"*.jpg"));
@@ -44,7 +41,7 @@ pasu_imdist.SSIM = D.distmat(rsz_imgs_tsr);
 toc% 119sec
 %%
 save(fullfile(mat_dir,"pasu_imdist.mat"),'pasu_imdist')
-%%
+
 %% Gabor distance
 gab_nm_grid = cellfun(@(idx)unique(Stats(40).imageName(idx)),Stats(40).ref.gab_idx_grid,'Uni',1);
 gab_nm_grid = reshape(gab_nm_grid,[],1); % reshape into one row. But transpose to make similar object adjacent
@@ -75,25 +72,12 @@ gab_imdist.FC6 = FC6dist;
 toc
 %%
 save(fullfile(mat_dir,"gab_imdist.mat"),'gab_imdist')
-%%
-Expi=1;si=1;
-imnm_grid = string(cellfun(@(idx)Stats(Expi).imageName{idx(1)},Stats(Expi).manif.idx_grid{si},'UniformOutput',false));
-manif_imgrid = arrayfun(@(nm)imread(fullfile(Stats(Expi).meta.stimuli,nm+".jpg")),imnm_grid,"Uni",0);
-manif_img_tsr = cell2mat(reshape(manif_imgrid,1,1,1,[]));
-%% Demo
-tic
-D.select_metric("squeeze");
-manif_imdist.squ = D.distmat(manif_img_tsr);
-toc
-% D.select_metric("SSIM");
-% manif_imdist.SSIM = D.distmat(manif_img_tsr);
-% toc% 119sec
-% D.select_metric("L2");
-% manif_imdist.L2 = D.distmat(manif_img_tsr);
-% toc% 
-%%
-save("manif_imdist.mat",'manif_imdist')
+
 %% Compute the image distance function of all Images on manifold
+Animal = "Alfa";
+load(fullfile(mat_dir, Animal+'_Evol_stats.mat'), 'EStats') 
+load(fullfile(mat_dir, Animal+'_Manif_stats.mat'), 'Stats') 
+%% 
 ManifImDistStat = repmat(struct(),1,numel(Stats));
 for Expi=1:numel(Stats)
 tic;
@@ -118,17 +102,11 @@ toc
 tic
 D = D.select_metric("SSIM");
 ManifImDistStat(Expi).SSIM = D.distmat(manif_img_tsr); % SSIM distance
-toc% 119sec
-% D = D.select_metric("SSIM");
-% ManifImDistStat(Expi).SSIM = D.distmat(manif_img_tsr);
-% toc% 119sec
-% D = D.select_metric("L2");
-% ManifImDistStat(Expi).L2 = D.distmat(manif_img_tsr);
-% toc% 
+toc
 end
 %%
 save(fullfile(mat_dir,Animal+"_Manif_ImDist.mat"),"ManifImDistStat")
-%%
+%% Adding a metric posthoc
 for Expi=1:numel(Stats)
 tic;
 fprintf("Processing exp %d\n",Expi)
@@ -143,12 +121,7 @@ toc;
 end
 %%
 save(fullfile(mat_dir,Animal+"_Manif_ImDist.mat"),"ManifImDistStat")
-%%
-pasu_nm_grid = cellfun(@(idx)unique(Stats(1).imageName(idx)),Stats(1).ref.pasu_idx_grid,'Uni',0);
-pasu_nm_grid = reshape(pasu_nm_grid',[],1); % reshape into one row. But transpose to make similar object adjacent
-pasu_val_msk = ~cellfun(@isempty,pasu_nm_grid);
-% pasu_nm_grid(cellfun(@isempty,pasu_nm_grid)) = []; % get rid of empty entries
-% pasu_nms = string(pasu_nm_grid);
+
 %% Load image distance matrices
 Animal = "Beto";
 mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
@@ -159,7 +132,12 @@ load(fullfile(mat_dir, Animal+'_Evol_stats.mat'), 'EStats')
 load(fullfile(mat_dir, Animal+'_Manif_stats.mat'), 'Stats') 
 figdir = "E:\OneDrive - Washington University in St. Louis\ImMetricTuning";
 %%
-% pasu_nm_grid = cellfun(@(idx)unique(Stats(12).imageName(idx)),Stats(12).ref.pasu_idx_grid,'Uni',0);
+pasu_nm_grid = cellfun(@(idx)unique(Stats(1).imageName(idx)),Stats(1).ref.pasu_idx_grid,'Uni',0);
+pasu_nm_grid = reshape(pasu_nm_grid',[],1); % reshape into one row. But transpose to make similar object adjacent
+pasu_val_msk = ~cellfun(@isempty,pasu_nm_grid);
+% pasu_nm_grid(cellfun(@isempty,pasu_nm_grid)) = []; % get rid of empty entries
+% pasu_nms = string(pasu_nm_grid);
+%%
 pasu_idx_vec = reshape(Stats(12).ref.pasu_idx_grid',[],1); % reshape into one row. But transpose to make similar object adjacent
 pasu_val_msk = ~cellfun(@isempty,pasu_idx_vec);
 %% Compute Summary Statistics and Collect stats into a table.
@@ -278,21 +256,25 @@ score_vec = cellfun(@(psth)mean(psth(ui,51:200,:),'all'),reshape(Stats(Expi).man
 [maxScore,maxId]=max(score_vec);
 nexttile(1);hold on
 scatter(ManifImDistStat(Expi).squ(:,maxId), score_vec)
-% Gaussian Process Smoothing
-xlinsp = linspace(0, max(ManifImDistStat(Expi).squ(:,maxId)), 50);
-gprMdl = fitrgp(ManifImDistStat(Expi).squ(:,maxId), score_vec);
-gpr_fit = gprMdl.predict(xlinsp');
-plot(xlinsp, gpr_fit)
+plotGPRfitting(ManifImDistStat(Expi).squ(:,maxId), score_vec)
+% Gaussian Process Smoothing or Fitting
+% gprMdl = fitrgp(ManifImDistStat(Expi).squ(:,maxId), score_vec);
+% xlinsp = linspace(0, max(ManifImDistStat(Expi).squ(:,maxId)), 50);
+% gpr_fit = gprMdl.predict(xlinsp');
+% plot(xlinsp, gpr_fit)
 xlabel("Perceptual Similarity(SqueezeNet)");ylabel("Neural Activation")
 titstr1 = { compose("Manif: pear %.3f spear %.3f",corr(ManifImDistStat(Expi).squ(:,maxId),score_vec),corr(ManifImDistStat(Expi).squ(:,maxId),score_vec,'Type','Spearman'))};
-% nexttile(2)
-% scatter(ManifImDistStat(Expi).SSIM(:,maxId),score_vec)
-% xlabel("SSIM")
-% nexttile(3)
-% scatter(ManifImDistStat(Expi).L2(:,maxId),score_vec)
-% xlabel("L2")
-nexttile(4)
+nexttile(2);hold on
+scatter(ManifImDistStat(Expi).SSIM(:,maxId),score_vec)
+plotGPRfitting(ManifImDistStat(Expi).SSIM(:,maxId),score_vec)
+xlabel("SSIM")
+nexttile(3);hold on
+scatter(ManifImDistStat(Expi).L2(:,maxId),score_vec)
+plotGPRfitting(ManifImDistStat(Expi).L2(:,maxId),score_vec)
+xlabel("L2")
+nexttile(4);hold on
 scatter(ManifImDistStat(Expi).FC6(:,maxId),score_vec)
+plotGPRfitting(ManifImDistStat(Expi).FC6(:,maxId),score_vec)
 titstr4 = { compose("Manif: pear %.3f spear %.3f",corr(ManifImDistStat(Expi).FC6(:,maxId),score_vec),corr(ManifImDistStat(Expi).FC6(:,maxId),score_vec,'Type','Spearman'))};
 xlabel("FC6 (1-corr)")
 % Pasupathy patches
@@ -301,20 +283,23 @@ pasu_vec = cellfun(@(psth)mean(psth(ui,51:200,:),'all'),reshape(Stats(Expi).ref.
 pasu_vec(~pasu_val_msk) = []; % isnan(pasu_vec)
 [pasu_sortScore,sortId]=sort(pasu_vec,'Descend');
 [pasu_maxScore,pasu_maxId]=max(pasu_vec);
-nexttile(1);hold on
+nexttile(1);
 scatter(pasu_imdist.squ(:,pasu_maxId),pasu_vec)
-% Gaussian Process Smoothing
-xlinsp = linspace(0,max(pasu_imdist.squ(:,pasu_maxId)),100);
-gprMdl = fitrgp(pasu_imdist.squ(:,pasu_maxId), pasu_vec);
-gpr_fit = gprMdl.predict(xlinsp');
+% gprMdl = fitrgp(pasu_imdist.squ(:,pasu_maxId), pasu_vec);
+% xlinsp = linspace(0,max(pasu_imdist.squ(:,pasu_maxId)),100);
+% gpr_fit = gprMdl.predict(xlinsp');
+plotGPRfitting(pasu_imdist.squ(:,pasu_maxId), pasu_vec)
 plot(xlinsp, gpr_fit)
 titstr1{end+1} = compose("Pasu: pear %.3f spear %.3f",corr(pasu_imdist.squ(:,pasu_maxId),pasu_vec,'Rows','complete'),corr(pasu_imdist.squ(:,pasu_maxId),pasu_vec,'Type','Spearman','Rows','complete'));
-% nexttile(2);hold on
-% scatter(pasu_imdist.SSIM(:,pasu_maxId),pasu_vec)
-% nexttile(3);hold on
-% scatter(pasu_imdist.L2(:,pasu_maxId),pasu_vec)
-nexttile(4);hold on
+nexttile(2);
+scatter(pasu_imdist.SSIM(:,pasu_maxId),pasu_vec)
+plotGPRfitting(pasu_imdist.SSIM(:,pasu_maxId),pasu_vec)
+nexttile(3);
+scatter(pasu_imdist.L2(:,pasu_maxId),pasu_vec)
+plotGPRfitting(pasu_imdist.L2(:,pasu_maxId),pasu_vec)
+nexttile(4);
 scatter(pasu_imdist.FC6(:,pasu_maxId),pasu_vec)
+plotGPRfitting(pasu_imdist.FC6(:,pasu_maxId),pasu_vec)
 legend(["Manifold","Pasupathy"])
 titstr4{end+1} = compose("Pasu: pear %.3f spear %.3f",corr(pasu_imdist.FC6(:,pasu_maxId),pasu_vec,'Rows','complete'),corr(pasu_imdist.FC6(:,pasu_maxId),pasu_vec,'Type','Spearman','Rows','complete'));
 end
@@ -325,18 +310,22 @@ gab_vec = cellfun(@(psth)mean(psth(ui,51:200,:),'all'),reshape(Stats(Expi).ref.g
 [gab_maxScore,gab_maxId]=max(gab_vec);
 nexttile(1);hold on
 scatter(gab_imdist.squ(:,gab_maxId), gab_vec,'g')
-% Plot the Interpolation of it
-xlinsp = linspace(0, max(gab_imdist.squ(:,gab_maxId)),100);
-gprMdl = fitrgp(gab_imdist.squ(:,gab_maxId), gab_vec);
-gpr_fit = gprMdl.predict(xlinsp');
-plot(xlinsp, gpr_fit,'g')
+plotGPRfitting(gab_imdist.squ(:,gab_maxId), gab_vec,'g')
+% % Plot the Interpolation of it
+% xlinsp = linspace(0, max(gab_imdist.squ(:,gab_maxId)),100);
+% gprMdl = fitrgp(gab_imdist.squ(:,gab_maxId), gab_vec);
+% gpr_fit = gprMdl.predict(xlinsp');
+% plot(xlinsp, gpr_fit,'g')
 titstr1{end+1} = compose("Gabor: pear %.3f spear %.3f",corr(gab_imdist.squ(:,gab_maxId),gab_vec,'Rows','complete'),corr(gab_imdist.squ(:,gab_maxId),gab_vec,'Type','Spearman','Rows','complete'));
-% nexttile(2);hold on
-% scatter(gab_imdist.SSIM(:,gab_maxId),gab_vec,'g')
-% nexttile(3);hold on
-% scatter(gab_imdist.L2(:,gab_maxId),gab_vec,'g')
+nexttile(2);hold on
+scatter(gab_imdist.SSIM(:,gab_maxId),gab_vec,'g')
+plotGPRfitting(gab_imdist.SSIM(:,gab_maxId),gab_vec,'g')
+nexttile(3);hold on
+scatter(gab_imdist.L2(:,gab_maxId),gab_vec,'g')
+plotGPRfitting(gab_imdist.L2(:,gab_maxId),gab_vec,'g')
 nexttile(4);hold on
 scatter(gab_imdist.FC6(:,gab_maxId),gab_vec,'g')
+plotGPRfitting(gab_imdist.FC6(:,gab_maxId),gab_vec,'g')
 legend(["Manifold","Pasupathy","Gabor"])
 titstr4{end+1} = compose("Gabor: pear %.3f spear %.3f",corr(gab_imdist.FC6(:,gab_maxId),gab_vec,'Rows','complete'),corr(gab_imdist.FC6(:,gab_maxId),gab_vec,'Type','Spearman','Rows','complete'));
 end
@@ -346,6 +335,7 @@ nexttile(4);title(titstr4)
 % savefig(21,fullfile(figdir,compose("%s_Exp%02d_pref%02d_peak.fig",Animal,Expi,Stats(Expi).units.pref_chan)))
 end
 % title(T,compose("%s Exp %d prefchan %d Pasupathy",Animal,Expi,Stats(Expi).units.pref_chan))
+
 %% Plot the same thing with maximum correlation stimuli. 
 figdir = "E:\OneDrive - Washington University in St. Louis\ImMetricTuning";
 Expi = 35;
@@ -363,17 +353,17 @@ figure(22);set(22,'pos',[0   286  2000  544])
 T=tiledlayout(1,4,'TileSpacing','compact');
 title(T,compose("%s Exp %d prefchan %d",Animal,Expi,Stats(Expi).units.pref_chan),'FontSize',16)
 
-nexttile(1) %subplot(141);
+nexttile(1) 
 scatter(ManifImDistStat(Expi).squ(:,maxId),score_vec)
 xlabel("Perceptual Similarity(SqueezeNet)");ylabel("Neural Activation")
 titstr1 = { compose("Manif: pear %.3f spear %.3f",corr(ManifImDistStat(Expi).squ(:,maxId),score_vec),corr(ManifImDistStat(Expi).squ(:,maxId),score_vec,'Type','Spearman'))};
-% nexttile %subplot(142);
-% scatter(ManifImDistStat(Expi).SSIM(:,maxId),score_vec)
-% xlabel("SSIM")
-% nexttile %subplot(143);
-% scatter(ManifImDistStat(Expi).L2(:,maxId),score_vec)
-% xlabel("L2")
-nexttile(4) %subplot(144);
+nexttile(2)
+scatter(ManifImDistStat(Expi).SSIM(:,maxId),score_vec)
+xlabel("SSIM")
+nexttile(3) 
+scatter(ManifImDistStat(Expi).L2(:,maxId),score_vec)
+xlabel("L2")
+nexttile(4) 
 scatter(ManifImDistStat(Expi).FC6(:,maxId),score_vec)
 titstr4 = { compose("Manif: pear %.3f spear %.3f",corr(ManifImDistStat(Expi).FC6(:,maxId),score_vec),corr(ManifImDistStat(Expi).FC6(:,maxId),score_vec,'Type','Spearman'))};
 xlabel("FC6 (1-corr)")
@@ -426,7 +416,24 @@ end
 
 %%
 % [b,bint,stats] = regress_(ManifImDistStat(Expi).squ(:,maxId),score_vec)
-
+%% Demo of Manifold Image Dissimilarity Computation.
+Expi=1;si=1;
+imnm_grid = string(cellfun(@(idx)Stats(Expi).imageName{idx(1)},Stats(Expi).manif.idx_grid{si},'UniformOutput',false));
+manif_imgrid = arrayfun(@(nm)imread(fullfile(Stats(Expi).meta.stimuli,nm+".jpg")),imnm_grid,"Uni",0);
+manif_img_tsr = cell2mat(reshape(manif_imgrid,1,1,1,[]));
+tic
+D.select_metric("squeeze");
+manif_imdist.squ = D.distmat(manif_img_tsr);
+toc
+% D.select_metric("SSIM");
+% manif_imdist.SSIM = D.distmat(manif_img_tsr);
+% toc% 119sec
+% D.select_metric("L2");
+% manif_imdist.L2 = D.distmat(manif_img_tsr);
+% toc% 
+%%
+save("manif_imdist.mat",'manif_imdist')
+%%
 function area_arr = chan2area(chans)
 area_arr = strings(size(chans));
 area_arr(chans<=32)="IT";
@@ -436,4 +443,11 @@ end
 function [b,bint,stats] = regress_(dist, act)
 [b,bint,~,~,stats] = regress(act, [dist, ones(numel(dist), 1)]);
 end
+function plotGPRfitting(X, Y, vargin)
+gprMdl = fitrgp(X, Y);
+xlinsp = linspace(0,max(X),100);
+gpr_fit = gprMdl.predict(xlinsp');
+plot(xlinsp, gpr_fit, vargin{:})
+end
+
 
