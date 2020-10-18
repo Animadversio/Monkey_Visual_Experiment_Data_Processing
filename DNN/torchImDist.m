@@ -49,9 +49,9 @@ classdef torchImDist
        G.metric = metric;
        switch metric
            case "SSIM"
-               G.D = py.models.PerceptualLoss(pyargs("model", "SSIM", "spatial", spatial));
+               G.D = py.models.PerceptualLoss(pyargs("model", "SSIM", "spatial", spatial,"colorspace","RGB"));
            case "L2"
-               G.D = py.models.PerceptualLoss(pyargs("model", "L2", "spatial", spatial));
+               G.D = py.models.PerceptualLoss(pyargs("model", "L2", "spatial", spatial,"colorspace","RGB"));
            case "alex"
                G.D = py.models.PerceptualLoss(pyargs("model", "net-lin", "net", "alex", "spatial", spatial));
            case "vgg"
@@ -68,16 +68,16 @@ classdef torchImDist
        py.torch.set_grad_enabled(false);
    end
    function G = select_metric(G, metric, spatial)
-       if nargin == 1
+       if nargin <= 2
            spatial = 0;
        end
        G.spatial = spatial;
        G.metric = metric;
        switch metric
            case "SSIM"
-               G.D = py.models.PerceptualLoss(pyargs("model", "SSIM", "spatial", spatial));
+               G.D = py.models.PerceptualLoss(pyargs("model", "SSIM", "spatial", spatial,"colorspace","RGB"));
            case "L2"
-               G.D = py.models.PerceptualLoss(pyargs("model", "L2", "spatial", spatial));
+               G.D = py.models.PerceptualLoss(pyargs("model", "L2", "spatial", spatial,"colorspace","RGB"));
            case "alex"
                G.D = py.models.PerceptualLoss(pyargs("model", "net-lin", "net", "alex", "spatial", spatial));
            case "vgg"
@@ -116,6 +116,14 @@ classdef torchImDist
        % interface with generate integrated code, cmp to FC6GAN
        imgn = size(imgs,4);
        distMat = zeros(imgn,imgn);
+       if G.metric == "SSIM"
+       for i=1:imgn
+           for j=i+1:imgn
+               distMat(i,j)=G.distance(imgs(:,:,:,i), imgs(:,:,:,j));
+               distMat(j,i)=distMat(i,j);
+           end
+       end
+       else
        for i=1:imgn
            csr=1;
            dist_row = [];
@@ -126,6 +134,7 @@ classdef torchImDist
            csr = csr_end+1;
            end
            distMat(i, :) = dist_row;
+       end
        end
    end
    
