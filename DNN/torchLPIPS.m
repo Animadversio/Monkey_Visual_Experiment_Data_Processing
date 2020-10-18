@@ -96,8 +96,8 @@ classdef torchLPIPS
        if max(im1,[],'all')>1.2, im1 = single(im1) / 255.0; end
        if max(im2,[],'all')>1.2, im2 = single(im2) / 255.0; end
        % interface with generate integrated code, cmp to FC6GAN
-       im1_tsr = py.torch.tensor(py.numpy.array(permute(im1,[4,3,1,2])));
-       im2_tsr = py.torch.tensor(py.numpy.array(permute(im2,[4,3,1,2])));
+       im1_tsr = py.torch.tensor(py.numpy.array(permute(im1,[4,3,1,2]))).float();
+       im2_tsr = py.torch.tensor(py.numpy.array(permute(im2,[4,3,1,2]))).float();
        dists = G.D.forward(im1_tsr, im2_tsr).squeeze().cpu().detach().numpy().double;
    end
    
