@@ -107,14 +107,14 @@ classdef torchLPIPS
        % interface with generate integrated code, cmp to FC6GAN
        imgn = size(imgs,4);
        distMat = zeros(imgn,imgn);
-       if G.metric == "SSIM"
+       if G.metric == "SSIM" % SSIM doesn't support batch distance computation, so do it one by one.
            for i=1:imgn
                for j=i+1:imgn
                    distMat(i,j)=G.distance(imgs(:,:,:,i), imgs(:,:,:,j));
                    distMat(j,i)=distMat(i,j);
                end
            end
-       else
+       else % net-lin model support batch distance computation, so do it batch in row.
            for i=1:imgn
                csr=1;
                dist_row = [];
