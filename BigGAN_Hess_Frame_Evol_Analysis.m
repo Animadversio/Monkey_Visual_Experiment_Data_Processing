@@ -1,3 +1,4 @@
+% Code dedicated to 
 %% BigGAN Hessian find and load experiments
 Animal="Both"; Set_Path;
 % ftrrows = find(contains(ExpRecord.expControlFN,"generate_") & (ExpRecord.Exp_collection=="BigGAN_fc6" |...
