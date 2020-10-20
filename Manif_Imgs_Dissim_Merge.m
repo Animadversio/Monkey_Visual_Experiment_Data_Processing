@@ -158,7 +158,7 @@ end
 %%
 function plotGPRfitting(X, Y, vargin)
 if nargin == 2, vargin={};end
-gprMdl = fitrgp(X, Y, 'SigmaLowerBound', 1E-3);
+gprMdl = fitrgp(X, Y, 'SigmaLowerBound', 1E-3); % This lower bound is to fix a problem! 
 xlinsp = linspace(0,max(X),100);
 gpr_fit = gprMdl.predict(xlinsp');
 plot(xlinsp, gpr_fit, vargin{:})
