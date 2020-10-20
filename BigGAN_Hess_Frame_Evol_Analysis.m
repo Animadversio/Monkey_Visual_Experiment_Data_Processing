@@ -31,6 +31,22 @@ last_gen_col{end+1} = last_gen_code;
 last_gen_mean_col(end+1, :) = mean(last_gen_code,1);
 gen_num_col(end+1) = gen_num;
 end
+%%
+init_gen_col = {}; % all the init generation codes. collected in a cell 
+init_gen_mean_col = []; % the mean of the init generation code. 
+for Expi = 1:numel(ftrrows)
+try
+[codes_all, img_ids, generations] = load_codes_all(ExpRecord.stimuli{ftrrows(Expi)}, 2, 1); % Last generation codes 
+catch 
+    fprintf("Exp %d folder %s loading Error. Comments:\n", Expi, ExpRecord.stimuli{ftrrows(Expi)})
+    fprintf(ExpRecord.comments{ftrrows(Expi)})
+   continue
+end
+gen_num = min(generations);
+last_gen_code = codes_all(generations == gen_num, :);
+init_gen_col{end+1} = last_gen_code;
+init_gen_mean_col(end+1, :) = mean(last_gen_code,1);
+end
 toc
 %% Load up Hessian matrix
 [evc_all, eva_all, evc_cls, eva_cls, evc_nos, eva_nos] = loadHessian("BigGAN");
@@ -58,12 +74,33 @@ perm_last_gen_mean = [perm_last_gen_mean; last_gen_mean_col(i,randperm(128))]; %
 end
 %%
 last_gen_mean_proj = last_gen_mean_col * evc_cls;
+init_gen_mean_proj = init_gen_mean_col * evc_cls;
 perm_last_gen_proj = perm_last_gen_mean * evc_cls;
-%%
-figure;hold on
-for i = 1:size(last_gen_mean_col,1)
-   scatter(1:128, last_gen_mean_proj(i,:)) 
-end
+
+%% Correlation of projection value and eig idx, eig value, log10(eig value)
+cc_idx = corr([1:128]', mean(abs(last_gen_mean_proj(:,:)),1)');
+cc_eva = corr(eva_cls', mean(abs(last_gen_mean_proj(:,:)),1)');
+cc_logeva = corr(log10(eva_cls)', mean(abs(last_gen_mean_proj(:,:)),1)');
+cc_spear = corr(eva_cls', mean(abs(last_gen_mean_proj(:,:)),1)');
+
+cc_idx_init = corr([1:128]', mean(abs(init_gen_mean_proj(:,:)),1)');
+cc_eva_init = corr(eva_cls', mean(abs(init_gen_mean_proj(:,:)),1)');
+cc_logeva_init = corr(log10(eva_cls)', mean(abs(init_gen_mean_proj(:,:)),1)');
+cc_spear_init = corr(eva_cls', mean(abs(init_gen_mean_proj(:,:)),1)');
+
+cc_idx_shfl = corr([1:128]', mean(abs(perm_last_gen_proj(:,:)),1)');
+cc_eva_shfl = corr(eva_cls', mean(abs(perm_last_gen_proj(:,:)),1)');
+cc_logeva_shfl = corr(log10(eva_cls)', mean(abs(perm_last_gen_proj(:,:)),1)');
+cc_spear_shfl = corr(eva_cls', mean(abs(perm_last_gen_proj(:,:)),1)');
+
+fprintf("Correlation of Projection Amplitude and Eigen Structures\n\t"+...
+  "Evolved Last Gen: Corr ~ rank %.3f, ~ eigval %.3f, ~ log(eigval) %.3f, spearman corr %.3f\n\t"+...
+  "Evolved Initial Gen: Corr ~ rank %.3f, ~ eigval %.3f, ~ log(eigval) %.3f, spearman corr %.3f\n\t"+...
+  "Shuffled Last Gen: Corr ~ rank %.3f, ~ eigval %.3f, ~ log(eigval) %.3f, spearman corr %.3f\n",...
+  cc_idx,cc_eva,cc_logeva,cc_spear,...
+  cc_idx_init,cc_eva_init,cc_logeva_init,cc_spear_init,...
+  cc_idx_shfl,cc_eva_shfl,cc_logeva_shfl,cc_spear_shfl)
+
 %%
 figure;
 errorbar(1:128, mean(abs(last_gen_mean_proj(:,:)),1), std(abs(last_gen_mean_proj(:,:)),1))
@@ -87,15 +124,6 @@ errorbar(log10(eva_cls), mean(abs(last_gen_mean_proj(:,:)),1), std(abs(last_gen_
 ylabel("Projection Amplitude");xlabel("log10(Eigen Value)")
 title(compose("cc=%.3f (p=%.4f)", cc_logeva, sum(cc_logeva_dist>cc_logeva)/numel(cc_logeva_dist)))
 
-
-%% Correlation of projection value and eig idx, eig value, log10(eig value)
-cc_idx = corr([1:128]', mean(abs(last_gen_mean_proj(:,:)),1)')
-cc_eva = corr(eva_cls', mean(abs(last_gen_mean_proj(:,:)),1)')
-cc_logeva = corr(log10(eva_cls)', mean(abs(last_gen_mean_proj(:,:)),1)')
-
-cc_idx_shfl = corr([1:128]', mean(abs(perm_last_gen_proj(:,:)),1)')
-cc_eva_shfl = corr(eva_cls', mean(abs(perm_last_gen_proj(:,:)),1)')
-cc_logeva_shfl = corr(log10(eva_cls)', mean(abs(perm_last_gen_proj(:,:)),1)')
 %% Confidence Interval Computation by shuffling the data
 cc_idx_dist = []; cc_eva_dist = []; cc_logeva_dist = [];
 for triali = 1:5000
@@ -130,7 +158,8 @@ T = tiledlayout(1,3,'TileSpacing','compact','Padding','compact');
 nexttile(1)
 histogram(cc_idx_dist, 30)
 line([cc_idx, cc_idx], ylim(), 'Color', 'red')
-legend(["Permutation Control","Real Value"])
+line([cc_idx_init, cc_idx_init], ylim(), 'Color', 'k')
+legend(["Permutation Control","Real Value","Initial Gen"])
 xlabel("Corr with eigen rank")
 ylabel("Density")
 title(compose("cc=%.3f (p=%.4f)", cc_idx, 1-sum(cc_idx_dist>cc_idx)/numel(cc_idx_dist)))
@@ -138,12 +167,14 @@ box off;
 nexttile(2)
 histogram(cc_eva_dist, 30)
 line([cc_eva, cc_eva], ylim(), 'Color', 'red')
+line([cc_eva_init, cc_eva_init], ylim(), 'Color', 'k')
 xlabel("Corr with eigval")
 title(compose("cc=%.3f (p=%.4f)", cc_eva, sum(cc_eva_dist>cc_eva)/numel(cc_eva_dist)))
 box off;
 nexttile(3)
 histogram(cc_logeva_dist, 30)
 line([cc_logeva, cc_logeva], ylim(), 'Color', 'red')
+line([cc_logeva_init, cc_logeva_init], ylim(), 'Color', 'k')
 xlabel("Corr with Log(eigval)")
 title(compose("cc=%.3f (p=%.4f)", cc_logeva, sum(cc_logeva_dist>cc_logeva)/numel(cc_logeva_dist)))
 box off;
