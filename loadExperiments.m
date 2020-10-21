@@ -39,12 +39,14 @@ Project_General_copyMissingFiles(preMeta); % communicating and copying data from
 meta = {}; rasters = {}; lfps = {}; Trials = {};
 for iExp = 1:length(preMeta) 
     tMeta = preMeta(iExp);
+    % if tMeta.  is about video, then modify the time window. 
     try
-    if ~no_conv
-        [meta_,rasters_,lfps_,Trials_] = loadData(tMeta.ephysFN,'expControlFN',tMeta.expControlFN) ;
-    else
-        [meta_,rasters_,lfps_,Trials_] = loadData(tMeta.ephysFN,'expControlFN',tMeta.expControlFN, 'sdf', 'raster') ;
-    end
+    addargs = {};
+    if no_conv, addargs = [addargs, 'sdf', 'raster']; end % instead of defualt 'sdf'
+    if contains(tMeta.expControlFN, "movie"), addargs = [addargs, 'rasterWindow', [-250 2500]]; end 
+    % Extract longer time window activity when using movie? TODO, this 
+    % time window value should change for each different movie experiments.
+    [meta_,rasters_,lfps_,Trials_] = loadData(tMeta.ephysFN,'expControlFN',tMeta.expControlFN, addargs{:}) ;
     catch err %e is an MException struct
         fprintf('Error message:\n%s\n',err.message);
         fprintf('Error trace:\n%s\n',err.getReport);
