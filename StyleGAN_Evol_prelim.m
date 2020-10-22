@@ -16,7 +16,7 @@ expday = datetime(meta.expControlFN(1:6),'InputFormat','yyMMdd');
 fdrnm = compose("%s-%s-Chan%02d-1",datestr(expday,'yyyy-mm-dd'), Animal, pref_chan(1));
 figdir = fullfile(saveroot, fdrnm);
 mkdir(figdir)
-%% 
+%% Collect basic info (adapted from Evol_Collect_Stats)
 pref_chan = Trials.TrialRecord.User.prefChan;
 unit_in_pref_chan = cell2mat(Trials.TrialRecord.User.evoConfiguration(:,4))';
 imgpos = cell2mat(Trials.TrialRecord.User.evoConfiguration(:,2));
@@ -65,11 +65,11 @@ for threadi = 1:thread_num
         nat_idx_seq{threadi, blocki} = find(nat_msk);
     end
 end
-%%
+%% Activation matrix. The simplest stats. 
 act_mat = squeeze(mean(rasters(:,51:200,:),2));
-%%
+%% Score Trajectory Plot. 
 gen_clr = {'red','magenta'}; nat_clr = {'green','cyan'};
-figure;
+figure(6);
 iCh=10;
 for iCh = 1:numel(meta.spikeID)
 cla(gca, 'reset')
@@ -79,12 +79,16 @@ nat_act_mean = cellfun(@(idx)mean(act_mat(iCh,idx),2), nat_idx_seq(:,1:end-1));
 nat_act_sem = cellfun(@(idx)std(act_mat(iCh,idx),1,2)/sqrt(length(idx)), nat_idx_seq(:,1:end-1));
 % plot(block_list(1:end-1), gen_act_mean')
 for thri = 1:thread_num
-   shadedErrorBar(block_list(1:end-1), gen_act_mean(thri,:), gen_act_sem(thri,:),'lineProps',{'Color', gen_clr{thri}})
+   shadedErrorBar(block_list(1:end-1), gen_act_mean(thri,:), gen_act_sem(thri,:),'lineProps',...
+       {'Color', gen_clr{thri},'LineWidth',2},'patchSaturation',0.15)
 end
 for thri = 1:thread_num
-   shadedErrorBar(block_list(1:end-1), nat_act_mean(thri,:), nat_act_sem(thri,:),'lineProps',{'Color', nat_clr{thri}})
+   shadedErrorBar(block_list(1:end-1), nat_act_mean(thri,:), nat_act_sem(thri,:),'lineProps',...
+       {'Color', nat_clr{thri},'LineWidth',2},'patchSaturation',0.15)
 end
+legend(["thr1 evo","thr2 evo","thr1 nat","thr2 nat"])
 xlabel("Generation");ylabel("Evoked Firing Rate");box off
-title(unit_name_arr(iCh))
-pause
+title(compose("%s %s score traj\n Thr1 Face Thr2 ImageNet",Animal,unit_name_arr(iCh)))
+saveas(6,fullfile(figdir,compose("%s_%s_score_traj.png",Animal,unit_name_arr(iCh))))
+% pause
 end
