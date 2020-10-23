@@ -83,6 +83,13 @@ def process_concat_cells(df, out_excel, Animal):
     # https://cooperluan.github.io/python/2015/01/08/pandas-daochu-excel-zhong-de-luan-ma-wen-ti/
     return df_sort
 
+def available_Explabel():
+    Animal_strs = ["Alfa", "Beto"]
+    for animal, out_path in zip(Animal_strs, df_paths):
+        df_old = pd.read_excel(out_path)
+        print("Existing labels for %s:"%animal)
+        print(list(df_old.Exp_collection.unique()))
+
 def concat_table(df_old, df_new, addexplabel=None, out_path=None):
     """Obsolete, use the function below instead"""
     if isinstance(df_old,str):
@@ -105,6 +112,7 @@ def concat_table(df_old, df_new, addexplabel=None, out_path=None):
     return df_cat
 
 def sort_merge_table(df_sort, addexplabel=None):
+    """Current version to combine new table and old one."""
     Animal_strs = ["Alfa", "Beto"]
     if isinstance(df_sort,str):
         df_sort = pd.read_excel(df_sort)
@@ -143,6 +151,7 @@ if __name__ == '__main__':
         df_sort = process_concat_cells(tmp_input, tmp_output, Animal=Animal)
     else: # try to open the tempory output directly and parse from it.
         pass
+    available_Explabel() # Print the available Exp labels for the monkeys
     try:
         os.startfile(tmp_output)
     except:
