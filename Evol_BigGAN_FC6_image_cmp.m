@@ -1,15 +1,13 @@
-% Analyze 
+% Analyze Evolved image in BigGAN and FC6 
+
 %% Image Analysis for BigGAN and FC6
 D = torchImDist("squeeze", true);
-% loadEvolImages(thread=1)
-% loadEvolImages(thread=2)
-% D.spatial=true;
 %%
 res = 119;
 distmap = D.distance(imresize(im1,[res,res]), imresize(im2,[res,res]));
 figure(1);clf; T=tiledlayout(1,3,'Padding','compact');
-nexttile(1);imshow(im1)
-nexttile(2);imshow(im2)
+nexttile(1);imshow(im1); 
+nexttile(2);imshow(im2); 
 nexttile(3);imagesc(distmap);axis image;colormap(flipud(gray));colorbar();xlabel("patch dist map")
 %%
 Animal="Both"; Set_Path;
@@ -21,7 +19,6 @@ figdir = "E:\OneDrive - Washington University in St. Louis\Evol_BigGAN_FC6";
 stimfdr = "N:\Stimuli\2020-BigGAN\2020-07-22-Beto-01\2020-07-22-10-14-22";
 im1 = imread(fullfile(stimfdr, "block048_thread000_gen_gen047_003089.bmp"));
 im2 = imread(fullfile(stimfdr, "block048_thread001_gen_gen047_003114.bmp"));
-
 %%
 im1 = imread(fullfile("N:\Stimuli\2020-Evolutions\2020-07-20-Beto-02\2020-07-20-12-58-55","block043_thread000_gen_gen042_001709.bmp"));
 im2 = imread(fullfile("N:\Stimuli\2020-BigGAN\2020-07-20-Beto-01\2020-07-20-12-40-51","block042_thread000_gen_gen041_001046.bmp"));
@@ -32,7 +29,7 @@ im_gen1 = cellfun(@(impath)imread(fullfile(imfdr,impath)),imnames,'Uni',0);
 imfdr = "N:\Stimuli\2020-BigGAN\2020-07-20-Beto-01\2020-07-20-12-40-51";
 imnames = string(ls(imfdr+"\block042_thread000*"));
 im_gen2 = cellfun(@(impath)imread(fullfile(imfdr,impath)),imnames,'Uni',0);
-%%
+%% Demo of population based distance map averaging procedure.
 res = 120;
 distmap_col = {};
 for i = 1:numel(im_gen1)
@@ -41,11 +38,10 @@ for i = 1:numel(im_gen1)
     distmap_col{i,j} = D.distance(imresize(im1,[res,res]), imresize(im2,[res,res]));
     end
 end
-%%
 distmap_stack = cell2mat(reshape(distmap_col,1,1,[]));
 distmap_mean = mean(distmap_stack,3); 
 figure;imagesc(distmap_mean);axis image;colormap(flipud(gray));colorbar();xlabel("patch dist map")
-%%
+%% 
 for i = 1:numel(im_gen1)
     for j = 1:numel(im_gen2)
     im1 = im_gen1{i}; im2 = im_gen2{j};
@@ -58,21 +54,56 @@ for i = 1:numel(im_gen1)
     pause
     end
 end
-%%
-[imFC_fina, imnmFC_fina] = loadEvolImages("N:\Stimuli\2020-Evolutions\2020-07-20-Beto-02\2020-07-20-12-58-55", 0, -1);
-[imBG_fina, imnmBG_fina] = loadEvolImages("N:\Stimuli\2020-BigGAN\2020-07-20-Beto-01\2020-07-20-12-40-51", 0, -1);
-[distmap_infa, distmap_col_fina] = calc_distmap_avg(D,imFC_fina, imBG_fina);
+%% Load the images for 2 threads in paired generation, compute the average distance map. 
+[imFC_fina, imnmFC_fina] = loadEvolImages("N:\Stimuli\2020-Evolutions\2020-07-20-Beto-02\2020-07-20-12-58-55", 0, -2);
+[imBG_fina, imnmBG_fina] = loadEvolImages("N:\Stimuli\2020-BigGAN\2020-07-20-Beto-01\2020-07-20-12-40-51", 0, -2);
+[distmap_fina, distmap_col_fina] = calc_distmap_avg(D,imFC_fina, imBG_fina);
+
+[imFC_mid, imnmFC_mid] = loadEvolImages("N:\Stimuli\2020-Evolutions\2020-07-20-Beto-02\2020-07-20-12-58-55", 0, 21);
+[imBG_mid, imnmBG_mid] = loadEvolImages("N:\Stimuli\2020-BigGAN\2020-07-20-Beto-01\2020-07-20-12-40-51", 0, 21);
+[distmap_mid, distmap_col_mid] = calc_distmap_avg_subsamp(D, imFC_mid, imBG_mid);
 %
-[imFC_init, imnmFC_init] = loadEvolImages("N:\Stimuli\2020-Evolutions\2020-07-20-Beto-02\2020-07-20-12-58-55", 0, 1);
-[imBG_init, imnmBG_init] = loadEvolImages("N:\Stimuli\2020-BigGAN\2020-07-20-Beto-01\2020-07-20-12-40-51", 0, 1);
+[imFC_init, imnmFC_init] = loadEvolImages("N:\Stimuli\2020-Evolutions\2020-07-20-Beto-02\2020-07-20-12-58-55", 0, 2);
+[imBG_init, imnmBG_init] = loadEvolImages("N:\Stimuli\2020-BigGAN\2020-07-20-Beto-01\2020-07-20-12-40-51", 0, 2);
 [distmap_init, distmap_col_init] = calc_distmap_avg(D,imFC_init, imBG_init);
 %%
-figure;imagesc(distmap_infa);axis image;colormap(flipud(gray));colorbar();xlabel("patch dist map")
-figure;imagesc(distmap_init);axis image;colormap(flipud(gray));colorbar();xlabel("patch dist map")
+figdir = "E:\OneDrive - Washington University in St. Louis\BigGAN_FC6_Evol_cmp\2020-07-20-Beto-01";
+figure; T = tiledlayout(1,3,'Padding','compact','TileSpacing','compact');
+nexttile(1);imagesc(distmap_init);axis image;colormap(flipud(gray));colorbar();xlabel("patch dist map");title("First Gen")
+nexttile(2);imagesc(distmap_mid);axis image;colormap(flipud(gray));colorbar();xlabel("patch dist map");title("Mid Gen")
+nexttile(3);imagesc(distmap_fina);axis image;colormap(flipud(gray));colorbar();xlabel("patch dist map");title("Final Gen")
+%%
+figure(13); T = tiledlayout(3,3,'Padding','compact','TileSpacing','compact');
+nexttile(3);imagesc(distmap_init);axis image;colormap(flipud(gray));colorbar();xlabel("patch dist map");title("First Gen")
+nexttile(1);imshow(imFC_init{randsample(numel(imFC_init),1)});title("FC6 GAN")
+nexttile(2);imshow(imBG_init{randsample(numel(imBG_init),1)});title("BigGAN")
+nexttile(6);imagesc(distmap_mid);axis image;colormap(flipud(gray));colorbar();xlabel("patch dist map");title("Mid Gen")
+nexttile(4);imshow(imFC_mid{randsample(numel(imFC_mid),1)});
+nexttile(5);imshow(imBG_mid{randsample(numel(imBG_mid),1)});
+nexttile(9);imagesc(distmap_fina);axis image;colormap(flipud(gray));colorbar();xlabel("patch dist map");title("Final Gen")
+nexttile(7);imshow(imFC_fina{randsample(numel(imFC_fina),1)});
+nexttile(8);imshow(imBG_fina{randsample(numel(imBG_fina),1)});
+title(T, compose("2020-07-20 Beto 01 Evol BigGAN FC6 Chan 20"))
+saveas(13,fullfile(figdir, "Evol_Img_Similarity.png"))
+savefig(13,fullfile(figdir, "Evol_Img_Similarity.fig"))
+%%
+figure(5); clf;hold on;
+histogram(distmap_init(:),0.2:0.01:1,'FaceAlpha',0.5);
+histogram(distmap_mid(:),0.2:0.01:1,'FaceAlpha',0.5); 
+histogram(distmap_fina(:),0.2:0.01:1,'FaceAlpha',0.5); 
+xlabel("Value in Distmap");legend(["Initial Generation", "Middle Generation", "Final Generation"])
+title(["Patch Distance Distribution between BigGAN and FC6.","(First, Mid, Last Gen)"])
+saveas(5,fullfile(figdir, "Img_Distmap_distribution.png"))
+%%
+figure;imagesc(distmap_fina);axis image;colormap(flipud(gray));colorbar();xlabel("patch dist map")
 %%
 function [im_gen, imnames] = loadEvolImages(stimfolder, thread, block, suffix)
+% Util function to load in evolved image of certain block x thread from a
+% folder
+% block: negative `block` variable means counting from the last block. e.g. -1 means
+%        the last block,-2 means the penultimate block
 if nargin<=3, suffix=".bmp";end
-if block <= 0
+if block <= 0 % negative block number means counting from the last one
 allimgs = string(ls(stimfolder+"\block*thread*gen*"));
 lastgeni = regexp(allimgs(end), "block(\d*)_thread\d*_gen", 'tokens');
 lastgeni = str2num(lastgeni{1});
@@ -83,11 +114,35 @@ end
 imnames = string(ls(stimfolder+compose("\\block%03d_thread%03d_gen*",blockid,thread)));
 im_gen = cellfun(@(impath)imread(fullfile(stimfolder,impath)),imnames,'Uni',0);
 end
-function [distmap_mean, distmap_col] = calc_distmap_avg(D,im_gen1, im_gen2)
+
+function [distmap_mean, distmap_col] = calc_distmap_avg(D, im_gen1, im_gen2, sampleN)
+% Compute the image distance map between each pair of image from 2 cell
+% arrays of images. 
 res = 120;
 distmap_col = {};
 for i = 1:numel(im_gen1)
     for j = 1:numel(im_gen2)
+    im1 = im_gen1{i}; im2 = im_gen2{j};
+    distmap_col{i,j} = D.distance(imresize(im1,[res,res]), imresize(im2,[res,res]));
+    end
+end
+distmap_stack = cell2mat(reshape(distmap_col,1,1,[]));
+distmap_mean = mean(distmap_stack,3); 
+end
+function [distmap_mean, distmap_col] = calc_distmap_avg_subsamp(D, im_gen1, im_gen2, sampleN)
+% Compute the image distance map between each pair of image from 2 cell
+% arrays of images. 
+if nargin == 3 %, sampleN = 0;
+imgidx_i = 1:numel(im_gen1);
+imgidx_j = 1:numel(im_gen2);
+else
+imgidx_i = randsample(numel(im_gen1),sampleN)';
+imgidx_j = randsample(numel(im_gen2),sampleN)';
+end
+res = 120;
+distmap_col = {};
+for i = imgidx_i
+    for j = imgidx_j
     im1 = im_gen1{i}; im2 = im_gen2{j};
     distmap_col{i,j} = D.distance(imresize(im1,[res,res]), imresize(im2,[res,res]));
     end
