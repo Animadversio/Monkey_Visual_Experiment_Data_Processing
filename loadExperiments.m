@@ -47,7 +47,7 @@ for iExp = 1:length(preMeta)
     % Extract longer time window activity when using movie? TODO, this 
     % time window value should change for each different movie experiments.
     [meta_,rasters_,lfps_,Trials_] = loadData(tMeta.ephysFN,'expControlFN',tMeta.expControlFN, addargs{:}) ;
-    catch err %e is an MException struct
+    catch err % err is an MException struct, save the err in a log file and continue. 
         fprintf('Error message:\n%s\n',err.message);
         fprintf('Error trace:\n%s\n',err.getReport);
         disp(tMeta)
