@@ -7,17 +7,17 @@ Animal="Alfa";Set_Path;
 ftr = find(contains(ExpRecord.ephysFN,"23102020") & contains(ExpRecord.Exp_collection, "StyleGAN_Evol") );
 [meta_new,rasters_new,~,Trials_new] = loadExperiments(ftr,Animal);
 %%
+saveroot = "E:\OneDrive - Washington University in St. Louis\StyleGAN_evol";
 Triali = 1;
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 Trials = Trials_new{Triali};
-
-stimparts = split(meta.stimuli,"\");
 %%
 pref_chan = Trials.TrialRecord.User.prefChan;
 assert(all(pref_chan==pref_chan(1)))
 pref_chan=pref_chan(1);
-saveroot = "E:\OneDrive - Washington University in St. Louis\StyleGAN_evol";
+
+stimparts = split(meta.stimuli,"\");
 expday = datetime(meta.expControlFN(1:6),'InputFormat','yyMMdd');
 % fdrnm = compose("%s-%s-Chan%02d-1",datestr(expday,'yyyy-mm-dd'), Animal, pref_chan(1));
 fdrnm = compose("%s-Chan%02d", stimparts{end-1}, pref_chan(1));
