@@ -1,5 +1,7 @@
-% Fast Sorting of today's experiments
 function batchProcessPL2(ephysFNs, varargin)
+% Simply Sorting of today's experiments and save the BigMat, with no other operations.
+% assume ephysFNs is a string array or a cell array of ephysFN names. 
+if nargin <= 1, sdf = 'sdf'; end % 'raster' otherwise
 if nargin == 0 % get today's animal
     animal = input("Animal:",'s');
     date = input("Date:",'s');
@@ -8,13 +10,30 @@ if nargin == 0 % get today's animal
     end
     searchstr = string([animal,'-',datestr(date,"ddmmyyyy"),'*.pl2']);
     ephysFNs = string(ls("N:\Data-Ephys-Raw\"+searchstr));
+    preMeta = arrayfun(@(fn)struct('ephysFN',fn{1}(1:end-4),'sdf',sdf), ephysFNs);
+else
+    if contains(ephysFNs{1},'.pl2')
+    preMeta = arrayfun(@(fn)struct('ephysFN',fn{1}(1:end-4),'sdf',sdf), ephysFNs);
+    else
+    preMeta = arrayfun(@(fn)struct('ephysFN',char(fn{1}),'sdf',sdf), ephysFNs);
+    end
 end
-if nargin <= 1, sdf = 'sdf'; end 
-preMeta = arrayfun(@(fn)struct('ephysFN',fn{1}(1:end-4),'sdf',sdf), ephysFNs);
 Project_General_copyMissingFiles(preMeta)
 for iFn = 1:numel(ephysFNs)
-ephysFN = ephysFNS(iFn);
-sortPL2(ephysFN, varargin);
+ephysFN = preMeta(iFn).ephysFN; % ephysFNs{iFn}(1:end-4);
+try
+sortPL2(ephysFN, varargin{:});
+catch err % err is an MException struct, save the err in a log file and continue. 
+    fprintf('Error message:\n%s\n',err.message);
+    fprintf('Error trace:\n%s\n',err.getReport);
+    disp(preMeta(iFn))
+    %keyboard
+    fileID = fopen('S:\Exp_error_log.log','w+');
+    fprintf(fileID,'Error message:\n%s\n',err.message);
+    fprintf(fileID,'Error trace:\n%s\n',err.getReport);
+    fclose(fileID);
+    continue
+end
 end
 end
 
