@@ -1,4 +1,5 @@
 %% Manif_Imgs_Dissim_Merge
+% Load the relevant statistics
 Animal = "Alfa";
 mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 load(fullfile(mat_dir,"gab_imdist.mat"),'gab_imdist')
@@ -7,11 +8,15 @@ load(fullfile(mat_dir,Animal+"_Manif_ImDist.mat"),"ManifImDistStat")
 load(fullfile(mat_dir, Animal+'_Evol_stats.mat'), 'EStats') 
 load(fullfile(mat_dir, Animal+'_Manif_stats.mat'), 'Stats') 
 figdir = "E:\OneDrive - Washington University in St. Louis\ImMetricTuning";
-%%
+%% Get the invalid mask for Pasupathy images.
 % pasu_nm_grid = cellfun(@(idx)unique(Stats(12).imageName(idx)),Stats(12).ref.pasu_idx_grid,'Uni',0);
+if Animal == "Alfa"
 pasu_idx_vec = reshape(Stats(1).ref.pasu_idx_grid',[],1); % 12% reshape into one row. But transpose to make similar object adjacent
+elseif Animal == "Beto"
+pasu_idx_vec = reshape(Stats(12).ref.pasu_idx_grid',[],1);
+end
 pasu_val_msk = ~cellfun(@isempty,pasu_idx_vec);
-%%
+%% Lengthy full version, more readable. 
 figdir = "E:\OneDrive - Washington University in St. Louis\ImMetricTuning";
 Expi = 35;
 bestcorr = 0;
@@ -94,7 +99,6 @@ end
 
 
 %% newer compact version of code.
-
 bestcorr = 0;
 Cord = colororder;
 metric_list = ["squ","SSIM","L2","FC6","FC6_corr"];
@@ -109,7 +113,7 @@ si=1; ui=1;
 score_vec = cellfun(@(psth)mean(psth(ui,51:200,:),'all'),reshape(Stats(Expi).manif.psth{si},[],1));
 [sortScore,sortId]=sort(score_vec,'Descend');
 [maxScore,maxId]=max(score_vec);
-for mi = 1:numel(metric_list)
+for mi = 1:numel(metric_list) % Loop through different distance metrics
 	nexttile(mi);  metname = metric_list(mi); hold on
     scatter(ManifImDistStat(Expi).(metname)(:,maxId), score_vec)
 	plotGPRfitting(ManifImDistStat(Expi).(metname)(:,maxId), score_vec)% Gaussian Process Smoothing or Fitting
@@ -154,6 +158,9 @@ saveas(21,fullfile(figdir,compose("%s_Exp%02d_pref%02d_peak.png",Animal,Expi,Sta
 savefig(21,fullfile(figdir,compose("%s_Exp%02d_pref%02d_peak.fig",Animal,Expi,Stats(Expi).units.pref_chan)))
 saveas(21,fullfile(figdir,compose("%s_Exp%02d_pref%02d_peak.pdf",Animal,Expi,Stats(Expi).units.pref_chan)))
 end
+%%
+
+
 
 %%
 function plotGPRfitting(X, Y, vargin)
@@ -161,5 +168,5 @@ if nargin == 2, vargin={};end
 gprMdl = fitrgp(X, Y, 'SigmaLowerBound', 1E-3); % This lower bound is to fix a problem! 
 xlinsp = linspace(0,max(X),100);
 gpr_fit = gprMdl.predict(xlinsp');
-plot(xlinsp, gpr_fit, vargin{:})
+plot(xlinsp, gpr_fit, vargin{:})%,'HandleVisibility','off' % adding these arguments will remove it from legend
 end
