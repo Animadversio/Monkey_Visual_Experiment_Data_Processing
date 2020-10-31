@@ -2,6 +2,7 @@
 Animal="Alfa";Set_Path;setMatlabTitle("MovieStaticDynamics")
 ftr = find(contains(ExpRecord.ephysFN,"21102020"));
 [meta_new,rasters_new,~,Trials_new] = loadExperiments(ftr(4:7),Animal);
+
 %% Evolved Image
 rasters_evo = rasters_new{1};
 Trials_evo = Trials_new{1};
