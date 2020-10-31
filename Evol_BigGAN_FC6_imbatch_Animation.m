@@ -5,7 +5,7 @@ load(fullfile(MatStats_path, Animal+"_HessBGEvolStats.mat"), 'HEStats')
 %%
 Animal = "Alfa";
 mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics"; 
-savefast(fullfile(mat_dir, Animal + "_BigGAN_FC6_Evol_Stats.mat"), 'BFEStats'); 
+load(fullfile(mat_dir, Animal + "_BigGAN_FC6_Evol_Stats.mat"), 'BFEStats'); 
 
 %% 
 result_dir = "E:\OneDrive - Washington University in St. Louis\BigGAN_Evol_Movies";

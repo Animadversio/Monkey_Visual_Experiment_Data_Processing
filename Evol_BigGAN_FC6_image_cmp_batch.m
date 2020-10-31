@@ -118,6 +118,26 @@ for Expi = 1:numel(BFEStats)
 end
 end
 %%
+mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics"; 
+figdir = "E:\OneDrive - Washington University in St. Louis\BigGAN_FC6_ImgCmp"; 
+for Animal = ["Alfa", "Beto"]
+load(fullfile(mat_dir, Animal + "_BigGAN_FC6_Evol_Stats.mat"), 'BFEStats'); 
+for Expi = 1:numel(BFEStats)
+    load(fullfile(figdir, compose("%s_Exp%02d_traj.mat",Animal,Expi)), ...
+            'dist_prctile', 'dist_pair_prctile')
+    stimparts = split(BFEStats(Expi).meta.stimuli,"\");
+    prefchan_str = BFEStats(Expi).units.unit_name_arr(BFEStats(Expi).units.pref_chan_id(1));
+    
+    figure(10);clf;hold on;
+    plot(dist_prctile);plot(dist_pair_prctile)
+    legend(["5%-ile in avg distmap", "5%-ile in distmap of all pairs"])
+    title(["BigGAN FC6 Dual Evol Image Cmp", stimparts{end-1}])
+    xlabel("Generation");ylabel("Patch Distance (Squeeze)")
+    saveas(10,fullfile(figdir, compose("%s_Exp%02d_chan%s_Dist_prctile_traj.png",Animal,Expi,prefchan_str)))
+    savefig(10,fullfile(figdir, compose("%s_Exp%02d_chan%s_Dist_prctile_traj.fig",Animal,Expi,prefchan_str)))
+end
+end
+%%
 generation_num_from_fdr("N:\Stimuli\2020-Evolutions\2020-07-20-Beto-02\2020-07-20-12-58-55")
 %%
 function genN = generation_num_from_fdr(stimfolder)

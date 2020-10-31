@@ -1,5 +1,6 @@
 % Analyze Evolved image in BigGAN and FC6 
 
+setMatlabTitle("BigGAN FC6 image comparison"); 
 %% Image Analysis for BigGAN and FC6
 D = torchImDist("squeeze", true);
 %%
@@ -96,6 +97,34 @@ title(["Patch Distance Distribution between BigGAN and FC6.","(First, Mid, Last 
 saveas(5,fullfile(figdir, "Img_Distmap_distribution.png"))
 %%
 figure;imagesc(distmap_fina);axis image;colormap(flipud(gray));colorbar();xlabel("patch dist map")
+%% Create that figure Gen by Gen
+FCdir = "N:\Stimuli\2020-Evolutions\2020-07-20-Beto-02\2020-07-20-12-58-55";
+BGdir = "N:\Stimuli\2020-BigGAN\2020-07-20-Beto-01\2020-07-20-12-40-51";
+distmap_traj = {};
+distmap_col_traj = {};
+tic
+for geni = 1:42
+  [imFC_fina, imnmFC_fina] = loadEvolImages(FCdir, 0, geni);
+  [imBG_fina, imnmBG_fina] = loadEvolImages(BGdir, 0, geni);
+  [distmap_fina, distmap_col_fina] = calc_distmap_avg_subsamp(D,imFC_fina, imBG_fina, 10);
+  distmap_traj{geni} = distmap_fina;
+  distmap_col_traj{geni} = distmap_col_fina;
+  toc
+end
+%%
+for geni = 1:42
+    dist_prctile(geni) = prctile(distmap_traj{geni}(:),5);
+    distmap_allpair = cell2mat(reshape(distmap_col_traj{geni},1,1,[]));
+    dist_pair_prctile(geni) = prctile(distmap_allpair(:),5);
+end
+figure;hold on;
+plot(dist_prctile);plot(dist_pair_prctile)
+legend(["5%-ile in avg distmap", "5%-ile in distmap of all pairs"])
+title(["BigGAN FC6 Dual Evol Image Cmp","2020-07-20-Beto-01"])
+xlabel("Generation");ylabel("Patch Distance (Squeeze)")
+%%
+savefig(2,fullfile("E:\OneDrive - Washington University in St. Louis\BigGAN_FC6_ImgCmp\2020-07-20-Beto-01", "Evol_imgsim_traj_2020-07-20-Beto-01.fig"))
+saveas(2,fullfile("E:\OneDrive - Washington University in St. Louis\BigGAN_FC6_ImgCmp\2020-07-20-Beto-01", "Evol_imgsim_traj_2020-07-20-Beto-01.png"))
 %%
 function [im_gen, imnames] = loadEvolImages(stimfolder, thread, block, suffix)
 % Util function to load in evolved image of certain block x thread from a
@@ -115,10 +144,10 @@ imnames = string(ls(stimfolder+compose("\\block%03d_thread%03d_gen*",blockid,thr
 im_gen = cellfun(@(impath)imread(fullfile(stimfolder,impath)),imnames,'Uni',0);
 end
 
-function [distmap_mean, distmap_col] = calc_distmap_avg(D, im_gen1, im_gen2, sampleN)
+function [distmap_mean, distmap_col] = calc_distmap_avg(D, im_gen1, im_gen2, res)
 % Compute the image distance map between each pair of image from 2 cell
 % arrays of images. 
-res = 120;
+if nargin <= 3,  res= 120;  end
 distmap_col = {};
 for i = 1:numel(im_gen1)
     for j = 1:numel(im_gen2)
@@ -129,9 +158,11 @@ end
 distmap_stack = cell2mat(reshape(distmap_col,1,1,[]));
 distmap_mean = mean(distmap_stack,3); 
 end
-function [distmap_mean, distmap_col] = calc_distmap_avg_subsamp(D, im_gen1, im_gen2, sampleN)
+
+function [distmap_mean, distmap_col] = calc_distmap_avg_subsamp(D, im_gen1, im_gen2, sampleN, res)
 % Compute the image distance map between each pair of image from 2 cell
 % arrays of images. 
+if nargin <= 4,  res= 120;  end
 if nargin == 3 %, sampleN = 0;
 imgidx_i = 1:numel(im_gen1);
 imgidx_j = 1:numel(im_gen2);
@@ -139,7 +170,6 @@ else
 imgidx_i = randsample(numel(im_gen1),sampleN)';
 imgidx_j = randsample(numel(im_gen2),sampleN)';
 end
-res = 120;
 distmap_col = {};
 for i = imgidx_i
     for j = imgidx_j
