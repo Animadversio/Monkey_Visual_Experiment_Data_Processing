@@ -1,4 +1,4 @@
-function [idx_arr_nos, imgnm_arr_nos, idx_arr_cls, imgnm_arr_cls] = parse_image_idx_arr_hess(imageName)
+function [idx_arr_nos, imgnm_arr_nos, idx_arr_cls, imgnm_arr_cls, eig_id_arr_nos, dist_arr_nos, eig_id_arr_cls, dist_arr_cls] = parse_image_idx_arr_hess(imageName)
 % Adapt for code in Hess_BigGAN_Tune_analysis.m 
 % Parse the `Trials.imageName` into 2 matrices of image name and 2 cell array
 %  of indices of which trial show this image. 

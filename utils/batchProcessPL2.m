@@ -67,18 +67,20 @@ error;
 end
 bigMatrixExists = exist(bigMatPath,'file');
 
-[spikeChans,lfpChans,timeline,spikeID] = plxread_fullExperiment_vcrp(meta);
+[spikeChans,lfpChans,timeline,spikeID,unitID,wvfms] = plxread_fullExperiment_vcrp(meta);
 % Save the source of the channel per isolated unit/hash
 if ~spikeID(1) 
     meta.spikeID = spikeID + 1;
 else
     meta.spikeID = spikeID ;
 end
+meta.unitID = unitID;
+meta.wvfms = wvfms;
 % read words/bits from Plexon file
 Trials = plxread_loadWordsInPlexonFile_v2(meta) ;
 if strcmp(meta.sdf, 'sdf')
 savefast(bigMatPath,'meta','Trials','spikeChans','lfpChans','timeline');
-elseif strcmp(meta.sdf, 'raster')
+elseif strcmp(meta.sdf, 'raster') % change name! 
 savefast(bigMatPath,'meta','Trials','spikeChans','lfpChans','timeline');
 else
 error();
