@@ -1,3 +1,5 @@
+% Adapt the Masking Analysis Code 
+
 Animal = "Alfa"; Set_Path;
 ftr = find(contains(ExpRecord.ephysFN,"Alfa-27102020"));
 ExpRecord(ftr,:)

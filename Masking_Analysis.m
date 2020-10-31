@@ -4,7 +4,7 @@ ephysFNs = string(ls("N:\Data-Ephys-Raw\"+searchstr));
 % batchProcessPL2(ephysFNs)
 %%
 Animal = "Alfa"; Set_Path;
-ftr = find(contains(ExpRecord.ephysFN,"Alfa-27102020"));
+ftr = find(contains(ExpRecord.ephysFN,"Alfa-29102020"));
 ExpRecord(ftr,:)
 [meta_new,rasters_new,~,Trials_new] = loadExperiments(ftr(:),Animal);
 %%
