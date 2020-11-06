@@ -1,8 +1,13 @@
 function reportStats = calc_tune_stats(psth_cells, wdw_vect)
 % similar function to calc_tuning_stats, but simpler just input an cell
 % array of psth and it can compute T and F for you. 
-% If you want, `wdw_vect` can input an array of time windows to compute the
-% F stats for each time window
+% Input format:
+%   psth_cells: cell array of psth array. each cell is a condition. Eahc
+%       psth array is of shape N neuron, T time, R trials. 
+%       It assumes the N==1, and use the first index to get PSTH. 
+%   wdw_vect: Default to be empty. If it's not empty,  `wdw_vect` can be an 
+%       array of time windows to compute the F stats for each time window
+% 
 if nargin == 1
     wdw_vect = [];
     MovF = false;
@@ -34,16 +39,16 @@ if MovF
 F_wdw = [];
 F_P_wdw = [];
 for fi = 1:size(wdw_vect,1)
-movscore_vect = cellfun(@(psth)squeeze(mean(psth(1,wdw_vect(fi,1):wdw_vect(fi,2),:),2)),psth_cells,'uni',false);
-movscore_vect = cell2mat(reshape(movscore_vect,[],1));
-[P,ANOVATAB,STATS] = anova1(movscore_vect,idx_vect,'off');
-if isempty(ANOVATAB{2,5}) % in case anova1 returns nothing as F.
-F_wdw(end+1) = nan;
-F_P_wdw(end+1) = nan;
-else
-F_wdw(end+1) = ANOVATAB{2,5};
-F_P_wdw(end+1) = P;
-end
+    movscore_vect = cellfun(@(psth)squeeze(mean(psth(1,wdw_vect(fi,1):wdw_vect(fi,2),:),2)),psth_cells,'uni',false);
+    movscore_vect = cell2mat(reshape(movscore_vect,[],1));
+    [P,ANOVATAB,STATS] = anova1(movscore_vect,idx_vect,'off');
+    if isempty(ANOVATAB{2,5}) % in case anova1 returns nothing as F.
+        F_wdw(end+1) = nan;
+        F_P_wdw(end+1) = nan;
+    else
+        F_wdw(end+1) = ANOVATAB{2,5};
+        F_P_wdw(end+1) = P;
+    end
 end
 reportStats.F_wdw = F_wdw;
 reportStats.F_P_wdw = F_P_wdw;

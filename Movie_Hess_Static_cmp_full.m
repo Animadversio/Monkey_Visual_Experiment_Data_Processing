@@ -1,3 +1,5 @@
+
+
 %%
 Animal = "Alfa"; Set_Path;
 ftr = find(contains(ExpRecord.ephysFN,"Alfa-27102020"));
@@ -39,8 +41,10 @@ imageName_cmb = cat(1, Trials_new{4}.imageName, Trials_new{5}.imageName, Trials_
 rasters_cmb = cat(3, rasters_new{4:6});
 stimparts = split(meta_new{4}.stimuli,'\');
 spikeID = meta_new{4}.spikeID;
-unit_name_arr = generate_unit_labels(spikeID);
-[activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, spikeID, rasters_cmb);
+unit_name_arr = generate_unit_labels_new(spikeID, meta_new{4}.unitID);
+unit_num_arr = meta_new{4}.unitID;
+% unit_name_arr = generate_unit_labels(spikeID);
+% [activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, spikeID, rasters_cmb);
 %% Predict 
 uniq_imgnm = unique(imageName_cmb);
 % cellfun(@(eigi){str2double(eigi{1})},regexp(uniq_imgnm,"(.*)_eig(\d*)_lin([\d.]*)",'tokens'));
@@ -52,6 +56,7 @@ imgnm_arr = [imgnm_arr_cls; imgnm_arr_nos];
 psth_mean = cellfun(@(idx)mean(rasters_cmb(:,:,idx),3), idx_arr,'Uni',0);
 psth_sem = cellfun(@(idx)std(rasters_cmb(:,:,idx),1,3)/sqrt(numel(idx)), idx_arr,'Uni',0);
 %% Set up the figure layout for faster update of static image rsp later. 
+%  Naively loop through tiles will be too slow.
 h=figure(2);clf
 nrow = size(idx_arr,1); ncol = size(idx_arr,2);
 T=tiledlayout(nrow,ncol,'TileSpacing','compact','Padding','compact');
@@ -59,7 +64,7 @@ for r = 1:nrow
     for c = 1:ncol
     ax_col{r,c} = nexttile(c+(r-1)*ncol);
     lin_col{r,c} = plot(1:200);
-    pat_col{r,c} = patch([1:200,fliplr(1:200)], [1:200,fliplr(1:200)], 'k','FaceAlpha',0.15,'EdgeColor','none');
+    pat_col{r,c} = patch([1:200,fliplr(1:200)], [1:200,fliplr(1:200)], 'k','FaceAltpha',0.15,'EdgeColor','none');
     box off; xticklabels([]); yticklabels([])
     end
 end
@@ -77,7 +82,7 @@ for r = 1:nrow
     ci = strfind(imgnm_arr{r,1},'lin');
     ylabel(ax_col{r,1}, strrep(imgnm_arr{r,1}(1:ci-2),'_',' '),'Interp','none')
 end
-%%
+%% Plot PSTH to Static frames in in tiled layout
 figdir = "E:\OneDrive - Washington University in St. Louis\MovieDynamics\2020-10-27-Alfa-Chan09-1";
 smth = 3;
 for iCh = 1:76
@@ -94,7 +99,7 @@ chan_str = unit_name_arr(iCh);
 TIT.String = compose("%s %s Ch %s",stimparts{end},Animal,chan_str);
 saveas(h,fullfile(figdir,compose("%s_Ch%s_frame_psth_avg.png",Animal,chan_str)))
 end
-%% 
+%% Plot PSTH to Movies in in tiled layout
 h2=figure(3);clf
 ncol = numel(movnm_sorted);
 T2=tiledlayout(ncol, 1,'TileSpacing','compact','Padding','compact');
@@ -128,7 +133,7 @@ img_act_mean_half = squeeze(mean(img_act_mean(:,6:9,:),2))';
 % mov_act_mean(meta_mov.spikeID==11,:)
 chid = 9;
 [cval, pval] = corr(img_act_mean_half(spikeID==chid,:)', mov_act_mean(meta_mov.spikeID==chid,:)','Type','Spearman')
-%%
+%% Plot the correlation of mean image response and movie response for half. 
 figure(5);
 subplot(121)
 scatter(img_act_mean_half(10,:), mov_act_mean(11,:))
@@ -141,7 +146,7 @@ xlabel("Image (Key Frames) Mean Resp");ylabel("Movie Mean Resp");title(compose("
 suptitle("Correlation of Average Response to Movie and Image")
 savefig(5, fullfile(figdir, "Movie_Img_Tuning_Corr_Chan9.fig"))
 saveas(5, fullfile(figdir, "Movie_Img_Tuning_Corr_Chan9.png"))
-%%
+%% Control plot
 figure(6);
 subplot(121)
 scatter(img_act_mean_half(10,:), mov_act_mean(12,:))
