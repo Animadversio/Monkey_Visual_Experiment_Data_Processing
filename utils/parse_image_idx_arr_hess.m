@@ -68,6 +68,7 @@ ncol_nos = length(dist_arr_nos);
 end
 
 function [noise_pattern, noise_imgnm, class_pattern, class_imgnm] = parse_naming_convention(imgname_uniq)
+% First parse out the naming convention or the pattern to search for 
 % noise part
 namepart_uniq = regexp(imgname_uniq,"noise_eig(?<eig_id>\d*)_lin(?<dist>[-.\d]*)",'names');
 namepart_uniq = namepart_uniq(~cellfun(@isempty,namepart_uniq));
