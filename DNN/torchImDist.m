@@ -159,5 +159,25 @@ classdef torchImDist
        end
    end
    
+   function distMat = distmat2(G, imgs1, imgs2, B)
+       if nargin==3, B = 50;end
+       if max(imgs1,[],'all')>1.2, imgs1 = single(imgs1) / 255.0; end
+       if max(imgs2,[],'all')>1.2, imgs2 = single(imgs2) / 255.0; end
+       % interface with generate integrated code, cmp to FC6GAN
+       imgn = size(imgs1,4);
+       imgm = size(imgs2,4);
+       distMat = zeros(imgn,imgm);
+       csr_i = 1;
+       for csr_i = 1:imgn
+           csr_j=1;
+           while csr_j <= imgm
+               csr_end = min(imgm, csr_j+B-1);
+               dists = G.distance(imgs1(:,:,:,csr_i), imgs2(:,:,:,csr_j:csr_end));
+               distMat(csr_i, csr_j:csr_end) = dists';
+               csr_j = csr_end+1;
+           end
+       end
+   end
+   
    end
 end
