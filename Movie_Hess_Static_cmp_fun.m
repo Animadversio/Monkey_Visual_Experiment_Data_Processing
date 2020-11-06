@@ -103,7 +103,7 @@ fprintf("%d / %d IT,  %d / %d V1, %d / %d V4 selective channels (F, p<0.01) have
 	sum(FsignfCorrMsk & ITmsk), sum(FsignfMsk & ITmsk), sum(FsignfCorrMsk & V1msk), sum(FsignfMsk & V1msk), sum(FsignfCorrMsk & V4msk), sum(FsignfMsk & V4msk))
 %%
 writetable(Tab, fullfile(figdir, "TuneStats.csv"))
-save(fullfile(figdir, "ExpStats.mat"), 'Stats', 'MovImgCorrStats')
+save(fullfile(figdir, "ExpStats.mat"), 'Stats', 'MovImgCorrStats','ImgrspDelayWdw','MvrspDelayWdw')
 %% Graphic summary on the Distribution of Correlations
 Pthresh1 = min(corr_arr(corr_P_arr < 0.01));
 figure(2);clf;hold on

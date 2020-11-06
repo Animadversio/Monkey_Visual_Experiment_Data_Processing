@@ -67,7 +67,7 @@ Stats.spikeID_mv = spikeID_mv;
 Stats.unitID_mv = unitID_mv; 
 Stats.MvRstrWdw = wdw; % Movie Raster window. Need this to interpret the raster's timeline.
 %%
-ImgrspDelayWdw = [81:200]; MvrspDelayWdw = [81:200];
+ImgrspDelayWdw = [130:200]; MvrspDelayWdw = [140:80];
 [MovImgCorrStats, corr_arr, corr_P_arr, corr_sep_arr, corr_sep_P_arr] = MovImgMatchCorr(ImgrspDelayWdw, MvrspDelayWdw, psthimg_mean, psthmov_mean, Stats);
 %%
 Stats.imgTuneStats = {};
@@ -88,7 +88,10 @@ fprintf("%d / %d IT,  %d / %d V1, %d / %d V4 channels are modulated (ANOVA p < 0
 fprintf("CONTROL: %d / %d channels' baseline activity modulated by image identity (ANOVA p < 0.01). %d / %d for p < 0.001\n",sum(Tab.F_P_bsl<0.01),numel(Tab.F_P_bsl),sum(Tab.F_P_bsl<0.001),numel(Tab.F_P_bsl))
 fprintf("%d / %d IT,  %d / %d V1, %d / %d V4 channels are modulated (ANOVA p < 0.01)\n", sum(Tab.F_P_bsl<0.01 & ITmsk), sum(ITmsk), ...
 											sum(Tab.F_P_bsl<0.01 & V1msk),sum(V1msk), sum(Tab.F_P_bsl<0.01 & V4msk), sum(V4msk))
-
+%%
+writetable(Tab, fullfile(figdir, "TuneStats.csv"))
+save(fullfile(figdir, "ExpStats.mat"), 'Stats', 'MovImgCorrStats', ...
+                                'ImgrspDelayWdw', 'MvrspDelayWdw')
 
 function [imgnm_per_movie, idx_arr, imgnm_arr, mvnms_uniq] = parse_frame_idx_arr(imageName)
 uniq_nms = string(unique(imageName));
