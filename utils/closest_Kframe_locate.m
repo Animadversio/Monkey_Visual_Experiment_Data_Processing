@@ -15,6 +15,7 @@ function [matchfrid_col, matchTON_col, matchTOFF_col] = closest_Kframe_locate(mv
 if nargin <= 6, frameMax = 48; end % max num of frame played is 48.
 if nargin <= 5, K = 2; end % by default find 2 most similar frames
 if nargin <= 4, halfSep = true; end
+batchsize = 20;
 assert(length(imnms_col)==length(mvnms), ...
 	"Img name collection should have the same number of entry as movie names.")
 
@@ -48,7 +49,7 @@ fprintf("Compute Static Frame Distance Matrix... ")
 % for i = 1:numel(keyimgs)
 % imfrdistmat(i,:) = D.distance(keyimgs_tsr(:,:,:,i), frames_tsr);
 % end
-imfrdistmat = D.distmat2(keyimgs_tsr, frames_tsr, 30);
+imfrdistmat = D.distmat2(keyimgs_tsr, frames_tsr, batchsize);
 % Closest frame id
 if halfSep 
 sepidx = 25;
