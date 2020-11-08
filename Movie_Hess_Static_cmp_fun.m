@@ -44,7 +44,7 @@ psthimg_mean = cellfun(@(idx)mean(rasters_img(:,:,idx),3), idx_arr,'Uni',0);
 psthimg_sem = cellfun(@(idx)std(rasters_img(:,:,idx),1,3)/sqrt(numel(idx)), idx_arr,'Uni',0);
 centcol = find(dist_arr_nos==0); % cent col index 
 imgnm_per_mov = mat2cell(imgnm_arr(:, centcol:end),ones(12,1),5); % Cell array of the images in 
-nImgPerMv = numel(imgnm_per_mov{1}); % may be better ways to do so. 
+nImgPerMv = max(cellfun(@numel, imgnm_per_mov)); % may be better ways to do so. 
 %% Matching process
 % Matchin one movie, image pairs
 % [matchfrid, matchTON, matchTOFF] = closest_Kframe_locate(movnm_sorted(1), {imgnm_arr(1, centcol:end)}, meta_mov.stimuli, meta_img.stimuli);
@@ -52,6 +52,7 @@ nImgPerMv = numel(imgnm_per_mov{1}); % may be better ways to do so.
 [matchfrids, matchTONs, matchTOFFs] = closest_Kframe_locate(movnm_sorted(:), imgnm_per_mov, ...
                                         meta_mov.stimuli, meta_img.stimuli); % halfSep = false,
 %% Save the meta information for functions to use.
+Stats.Animal = Animal; 
 Stats.movnm = movnm_sorted;
 Stats.imgnm_arr = imgnm_arr;
 Stats.img_idx_arr = idx_arr;
@@ -75,7 +76,9 @@ ImgrspDelayWdw = [81:200]; MvrspDelayWdw = [81:200];
 [MovImgCorrStats, corr_arr, corr_P_arr, corr_sep_arr, corr_sep_P_arr] = HessMovImgMatchCorr(ImgrspDelayWdw, MvrspDelayWdw, psthimg_mean, psthmov_mean, Stats);
 % [MovImgCorrStats, corr_arr, corr_P_arr] = HessMovImgMatchCorr([81:200], [-59:60], psthimg_mean, psthmov_mean, Stats);
 % [MovImgCorrStats, corr_arr, corr_P_arr] = HessMovImgMatchCorr([81:200], [120:240], psthimg_mean, psthmov_mean, Stats);
-%% Compute Tuning Statistics for each channel for filtering purpose.
+%%
+plot_channel_corr(Stats, MovImgCorrStats, ImgrspDelayWdw, MvrspDelayWdw);
+%% Compute Tuning Statistics for Static images for each channel for filtering purpose.
 Stats.imgTuneStats = {};
 for chid = 1:numel(spikeID_im)
     Stats.imgTuneStats{chid} = calc_tune_stats(cellfun(@(idx) rasters_img(chid, :, idx), idx_arr(:, centcol:end), 'Uni', 0));
@@ -228,6 +231,35 @@ fprintf("%d / %d V4 channels has significant (0.01) correlation\n",sum(corr_P_ar
 fprintf("%s ",S.unit_str_im(corr_P_arr<0.01))
 fprintf("\n")
 end
+
+function h = plot_channel_corr(Stats, MovImgCorrStats, ImgrspDelayWdw, MvrspDelayWdw)
+h = figure;set(h,'pos',[1000         462         560         520])
+for chid = 1:numel(MovImgCorrStats)
+	set(0, 'CurrentFigure', h);hold off;
+    iCh = MovImgCorrStats(chid).iCh;
+    iU = MovImgCorrStats(chid).iU;
+    static_rspmat_key = MovImgCorrStats(chid).rspmat_static;
+    movie_rspmat_key = MovImgCorrStats(chid).rspmat_movie;
+    scatter(static_rspmat_key(:), movie_rspmat_key(:));
+    axis equal; addDiagonal();
+    title(compose("Correlation of Movie-Image Firing Rate Rsp %s Chan%d Unit%s\nCorr Coef %.3f(%.1e)\nMovie Delay Window %d, %d\n Image Delay Window %d, %d",...
+            Stats.Animal, iCh, char(64+iU), MovImgCorrStats(chid).corr, MovImgCorrStats(chid).corr_P, ...
+            MvrspDelayWdw(1), MvrspDelayWdw(end), ImgrspDelayWdw(1), ImgrspDelayWdw(end)))
+    xlabel("Static Firing Rate");ylabel("Movie Firing Rate")
+    saveas(h,fullfile(Stats.figdir,compose("movie_image_corr_%s_%d%s.png",Stats.Animal,iCh,char(64+iU)))) % Stats.unit_str_im(chid)
+end
+end
+
+function addDiagonal()
+ax = gca;
+XLIM = xlim(ax);YLIM = ylim(ax);
+% MAX = min(YLIM(2),XLIM(2));
+% MIN = max(YLIM(1),XLIM(1));
+LIM = [min(XLIM(1),YLIM(1)), max(XLIM(2),YLIM(2))];
+hold on; line(LIM,LIM,'Color','r')
+xlim(max(0, LIM));ylim(max(0, LIM));
+end
+
 % %% Get the Response Mat and PSTH in that period, clipping machine for psth
 % MvrspDelayWdw = [60:200];
 % ImgrspDelayWdw = [60:200];
