@@ -96,10 +96,11 @@ ImgrspDelayWdw = [81:200]; MvrspDelayWdw = [-20:100];
 %%
 ImgrspDelayWdw = [81:200]; MvrspDelayWdw = [81:200];
 [MovImgCorrStats] = MovImgCorrVariability(ImgrspDelayWdw, MvrspDelayWdw, psthimg_all(:,centcol:end), psthmov_all, Stats);
+corr_P_arr = arrayfun(@(S)S.corr_P, MovImgCorrStats);
+corr_arr = arrayfun(@(S)S.corr, MovImgCorrStats);
 %%
 ImgrspDelayWdw = [81:200]; MvrspDelayWdw = [-19:100];
 [MovImgCorrStats] = MovImgCorrVariability(ImgrspDelayWdw, MvrspDelayWdw, psthimg_all(:,centcol:end), psthmov_all, Stats);
-
 %%
 plot_channel_corr(Stats, MovImgCorrStats, ImgrspDelayWdw, MvrspDelayWdw, true);
 plot_channel_corr(Stats, MovImgCorrStats, ImgrspDelayWdw, MvrspDelayWdw, false);
@@ -109,7 +110,7 @@ for chid = 1:numel(spikeID_im)
     Stats.imgTuneStats{chid} = calc_tune_stats(cellfun(@(idx) rasters_img(chid, :, idx), idx_arr(:, centcol:end), 'Uni', 0));
 end
 Stats.imgTuneStats = cell2mat(Stats.imgTuneStats);
-%% Verbal summary for the table. 
+% Verbal summary for the table. 
 Tab = struct2table(Stats.imgTuneStats);
 ITmsk = spikeID_im<=32; V1msk = spikeID_im>=33 & spikeID_im<=48; V4msk = spikeID_im>=49;
 fprintf("Response Delay window image [%d,%d] ms\n", 51, 200)
