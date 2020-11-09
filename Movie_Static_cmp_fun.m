@@ -37,6 +37,7 @@ movnm = string(unique(Trials_mov.imageName));
 movnm_sorted = movnm;
 mov_idx_arr = arrayfun(@(mv)find(contains(Trials_mov.imageName, mv)),movnm_sorted,'Uni',0);
 
+psthmov_all = cellfun(@(idx) rasters_mov(:, :, idx), mov_idx_arr, 'Uni',0);
 psthmov_mean = cellfun(@(idx) mean(rasters_mov(:, :, idx),3), mov_idx_arr, 'Uni',0);
 psthmov_sem = cellfun(@(idx) std(rasters_mov(:, :, idx),1,3) / sqrt(numel(idx)), mov_idx_arr, 'Uni',0);
 %%
@@ -48,6 +49,7 @@ unit_str_im = generate_unit_labels_new(meta_img.spikeID, meta_img.unitID);
 [img_mvnm_arr, img_frnum_arr, uniq_imgnms] = parse_frame_name(Trials_img.imageName);
 nImgPerMv = max(cellfun(@numel, imgnm_per_mov)); 
 
+psthimg_all = cellfun(@(idx) rasters_img(:, :, idx), idx_arr, 'Uni',0);
 psthimg_mean = cellfun(@(idx)mean(rasters_img(:,:,idx),3), idx_arr,'Uni',0);
 psthimg_sem = cellfun(@(idx)std(rasters_img(:,:,idx),1,3)/sqrt(numel(idx)), idx_arr,'Uni',0);
 % imgnm_per_mov = mat2cell(imgnm_arr, ones(size(imgnm_arr,1),1), size(imgnm_arr,2)); % Cell array of the images in 
@@ -96,9 +98,15 @@ fprintf("%d / %d IT,  %d / %d V1, %d / %d V4 channels are modulated (ANOVA p < 0
 fprintf("CONTROL: %d / %d channels' baseline activity modulated by image identity (ANOVA p < 0.01). %d / %d for p < 0.001\n",sum(Tab.F_P_bsl<0.01),numel(Tab.F_P_bsl),sum(Tab.F_P_bsl<0.001),numel(Tab.F_P_bsl))
 fprintf("%d / %d IT,  %d / %d V1, %d / %d V4 channels are modulated (ANOVA p < 0.01)\n", sum(Tab.F_P_bsl<0.01 & ITmsk), sum(ITmsk), ...
 											sum(Tab.F_P_bsl<0.01 & V1msk),sum(V1msk), sum(Tab.F_P_bsl<0.01 & V4msk), sum(V4msk))
+FsignfMsk = Tab.t_P<0.01 & Tab.F_P<0.01; 
+FsignfCorrMsk = Tab.t_P<0.01 & Tab.F_P<0.01 & corr_P_arr' < 0.01; 
+fprintf("Response Delay window image [%d,%d] ms\n", 51, 200)
+fprintf("From %d channels in total\n%d / %d selective channels (F, p<0.01) have a correlated selectivity in Movie vs Static image. \n", numel(spikeID_im),sum(FsignfCorrMsk), sum(FsignfMsk)) % %d / %d for p < 0.001
+fprintf("%d / %d IT,  %d / %d V1, %d / %d V4 selective channels (F, p<0.01) have a significantly correlated (p<0.01) selectivity.\n", ...
+	sum(FsignfCorrMsk & ITmsk), sum(FsignfMsk & ITmsk), sum(FsignfCorrMsk & V1msk), sum(FsignfMsk & V1msk), sum(FsignfCorrMsk & V4msk), sum(FsignfMsk & V4msk))
 
 %%
-ImgrspDelayWdw = [80:200]; MvrspDelayWdw = [-20:100];%[80:200];
+ImgrspDelayWdw = [80:200]; MvrspDelayWdw = [80:200];%[-20:100];%
 [MovImgCorrStats, corr_arr, corr_P_arr, corr_sep_arr, corr_sep_P_arr] = MovImgMatchCorr(ImgrspDelayWdw, MvrspDelayWdw, psthimg_mean, psthmov_mean, Stats);
 %%
 save(fullfile(figdir, "ExpStats.mat"), 'Stats', 'MovImgCorrStats', ...
@@ -181,7 +189,10 @@ title(compose("Paired T comparison Movie-Image Firing Rate Rsp\n Movie %s Image 
 saveas(3,fullfile(figdir,compose("movieImageTstatsHist_%s.png",Animal)))
 savefig(3,fullfile(figdir,compose("movieImageTstatsHist_%s.fig",Animal)))
 %%
+ImgrspDelayWdw = [80:200]; MvrspDelayWdw = [80:200];%[-20:100];%
+[MovImgCorrStats] = MovImgCorrVariability(ImgrspDelayWdw, MvrspDelayWdw, psthimg_all, psthmov_all, Stats);
 
+%%
 function [imgnm_per_movie, idx_arr, imgnm_arr, mvnms_uniq] = parse_frame_idx_arr(imageName)
 % Equivalent to the `parse_image_idx_arr_hess` for non-Hessian experiments
 uniq_nms = string(unique(imageName));
@@ -197,7 +208,7 @@ for iMv = 1:numel(mvnms_uniq)
     for iMat = 1:numel(imgnm_per_movie{iMv})
         imgnm = imgnm_per_movie{iMv}(iMat);
         imgnm_arr{iMv, iMat} = imgnm;
-        idx_arr{iMv, iMat} = find(contains(imageName, imgnm));
+        idx_arr{iMv, iMat} = find(strcmp(imageName, imgnm));
     end
 end
 end
@@ -216,8 +227,11 @@ function [MovImgCorrStats, corr_arr, corr_P_arr, corr_sep_arr, corr_sep_P_arr] =
 % Input parameters:
 %   ImgrspDelayWdw / MvrspDelayWdw: index array of the window to compute
 %       e.g. [61:200], [-59:60]
+%   psthimg_mean: Trial averaged PSTH of each image. An cell array of shape
+%       (nMovie, nImginMovie) eahc array in it is of shape (nChannel, nTime)
+%   psthmov_mean: Trial averaged PSTH of each movie. An cell array of shape
+%       (nMovie, ) each array in it is of shape (nChannel, nTime)
 %   S: Stats formed in beforehand. 
-
 MovImgCorrStats = repmat(struct(),1,numel(S.spikeID_im)); % collect results here. 
 for chid = 1:numel(S.spikeID_im) % loop through static image units (Loop through movie is also fine). 
 iCh = S.spikeID_im(chid); 
@@ -285,6 +299,105 @@ fprintf("In V1, %d / %d Static > Movie, %d / %d Movie > Static  significantly\n"
 fprintf("In V4, %d / %d Static > Movie, %d / %d Movie > Static  significantly\n",sum(T_P_arr<0.01 & T_arr >0 & V4msk),sum(V4msk),sum(T_P_arr<0.01 & T_arr <0 & V4msk),sum(V4msk))
 end
 
+function [MovImgCorrStats] = MovImgCorrVariability(ImgrspDelayWdw, MvrspDelayWdw, psthimg_all, psthmov_all, S)
+% Note: This is limited to Hessian Movies. The correlation part need to be
+%   rewrite for non-Hessian
+% 
+% Input parameters:
+%   ImgrspDelayWdw / MvrspDelayWdw: index array of the window to compute
+%       e.g. [61:200], [-59:60]
+%   psthimg_all: Trial averaged PSTH of each image. An cell array of shape
+%       (nMovie, nImginMovie) each array in it is of shape (nChannel, nTime, nTrials)
+%   psthmov_all: Trial averaged PSTH of each movie. An cell array of shape
+%       (nMovie, ) each array in it is of shape (nChannel, nTime, nTrials)
+%   S: Stats formed in beforehand. 
+MovImgCorrStats = repmat(struct(),1,numel(S.spikeID_im)); % collect results here. 
+for chid = 1:numel(S.spikeID_im) % loop through static image units (Loop through movie is also fine). 
+iCh = S.spikeID_im(chid); 
+iU = S.unitID_im(chid); 
+
+tr_rspmat_static = cellfun(@(psth) squeeze(mean(psth(chid, ImgrspDelayWdw, :),[1,2])), psthimg_all, 'Uni', 0); % cell (nMovie, nImginMovie) with (nTrials,) shape elements
+tr_psth_static = cellfun(@(psth) psth(chid, ImgrspDelayWdw, :), psthimg_all, 'Uni', 0); % cell (nMovie, nImginMovie) with (1, TimeWindow, nTrials,) shape elements
+
+chid2 = find(S.spikeID_mv==iCh & S.unitID_mv==iU); % Corresponding unit in movie exp. 
+tr_rspmat_movie = cell(numel(S.movnm), S.nImgPerMv); 
+tr_psth_movie = cell(numel(S.movnm), S.nImgPerMv); 
+for iMv = 1:numel(S.movnm) % movies
+	matchONidx = round(S.matchTONs{iMv}) - S.MvRstrWdw(1) + 1; % find the index in the raster matrix. Shifting the window by wdw(1) - 1;
+    % rspmat_movie(iMv, :, :) = arrayfun(@(iTon) mean(psthmov_mean{iMv}(chid2, iTon+MvrspDelayWdw)), matchONidx); 
+    for iSta = 1:size(matchONidx, 1) % Static images Embedded in the movie
+        for iOccr = 1:size(matchONidx,2) % Occurance of that image 
+           iTon = matchONidx(iSta, iOccr);
+           tr_rspmat_movie{iMv, iSta, iOccr} = squeeze(mean(psthmov_all{iMv}(chid2, iTon+MvrspDelayWdw, :),[1,2])); % (nTrials, ) shaped
+           tr_psth_movie{iMv, iSta, iOccr} = psthmov_all{iMv}(chid2, iTon+MvrspDelayWdw, :); % (1, TimeWindow, nTrials, ) shaped elements
+        end
+    end
+end
+% ANOVA of individual trials
+anova_mov = anova_cells(tr_rspmat_movie);
+anova_img = anova_cells(tr_rspmat_static);
+MovImgCorrStats(chid).F_im = anova_img.F;
+MovImgCorrStats(chid).F_P_im = anova_img.F_P;
+MovImgCorrStats(chid).F_mv = anova_mov.F;
+MovImgCorrStats(chid).F_P_mv = anova_mov.F_P;
+% Collapse the trial dimension to get std and sem of each group
+% rspmat_movie is # Movie - by - # Static in the Movie - by - # Occurence (12, 5, 2)
+rspmat_movie = cellfun(@mean, tr_rspmat_movie);
+rspstd_movie = cellfun(@std, tr_rspmat_movie);
+rspsem_movie = cellfun(@(rsps) std(rsps)/sqrt(numel(rsps)), tr_rspmat_movie);
+rspmat_static = cellfun(@mean, tr_rspmat_static);
+rspstd_static = cellfun(@std, tr_rspmat_static);
+rspsem_static = cellfun(@(rsps) std(rsps)/sqrt(numel(rsps)), tr_rspmat_static);
+% Correlate the non-center image responses
+rspmat_key = rspmat_static(:,:);
+rspmat_movie_key = mean(rspmat_movie(:,:,:), 3);
+[cc,pp] = corr(rspmat_key(:),rspmat_movie_key(:), 'rows', 'complete');
+MovImgCorrStats(chid).corr = cc;
+MovImgCorrStats(chid).corr_P = pp;
+% Paired ttest of image - frame response. 2 sided.
+[H,P,~,STAT] = ttest(rspmat_key(:),rspmat_movie_key(:)); 
+MovImgCorrStats(chid).T = STAT.tstat; % t > 0 show the response to image > movie
+MovImgCorrStats(chid).T_P = P;
+% Correlation of image response to response of each occurance of the image
+rspmat_movie_vecs = reshape(rspmat_movie(:,:,:),[], size(rspmat_movie,3));
+[cc,pp] = corr(rspmat_key(:), rspmat_movie_vecs, 'rows', 'complete');
+MovImgCorrStats(chid).corr_sep = cc;
+MovImgCorrStats(chid).corr_sep_P = pp;
+MovImgCorrStats(chid).rspmat_movie = rspmat_movie; 
+MovImgCorrStats(chid).rspstd_movie = rspstd_movie; 
+MovImgCorrStats(chid).rspsem_movie = rspsem_movie; 
+MovImgCorrStats(chid).rspmat_static = rspmat_static; 
+MovImgCorrStats(chid).rspstd_static = rspstd_static; 
+MovImgCorrStats(chid).rspsem_static = rspsem_static; 
+MovImgCorrStats(chid).psth_movie = psth_movie; 
+MovImgCorrStats(chid).psth_static = psth_static; 
+MovImgCorrStats(chid).iCh = iCh;
+MovImgCorrStats(chid).iU = iU;
+end
+% summarize channel stats into population
+corr_arr = arrayfun(@(S)S.corr, MovImgCorrStats); 
+corr_P_arr = arrayfun(@(S)S.corr_P, MovImgCorrStats); 
+corr_sep_arr = cell2mat(arrayfun(@(S)S.corr_sep, MovImgCorrStats','Uni',0)); % each column is an occurence
+corr_sep_P_arr = cell2mat(arrayfun(@(S)S.corr_sep_P, MovImgCorrStats','Uni',0));
+T_arr = arrayfun(@(S)S.T, MovImgCorrStats); 
+T_P_arr = arrayfun(@(S)S.T_P, MovImgCorrStats); 
+% Print summary string
+ITmsk = S.spikeID_im'<=32; V1msk = S.spikeID_im'>=33 & S.spikeID_im'<=48; V4msk = S.spikeID_im'>=49;
+fprintf("Response Delay window movie [%d,%d] image [%d,%d] ms\n",MvrspDelayWdw(1), MvrspDelayWdw(end), ImgrspDelayWdw(1), ImgrspDelayWdw(end))
+fprintf("%d / %d channels has significant(0.01) correlation between Movie and Image Response\n",sum(corr_P_arr<0.01),numel(S.spikeID_im))
+fprintf("%d / %d channels has significant(0.001) correlation\n",sum(corr_P_arr<0.001),numel(S.spikeID_im))
+fprintf("%d / %d IT channels has significant (0.01) correlation\n",sum(corr_P_arr<0.01 & ITmsk),sum(ITmsk))
+fprintf("%d / %d V1 channels has significant (0.01) correlation\n",sum(corr_P_arr<0.01 & V1msk),sum(V1msk))
+fprintf("%d / %d V4 channels has significant (0.01) correlation\n",sum(corr_P_arr<0.01 & V4msk),sum(V4msk))
+fprintf("%s ",S.unit_str_im(corr_P_arr<0.01)) % list of channels that are strongly correlated 
+fprintf("\n")
+fprintf("%d / %d channels has significant (0.01) difference between firing rate of paired Movie and Image Response\n",sum(T_P_arr<0.01),numel(S.spikeID_im))
+fprintf("In IT, %d / %d Static > Movie, %d / %d Movie > Static  significantly\n",sum(T_P_arr<0.01 & T_arr >0 & ITmsk),sum(ITmsk),sum(T_P_arr<0.01 & T_arr <0 & ITmsk),sum(ITmsk))
+fprintf("In V1, %d / %d Static > Movie, %d / %d Movie > Static  significantly\n",sum(T_P_arr<0.01 & T_arr >0 & V1msk),sum(V1msk),sum(T_P_arr<0.01 & T_arr <0 & V1msk),sum(V1msk))
+fprintf("In V4, %d / %d Static > Movie, %d / %d Movie > Static  significantly\n",sum(T_P_arr<0.01 & T_arr >0 & V4msk),sum(V4msk),sum(T_P_arr<0.01 & T_arr <0 & V4msk),sum(V4msk))
+end
+
+% Visualization and summary
 function h = plot_channel_corr(Stats, MovImgCorrStats, ImgrspDelayWdw, MvrspDelayWdw)
 h = figure;set(h,'pos',[1000         462         560         520])
 for chid = 1:numel(MovImgCorrStats)
