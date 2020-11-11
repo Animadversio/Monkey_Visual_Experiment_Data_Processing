@@ -147,7 +147,11 @@ classdef torchBigGAN
            elseif numel(setting) == 128 % setting is an 128D hidden vect
                G.fix_noise_vec = setting;
            else
+               if isempty(setting)
+                   error('The setting cannot be empty for BigGAN evolutions')
+               else
                error("Second argument not understood...")
+               end
            end
            G.fix_class_vec = nan(1,128); % set the other half of the code to nan
        else
@@ -195,7 +199,7 @@ classdef torchBigGAN
    
    function matimgs = visualize_latent(G, latent, truncation)
        if nargin == 2, truncation=0.7;end
-       batchsize = 10;samplen = size(latent,1);csr = 1;
+       batchsize = 14;samplen = size(latent,1);csr = 1;
        tic
        matimgs = [];
        while csr <= samplen
@@ -207,6 +211,18 @@ classdef torchBigGAN
        csr = cnd + 1;
        end
        toc
+   end
+
+   function frame_cell = visualize_movie(G, latent_col, truncation)
+       if nargin == 2, truncation=0.7;end
+       batchsize = 10; movieN = numel(latent_col); 
+       frameN = cellfun(@(code)size(code, 1), latent_col);
+       samplen = sum(frameN); 
+       latent_arr = cat(1, latent_col{:});
+       % Generate latent code using the current space
+       matimgs = G.visualize(latent_arr);
+       % sort the frames into cells corresponding to each movie. 
+       frame_cell = arrayfun(@(iMv) matimgs(:,:,:,sum(frameN(1:iMv-1))+1:sum(frameN(1:iMv))), 1:movieN, "Uni", 0); 
    end
    
    function EmbedVects_mat = get_embedding(G)
