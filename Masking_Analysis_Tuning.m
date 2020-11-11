@@ -8,7 +8,8 @@ ExpRecord(ftr,:)
 %%
 % resultroot = "OneDrive - Washington University in St. Louis";
 figroot = "E:\OneDrive - Washington University in St. Louis\VisualMask_PSTH";
-for Triali = 3:numel(meta_new)
+flag.plot_chan = false;
+for Triali = 4%3:numel(meta_new)
 rasters = rasters_new{Triali};
 meta = meta_new{Triali};
 Trials = Trials_new{Triali};
@@ -36,6 +37,126 @@ fprintf("Pre-Stimuli ISIs (med of category): %s \n",join(compose("%.1f(%d) ",pre
 fprintf("Post-Stimuli ISIs (med of category): %s \n",join(compose("%.1f(%d) ",postISI_arr',cellfun(@sum,postISI_msk)')));
 fprintf("Stimuli Duration (med of category): %s \n",join(compose("%.1f(%d) ",dur_arr',cellfun(@sum,dur_msk)')));
 assert(numel(dur_arr)==1, "Multiple stimuli duration detected, modify your code!\n")
+%% Collect Statics for this 
+figure(2); set(2,'pos',[1092, 339, 960, 480]);
+figure(3); set(3,'pos',[125, 339, 960, 480]);
+figure(4); set(4,'pos',[125, 339, 960, 480]);
+nonoverlap_bnd = 150;
+preISI_far_msk = any(cat(1,preISI_msk{preISI_arr > nonoverlap_bnd}),1);
+stats_all = [];
+for chid = 1:numel(meta.spikeID)
+    stats = []; stats_bsl = []; stats_del = [];
+    respmat = [];respsem = [];
+    respmat_bsl = [];respsem_bsl = [];
+    respmat_del = [];respsem_del = [];    
+    for postmsk = postISI_msk
+    resp_dist_col = cellfun(@(msk) squeeze(mean(rasters(chid, 250+[100:200], msk' & postmsk{1} & preISI_far_msk),2)), imgmsks, 'uni',0);
+    resp_bsl_dist_col = cellfun(@(msk) squeeze(mean(rasters(chid, 250+[-50:50], msk' & postmsk{1} & preISI_far_msk),2)), imgmsks, 'uni',0);
+    resp_del_dist_col = cellfun(@(msk) squeeze(mean(rasters(chid, 250+[250:350], msk' & postmsk{1} & preISI_far_msk),2)), imgmsks, 'uni',0);
+    resp_col = cellfun(@mean, resp_dist_col);
+    resp_sem_col = cellfun(@(rsps) std(rsps)/sqrt(numel(rsps)), resp_dist_col);
+    resp_bsl_col = cellfun(@mean, resp_bsl_dist_col);
+    resp_bsl_sem_col = cellfun(@(rsps) std(rsps)/sqrt(numel(rsps)), resp_bsl_dist_col);
+    resp_del_col = cellfun(@mean, resp_del_dist_col);
+    resp_del_sem_col = cellfun(@(rsps) std(rsps)/sqrt(numel(rsps)), resp_del_dist_col);
+    stats = [stats, anova_cells(resp_dist_col)];
+    stats_bsl = [stats_bsl, anova_cells(resp_bsl_dist_col)];
+    stats_del = [stats_del, anova_cells(resp_del_dist_col)];
+    respmat = [respmat, resp_col];
+    respsem = [respsem, resp_sem_col];
+    respmat_bsl = [respmat_bsl, resp_bsl_col];
+    respsem_bsl = [respsem_bsl, resp_bsl_sem_col];
+    respmat_del = [respmat_del, resp_del_col];
+    respsem_del = [respsem_del, resp_del_sem_col];
+    end
+    stats_all = [stats_all; stats];
+    figure(2); clf;hold on
+    for i = 1:numel(postISI_arr)
+    errorbar(respmat(:,i), respsem(:,i),'LineWidth',1.5)
+    end
+    xticks(1:numel(imgnm_uniq));xlim([0.5,numel(imgnm_uniq)+0.5])
+    xticklabels(imgnm_uniq);xtickangle(50)
+    title([unit_name_arr(chid)+" response period 100,200 ms","ANOVA F="+join(compose("%.2f ",struct2table(stats).F'))])
+    legend(compose("postISI %.1fms",postISI_arr))
+    box off
+    figure(3); clf;hold on
+    for i = 1:numel(postISI_arr)
+    errorbar(respmat_bsl(:,i), respsem_bsl(:,i),'LineWidth',1.5)
+    end
+    xticks(1:numel(imgnm_uniq));xlim([0.5,numel(imgnm_uniq)+0.5])
+    xticklabels(imgnm_uniq);xtickangle(50);box off
+    title([unit_name_arr(chid)+" baseline period -50,50 ms","ANOVA F="+join(compose("%.2f ",struct2table(stats_bsl).F'))])
+    legend(compose("postISI %.1fms",postISI_arr))
+    figure(4); clf;hold on
+    for i = 1:numel(postISI_arr)
+    errorbar(respmat_del(:,i), respsem_del(:,i),'LineWidth',1.5)
+    end
+    xticks(1:numel(imgnm_uniq));xlim([0.5,numel(imgnm_uniq)+0.5])
+    xticklabels(imgnm_uniq);xtickangle(50); box off
+    title([unit_name_arr(chid)+" baseline period 250,350 ms","ANOVA F="+join(compose("%.2f ",struct2table(stats_del).F'))])
+    legend(compose("postISI %.1fms",postISI_arr))
+    align_figures_ylim([2,3,4])
+    saveas(2, fullfile(figdir,compose("tuningcurv_postISI_%s.png", unit_name_arr(chid))))
+    saveas(3, fullfile(figdir,compose("tuningcurv_postISI_bsl_%s.png", unit_name_arr(chid))))
+    saveas(4, fullfile(figdir,compose("tuningcurv_postISI_delay_%s.png", unit_name_arr(chid))))
+end
+figure(5);imagesc(arrayfun(@(S)S.F, stats_all))
+yticks(1:numel(meta.spikeID));yticklabels(unit_name_arr)
+%%
+set(groot,'defaultAxesTickLabelInterpreter','none');  
+nonoverlap_bnd = 150;
+postISI_far_msk = any(cat(1,postISI_msk{postISI_arr > nonoverlap_bnd}),1);
+stats_all = [];
+for chid = 1:numel(meta.spikeID)
+    stats = [];
+    stats_bsl = [];
+    respmat = [];
+    respsem = [];
+    respmat_bsl = [];
+    respsem_bsl = [];
+    for premsk = preISI_msk
+    resp_dist_col = cellfun(@(msk) squeeze(mean(rasters(chid, 250+[100:200], msk' & premsk{1} & postISI_far_msk),2)), imgmsks, 'uni',0);
+    resp_bsl_dist_col = cellfun(@(msk) squeeze(mean(rasters(chid, 250+[-50:50], msk' & premsk{1} & postISI_far_msk),2)), imgmsks, 'uni',0);
+    resp_col = cellfun(@(msk) squeeze(mean(rasters(chid, 250+[100:200], msk' & premsk{1} & postISI_far_msk),[2,3])), imgmsks);
+    resp_sem_col = cellfun(@(msk) squeeze(std(mean(rasters(chid, 250+[100:200], msk' & premsk{1} & postISI_far_msk),[2]),1,3)/sqrt(sum(msk' & premsk{1} & postISI_far_msk))), imgmsks);
+    resp_bsl_col = cellfun(@(msk) squeeze(mean(rasters(chid, 250+[-50:50], msk' & premsk{1} & postISI_far_msk),[2,3])), imgmsks);
+    resp_bsl_sem_col = cellfun(@(msk) squeeze(std(mean(rasters(chid, 250+[-50:50], msk' & premsk{1} & postISI_far_msk),[2]),1,3))/sqrt(sum(msk' & premsk{1} & postISI_far_msk)), imgmsks);
+    stats = [stats, anova_cells(resp_dist_col)];
+    stats_bsl = [stats_bsl, anova_cells(resp_bsl_dist_col)];
+    respmat = [respmat, resp_col];
+    respsem = [respsem, resp_sem_col];
+    respmat_bsl = [respmat_bsl, resp_bsl_col];
+    respsem_bsl = [respsem_bsl, resp_bsl_sem_col];
+    end
+    stats_all = [stats_all; stats]; 
+    
+    figure(7); set(7,'pos',[1092, 339, 960, 480]);clf;hold on
+    for i = 1:numel(preISI_msk)
+    errorbar(respmat(:,i), respsem(:,i),'LineWidth',1.5)
+    end
+    xticks(1:numel(imgnm_uniq));xlim([0.5,numel(imgnm_uniq)+0.5])
+    xticklabels(imgnm_uniq);xtickangle(50)
+    title([unit_name_arr(chid)+" response period 100, 200 ms","ANOVA F="+join(compose("%.2f ",struct2table(stats).F'))])
+    legend(compose("preISI %.1fms",preISI_arr))
+    box off
+    figure(8); set(8,'pos',[1092, 339, 960, 480]);clf;hold on
+    %plot(respmat,'LineWidth',1.5)
+    for i = 1:numel(preISI_msk)
+    errorbar(respmat_bsl(:,i), respsem_bsl(:,i),'LineWidth',1.5)
+    end
+    xticks(1:numel(imgnm_uniq));xlim([0.5,numel(imgnm_uniq)+0.5])
+    xticklabels(imgnm_uniq);xtickangle(50)
+    title([unit_name_arr(chid)+" baseline period -50,50 ms","ANOVA F="+join(compose("%.2f ",struct2table(stats_bsl).F'))])
+    legend(compose("preISI %.1fms",preISI_arr))
+    box off
+    align_figures_ylim([7,8])
+    saveas(7, fullfile(figdir,compose("tuningcurv_preISI_%s.png", unit_name_arr(chid))))
+    saveas(8, fullfile(figdir,compose("tuningcurv_preISI_bsl_%s.png", unit_name_arr(chid))))
+end
+figure(6); imagesc(arrayfun(@(S)S.F, stats_all));colorbar()
+yticks(1:numel(meta.spikeID));yticklabels(unit_name_arr)
+%%
+if flag.plot_chan
 %% Func of post onset
 clrseq = brewermap(numel(postISI_msk),'Spectral');
 smth = 9; dur = dur_arr(1); nonoverlap_bnd = 150;
@@ -121,9 +242,9 @@ title(T, compose("PSTH as a Function of Pre Onset ISI\n%s Ch %s",Animal,unit_nam
 saveas(11, fullfile(figdir,compose("Pre_offset_PSTH_imgsep_Chan%s.png",unit_name_arr(iCh))))
 savefig(11, fullfile(figdir,compose("Pre_offset_PSTH_imgsep_Chan%s.fig",unit_name_arr(iCh))))
 end
-
 end
-%% Collect Statics for this 
+end
+
 
 
 %%
@@ -202,6 +323,29 @@ end
 
 function align_tile_ylim(T)
 ax_arr = get(T,'Children');
+ylim_arr = [];
+for i = 1:numel(ax_arr)
+    ylim_arr(i,:) = ylim(ax_arr(i));
+end
+YLIM(1) = min(ylim_arr(:,1)); YLIM(2) = max(ylim_arr(:,2));
+for i = 1:numel(ax_arr)
+    ylim(ax_arr(i), YLIM);
+    alllines = allchild(ax_arr(i));
+    for ln = alllines' 
+    if strcmp(ln.Tag,'vline')
+        ln.YData = YLIM; % Change the y limit for the Vlines
+    end
+    end
+end
+end
+
+function align_figures_ylim(figs)
+ax_arr = [];
+for fignum = figs
+    ax = findobj(fignum,'Type','Axes');
+    ax_arr = [ax_arr, ax];
+end
+
 ylim_arr = [];
 for i = 1:numel(ax_arr)
     ylim_arr(i,:) = ylim(ax_arr(i));
