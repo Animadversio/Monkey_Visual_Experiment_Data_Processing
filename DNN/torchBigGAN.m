@@ -147,7 +147,11 @@ classdef torchBigGAN
            elseif numel(setting) == 128 % setting is an 128D hidden vect
                G.fix_noise_vec = setting;
            else
+               if isempty(setting)
+                   error('The setting cannot be empty for BigGAN evolutions')
+               else
                error("Second argument not understood...")
+               end
            end
            G.fix_class_vec = nan(1,128); % set the other half of the code to nan
        else
