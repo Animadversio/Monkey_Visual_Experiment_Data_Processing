@@ -44,8 +44,9 @@ for iExp = 1:length(preMeta)
 
     addargs = {};
     if no_conv, addargs = [addargs, 'sdf', 'raster']; end % instead of defualt 'sdf'
-    if contains(tMeta.expControlFN, "movie"), addargs = [addargs, 'rasterWindow', [-250 2500]]; end 
-    if contains(tMeta.expControlFN, "Masking"), addargs = [addargs, 'rasterWindow', [-250 600]]; end 
+    if contains(tMeta.expControlFN, "generate_Movie"), addargs = [addargs, 'rasterWindow', [-250 500]]; 
+    elseif contains(tMeta.expControlFN, "movie"), addargs = [addargs, 'rasterWindow', [-250 2500]];  
+    elseif contains(tMeta.expControlFN, "Masking"), addargs = [addargs, 'rasterWindow', [-250 600]]; end 
     % Extract longer time window activity when using movie? TODO, this 
 %     try
     % time window value should change for each different movie experiments.
