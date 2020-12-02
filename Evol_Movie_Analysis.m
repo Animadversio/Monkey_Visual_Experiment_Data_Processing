@@ -5,7 +5,7 @@ ExpRecord(ftr,:)
 [meta_new, rasters_new, ~, Trials_new] = loadExperiments(ftr, Animal);
 %%
 saveroot = "E:\OneDrive - Washington University in St. Louis\Evol_Movie";
-Triali = 4; % 3:numel(meta_new)
+Triali = 5; % 3:numel(meta_new)
 rasters = rasters_new{Triali};
 meta = meta_new{Triali};
 Trials = Trials_new{Triali};
@@ -70,14 +70,16 @@ for threadi = 1:thread_num
     end
 end
 %%
-iCh = 8;
-psth_col = cellfun(@(idx)mean(rasters(iCh,:,idx),3), gen_idx_seq, 'uni', false);
-psthsem_col = cellfun(@(idx)std(rasters(iCh,:,idx),1,3)/sqrt(numel(idx)), gen_idx_seq, 'uni', false);
-%%
-clrseq = brewermap(numel(psth_col),'PuBuGn');
-figure;hold on
-for i =1:numel(psth_col)
-plot(-249:500,psth_col{i},'color',[clrseq(i,:),0.5],'LineWidth',1)
+clrseq = brewermap(numel(psth_col),'Spectral');
+for iCh = 1:numel(meta.spikeID)
+    psth_col = cellfun(@(idx)mean(rasters(iCh,:,idx),3), gen_idx_seq, 'uni', false);
+    psthsem_col = cellfun(@(idx)std(rasters(iCh,:,idx),1,3)/sqrt(numel(idx)), gen_idx_seq, 'uni', false);
+    figure(1);clf;hold on
+    for i =1:numel(psth_col)-1
+    shadedErrorBar(-249:500,psth_col{i},psthsem_col{i},'lineProps',{'color',[clrseq(i,:),0.7],'LineWidth',1.5})
+    end
+    xlim([-50,400])
+    title(unit_name_arr(iCh))
+    hold off
+    pause
 end
-xlim([-50,300])
-hold off
