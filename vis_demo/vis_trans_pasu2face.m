@@ -1,4 +1,4 @@
-
+% Small utility code to visualize change from Pasupathy patch to faces
 % D = load("E:\OneDrive - Washington University in St. Louis\ref_img_fit\Pasupathy\pasu_fit_code.mat");
 D = load("N:\Users\Binxu\pasu_fit_code.mat");
 pasu_code = D.pasu_code;
