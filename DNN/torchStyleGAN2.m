@@ -4,6 +4,10 @@ classdef torchStyleGAN2
    % matimg = visualize_codes(G,randn(4,512));
    %   > Elapsed time is 0.820856 seconds.
    % figure;montage(matimg)
+   % pyenv("Version", "C:\Users\binxu\.conda\envs\caffe36\python.exe") is
+   % not OK
+   % pyenv("Version", "C:\ProgramData\Anaconda3\envs\tf-torch\python.exe")
+   % is OK
    properties
        Generator
        config

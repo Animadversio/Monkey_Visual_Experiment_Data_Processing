@@ -23,7 +23,7 @@ PSTHDynViewer(dyntsr, 0.01, 10)
 % PSTHDynViewer(ManifDyn(Expi).psth_tsr(21,:,:,:), 0.02, 10)
 %%
 
-%%
+%% Demo of the Center of Mass Computation
 PSTHDynViewer(dyntsr, 0.01, 10)
 [PHI,THETA] = meshgrid(-90:18:90,-90:18:90);
 coordtsr = cat(3,cosd(THETA).*cosd(PHI),... % PC1
@@ -46,7 +46,7 @@ comet(gca,PHItrace,THEtrace)
 basis = ManifBasisStats(Expi).basis{1};
 sphere_norm = ManifBasisStats(Expi).sphere_norm;
 CoM_codes = sphere_norm * comtrace * basis;
-img_traj = G.visualize(CoM_codes);
+img_traj = G.visualize(CoM_codes); % gen images
 %%  
 figure(7); sleep=0.03;
 ims = imshow(img_traj(:,:,:,1));
@@ -56,6 +56,7 @@ title(compose("%d ms Theta %.1f Phi %.1f",fi,THEtrace(fi),PHItrace(fi)))
 drawnow;pause(sleep)
 end
 %% Correlating dynamics across image, or correlating selectivity across time
+%  Activity correlation  vs  tuning correlation across time.
 dynmat = reshape(dyntsr,200,[]);
 imgsimmat = corr(dynmat);
 timsimmat = corr(dynmat');
@@ -63,7 +64,8 @@ figure(8);
 subplot(121);imagesc(imgsimmat);colorbar(); xlabel("image id"); axis image
 line([0.5,121.5]'+zeros(1,12),[0:11:121;0:11:121]+0.5,'color','red')
 subplot(122);imagesc(timsimmat);colorbar(); xlabel("time"); axis image
-%% nnmf Factorization applied to spatial temporal data. 
+%% nnmf Factorization applied to spatial temporal data
+%  to see if the spatial and temporal component is separable or not. 
 %%
 [Tfact,Sfact] = nnmf(dynmat,1);
 residue = dynmat - Tfact*Sfact;
