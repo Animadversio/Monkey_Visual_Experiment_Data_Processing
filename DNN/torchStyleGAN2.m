@@ -1,13 +1,66 @@
 classdef torchStyleGAN2
-   % Usage 
+   % Usage: 
    % G = torchStyleGAN2("model.ckpt-533504.pt");
    % matimg = visualize_codes(G,randn(4,512));
    %   > Elapsed time is 0.820856 seconds.
    % figure;montage(matimg)
-   % pyenv("Version", "C:\Users\binxu\.conda\envs\caffe36\python.exe") is
-   % not OK
-   % pyenv("Version", "C:\ProgramData\Anaconda3\envs\tf-torch\python.exe")
-   % is OK
+   % 
+   % # First Time Setup Instruction:
+   % 
+
+   % ## Download StyleGAN2 and add to Path 
+   %
+   %    Get stylegan2-pytorch  from  
+   %    https://github.com/rosinality/stylegan2-pytorch 
+   %
+   %    Get Weights (.pt files) from Network folder.  
+   %    Or Download the Tensorflow version .pkl file from 
+   %    https://github.com/justinpinkney/awesome-pretrained-stylegan2
+   %    And convert them in python code.... I've done that once. 
+   %
+   % ## Get a python env with suitable pytorch version
+   % Note for Python environment, Pytorch 1.3.1 is recommended. 
+   % Pytorch 1.1.0 cannot compile the StyleGAN operators... >1.4.0 will not
+   % work with matlab. 
+   % assume the name of it is [envname]
+   % 
+   % ## Compile model code (CUDA, C++ code of operators)
+   % 1. Open an Anaconda Prompt, activate that env: conda activate [envname]
+   % 2. cd to ...\stylegan2-pytorch\op
+   % 3. Compile the source code and install the operators as py package `python setup.py install` 
+   % 3.1. This is really easy to fail spectacularly... So finger crossed. 
+   % 3.2. Make sure you have a Visual Studio 2017 or 2019. VS2015 compiler
+   %      will not work
+   % 4. Check compilation: cd to ...\stylegan2-pytorch
+   % python
+   % > from model import Generator
+   % If it succeed you are done on python side! The compilation is successful, 
+   % you are half way there. If you have some checkpoints stored there you
+   % can generate some pretty images in command line through
+   % > 
+   % 
+   % # Setup Python env in Matlab
+   % Environments that have been tested to work are these. 
+   % For ML2A machine, setup the python env before first time use like this
+   % >  setenv('path',['C:\Anaconda3\envs\torch\Library\bin;', getenv('path')]);
+   % >  pyenv("Version","C:\Anaconda3\envs\torch\python.exe");
+   % For ML2B machine, setup the python env before first time use like this
+   % >  setenv('path',['C:\Users\Ponce lab\.conda\envs\torch\Library\bin;', getenv('path')]);
+   % >  pyenv("Version","C:\Users\Ponce lab\.conda\envs\torch\python.exe");
+   % on Binxu home 
+   %  `pyenv('Version','C:\ProgramData\Anaconda3\envs\tf-torch\python.exe')` 
+   % on Office 3 
+   %  `pyenv("Version","C:\Users\ponce\.conda\envs\caffe36\python.exe")`
+   % run this FIRST when you start matlab.(usually only need to run once,
+   %   then matlab remember your environment. 
+   %
+   % Note, sometimes import numpy and torch can fail, then we need to add the
+   % path of binary of the Library to the PATH env variable. E.g.
+   % This is in `[envpath]\Library\bin` 
+   % 
+   %   setenv('path',['C:\Anaconda3\envs\torch\Library\bin;', getenv('path')]);
+   % 
+   % Binxu Oct. 9, 2020
    properties
        Generator
        config
@@ -41,16 +94,6 @@ classdef torchStyleGAN2
        elseif nargin == 1
            config = configMap(ckpt); % struct("latent",int32(512),"n_mlp",int32(8),"channel_multiplier",int32(2));
        end
-       % switch ckpt
-       %     case "stylegan2-ffhq-config-f.pt"
-       %         config.size = int32(1024);
-       %     case {"model.ckpt-533504.pt", "2020-01-11-skylion-stylegan2-animeportraits.pt"}
-       %         config.size = int32(512);
-       %     otherwise
-       %         config.size = int32(512);
-       % end
-       % Use the torch 1.3.x and the stylegan2 package like below.
-       py.importlib.import_module('torch');
        syspath = py.sys.path(); % add the official stylegan2 repo. 
        switch getenv('COMPUTERNAME')
            case 'DESKTOP-9DDE2RH' % Office 3 Binxu's 
@@ -60,12 +103,18 @@ classdef torchStyleGAN2
             syspath.append("E:\DL_Projects\Vision\stylegan2-pytorch"); 
             savedir = "E:\DL_Projects\Vision\stylegan2-pytorch\checkpoint"; 
            case 'PONCELAB-ML2A' % MLa machine 
-            % savedir = "C:\Users\Poncelab-ML2a\Documents\Python\pytorch-pretrained-BigGAN\weights";
+            syspath.append("C:\Users\Poncelab-ML2a\Documents\Python\stylegan2-pytorch"); 
+            savedir = "C:\Users\Poncelab-ML2a\Documents\Python\stylegan2-pytorch\checkpoint"; 
+            setenv('path',['C:\Anaconda3\envs\torch\Library\bin;', getenv('path')]);
            case 'PONCELAB-ML2B' % MLb machine 
-            % savedir = "C:\Users\Ponce lab\Documents\Python\pytorch-pretrained-BigGAN\weights";
+            syspath.append("C:\Users\Ponce lab\Documents\Python\stylegan2-pytorch"); 
+            savedir = "C:\Users\Ponce lab\Documents\Python\stylegan2-pytorch\checkpoint"; 
+            setenv('path',['C:\Users\Ponce lab\.conda\envs\torch\Library\bin;', getenv('path')]); 
            otherwise
             % savedir = "C:\Users\Poncelab-ML2a\Documents\Python\pytorch-pretrained-BigGAN\weights";
-        end
+       end
+       % Use the torch 1.3.x and the stylegan2 package like below.
+       py.importlib.import_module('torch');
        py.importlib.import_module('model');
        G.Generator = py.model.Generator(config.size, config.latent, config.n_mlp, config.channel_multiplier);
        SD = py.torch.load(fullfile(savedir, ckpt));
@@ -127,4 +176,38 @@ classdef torchStyleGAN2
        matimg = permute(clip((matimg + 1) / 2, 0, 1),[3,4,2,1]);
    end
    end
+end
+
+% [RES] = clip(IM, MINVALorRANGE, MAXVAL)
+%
+% Clip values of matrix IM to lie between minVal and maxVal:
+%      RES = max(min(IM,MAXVAL),MINVAL)
+% The first argument can also specify both min and max, as a 2-vector.
+% If only one argument is passed, the range defaults to [0,1].
+
+function res = clip(im, minValOrRange, maxVal)
+
+if (exist('minValOrRange') ~= 1) 
+  minVal = 0; 
+  maxVal = 1;
+elseif (length(minValOrRange) == 2)
+  minVal = minValOrRange(1);
+  maxVal = minValOrRange(2);
+elseif (length(minValOrRange) == 1)
+  minVal = minValOrRange;
+  if (exist('maxVal') ~= 1)
+    maxVal=minVal+1;
+  end
+else
+  error('MINVAL must be  a scalar or a 2-vector');
+end
+
+if ( maxVal < minVal )
+  error('MAXVAL should be less than MINVAL');
+end
+
+res = im;
+res((im < minVal)) = minVal;
+res((im > maxVal)) = maxVal;
+
 end

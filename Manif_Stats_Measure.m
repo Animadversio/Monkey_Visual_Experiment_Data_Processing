@@ -1,5 +1,6 @@
 %% This file is written to use the stats extracted from the formatted mat file 
-% and further do fitting, analysis and plotting for the key units. 
+%  and further do Kent Function fitting, analysis and plotting for the key units. 
+%  and to export tables and draw figures.
 mat_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
 Animal = "Alfa";
 load(fullfile(mat_dir, Animal+'_Evol_stats.mat'))
@@ -400,8 +401,6 @@ Kent_sphere_plot(ax2, coeffvalues(Parameter));
 ylabel("RND1(theta)");zlabel("RND2(phi)");caxis(cl);
 title([chan_label_str, "Kent Fit Tuning map on RND 1 2 subspace", param_str])
 %%
-
-
 
 %%
 mean_act = nanmean(score_col{uniti}, 3 );

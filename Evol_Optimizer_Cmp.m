@@ -183,7 +183,7 @@ MAX_BLOCK_NUM = length(block_list);
 color_seq = brewermap(MAX_BLOCK_NUM, 'spectral');
 for channel_j = 1:size(rasters, 1)%pref_chan_id%
 %% Plot Mean response compare figure
-%channel_j = pref_chan_id;
+% channel_j = pref_chan_id;
 % h1 = figure(1);clf
 % ax1{1} = subplot(1,2,1);hold on
 % plot(block_list, meanscore_syn(channel_j, :, 1), 'LineWidth',2,'Color','k')

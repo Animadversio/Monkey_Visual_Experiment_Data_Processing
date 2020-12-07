@@ -19,7 +19,7 @@ fllist = find(expftr);no_return=false;
 %% Prepare Image Metric
 D = torchImDist();
 %%
-for Triali = 3
+for Triali = 1:14
 %%
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
@@ -43,7 +43,7 @@ unit_name_arr = generate_unit_labels(meta.spikeID);
 imgname_uniq = unique(Trials.imageName); 
 keyboard
 %% Load the images in the class space and noise space
-% Identify the naming convention used in this Exp. (Different version of py code)
+% Identify the naming convention used in this Exp. (Different version of py code...)
 [noise_pattern, noise_imgnm, class_pattern, class_imgnm] = parse_naming_convention(imgname_uniq);
 % Extract parameters of images in noise space from img name
 namepart_uniq = regexp(imgname_uniq, noise_pattern, 'names');
@@ -60,6 +60,10 @@ for i = 1:length(eig_id_arr_nos)
     imgnm = compose(noise_imgnm,eig_id,dist); % e.g. "noise_eig%d_lin%.1f"
     idx_arr_nos{i,j} = find(contains(Trials.imageName, imgnm));
     imgnm_arr_nos(i,j) = imgnm;
+    if numel(idx_arr_nos{i,j}) == 0 && dist== 0 
+    % Recently, we deleted images like "noise_eig2_lin0.0" so should use "noise_eig1_lin0.0" instead
+    imgnm_arr_nos(i,j) = compose(noise_imgnm,eig_id_arr_nos(1),0);
+    end
     end
 end
 img_noise = arrayfun(@(imgnm)imread(fullfile(meta.stimuli, imgnm+".jpg")),imgnm_arr_nos,"Un",false);
@@ -78,6 +82,10 @@ for i = 1:length(eig_id_arr_cls)
     imgnm = compose(class_imgnm,eig_id,dist); % "class_eig%d_lin%.1f"
     idx_arr_cls{i,j} = find(contains(Trials.imageName, imgnm));
     imgnm_arr_cls(i,j) = imgnm;
+    if numel(idx_arr_cls{i,j}) == 0 && dist== 0 
+    % Recently, we deleted images like "noise_eig2_lin0.0" so should use "noise_eig1_lin0.0" instead
+    imgnm_arr_cls(i,j) = compose(class_imgnm,eig_id_arr_cls(1),0);
+    end
     end
 end
 img_class = arrayfun(@(imgnm)imread(fullfile(meta.stimuli, imgnm+".jpg")),imgnm_arr_cls,"Un",false);
@@ -92,7 +100,6 @@ ncol_cls = length(dist_arr_cls);
 nrow_nos = length(eig_id_arr_nos);
 ncol_nos = length(dist_arr_nos);
 %%  Compute Image Dissimilarity and make heatmap
-
 imdist_class = zeros(size(img_class));
 cent_i = (ncol_cls + 1) / 2;
 for rowi = 1:size(img_class,1)
@@ -130,10 +137,10 @@ saveas(2,fullfile(figdir, "noise_space_ImDist.jpg"))
 figure(12);set(12,'pos',[325    67   717   850]);%set(12,'position',[315   506   560   444])
 figure(13);set(13,'position',[961    64   676   850])%set(13,'position',[315   159   560   608])
 ExpLabel = compose("%s Pilot Exp %d pref chan %d", Animal, Expi, prefchan);
-for iCh = 1:size(rasters,1) %prefchan_ids'%%
+for iCh = prefchan_ids'%1:size(rasters,1) %prefchan_ids'%%
 resp_mat_nois = cellfun(@(idx)mean(rasters(iCh,51:200,idx),'all'), idx_arr_nos);
 resp_mat_cls = cellfun(@(idx)mean(rasters(iCh,51:200,idx),'all'), idx_arr_cls);
-% Form the psth cell array and compute statistics for rows and cols
+% Form the psth cell array and compute F, T statistics for rows and cols
 psth_col_nois = cellfun(@(idx)rasters(iCh,:,idx), idx_arr_nos, 'uni',0);
 psth_col_clas = cellfun(@(idx)rasters(iCh,:,idx), idx_arr_cls, 'uni',0);
 stats_nois = calc_tune_stats(psth_col_nois);
@@ -142,7 +149,7 @@ stats_row_nois = arrayfun(@(i)calc_tune_stats(psth_col_nois(i,:)), 1:nrow_nos);
 stats_col_nois = arrayfun(@(i)calc_tune_stats(psth_col_nois(:,i)), 1:ncol_nos);
 stats_row_clas = arrayfun(@(i)calc_tune_stats(psth_col_clas(i,:)), 1:nrow_cls);
 stats_col_clas = arrayfun(@(i)calc_tune_stats(psth_col_clas(:,i)), 1:ncol_cls);
-% Score Heatmap in Noise space
+% Plot Score Heatmap in Noise space
 set(0,'CurrentFigure',12);clf;
 imagesc(resp_mat_nois)
 colorbar();axis image
@@ -157,7 +164,7 @@ colFstr = arrayfun(@(S)compose("F=%.1f\n(%.e)",S.F,S.F_P),stats_col_nois)';
 text(ncol_nos + 1+ones(nrow_nos,1), 1:nrow_nos, rowFstr')
 text(1:ncol_nos, nrow_nos+2*ones(ncol_nos,1), colFstr,'HorizontalAlignment','center')
 saveas(12, fullfile(figdir, compose("Noise_TuneMap_%s.jpg",unit_name_arr(iCh))))
-% Score Heatmap in Class space
+% Plot Score Heatmap in Class space
 set(0,'CurrentFigure',13);clf;
 imagesc(resp_mat_cls)
 colorbar();axis image
@@ -172,18 +179,19 @@ colFstr = arrayfun(@(S)compose("F=%.1f\n(%.e)",S.F,S.F_P),stats_col_clas)';
 text(ncol_cls + 1+ones(nrow_cls,1), 1:nrow_cls, rowFstr')
 text(1:ncol_cls, nrow_cls+2*ones(ncol_cls,1), colFstr,'HorizontalAlignment','center')
 saveas(13, fullfile(figdir, compose("Class_TuneMap_%s.jpg",unit_name_arr(iCh))))
-% Score framed image tile in class and noise space
+% Plot Score framed image tile in class and noise space
 frame_img_class = score_frame_image_arr(img_class, resp_mat_cls, prctile(resp_mat_cls,[0,100],'all')'+[0,0.001], parula, 10);
 frame_img_noise = score_frame_image_arr(img_noise, resp_mat_nois, prctile(resp_mat_nois,[0,100],'all')'+[0,0.001], parula, 10);
 cls_scr_tile = imtile(frame_img_class','GridSize',[length(eig_id_arr_cls),length(dist_arr_cls)]);
 imwrite(cls_scr_tile, fullfile(figdir, compose("Class_TuneTile_%s.jpg",unit_name_arr(iCh))))
 nos_scr_tile = imtile(frame_img_noise','GridSize',[length(eig_id_arr_nos),length(dist_arr_nos)]);
 imwrite(nos_scr_tile, fullfile(figdir, compose("Noise_TuneTile_%s.jpg",unit_name_arr(iCh))))
-end
-%%
-end
+end % End Loop of Channels
+end % End Loop of Exp
+
+
 %% Purely Calculate the T and F stats for channels
-for iCh = prefchan_ids
+for iCh = prefchan_ids %1:size(rasters,1)
 resp_mat_nois = cellfun(@(idx)mean(rasters(iCh,51:200,idx),'all'), idx_arr_nos);
 resp_mat_cls = cellfun(@(idx)mean(rasters(iCh,51:200,idx),'all'), idx_arr_cls);
 psth_col_nois = cellfun(@(idx)rasters(iCh,:,idx), idx_arr_nos, 'Un',0);
@@ -340,6 +348,8 @@ rasters_tr3 = deconvlucy(rasters_tmp(:,:), ker, 100);
 toc
 %%
 rasters_tr3 = reshape(rasters_tr3,[],size(rasters,1),200);
+%%
+[noise_pattern, noise_imgnm, class_pattern, class_imgnm] = parse_naming_convention( unique(Trials.imageName))
 function [noise_pattern, noise_imgnm, class_pattern, class_imgnm] = parse_naming_convention(imgname_uniq)
 % noise part
 namepart_uniq = regexp(imgname_uniq,"noise_eig(?<eig_id>\d*)_lin(?<dist>[-.\d]*)",'names');
