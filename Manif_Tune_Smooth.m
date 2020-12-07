@@ -372,7 +372,7 @@ end
 end
 end
 %%
-writetable(struct2table(SmthStatTab),fullfile(figdir,"Beto_SmoothStatTab.csv"))
+writetable(struct2table(SmthStatTab),fullfile(figdir,Animal+"_SmoothStatTab.csv"))
 %%
 SmthStatTable = struct2table(SmthStatTab);
 %%

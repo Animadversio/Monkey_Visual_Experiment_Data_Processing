@@ -1,15 +1,18 @@
 %% Manif_Tune_Smooth_Popul
 %  Code to compute Smoothness statistics for all the units for all exps. 
-Animal="Beto"; Set_Path;
+Animal="Alfa"; Set_Path;
 mat_dir = "O:\Mat_Statistics";
 tabdir = "O:\Manif_MapSmooth\popstats";
 % load(fullfile(Matdir, "Beto_ManifPopDynamics.mat"))
 load(fullfile(mat_dir,Animal+"_ManifMapVarStats.mat"),'MapVarStats')
 load(fullfile(mat_dir,Animal+"_Manif_stats.mat"),'Stats')
 %%
-%%
 % StatsTab_sum = [];
-for Expi = 35 % 36:numel(Stats)
+pool = parpool(5); % distribute the computation since it can take quite a while
+%%
+T00 = tic;
+parfor Expi = 1:numel(Stats)
+% Basic information to collect into the Stats
 nCh = numel(MapVarStats(Expi).units.spikeID);
 Animal_tab = array2table(repmat(Animal,nCh,1),'VariableNames',{'Animal'});
 Expi_tab = array2table(repmat(Expi,nCh,1),'VariableNames',{'Expi'});
@@ -30,14 +33,23 @@ toc
 anovaStats_tab = struct2table(anovaStats_exp);
 smthStats_tab = struct2table(smthStats_exp);
 StatsTab = [Animal_tab, Expi_tab, unitstr_tab, unit_tab, chan_tab, prefchan_tab, space_tab, anovaStats_tab, smthStats_tab];
-StatsTab_sum = [StatsTab_sum;StatsTab];
-disp(size(StatsTab_sum))
 writetable(StatsTab,fullfile(tabdir,compose("%s_Exp%d_sp%d.csv",Animal,Expi,si)));
+% StatsTab_sum = [StatsTab_sum;StatsTab];
+% disp(size(StatsTab_sum))
 end
 end
-%%
+toc(T00);
+%% Merge the stats to a full table.
+StatsTab_sum = [];
+for Expi = 1:numel(Stats)
+for si = 1:MapVarStats(Expi).manif.subsp_n
+curtab = readtable(fullfile(tabdir,compose("%s_Exp%d_sp%d.csv",Animal,Expi,si)));
+StatsTab_sum = [StatsTab_sum;curtab];
+end
+end
 writetable(StatsTab_sum,fullfile(tabdir,compose("%s_Exp_all_SmoothStat.csv",Animal)));
-%% Summarize the stats
+
+%% Load and Summarize the stats
 StatsTab_sum = readtable(fullfile(tabdir,compose("%s_Exp_all_SmoothStat.csv",Animal)));
 %%
 drivermsk = (StatsTab_sum.chan==StatsTab_sum.prefchan);

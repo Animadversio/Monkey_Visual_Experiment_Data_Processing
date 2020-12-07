@@ -1,27 +1,32 @@
 %% 
-%  Collect the Activation and trial by trial variability for Manifold
+%  Collect the Baseline and Activation trial by trial variability for Manifold
 %  Experiments
-Set_Path;Animal = "Beto";
+Animal = "Alfa";Set_Path;
 mat_dir = "O:\Mat_Statistics";
+figdir = "O:\ImMetricTuning";
 load(fullfile(mat_dir, Animal+'_Evol_stats.mat'), 'EStats') 
 load(fullfile(mat_dir, Animal+'_Manif_stats.mat'), 'Stats') 
-figdir = "O:\ImMetricTuning";
+%%
+expftr = (contains(ExpRecord.Exp_collection,"Manifold") &...
+            contains(ExpRecord.expControlFN, "selectivity")&...
+            ExpRecord.Expi > 0);
+[meta_new,rasters_new,~,Trials_new] = loadExperiments(find(expftr),Animal);
 %%
 MapVarStats = repmat(struct(), 1, length(Stats));
 %%
-for Triali = 35%1:length(Stats)
+for Triali = 1:length(Stats)
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 % Trials = Trials_new{Triali};
 exp_rowi = find(contains(ExpRecord.ephysFN, meta.ephysFN));
 % Check the Expi match number
 Expi = ExpRecord.Expi(exp_rowi);Expi=Expi(end); % hack this for beto exp 35
-% if isnan(Expi) || ~all(contains(ExpRecord.expControlFN(exp_rowi),'selectivity')) ...
-%         || ~all(contains(ExpRecord.Exp_collection(exp_rowi),'Manifold'))
-%     % add this filter to process a sequence of Trials_new 
-%     keyboard
-%     continue
-% end
+if isnan(Expi) || ~all(contains(ExpRecord.expControlFN(exp_rowi),'selectivity')) ...
+        || ~all(contains(ExpRecord.Exp_collection(exp_rowi),'Manifold'))
+    % add this filter to process a sequence of Trials_new 
+    keyboard
+    continue
+end
 fprintf("Processing  Exp %d:\n",Expi)
 fprintf([ExpRecord.comments{exp_rowi},'\n'])
 % savepath = fullfile(result_dir, sprintf("%s_Exp%02d", Animal, Expi));
@@ -38,6 +43,8 @@ MapVarStats(Expi).meta = meta;
 % [activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
 % note if the evolved channel is marked as null 0 then this can fail! 
 % unit_in_pref_chan = 0;
+pref_chan = Stats(Expi).units.pref_chan;
+unit_num_arr = Stats(Expi).units.unit_num_arr;
 pref_chan_id = find(meta.spikeID==pref_chan & ... % the id in the raster and lfps matrix 
                 unit_num_arr > 0); % match for unit number
 MapVarStats(Expi).units = Stats(Expi).units;
@@ -59,8 +66,8 @@ MapVarStats(Expi).manif.act_col{subsp_i} = activ_col;
 MapVarStats(Expi).manif.bsl_col{subsp_i} = basel_col;
 end
 %%
-MapVarStats(Expi).ref.didGabor = false;
-MapVarStats(Expi).ref.didPasu = false;
+MapVarStats(Expi).ref.didGabor = Stats(Expi).ref.didGabor;
+MapVarStats(Expi).ref.didPasu = Stats(Expi).ref.didPasu;
 if Stats(Expi).ref.didPasu
 pasu_idx_grid = Stats(Expi).ref.pasu_idx_grid;
 pasu_activ_col = cellfun(@(idx) squeeze(mean(rasters(:, 51:200, idx),2)), pasu_idx_grid, 'Uni', false);
