@@ -199,7 +199,7 @@ classdef torchBigGAN
    
    function matimgs = visualize_latent(G, latent, truncation)
        if nargin == 2, truncation=0.7;end
-       batchsize = 14;samplen = size(latent,1);csr = 1;
+       batchsize = 12;samplen = size(latent,1);csr = 1;
        tic
        matimgs = [];
        while csr <= samplen
