@@ -54,19 +54,20 @@ saveas(3,fullfile(sumdir,"D1E_dpr_driver_non_cmp.pdf"))
 savefig(3,fullfile(sumdir,"D1E_dpr_driver_non_cmp.fig"))
 %% 
 figure;
-scatter(StatsTab_sum.chan(Betomsk & tunemsk), StatsTab_sum.D1E_Dpr(Betomsk & tunemsk))
+scatter(StatsTab_sum.chan(Betomsk & tunemsk), StatsTab_sum.D1E_Dpr(Betomsk & tunemsk), 36, StatsTab_sum.unitnum(Betomsk & tunemsk))
 xlim([0,65])
-%%
+%% Summary figures
 hist_cmp_plot(StatsTab_sum, {drivermsk & tunemsk, ~drivermsk & tunemsk},...
         ["Driver", "Non-Drivers"],"All Tune","driver_non","pdf");
-    %%
 hist_cmp_plot(StatsTab_sum, {Alfamsk&drivermsk & tunemsk, Alfamsk&~drivermsk & tunemsk},...
         ["Driver", "Non-Drivers"],"Alfa Tune","driver_non_alfa","pdf");
 hist_cmp_plot(StatsTab_sum, {Betomsk&drivermsk & tunemsk, Betomsk&~drivermsk & tunemsk},...
         ["Driver", "Non-Drivers"],"Beto Tune","driver_non_beto","pdf");
-function h = hist_cmp_plot(StatsTab_sum, masks, labels, titstr, namestr, normstr)
+
+function h = hist_cmp_plot(StatsTab_sum, masks, labels, titstr, namestr, normstr,h)
 global sumdir
-h = figure;clf;hold on 
+if nargin<7,h = figure;else, set(0,"CurrentFigure",h);end
+clf;hold on 
 for i = 1:numel(masks)
 histogram(StatsTab_sum.D1E_Dpr(masks{i}),20,'norm',normstr)
 end

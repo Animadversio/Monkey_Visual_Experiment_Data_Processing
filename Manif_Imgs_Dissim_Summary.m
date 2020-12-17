@@ -1,6 +1,6 @@
 %% Manif_Imgs_Dissim_Summary
 %  Structure is borrowed from Manif_Imgs_Dissim_Merge, and it's more about collecting stats and plot.
-%  
+%  This script is extremely well structured! 
 Animal = "Beto";
 mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 load(fullfile(mat_dir,"gab_imdist.mat"),'gab_imdist')
@@ -10,7 +10,7 @@ load(fullfile(mat_dir, Animal+'_Evol_stats.mat'), 'EStats')
 load(fullfile(mat_dir, Animal+'_Manif_stats.mat'), 'Stats') 
 figdir = "E:\OneDrive - Washington University in St. Louis\ImMetricTuning";
 
-%%
+%% Pre step, get the valid mask for pasupathy patches
 if Animal == "Alfa"
 pasu_idx_vec = reshape(Stats(1).ref.pasu_idx_grid',[],1); % 12% reshape into one row. But transpose to make similar object adjacent
 elseif Animal == "Beto"
@@ -20,7 +20,7 @@ pasu_val_msk = ~cellfun(@isempty,pasu_idx_vec);
 
 %%
 % RadTuneStats = repmat(struct(), 1, numel(Stats));
-%%
+%% Taking in all ImDist structure and COMPUTE Tuning Statistics w.r.t. it.
 bestcorr = 0;
 metric_list = ["squ","SSIM","L2","FC6","FC6_corr"];
 label_list = ["LPIPS (SqueezeNet)", "SSIM", "L2", "FC6 (L2)", "FC6 (1 - corr)"];
@@ -90,10 +90,10 @@ end
 end
 %%
 save(fullfile(mat_dir,Animal+"_ManifRadiTuneStats.mat"),'RadTuneStats')
-%%
+%% Collect the Hierarchical Stats in Mat file into a csv table for summarizing
 summarydir = "E:\OneDrive - Washington University in St. Louis\ImMetricTuning\summary";
 tab_all = table();
-metname = "squ"; 
+metname = "squ"; % pick the stats you like
 for Animal = ["Alfa","Beto"]
 load(fullfile(mat_dir,Animal+"_ManifRadiTuneStats.mat"),'RadTuneStats')
 tab = struct();
@@ -125,6 +125,7 @@ tab_all = [tab_all; tab];
 end
 writetable(tab_all, fullfile(summarydir,"Both"+"_RadialTuningStatsTab.csv"))
 %%
+tab_all = readtable(fullfile(summarydir,"Both"+"_RadialTuningStatsTab.csv"));
 tab = tab_all;
 %%
 Animal = "Both";
@@ -167,8 +168,9 @@ saveas(h3, fullfile(summarydir, Animal+"_AUC_scatt_squ.png"))
 saveas(h3, fullfile(summarydir, Animal+"_AUC_scatt_squ.pdf"))
 %%
 % Linearfitting(1:10,-[1:10]+0.1*randn(1,10))
+% Util functions to compute Gaussian Process fitting and linear fitting.
 function [gpr_fit, xlinsp, AOC, gprMdl] = GPRfitting(X, Y)
-gprMdl = fitrgp(X, Y, 'SigmaLowerBound', 5E-3); % This lower bound is to fix a fitting problem! 
+gprMdl = fitrgp(X, Y, 'SigmaLowerBound', 5E-3); % Edit this lower bound if encoutering fitting problem! 
 xlinsp = linspace(0,max(X),100);
 gpr_fit = gprMdl.predict(xlinsp');
 AOC = trapz(xlinsp, gpr_fit);
