@@ -112,8 +112,9 @@ end
 Stats.imgTuneStats = cell2mat(Stats.imgTuneStats);
 % Verbal summary for the table. 
 Tab = struct2table(Stats.imgTuneStats);
+writetable(Tab, fullfile(figdir, "TuneStats.csv"))
 ITmsk = spikeID_im<=32; V1msk = spikeID_im>=33 & spikeID_im<=48; V4msk = spikeID_im>=49;
-fprintf("Response Delay window image [%d,%d] ms\n", 51, 200)
+fprintf("Static Image: Response Delay window [%d,%d] ms\n", 51, 200)
 fprintf("%d / %d channels are visually responsive (T test p < 0.01). %d / %d for p < 0.001\n",sum(Tab.t_P<0.01),numel(Tab.t_P), sum(Tab.t_P<0.001),numel(Tab.t_P))
 fprintf("%d / %d IT,  %d / %d V1, %d / %d V4 channels are visually responsive (T test p < 0.01)\n", sum(Tab.t_P<0.01 & ITmsk), sum(ITmsk), ...
 											sum(Tab.t_P<0.01 & V1msk),sum(V1msk), sum(Tab.t_P<0.01 & V4msk), sum(V4msk))
@@ -123,7 +124,7 @@ fprintf("%d / %d IT,  %d / %d V1, %d / %d V4 channels are modulated (ANOVA p < 0
 fprintf("CONTROL: %d / %d channels' baseline activity modulated by image identity (ANOVA p < 0.01). %d / %d for p < 0.001\n",sum(Tab.F_P_bsl<0.01),numel(Tab.F_P_bsl),sum(Tab.F_P_bsl<0.001),numel(Tab.F_P_bsl))
 fprintf("%d / %d IT,  %d / %d V1, %d / %d V4 channels are modulated (ANOVA p < 0.01)\n", sum(Tab.F_P_bsl<0.01 & ITmsk), sum(ITmsk), ...
 											sum(Tab.F_P_bsl<0.01 & V1msk),sum(V1msk), sum(Tab.F_P_bsl<0.01 & V4msk), sum(V4msk))
-%
+%%
 FsignfMsk = Tab.t_P<0.01 & Tab.F_P<0.01; 
 FsignfCorrMsk = Tab.t_P<0.01 & Tab.F_P<0.01 & corr_P_arr' < 0.01; 
 fprintf("Response Delay window image [%d,%d] ms\n", 51, 200)
@@ -131,7 +132,6 @@ fprintf("From %d channels in total\n%d / %d selective channels (F, p<0.01) have 
 fprintf("%d / %d IT,  %d / %d V1, %d / %d V4 selective channels (F, p<0.01) have a significantly correlated (p<0.01) selectivity.\n", ...
 	sum(FsignfCorrMsk & ITmsk), sum(FsignfMsk & ITmsk), sum(FsignfCorrMsk & V1msk), sum(FsignfMsk & V1msk), sum(FsignfCorrMsk & V4msk), sum(FsignfMsk & V4msk))
 %%
-writetable(Tab, fullfile(figdir, "TuneStats.csv"))
 save(fullfile(figdir, "ExpStats.mat"), 'Stats', 'MovImgCorrStats','ImgrspDelayWdw','MvrspDelayWdw')
 %% Graphic summary on the Distribution of Correlations
 Pthresh1 = min(corr_arr(corr_P_arr < 0.01));
