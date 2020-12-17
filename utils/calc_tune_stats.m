@@ -1,9 +1,10 @@
 function reportStats = calc_tune_stats(psth_cells, wdw_vect)
 % similar function to calc_tuning_stats, but simpler just input an cell
-% array of psth and it can compute T and F for you. 
+% array of **psth** and it can compute T and F for you. 
 % Input format:
 %   psth_cells: cell array of psth array. each cell is a condition. Eahc
-%       psth array is of shape N neuron, T time, R trials. 
+%       psth array is of shape (N, T, R) N neuron, T time, R trials. 
+%       These axes order is the same as in `rasters`
 %       It assumes the N==1, and use the first index to get PSTH. 
 %   wdw_vect: Default to be empty. If it's not empty,  `wdw_vect` can be an 
 %       array of time windows to compute the F stats for each time window
@@ -20,7 +21,7 @@ groupsize = cellfun(@(psth) size(psth,3), psth_cells);
 indices = reshape(1:numel(psth_cells),size(psth_cells));
 idx_vect = arrayfun(@(L, idx) idx*ones(L,1), groupsize, indices, 'uni', false);
 
-act_wdw = 51:200; bsl_wdw=1:50;
+act_wdw = 51:200; bsl_wdw=1:50; % default value for activation and baseline window
 score_vect = cellfun(@(psth)squeeze(mean(psth(1,act_wdw,:),2)),psth_cells,'uni',false);
 basel_vect = cellfun(@(psth)squeeze(mean(psth(1,bsl_wdw,:),2)),psth_cells,'uni',false);
 idx_vect = cell2mat(reshape(idx_vect,[],1));
