@@ -93,7 +93,7 @@ end
 end
 %% 
 save(fullfile(figdir,'FeatWdw_CoherMat.mat'),'coher_synop','kerWids','MovDelays','WdwL')
-%%
+%% 
 figure(6);T=tiledlayout(2,1,'Padd','compact');
 title(T,"Median Coherence of PSTH as a Function of PSTH Feature Window")
 nexttile(1)

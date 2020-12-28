@@ -10,12 +10,12 @@ ExpRecord(ftr,:)
 [meta_new,rasters_new,~,Trials_new] = loadExperiments(ftr, Animal);
 %%
 figroot = "E:\OneDrive - Washington University in St. Louis\MovieDynamics";
-Trials_mov = Trials_new{3};
-rasters_mov = rasters_new{3};
-meta_mov = meta_new{3};
-Trials_img = Trials_new{4};
-rasters_img = rasters_new{4};
-meta_img = meta_new{4};
+Trials_mov = Trials_new{2};
+rasters_mov = rasters_new{2};
+meta_mov = meta_new{2};
+Trials_img = Trials_new{5};
+rasters_img = rasters_new{5};
+meta_img = meta_new{5};
 % figdir will be an input argument.
 prefchan = ExpRecord.pref_chan(contains(ExpRecord.ephysFN,meta_mov.ephysFN));
 stimparts = split(meta_mov.stimuli,'\');
@@ -52,8 +52,8 @@ unit_str_im = generate_unit_labels_new(meta_img.spikeID, meta_img.unitID);
 nImgPerMv = max(cellfun(@numel, imgnm_per_mov)); 
 
 psthimg_all = cellfun(@(idx) rasters_img(:, :, idx), idx_arr, 'Uni',0);
-psthimg_mean = cellfun(@(idx)mean(rasters_img(:,:,idx),3), idx_arr,'Uni',0);
-psthimg_sem = cellfun(@(idx)std(rasters_img(:,:,idx),1,3)/sqrt(numel(idx)), idx_arr,'Uni',0);
+psthimg_mean = cellfun(@(idx) mean(rasters_img(:,:,idx),3), idx_arr,'Uni',0);
+psthimg_sem = cellfun(@(idx) std(rasters_img(:,:,idx),1,3)/sqrt(numel(idx)), idx_arr,'Uni',0);
 % imgnm_per_mov = mat2cell(imgnm_arr, ones(size(imgnm_arr,1),1), size(imgnm_arr,2)); % Cell array of the images in 
 %% Matching images into frames process (takes a few seconds)
 % Matching all movie image pairs. Currently requires LPIPS and torch to be
@@ -64,6 +64,7 @@ psthimg_sem = cellfun(@(idx)std(rasters_img(:,:,idx),1,3)/sqrt(numel(idx)), idx_
 Stats.figdir = figdir;
 Stats.Animal = Animal;
 Stats.movnm = movnm_sorted;
+Stats.mov_idx_arr = mov_idx_arr;
 Stats.imgnm_arr = imgnm_arr;
 Stats.img_idx_arr = idx_arr;
 Stats.imgnm_per_mov = imgnm_per_mov;
@@ -128,7 +129,6 @@ writetable(Tab, fullfile(figdir, "TuneStats.csv"))
 plot_channel_corr(Stats, MovImgCorrStats, ImgrspDelayWdw, MvrspDelayWdw, true); % with error bar
 plot_channel_corr(Stats, MovImgCorrStats, ImgrspDelayWdw, MvrspDelayWdw, false); % without error bar
 
-
 %%
 function [imgnm_per_movie, idx_arr, imgnm_arr, mvnms_uniq] = parse_frame_idx_arr(imageName)
 % Equivalent to the `parse_image_idx_arr_hess` for non-Hessian experiments
@@ -163,7 +163,8 @@ end
 
 function [MovImgCorrStats, corr_arr, corr_P_arr, corr_sep_arr, corr_sep_P_arr] = MovImgMatchCorr(ImgrspDelayWdw, MvrspDelayWdw, psthimg_mean, psthmov_mean, S)
 % Note: This is limited to Hessian Movies. The correlation part need to be
-%   rewrite for non-Hessian
+%   rewrite for non-Hessian.
+% Note: This function is now obsolete use MovImgCorrVariability instead.
 % 
 % Input parameters:
 %   ImgrspDelayWdw / MvrspDelayWdw: index array of the window to compute
@@ -247,9 +248,9 @@ function [MovImgCorrStats] = MovImgCorrVariability(ImgrspDelayWdw, MvrspDelayWdw
 % Input parameters:
 %   ImgrspDelayWdw / MvrspDelayWdw: index array of the window to compute
 %       e.g. [61:200], [-59:60]. Relative to image onset and frame onset.
-%   psthimg_all: Trial averaged PSTH of each image. An cell array of shape
+%   psthimg_all: Single Trial PSTH of each image. An cell array of shape
 %       (nMovie, nImginMovie) each array in it is of shape (nChannel, nTime, nTrials)
-%   psthmov_all: Trial averaged PSTH of each movie. An cell array of shape
+%   psthmov_all: Single Trial PSTH of each movie. An cell array of shape
 %       (nMovie, ) each array in it is of shape (nChannel, nTime, nTrials)
 %   S: Stats formed in beforehand. 
 MovImgCorrStats = repmat(struct(),1,numel(S.spikeID_im)); % collect results here. 
@@ -361,6 +362,7 @@ if nargin <5, figdir = Stats.figdir; end
 ITmsk = Stats.spikeID_im<=32; V1msk = Stats.spikeID_im>=33 & Stats.spikeID_im<=48; V4msk = Stats.spikeID_im>=49;
 Tab = struct2table(Stats.imgTuneStats); Animal = Stats.Animal;
 wdwstr = compose("im_%d_%d_mv_%d_%d",ImgrspDelayWdw(1), ImgrspDelayWdw(end), MvrspDelayWdw(1), MvrspDelayWdw(end));
+save(fullfile(figdir, compose("CorrStats_%s.mat",wdwstr)), 'Stats', 'MovImgCorrStats', 'ImgrspDelayWdw', 'MvrspDelayWdw')
 % Correlation of activation
 corr_arr = arrayfun(@(S)S.corr, MovImgCorrStats);
 corr_P_arr = arrayfun(@(S)S.corr_P, MovImgCorrStats);
@@ -439,7 +441,6 @@ saveas(3,fullfile(figdir,compose("movImgTstatsHist_%s_%s.png",Animal,wdwstr)))
 savefig(3,fullfile(figdir,compose("movImgTstatsHist_%s_%s.fig",Animal,wdwstr)))
 end
 
-
 function h = plot_channel_corr(Stats, MovImgCorrStats, ImgrspDelayWdw, MvrspDelayWdw, errorbarflag)
 if nargin == 4, errorbarflag = true; end
 h = figure;set(h,'pos',[1000         462         560         520])
@@ -485,7 +486,6 @@ LIM = [min(XLIM(1),YLIM(1)), max(XLIM(2),YLIM(2))];
 hold on; line(LIM,LIM,'Color','r')
 xlim(max(0, LIM));ylim(max(0, LIM));
 end
-
 
 % %% Visualize the Correlation Statistic on Population Level
 % corr_arr = arrayfun(@(S)S.corr, MovImgCorrStats);
