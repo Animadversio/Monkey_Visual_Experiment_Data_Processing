@@ -1,4 +1,5 @@
-
+% This script will search the combinations of different time windows
+% in computing the firing rate for static images and movies. 
 figroot = "E:\OneDrive - Washington University in St. Louis\MovieDynamics";
 Trials_mov = Trials_new{2};
 rasters_mov = rasters_new{2};
@@ -12,25 +13,25 @@ stimparts = split(meta_mov.stimuli,'\');
 fdrname = compose("%s-Chan%02d",stimparts{end},prefchan);
 figdir = fullfile(figroot, fdrname);
 assert(exist(figdir,'dir')>0, "Exp folder not exist, no where to load the files.")
-% mkdir(figdir)
-%%  
-D = load(fullfile(figdir, "ExpStats.mat"));%, 'Stats', 'MovImgCorrStats','ImgrspDelayWdw','MvrspDelayWdw')
+% mkdir(figdir) % This folder should exist, so you can load the files. 
+%% Load statistics from those pre-computed in Movie-Hess-Static-cmp
+D = load(fullfile(figdir, "ExpStats.mat")); %, 'Stats', 'MovImgCorrStats','ImgrspDelayWdw','MvrspDelayWdw')
 S = D.Stats;
 psthmov_all = cellfun(@(idx) rasters_mov(:,:,idx), S.mov_idx_arr,'Uni',0);
 psthimg_all = cellfun(@(idx) rasters_img(:,:,idx), S.img_idx_arr,'Uni',0);
 %% Is there a best time window (length, delay) for each channel to be correlated? 
 % loop
-MovDelays = -120:10:120;nMvDel = numel(MovDelays);
-ImgDelays = 40:10:100;nImDel = numel(ImgDelays);
-WdwLens = 10:10:150;nWdw = numel(WdwLens);
+MovDelays = -120:10:120; nMvDel = numel(MovDelays);
+ImgDelays = 40:10:100; nImDel = numel(ImgDelays);
+WdwLens = 10:10:150; nWdw = numel(WdwLens);
 % kerWids = [5, 11, 21, 31, 51, 81, 121];
 CorrStat_col = cell(numel(MovDelays),numel(WdwLens),numel(ImgDelays)); 
 wdw_col = cell(numel(MovDelays),numel(WdwLens),numel(ImgDelays));
 % workers = parpool(6);
 tic
-parfor i = 1:nMvDel%numel(MovDelays)
-for j = 1:nWdw%numel(WdwLens)
-for k = 1:nImDel%numel(ImgDelays)
+parfor i = 1:nMvDel % numel(MovDelays)
+for j = 1:nWdw % numel(WdwLens)
+for k = 1:nImDel % numel(ImgDelays)
 ImgrspDelayWdw = ImgDelays(k):ImgDelays(k)+WdwLens(j);
 MvrspDelayWdw = MovDelays(i):MovDelays(i)+WdwLens(j);
 if ImgrspDelayWdw(end) > 200 || ImgrspDelayWdw(1) < 1, continue; end
@@ -43,7 +44,6 @@ end
 end
 end
 %% Use the template to fill the blanks for CorrStat 
-% tmpl = MovImgCorrStats;
 tmpl = arrayfun(@(M)struct('corr', nan, 'corr_P', nan, 'T', nan, 'T_P', nan,'iCh',M.iCh,'iU',M.iU),MovImgCorrStats);
 CorrStat_col_fill = CorrStat_col;
 CorrStat_col_fill(cellfun(@isempty, CorrStat_col)) = {tmpl};
@@ -56,6 +56,7 @@ k = find(ImgDelays == imdelay);
 CorrStat_arr = cell2mat(cellfun(@(C)reshape(C,1,1,[]),CorrStat_col(:,1:end-1,k),'Uni',0));
 cc_tsr = arrayfun(@(C)C.corr,CorrStat_arr);
 %%
+% Save the correlation statistics
 save(fullfile(figdir, "corr_wdw_optim.mat"),'CorrStat_col','wdw_col','S')
 %%
 h=figure;set(h,'pos',[16         353        2538         508])
@@ -115,6 +116,8 @@ ylabel("Onset of Movie Window");xlabel("Channel");hold off
 title("Optimal Window Length vs Channel Number")
 saveas(h2,fullfile(figdir,"Optim_Window_sumall.png"))
 function [MovImgCorrS] = MovImgCorrVariability_fast(ImgrspDelayWdw, MvrspDelayWdw, psthimg_all, psthmov_all, S, chanels)
+% This is the reduced version of computing correlation in response to movie
+%   and static images. Use it to compute 
 % Note: This is not limited to Hessian Movies. The correlation part has
 %   been rewriten for non-Hessian
 % 
