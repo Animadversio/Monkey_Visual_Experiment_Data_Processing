@@ -54,7 +54,7 @@ gab_rsz_imgs_tsr = cell2mat(shiftdim(gab_rsz_imgs_all,-3));
 %%
 gab_imdist = struct();
 tic
-D=D.select_metric("squeeze");
+D = D.select_metric("squeeze");
 gab_imdist.squ = D.distmat(gab_rsz_imgs_tsr);
 toc
 L2dist = pdist(reshape(gab_rsz_imgs_tsr,[],size(gab_rsz_imgs_tsr,4))'/255.0);
@@ -77,7 +77,7 @@ save(fullfile(mat_dir,"gab_imdist.mat"),'gab_imdist')
 Animal = "Alfa";
 load(fullfile(mat_dir, Animal+'_Evol_stats.mat'), 'EStats') 
 load(fullfile(mat_dir, Animal+'_Manif_stats.mat'), 'Stats') 
-%% 
+%% Compute the ImDist using different metric functions
 ManifImDistStat = repmat(struct(),1,numel(Stats));
 for Expi=1:numel(Stats)
 tic;
@@ -121,7 +121,7 @@ toc;
 end
 %%
 save(fullfile(mat_dir,Animal+"_Manif_ImDist.mat"),"ManifImDistStat")
-
+%% Compute the summary statistics for Firing rate ~ image distance. 
 %% Load image distance matrices
 Animal = "Beto";
 mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
@@ -142,6 +142,8 @@ pasu_idx_vec = reshape(Stats(12).ref.pasu_idx_grid',[],1); % reshape into one ro
 pasu_val_msk = ~cellfun(@isempty,pasu_idx_vec);
 %% Compute Summary Statistics and Collect stats into a table.
 %  the relationship between the image metric and the firing. 
+%  This part get refactored into Manif_Imgs_Dissim_Summary.m which generate
+%  the csv in a more concise code. 
 %  Summarize it in a large csv
 Expi = 35;
 nanstrct = struct('Manif_squ_pear',nan,'Manif_squ_spear',nan,'Manif_FC6_pear',nan,'Manif_FC6_spear',nan,'Manif_squ_pear_max',nan,'Manif_squ_spear_max',nan,'Manif_FC6_pear_max',nan,'Manif_FC6_spear_max',nan,'Pasu_squ_pear',nan,'Pasu_squ_spear',nan,'Pasu_FC6_pear',nan,'Pasu_FC6_spear',nan,'Pasu_squ_pear_max',nan,'Pasu_squ_spear_max',nan,'Pasu_FC6_pear_max',nan,'Pasu_FC6_spear_max',nan,'Gabor_squ_pear',nan,'Gabor_squ_spear',nan,'Gabor_FC6_pear',nan,'Gabor_FC6_spear',nan,'Gabor_squ_pear_max',nan,'Gabor_squ_spear_max',nan,'Gabor_FC6_pear_max',nan,'Gabor_FC6_spear_max',nan,"Manif_squ_reg_b",nan(2,1),"Manif_squ_reg_Rsq",nan,"Manif_squ_reg_F",nan,"Manif_squ_reg_P",nan,"Manif_FC6_reg_b",nan(2,1),"Manif_FC6_reg_Rsq",nan,"Manif_FC6_reg_F",nan,"Manif_FC6_reg_P",nan,"Pasu_squ_reg_b",nan(2,1),"Pasu_squ_reg_Rsq",nan,"Pasu_squ_reg_F",nan,"Pasu_squ_reg_P",nan,"Pasu_FC6_reg_b",nan(2,1),"Pasu_FC6_reg_Rsq",nan,"Pasu_FC6_reg_F",nan,"Pasu_FC6_reg_P",nan,"Gabor_squ_reg_b",nan(2,1),"Gabor_squ_reg_Rsq",nan,"Gabor_squ_reg_F",nan,"Gabor_squ_reg_P",nan,"Gabor_FC6_reg_b",nan(2,1),"Gabor_FC6_reg_Rsq",nan,"Gabor_FC6_reg_F",nan,"Gabor_FC6_reg_P",nan);
