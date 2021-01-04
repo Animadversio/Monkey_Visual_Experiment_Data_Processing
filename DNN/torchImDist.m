@@ -17,6 +17,7 @@ classdef torchImDist
        D
        metric % a variable preset to specify which metric to use
        spatial % boolean for whether analyze spatial distribution of difference or not.
+       net
    end
    methods
    function G = torchImDist(metric, spatial)
@@ -45,8 +46,8 @@ classdef torchImDist
         py.importlib.import_module("models");
         py.importlib.import_module("torch");
         py.importlib.import_module("numpy");
-       G.spatial = spatial;
-       G.metric = metric;
+        G.spatial = spatial;
+        G.metric = metric;
        switch metric
            case "SSIM"
                G.D = py.models.PerceptualLoss(pyargs("model", "SSIM", "spatial", spatial,"colorspace","RGB"));
@@ -64,7 +65,7 @@ classdef torchImDist
                G.metric = "squeeze";
        end
        G.D.requires_grad_(false);
-       G.D.eval();%G.BGAN.to('cuda');
+       G.D.eval(); % G.BGAN.to('cuda');
        py.torch.set_grad_enabled(false);
    end
    function G = select_metric(G, metric, spatial)
@@ -91,7 +92,9 @@ classdef torchImDist
                G.spatial = 0;
        end
    end
-   
+   function G = load_net(G)
+   G.net = alexnet;
+   end
    function dists = distance(G, im1, im2)
        if max(im1,[],'all')>1.2, im1 = single(im1) / 255.0; end
        if max(im2,[],'all')>1.2, im2 = single(im2) / 255.0; end
@@ -123,6 +126,17 @@ classdef torchImDist
                distMat(j,i)=distMat(i,j);
            end
        end
+       elseif G.metric == "L2"
+           L2dist = pdist(reshape(imgs,[],size(imgs,4))');
+           distMat = squareform(L2dist);
+       elseif G.metric == "FC6_corr"
+           acts = G.net.activations(255*imgs,"fc6"); 
+           FC6dist_corr = squareform(pdist(squeeze(acts)','correlation'));
+           distMat = FC6dist_corr; 
+       elseif G.metric == "FC6_L2"
+           acts = G.net.activations(255*imgs,"fc6"); 
+           FC6dist = squareform(pdist(squeeze(acts)','euclidean'));
+           distMat = FC6dist; 
        else
        for i=1:imgn
            csr=1;
