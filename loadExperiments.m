@@ -48,20 +48,20 @@ for iExp = 1:length(preMeta)
     elseif contains(tMeta.expControlFN, "movie"), addargs = [addargs, 'rasterWindow', [-250 2500]];  
     elseif contains(tMeta.expControlFN, "Masking"), addargs = [addargs, 'rasterWindow', [-250 600]]; end 
     % Extract longer time window activity when using movie? TODO, this 
-%     try
+    try
     % time window value should change for each different movie experiments.
     [meta_,rasters_,lfps_,Trials_] = loadData(tMeta.ephysFN,'expControlFN',tMeta.expControlFN, addargs{:}) ;
-%     catch err % err is an MException struct, save the err in a log file and continue. 
-%         fprintf('Error message:\n%s\n',err.message);
-%         fprintf('Error trace:\n%s\n',err.getReport);
-%         disp(tMeta)
-%         %keyboard
-%         fileID = fopen('S:\Exp_error_log.log','w+');
-%         fprintf(fileID,'Error message:\n%s\n',err.message);
-%         fprintf(fileID,'Error trace:\n%s\n',err.getReport);
-%         fclose(fileID);
-%         continue
-%     end
+    catch err % err is an MException struct, save the err in a log file and continue. 
+        fprintf('Error message:\n%s\n',err.message);
+        fprintf('Error trace:\n%s\n',err.getReport);
+        disp(tMeta)
+        %keyboard
+        fileID = fopen('S:\Exp_error_log.log','w+');
+        fprintf(fileID,'Error message:\n%s\n',err.message);
+        fprintf(fileID,'Error trace:\n%s\n',err.getReport);
+        fclose(fileID);
+        continue
+    end
     meta_merged = rmfield( tMeta, intersect(fieldnames(tMeta), fieldnames(meta_)) );
     names = [fieldnames(meta_merged); fieldnames(meta_)];
     meta_ = cell2struct([struct2cell(meta_merged); struct2cell(meta_)], names, 1);
