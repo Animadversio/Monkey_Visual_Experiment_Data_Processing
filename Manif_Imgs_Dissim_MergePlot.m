@@ -22,6 +22,7 @@ pasu_val_msk = ~cellfun(@isempty,pasu_idx_vec);
 
 %% newer compact version of code
 flag.doEvoRef = 1;
+flag.doError = 1;
 bestcorr = 0;
 Cord = colororder;
 metric_list = ["squ","SSIM","L2","FC6","FC6_corr"];
@@ -36,6 +37,7 @@ bsl_VEC_ALL = [];
 si=1; ui=1;
 score_vec = cellfun(@(psth)mean(psth(ui,51:200,:),'all'),reshape(Stats(Expi).manif.psth{si},[],1));
 score_std_vec = cellfun(@(psth)std(mean(psth(ui,51:200,:),[1,2]),1,'all'),reshape(Stats(Expi).manif.psth{si},[],1));
+score_sem_vec = cellfun(@(psth)std(mean(psth(ui,51:200,:),[1,2]),1,'all')/sqrt(size(psth,3)),reshape(Stats(Expi).manif.psth{si},[],1));
 score_bsl_VEC = cell2mat(cellfun(@(psth)squeeze(mean(psth(ui,1:45,:),[2])),reshape(Stats(Expi).manif.psth{si},[],1),'uni',0)); % single trial
 bsl_VEC_ALL = [bsl_VEC_ALL; score_bsl_VEC];
 [sortScore,sortId]=sort(score_vec,'Descend');
@@ -44,6 +46,7 @@ for mi = 1:numel(metric_list) % Loop through different distance metrics
 	nexttile(mi);  metname = metric_list(mi); hold on
 	distmat = ManifImDistStat(Expi).(metname);
     scatter(distmat(:,maxId), score_vec, 36, Cord(1,:))
+    if flag.doError, errorbar(distmat(:,maxId), score_vec, score_sem_vec,'Color',Cord(1,:),'LineStyle','none','LineWidth',0.25); end 
 	plotGPRfitting(distmat(:,maxId), score_vec, mean(score_std_vec), {'Color',Cord(1,:)})% Gaussian Process Smoothing or Fitting
 	[cc_s,pval_s] = corr(distmat(:,maxId),score_vec,'Type','Spearman');
 	[cc_p,pval_p] = corr(distmat(:,maxId),score_vec);
@@ -54,6 +57,7 @@ end
 if flag.doEvoRef
 evoref_vec = cellfun(@(psth)mean(psth(1,51:200,:),'all'),reshape(EStats(Expi).ref.psth_arr,[],1));
 evoref_std_vec = cellfun(@(psth)std(mean(psth(1,51:200,:),[1,2]),1,'all'),reshape(EStats(Expi).ref.psth_arr,[],1));
+evoref_sem_vec = cellfun(@(psth)std(mean(psth(1,51:200,:),[1,2]),1,'all')/sqrt(size(psth,3)),reshape(EStats(Expi).ref.psth_arr,[],1));
 evoref_bsl_VEC = cell2mat(cellfun(@(psth)squeeze(mean(psth(1,1:45,:),[2])),reshape(EStats(Expi).ref.psth_arr,[],1),'uni',0));
 bsl_VEC_ALL = [bsl_VEC_ALL; evoref_bsl_VEC];
 [evoref_sortScore,sortId] = sort(evoref_vec,'Descend');
@@ -62,6 +66,7 @@ for mi = 1:numel(metric_list)
     nexttile(mi);  metname = metric_list(mi);
 	distmat = EvoRefImDistStat(Expi).(metname);
     scatter(distmat(:,evoref_maxId), evoref_vec,'m')
+    if flag.doError, errorbar(distmat(:,evoref_maxId), evoref_vec,evoref_sem_vec,'m','LineStyle','none','LineWidth',0.25); end 
     plotGPRfitting(distmat(:,evoref_maxId), evoref_vec, mean(evoref_std_vec), {'m'})% % Plot the Interpolation of it
     [cc_s,pval_s] = corr(distmat(:,evoref_maxId),evoref_vec,'Type','Spearman','Rows','complete');
 	[cc_p,pval_p] = corr(distmat(:,evoref_maxId),evoref_vec,'Rows','complete');    	
@@ -74,15 +79,18 @@ if Stats(Expi).ref.didPasu
 pasu_vec = cellfun(@(psth)mean(psth(ui,51:200,:),'all'),reshape(Stats(Expi).ref.pasu_psths',[],1));
 pasu_vec(~pasu_val_msk) = []; % isnan(pasu_vec) % get rid of non-existing pasupathy images. 
 pasu_std_vec = cellfun(@(psth)std(mean(psth(ui,51:200,:),[1,2]),1,'all'),reshape(Stats(Expi).ref.pasu_psths',[],1));
+pasu_sem_vec = cellfun(@(psth)std(mean(psth(ui,51:200,:),[1,2]),1,'all')/sqrt(size(psth,3)),reshape(Stats(Expi).ref.pasu_psths',[],1));
 pasu_std_vec(~pasu_val_msk) = [];
+pasu_sem_vec(~pasu_val_msk) = [];
 pasu_bsl_VEC = cell2mat(cellfun(@(psth)squeeze(mean(psth(ui,1:45,:),[2])),reshape(Stats(Expi).ref.pasu_psths',[],1),'uni',0));
 bsl_VEC_ALL = [bsl_VEC_ALL; pasu_bsl_VEC];
 [pasu_sortScore,sortId]=sort(pasu_vec,'Descend');
 [pasu_maxScore,pasu_maxId]=max(pasu_vec);
 for mi = 1:numel(metric_list)
 	nexttile(mi);  metname = metric_list(mi);
-    scatter(pasu_imdist.(metname)(:,pasu_maxId),pasu_vec,'b')
-	plotGPRfitting(pasu_imdist.(metname)(:,pasu_maxId), pasu_vec, nanmean(pasu_std_vec), {'b'})
+    scatter(pasu_imdist.(metname)(:,pasu_maxId),pasu_vec,36,Cord(3,:))
+    if flag.doError, errorbar(pasu_imdist.(metname)(:,pasu_maxId),pasu_vec,pasu_sem_vec,'Color',Cord(3,:),'LineStyle','none','LineWidth',0.25); end 
+	plotGPRfitting(pasu_imdist.(metname)(:,pasu_maxId), pasu_vec, nanmean(pasu_std_vec), {'Color',Cord(3,:)})
 	[cc_s,pval_s] = corr(pasu_imdist.(metname)(:,pasu_maxId),pasu_vec,'Type','Spearman','Rows','complete');
 	[cc_p,pval_p] = corr(pasu_imdist.(metname)(:,pasu_maxId),pasu_vec,'Rows','complete');		
 	titstr{mi}{end+1} = compose("Pasu: pear %.3f (%.1e) spear %.3f (%.1e)",cc_p,pval_p,cc_s,pval_s);
@@ -93,6 +101,7 @@ end
 if Stats(Expi).ref.didGabor
 gab_vec = cellfun(@(psth)mean(psth(ui,51:200,:),'all'),reshape(Stats(Expi).ref.gab_psths,[],1));
 gab_std_vec = cellfun(@(psth)std(mean(psth(ui,51:200,:),[1,2]),1,'all'),reshape(Stats(Expi).ref.gab_psths,[],1));
+gab_sem_vec = cellfun(@(psth)std(mean(psth(ui,51:200,:),[1,2]),1,'all')/sqrt(size(psth,3)),reshape(Stats(Expi).ref.gab_psths,[],1));
 gab_bsl_VEC = cell2mat(cellfun(@(psth)squeeze(mean(psth(ui,1:45,:),[2])),reshape(Stats(Expi).ref.gab_psths,[],1),'uni',0));
 bsl_VEC_ALL = [bsl_VEC_ALL; gab_bsl_VEC];
 [gab_sortScore,sortId]=sort(gab_vec,'Descend');
@@ -100,6 +109,7 @@ bsl_VEC_ALL = [bsl_VEC_ALL; gab_bsl_VEC];
 for mi = 1:numel(metric_list)
     nexttile(mi);  metname = metric_list(mi);
     scatter(gab_imdist.(metname)(:,gab_maxId), gab_vec,'g')
+    if flag.doError, errorbar(gab_imdist.(metname)(:,gab_maxId), gab_vec,gab_sem_vec,'g','LineStyle','none','LineWidth',0.25); end 
     plotGPRfitting(gab_imdist.(metname)(:,gab_maxId), gab_vec, nanmean(gab_std_vec), {'g'})% % Plot the Interpolation of it
     [cc_s,pval_s] = corr(gab_imdist.(metname)(:,gab_maxId),gab_vec,'Type','Spearman','Rows','complete');
 	[cc_p,pval_p] = corr(gab_imdist.(metname)(:,gab_maxId),gab_vec,'Rows','complete');    	
@@ -111,21 +121,19 @@ end
 bsl_rate = nanmean(bsl_VEC_ALL);
 bsl_rate_std = nanstd(bsl_VEC_ALL,1);
 bsl_rate_sem = sem(bsl_VEC_ALL,1);
-for mi = 1:numel(metric_list)
+for mi = 1:numel(metric_list) % add title and baseline firing rate 
 nexttile(mi);title(titstr{mi})
 hline(bsl_rate,'k-');hline(bsl_rate+[-bsl_rate_sem,bsl_rate_sem],'-.')
 YLIM = ylim();ylim(max(0,YLIM)); % no need to show negative firing rate. 
 end
 nexttile(1); ylabel("Neural Activation")
-if flag.doEvoRef
-saveas(21,fullfile(figdir,compose("%s_Exp%02d_pref%02d_peak_nat.png",Animal,Expi,Stats(Expi).units.pref_chan)))
-savefig(21,fullfile(figdir,compose("%s_Exp%02d_pref%02d_peak_nat.fig",Animal,Expi,Stats(Expi).units.pref_chan)))
-saveas(21,fullfile(figdir,compose("%s_Exp%02d_pref%02d_peak_nat.pdf",Animal,Expi,Stats(Expi).units.pref_chan)))
-else
-saveas(21,fullfile(figdir,compose("%s_Exp%02d_pref%02d_peak.png",Animal,Expi,Stats(Expi).units.pref_chan)))
-savefig(21,fullfile(figdir,compose("%s_Exp%02d_pref%02d_peak.fig",Animal,Expi,Stats(Expi).units.pref_chan)))
-saveas(21,fullfile(figdir,compose("%s_Exp%02d_pref%02d_peak.pdf",Animal,Expi,Stats(Expi).units.pref_chan)))
-end	
+% Saving part. 
+savefnm = compose("%s_Exp%02d_pref%02d_peak",Animal,Expi,Stats(Expi).units.pref_chan); 
+if flag.doEvoRef, savefnm = savefnm + "_nat";end
+if flag.doError, savefnm = savefnm + "_err";end
+saveas(21,fullfile(figdir, savefnm + ".png"))
+savefig(21,fullfile(figdir, savefnm + ".fig"))
+saveas(21,fullfile(figdir, savefnm + ".pdf"))
 end
 % end
 %%
