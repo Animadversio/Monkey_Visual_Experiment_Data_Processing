@@ -1,5 +1,6 @@
 %% Set Path 
 system("subst S: E:\Network_Data_Sync") % set this alias! so that copying and syncing could work 
+system('subst O: "E:\OneDrive - Washington University in St. Louis"')
 %result_dir = "C:\\Users\\ponce\\OneDrive - Washington University in St. Louis\\PC_space_tuning";
 % it will load the newest version of ExpSpecTable and compute pref_chan_arr
 % and norm_arr from it! 

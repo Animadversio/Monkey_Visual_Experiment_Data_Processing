@@ -1,0 +1,336 @@
+%% Manif_Imgs_Dissim_Summary
+%  Structure is borrowed from Manif_Imgs_Dissim_Merge, and it's more about collecting stats and plot.
+%  This script is extremely well structured and concise!
+%  Used to generate panels for figure 2 E  
+Animal = "Beto";
+mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
+load(fullfile(mat_dir,"gab_imdist.mat"),'gab_imdist')
+load(fullfile(mat_dir,"pasu_imdist.mat"),'pasu_imdist')
+load(fullfile(mat_dir,Animal+"_Manif_ImDist.mat"),"ManifImDistStat")
+load(fullfile(mat_dir, Animal+'_Evol_stats.mat'), 'EStats') 
+load(fullfile(mat_dir, Animal+'_Manif_stats.mat'), 'Stats') 
+figdir = "E:\OneDrive - Washington University in St. Louis\ImMetricTuning";
+
+%% Pre step, get the valid mask for pasupathy patches
+if Animal == "Alfa"
+pasu_idx_vec = reshape(Stats(1).ref.pasu_idx_grid',[],1); % 12% reshape into one row. But transpose to make similar object adjacent
+elseif Animal == "Beto"
+pasu_idx_vec = reshape(Stats(12).ref.pasu_idx_grid',[],1);
+end
+pasu_val_msk = ~cellfun(@isempty,pasu_idx_vec);
+
+%%
+% RadTuneStats = repmat(struct(), 1, numel(Stats));
+%% Taking in all ImDist structure and COMPUTE Tuning Statistics w.r.t. it.
+metric_list = ["squ","SSIM","L2","FC6","FC6_corr"];
+label_list = ["LPIPS (SqueezeNet)", "SSIM", "L2", "FC6 (L2)", "FC6 (1 - corr)"];
+for Expi=42:numel(Stats)
+% Manifold images. 
+fprintf("Processing %s Exp %d\n", Animal,Expi)
+RadTuneStats(Expi).Animal = Animal; 
+RadTuneStats(Expi).Expi = Expi;
+si=1; ui=1;
+score_vec = cellfun(@(psth)mean(psth(ui,51:200,:),'all'),reshape(Stats(Expi).manif.psth{si},[],1));
+[sortScore,sortId]=sort(score_vec,'Descend');
+[maxScore,maxId]=max(score_vec);
+RadTuneStats(Expi).manif.maxScore = maxScore;
+for mi = 1:numel(metric_list) % Loop through different distance metrics
+	metname = metric_list(mi);
+	[gpr_fit, ~, AOC, gprMdl] = GPRfitting(ManifImDistStat(Expi).(metname)(:,maxId), score_vec); % Gaussian Process Smoothing or Fitting
+	[R2, slope, intercept] = Linearfitting(ManifImDistStat(Expi).(metname)(:,maxId), score_vec);
+	% titstr{mi} = { compose("Manif: pear %.3f spear %.3f",
+	RadTuneStats(Expi).manif.AOC.(metname) = AOC; 
+	RadTuneStats(Expi).manif.gprMdl.(metname) = gprMdl;
+	RadTuneStats(Expi).manif.linR2.(metname) = R2;
+	RadTuneStats(Expi).manif.lincc.(metname) = [slope, intercept];
+	RadTuneStats(Expi).manif.corr.(metname) = corr(ManifImDistStat(Expi).(metname)(:,maxId),score_vec);
+	RadTuneStats(Expi).manif.corr_sp.(metname) = corr(ManifImDistStat(Expi).(metname)(:,maxId),score_vec,'Type','Spearman');
+end
+% Pasupathy patches
+if Stats(Expi).ref.didPasu
+pasu_vec = cellfun(@(psth)mean(psth(ui,51:200,:),'all'),reshape(Stats(Expi).ref.pasu_psths',[],1));
+pasu_vec(~pasu_val_msk) = []; % isnan(pasu_vec) % get rid of non-existing pasupathy images. 
+[pasu_sortScore,sortId]=sort(pasu_vec,'Descend');
+[pasu_maxScore,pasu_maxId]=max(pasu_vec);
+RadTuneStats(Expi).pasu.maxScore = pasu_maxScore; 
+for mi = 1:numel(metric_list)
+	metname = metric_list(mi);
+	[gpr_fit, ~, AOC, gprMdl] = GPRfitting(pasu_imdist.(metname)(:,pasu_maxId), pasu_vec);
+	[R2, slope, intercept] = Linearfitting(pasu_imdist.(metname)(:,pasu_maxId), pasu_vec);
+	% titstr{mi}{end+1} = compose("Pasu: pear %.3f spear %.3f",
+	RadTuneStats(Expi).pasu.AOC.(metname) = AOC; 
+	RadTuneStats(Expi).pasu.gprMdl.(metname) = gprMdl;
+	RadTuneStats(Expi).pasu.linR2.(metname) = R2;
+	RadTuneStats(Expi).pasu.lincc.(metname) = [slope, intercept];
+	RadTuneStats(Expi).pasu.corr.(metname) = corr(pasu_imdist.(metname)(:,pasu_maxId),pasu_vec,'Rows','complete');
+	RadTuneStats(Expi).pasu.corr_sp.(metname) = corr(pasu_imdist.(metname)(:,pasu_maxId),pasu_vec,'Type','Spearman','Rows','complete');
+end	
+legend(["Manifold","Manifold","Pasupathy","Pasupathy"])
+end
+% Gabor patches
+if Stats(Expi).ref.didGabor
+gab_vec = cellfun(@(psth)mean(psth(ui,51:200,:),'all'),reshape(Stats(Expi).ref.gab_psths,[],1));
+[gab_sortScore,sortId]=sort(gab_vec,'Descend');
+[gab_maxScore,gab_maxId]=max(gab_vec);
+RadTuneStats(Expi).gabor.maxScore = gab_maxScore; 
+for mi = 1:numel(metric_list)
+    metname = metric_list(mi);
+    [gpr_fit, ~, AOC, gprMdl] = GPRfitting(gab_imdist.(metname)(:,gab_maxId), gab_vec);% % Plot the Interpolation of it
+	[R2, slope, intercept] = Linearfitting(gab_imdist.(metname)(:,gab_maxId), gab_vec);
+    % titstr{mi}{end+1} = compose("Gabor: pear %.3f spear %.3f",
+	RadTuneStats(Expi).gabor.AOC.(metname) = AOC; 
+	RadTuneStats(Expi).gabor.gprMdl.(metname) = gprMdl;
+	RadTuneStats(Expi).gabor.linR2.(metname) = R2;
+	RadTuneStats(Expi).gabor.lincc.(metname) = [slope, intercept];
+	RadTuneStats(Expi).gabor.corr.(metname) = corr(gab_imdist.(metname)(:,gab_maxId),gab_vec,'Rows','complete');
+	RadTuneStats(Expi).gabor.corr_sp.(metname) = corr(gab_imdist.(metname)(:,gab_maxId),gab_vec,'Type','Spearman','Rows','complete');
+end
+end
+% saveas(21,fullfile(figdir,compose("%s_Exp%02d_pref%02d_peak.pdf",Animal,Expi,Stats(Expi).units.pref_chan)))
+end
+%%
+save(fullfile(mat_dir,Animal+"_ManifRadiTuneStats.mat"),'RadTuneStats')
+%%
+
+
+
+%% Collect the Hierarchical Stats in Mat file into a csv table for summarizing and ploting
+summarydir = "E:\OneDrive - Washington University in St. Louis\ImMetricTuning\summary";
+tab_all = table();
+metname = "squ"; % pick the stats you like
+for Animal = ["Alfa","Beto"]
+load(fullfile(mat_dir,Animal+"_ManifRadiTuneStats.mat"),'RadTuneStats')
+load(fullfile(mat_dir,Animal+"_Evol_stats.mat"),'EStats')
+tab = struct();
+for Expi = 1:numel(RadTuneStats)
+tab(Expi).Expi = Expi;
+tab(Expi).Animal = Animal;
+tab(Expi).pref_chan = EStats(Expi).units.pref_chan;
+tab(Expi).pref_unit = EStats(Expi).evol.unit_in_pref_chan;
+if EStats(Expi).units.pref_chan < 33
+tab(Expi).area = "IT";
+elseif EStats(Expi).units.pref_chan < 49
+tab(Expi).area = "V1";  
+else
+tab(Expi).area = "V4"; 
+end
+tab(Expi).is_evoref_gab = all(contains(EStats(Expi).ref.imgnm,"gab")); % if all ref images are gabor.
+tab(Expi).peak_evoref = RadTuneStats(Expi).evoref.maxScore;
+tab(Expi).normAOC_evoref = RadTuneStats(Expi).evoref.AOC.(metname) / RadTuneStats(Expi).evoref.maxScore;
+tab(Expi).AOC_evoref = RadTuneStats(Expi).evoref.AOC.(metname);
+tab(Expi).corr_evoref = RadTuneStats(Expi).evoref.corr.(metname);
+
+tab(Expi).peak_mani = RadTuneStats(Expi).manif.maxScore;
+tab(Expi).normAOC_mani = RadTuneStats(Expi).manif.AOC.(metname) / RadTuneStats(Expi).manif.maxScore;
+tab(Expi).AOC_mani = RadTuneStats(Expi).manif.AOC.(metname);
+tab(Expi).corr_mani = RadTuneStats(Expi).manif.corr.(metname);
+if ~isempty(RadTuneStats(Expi).pasu)
+tab(Expi).peak_pasu = RadTuneStats(Expi).pasu.maxScore;
+tab(Expi).normAOC_pasu = RadTuneStats(Expi).pasu.AOC.(metname) / RadTuneStats(Expi).pasu.maxScore;
+tab(Expi).AOC_pasu = RadTuneStats(Expi).pasu.AOC.(metname); 
+tab(Expi).corr_pasu = RadTuneStats(Expi).pasu.corr.(metname); 
+else
+tab(Expi).peak_pasu = nan; tab(Expi).AOC_pasu = nan; tab(Expi).normAOC_pasu = nan; tab(Expi).corr_pasu = nan;
+end
+if ~isempty(RadTuneStats(Expi).gabor)
+tab(Expi).peak_gab = RadTuneStats(Expi).gabor.maxScore;
+tab(Expi).normAOC_gab = RadTuneStats(Expi).gabor.AOC.(metname) / RadTuneStats(Expi).gabor.maxScore;
+tab(Expi).AOC_gab = RadTuneStats(Expi).gabor.AOC.(metname); 
+tab(Expi).corr_gab = RadTuneStats(Expi).gabor.corr.(metname); 
+else
+tab(Expi).peak_gab = nan; tab(Expi).AOC_gab = nan; tab(Expi).normAOC_gab = nan; tab(Expi).corr_gab = nan;
+end
+end
+tab = struct2table(tab);
+writetable(tab, fullfile(summarydir,Animal+"_RadialTuningStatsTab_"+metname+".csv"))
+tab_all = [tab_all; tab]; % Cat the table of 2 monkeys together 
+end
+writetable(tab_all, fullfile(summarydir,"Both"+"_RadialTuningStatsTab_"+metname+".csv"))
+%%
+tab_all = readtable(fullfile(summarydir,"Both"+"_RadialTuningStatsTab_squ.csv"));
+tab = tab_all;
+%% Plot Summary figure from this 
+Animal = "Both";
+h=figure; set(h,'pos',[1000, 413, 640, 570]); hold on
+scatter(tab.normAOC_mani, tab.corr_mani)
+scatter(tab.normAOC_pasu, tab.corr_pasu)
+scatter(tab.normAOC_gab, tab.corr_gab)
+plot([tab.normAOC_mani,tab.normAOC_pasu]', [tab.corr_mani, tab.corr_pasu]', 'Color', [0,0,0,0.2],'HandleVisibility','off')
+plot([tab.normAOC_mani,tab.normAOC_gab]', [tab.corr_mani, tab.corr_gab]', 'Color', [0,0,1,0.2],'HandleVisibility','off')
+legend(["GAN Manifold Space", "Pasupathy", "Gabor"])
+xlabel("Normalized AUC"); ylabel("Correlation Coefficient") 
+title(["Manifold Exps Tuning AUC ~ Correlation "+Animal,"Squeeze Net LPIPS metric"])
+savefig(h,fullfile(summarydir, Animal+"_AUC_Corr_scatt_squ.fig")) 
+saveas(h,fullfile(summarydir, Animal+"_AUC_Corr_scatt_squ.png"))
+saveas(h,fullfile(summarydir, Animal+"_AUC_Corr_scatt_squ.pdf"))
+%%
+h2=figure; set(h2,'pos',[1000, 413, 640, 570]); hold on
+histogram(tab.normAOC_mani, 10, 'FaceAlpha', 0.4)%, tab.corr_mani)
+histogram(tab.normAOC_pasu, 10, 'FaceAlpha', 0.4)%, tab.corr_pasu)
+histogram(tab.normAOC_gab, 10, 'FaceAlpha', 0.4)%, tab.corr_gab)
+% plot([tab.normAOC_mani,tab.normAOC_pasu]', [tab.corr_mani, tab.corr_pasu]', 'Color', [0,0,0,0.3],'HandleVisibility','off')
+legend(["GAN Manifold Space", "Pasupathy", "Gabor"])
+xlabel("Normalized AUC"); % ylabel("Correlation Coefficient") 
+title(["Manifold Exps Density of Tuning AUC "+Animal,"Squeeze Net LPIPS metric"])
+savefig(h2,fullfile(summarydir, Animal+"_AUC_hist_squ.fig")) 
+saveas(h2,fullfile(summarydir, Animal+"_AUC_hist_squ.png"))
+saveas(h2,fullfile(summarydir, Animal+"_AUC_hist_squ.pdf"))
+%%
+h3 = figure; hold on; set(h3,'pos',[1000,366,438,650]);
+jit = randn(size(tab,1),1) * 0.1;
+scatter(jit + 1, tab.normAOC_mani);
+scatter(jit + 2, tab.normAOC_pasu);
+scatter(jit + 3, tab.normAOC_gab);
+plot([jit + [1:3]]', [tab.normAOC_mani,tab.normAOC_pasu,tab.normAOC_gab]', 'Color', [0,0,0,0.2]);
+ylabel("Normalized AUC");xlabel("Tuning Space")
+title(["Manifold Exps Tuning AUC "+Animal,"Squeeze Net LPIPS metric"])
+xticks([1,2,3]); xticklabels(["GAN Manifold", "Pasupathy", "Gabor"])
+savefig(h3, fullfile(summarydir, Animal+"_AUC_scatt_squ.fig")) 
+saveas(h3, fullfile(summarydir, Animal+"_AUC_scatt_squ.png"))
+saveas(h3, fullfile(summarydir, Animal+"_AUC_scatt_squ.pdf"))
+%%
+Animal = "Both";
+h4 = figure; hold on; set(h4,'pos',[816   312   622   684]);
+Alfamsk = (tab.Animal == "Alfa"); Betomsk = (tab.Animal == "Beto");
+spacelist = ["evoref", "mani", "pasu", "gab"];
+Cord = colororder;
+jit = randn(size(tab,1),1) * 0.1;
+for spi = 1:numel(spacelist)
+space = spacelist(spi);
+scatter(jit(Alfamsk) + spi, tab.("normAOC_"+space)(Alfamsk), 36, Cord(1,:),'*');
+scatter(jit(Betomsk) + spi, tab.("normAOC_"+space)(Betomsk), 36, Cord(1,:),'o');
+end
+plot([jit + [1:4]]', [tab.normAOC_evoref,tab.normAOC_mani,tab.normAOC_pasu,tab.normAOC_gab]', 'Color', [0,0,0,0.2]);
+ylabel("Normalized AUC");xlabel("Tuning Space")
+title(["Manifold Exps Tuning AUC "+Animal,"Squeeze Net LPIPS metric"])
+xticks([1,2,3,4]); xticklabels(["Natural", "GAN Manifold", "Pasupathy", "Gabor"])
+savefig(h4, fullfile(summarydir, Animal+"_AUC_scatt_squ_nat.fig")) 
+saveas(h4, fullfile(summarydir, Animal+"_AUC_scatt_squ_nat.png"))
+saveas(h4, fullfile(summarydir, Animal+"_AUC_scatt_squ_nat.pdf"))
+%%
+h4 = figure; hold on; set(h4,'pos',[816   312   622   684]);
+Alfamsk = (tab.Animal == "Alfa"); Betomsk = (tab.Animal == "Beto");
+spacelist = ["evoref", "mani", "pasu", "gab"];
+Cord = colororder;
+jit = randn(size(tab,1),1) * 0.1;
+for spi = 1:numel(spacelist)
+space = spacelist(spi);
+scatter(jit(Alfamsk) + spi, tab.("peak_"+space)(Alfamsk), 36, Cord(1,:),'*');
+scatter(jit(Betomsk) + spi, tab.("peak_"+space)(Betomsk), 36, Cord(1,:),'o');
+end
+plot([jit + [1:4]]', [tab.peak_evoref,tab.peak_mani,tab.peak_pasu,tab.peak_gab]', 'Color', [0,0,0,0.2]);
+ylabel("Peak Activation");xlabel("Tuning Space")
+title(["Manifold Exps Peak Firing Rate "+Animal,"Squeeze Net LPIPS metric"])
+xticks([1,2,3,4]); xticklabels(["Natural", "GAN Manifold", "Pasupathy", "Gabor"])
+savefig(h4, fullfile(summarydir, Animal+"_peak_scatt_squ_nat.fig")) 
+saveas(h4, fullfile(summarydir, Animal+"_peak_scatt_squ_nat.png"))
+saveas(h4, fullfile(summarydir, Animal+"_peak_scatt_squ_nat.pdf"))
+%%
+Animal = "Both";
+gabrefmsk = logical(tab.is_evoref_gab);
+h4 = figure; hold on; set(h4,'pos',[816   312   622   684]);
+Alfamsk = (tab.Animal == "Alfa"); Betomsk = (tab.Animal == "Beto");
+spacelist = ["evoref", "mani", "pasu", "gab"];
+Cord = colororder;
+jit = randn(size(tab,1),1) * 0.1;
+for spi = 1:numel(spacelist)
+space = spacelist(spi);
+if space == "evoref", 
+scatter(jit(Alfamsk & gabrefmsk) + spi, tab.("normAOC_"+space)(Alfamsk & gabrefmsk), 10, Cord(1,:),'*');
+scatter(jit(Betomsk & gabrefmsk) + spi, tab.("normAOC_"+space)(Betomsk & gabrefmsk), 10, Cord(1,:),'o');
+scatter(jit(Alfamsk & ~gabrefmsk) + spi, tab.("normAOC_"+space)(Alfamsk & ~gabrefmsk), 36, Cord(1,:),'*');
+scatter(jit(Betomsk & ~gabrefmsk) + spi, tab.("normAOC_"+space)(Betomsk & ~gabrefmsk), 36, Cord(1,:),'o');
+else
+scatter(jit(Alfamsk) + spi, tab.("normAOC_"+space)(Alfamsk), 36, Cord(1,:),'*');
+scatter(jit(Betomsk) + spi, tab.("normAOC_"+space)(Betomsk), 36, Cord(1,:),'o');
+end
+end
+plot([jit + [1:4]]', [tab.normAOC_evoref,tab.normAOC_mani,tab.normAOC_pasu,tab.normAOC_gab]', 'Color', [0,0,0,0.2]);
+ylabel("Normalized AUC");xlabel("Tuning Space")
+title(["Manifold Exps Tuning AUC "+Animal,"Squeeze Net LPIPS metric","* Alfa o Beto, small symbol gabor reference"])
+xticks([1,2,3,4]); xticklabels(["Natural", "GAN Manifold", "Pasupathy", "Gabor"])
+savefig(h4, fullfile(summarydir, Animal+"_AUC_scatt_squ_nat_gab.fig")) 
+saveas(h4, fullfile(summarydir, Animal+"_AUC_scatt_squ_nat_gab.png"))
+saveas(h4, fullfile(summarydir, Animal+"_AUC_scatt_squ_nat_gab.pdf"))
+%%
+h4 = figure; hold on; set(h4,'pos',[816   312   622   684]);
+gabrefmsk = logical(tab.is_evoref_gab);
+Alfamsk = (tab.Animal == "Alfa"); Betomsk = (tab.Animal == "Beto");
+spacelist = ["evoref", "mani", "pasu", "gab"];
+Cord = colororder;
+jit = randn(size(tab,1),1) * 0.1;
+for spi = 1:numel(spacelist)
+space = spacelist(spi);
+if space == "evoref", 
+scatter(jit(Alfamsk & gabrefmsk) + spi, tab.("peak_"+space)(Alfamsk & gabrefmsk), 10, Cord(1,:),'*');
+scatter(jit(Betomsk & gabrefmsk) + spi, tab.("peak_"+space)(Betomsk & gabrefmsk), 10, Cord(1,:),'o');
+scatter(jit(Alfamsk & ~gabrefmsk) + spi, tab.("peak_"+space)(Alfamsk & ~gabrefmsk), 36, Cord(1,:),'*');
+scatter(jit(Betomsk & ~gabrefmsk) + spi, tab.("peak_"+space)(Betomsk & ~gabrefmsk), 36, Cord(1,:),'o');
+else
+scatter(jit(Alfamsk) + spi, tab.("peak_"+space)(Alfamsk), 36, Cord(1,:),'*');
+scatter(jit(Betomsk) + spi, tab.("peak_"+space)(Betomsk), 36, Cord(1,:),'o');
+end
+end
+plot([jit + [1:4]]', [tab.peak_evoref,tab.peak_mani,tab.peak_pasu,tab.peak_gab]', 'Color', [0,0,0,0.2]);
+ylabel("Peak Activation");xlabel("Tuning Space")
+title(["Manifold Exps Peak Firing Rate "+Animal,"Squeeze Net LPIPS metric","* Alfa o Beto, small symbol gabor reference"])
+xticks([1,2,3,4]); xticklabels(["Natural", "GAN Manifold", "Pasupathy", "Gabor"])
+savefig(h4, fullfile(summarydir, Animal+"_peak_scatt_squ_nat_gab.fig")) 
+saveas(h4, fullfile(summarydir, Animal+"_peak_scatt_squ_nat_gab.png"))
+saveas(h4, fullfile(summarydir, Animal+"_peak_scatt_squ_nat_gab.pdf"))
+%%
+tab_nog = tab;
+gabrefmsk = logical(tab.is_evoref_gab);
+for varname = ["peak_evoref", "normAOC_evoref", "AOC_evoref", "corr_evoref"]
+	tab_nog.(varname)(gabrefmsk) = nan;
+end
+%%
+plotJitScatterVar("AOC_", "UnNormalized Area Under Curve", {'m', Cord(1,:), Cord(3,:), 'g'}, tab, summarydir)
+plotJitScatterVar("normAOC_", "Normalized Area Under Curve", {'m', Cord(1,:), Cord(3,:), 'g'}, tab, summarydir)
+
+% Linearfitting(1:10,-[1:10]+0.1*randn(1,10))
+% Util functions to compute Gaussian Process fitting and linear fitting.
+function [gpr_fit, xlinsp, AOC, gprMdl] = GPRfitting(X, Y)
+gprMdl = fitrgp(X, Y, 'SigmaLowerBound', 5E-3); % Edit this lower bound if encoutering fitting problem! 
+xlinsp = linspace(0,max(X),100);
+gpr_fit = gprMdl.predict(xlinsp');
+AOC = trapz(xlinsp, gpr_fit);
+% plot(xlinsp, gpr_fit, vargin{:})%,'HandleVisibility','off' % adding these arguments will remove it from legend
+end
+function [r,m,b] = Linearfitting(X, Y, varargin) % Util function to add a linear reg line to a scatter
+if nargin==2, varargin={};end
+[r,m,b] = regression(X, Y);
+% xmin = min(X); xmax = max(X);
+% p = plot([xmin,xmax],[xmin,xmax].*m+b,varargin{:});
+% set(get(get(p(1),'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
+end
+%%
+function plotJitScatterVar(varprefix, label, colors, tab, summarydir)
+Animal = "Both";
+h4 = figure; hold on; set(h4,'pos',[816   312   622   684]);
+gabrefmsk = logical(tab.is_evoref_gab);
+Alfamsk = (tab.Animal == "Alfa"); Betomsk = (tab.Animal == "Beto");
+spacelist = ["evoref", "mani", "pasu", "gab"];
+Cord = colororder;
+jit = randn(size(tab,1),1) * 0.1;
+for spi = 1:numel(spacelist)
+space = spacelist(spi);
+if space == "evoref"
+scatter(jit(Alfamsk & gabrefmsk) + spi, tab.(varprefix+space)(Alfamsk & gabrefmsk), 10, colors{spi},'*');
+scatter(jit(Betomsk & gabrefmsk) + spi, tab.(varprefix+space)(Betomsk & gabrefmsk), 10, colors{spi},'o');
+scatter(jit(Alfamsk & ~gabrefmsk) + spi, tab.(varprefix+space)(Alfamsk & ~gabrefmsk), 36, colors{spi},'*');
+scatter(jit(Betomsk & ~gabrefmsk) + spi, tab.(varprefix+space)(Betomsk & ~gabrefmsk), 36, colors{spi},'o');
+else
+scatter(jit(Alfamsk) + spi, tab.(varprefix+space)(Alfamsk), 36, colors{spi},'*');
+scatter(jit(Betomsk) + spi, tab.(varprefix+space)(Betomsk), 36, colors{spi},'o');
+end
+end
+plot([jit + [1:4]]', [tab.(varprefix+"evoref"),tab.(varprefix+"mani"),tab.(varprefix+"pasu"),tab.(varprefix+"gab")]', 'Color', [0,0,0,0.2]);
+ylabel(label);xlabel("Tuning Space")
+title(["Manifold Exps "+label+" "+Animal,"Squeeze Net LPIPS metric","* Alfa o Beto, small symbol gabor reference"])
+xticks([1,2,3,4]); xticklabels(["Natural", "GAN Manifold", "Pasupathy", "Gabor"])
+savefnm = compose("%s_%sscatt_squ_nat_gab",Animal,varprefix);
+savefig(h4, fullfile(summarydir, savefnm+".fig")) 
+saveas(h4, fullfile(summarydir, savefnm+".png"))
+saveas(h4, fullfile(summarydir, savefnm+".pdf"))
+end

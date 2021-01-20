@@ -4,7 +4,7 @@
 
 clearvars -except meta_new rasters_new lfps_new Trials_new ExpSpecTable_Aug ExpRecord
 %%
-Animal = "Both";Set_Path;
+Animal = "Alfa";Set_Path;
 expftr = (contains(ExpRecord.expControlFN,"20042"));
 %expftr = (contains(ExpRecord.ephysFN,"15042020") | contains(ExpRecord.ephysFN,"16042020") |contains(ExpRecord.ephysFN,"17042020"));
 %expftr = (contains(ExpRecord.Exp_collection,"SUHash"));%find(expftr)
@@ -183,7 +183,7 @@ MAX_BLOCK_NUM = length(block_list);
 color_seq = brewermap(MAX_BLOCK_NUM, 'spectral');
 for channel_j = 1:size(rasters, 1)%pref_chan_id%
 %% Plot Mean response compare figure
-%channel_j = pref_chan_id;
+% channel_j = pref_chan_id;
 % h1 = figure(1);clf
 % ax1{1} = subplot(1,2,1);hold on
 % plot(block_list, meanscore_syn(channel_j, :, 1), 'LineWidth',2,'Color','k')

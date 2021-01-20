@@ -3,9 +3,9 @@ system("subst S: E:\Network_Data_Sync")
 addpath .\utils
 mat_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
 Animal = "Alfa";
-load(fullfile(mat_dir,"Alfa_ManifPopDynamics.mat"));
-load(fullfile(mat_dir,"Alfa_Manif_stats.mat"));
-load(fullfile(mat_dir,"Alfa_Evol_stats.mat"));
+load(fullfile(mat_dir,Animal+"_ManifPopDynamics.mat"));
+load(fullfile(mat_dir,Animal+"_Manif_stats.mat"));
+load(fullfile(mat_dir,Animal+"_Evol_stats.mat"));
 %%
 Extract_Channel_Organization;
 %%

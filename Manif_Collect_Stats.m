@@ -1,6 +1,6 @@
 %% Manif_Collect_Stats into mat
 %%
-Animal = "Alfa";Set_Path;
+Animal = "Beto";Set_Path;
 %expftr = (contains(ExpRecord.expControlFN,"200319"));
 expftr = (contains(ExpRecord.Exp_collection,"Manifold") &...
             contains(ExpRecord.expControlFN, "selectivity")&...
@@ -9,7 +9,7 @@ rowis = find(expftr);
 % Expi_col = [1,2,3,6,7,10,11,12,19,27];
 % Expi_col = [1,3,4,5,8,9,10,11,12,13,15,16,17,18,19,20,21,22];
 % assert(all(ExpRecord.Expi(rowis(Expi_col))==Expi_col')) % assert you are getting what you want. 
-[meta_new,rasters_new,~,Trials_new] = Project_Manifold_Beto_loadRaw(rowis,Animal); % ,false, true
+[meta_new,rasters_new,~,Trials_new] = loadExperiments(rowis,Animal); % ,false, true
 %%
 Stats = repmat(struct(), 1, length(meta_new));
 %% If there is stats saved, load it! 
@@ -115,6 +115,14 @@ act_mat = cellfun(@(psth) squeeze(mean(psth(uniti, 51:200, :), [2,3])), pasu_pst
 act_col = cellfun(@(psth) squeeze(mean(psth(uniti, 51:200, :), [2])), pasu_psths_col, ...
                 'UniformOutput', false);
 anovan()
+
+%%
+[pasu_idx_grid,~,~,~] = build_Pasu_idx_grid(Trials.imageName);
+[gab_idx_grid,~,~,~] = build_Gabor_idx_grid(Trials.imageName);
+Stats(Expi).ref.pasu_idx_grid = pasu_idx_grid;
+Stats(Expi).ref.gab_idx_grid = gab_idx_grid;
+%%
+savefast(fullfile(mat_dir, Animal+'_Manif_stats.mat'),'Stats')
 %%
 % psths_mean = cellfun(@(c) mean(c, 3), psths_col, 'UniformOutput', false);
 % psths_1 = cellfun(@(c) squeeze(c(1,:)), psths_mean, 'UniformOutput', false);

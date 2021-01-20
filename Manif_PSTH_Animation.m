@@ -1,11 +1,12 @@
 %% Manif_Animation  
 %% Really compelling visualization
-mat_dir = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
-Animal = "Alfa";
+mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
+Animal = "Beto";
 load(fullfile(mat_dir, Animal+'_Evol_stats.mat'))
 load(fullfile(mat_dir, Animal+'_Manif_stats.mat'))
+load(fullfile(mat_dir, Animal+'_ManifPopDynamics.mat'),'ManifDyn')
 %%
-savepath = "C:\Users\binxu\OneDrive - Washington University in St. Louis\PSTH_anim";
+savepath = "E:\OneDrive - Washington University in St. Louis\PSTH_anim";
 mkdir(savepath)
 %%
 Wlen=20; shift_step=2;
@@ -44,10 +45,10 @@ end
 % end
 end
 end
-% Use the same caxis
+%% Use the same caxis
 Wlen=20; shift_step=2;
-% Expi = 10;
-% ui=2; 
+%Expi = 10;
+%ui=2; 
 h=figure(1);set(1,'position',[680   436   552   542]);
 for Expi = 20:numel(Stats)
  % index for SU and Ha within each struct
