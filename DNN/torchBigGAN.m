@@ -75,6 +75,8 @@ classdef torchBigGAN
             setenv('path',['C:\Users\Ponce lab\.conda\envs\torch\Library\bin;', getenv('path')]); % this gives the path to the dll and binary files. Or import will fail.
             % WHEN IMPORT FAILS, RUN THIS LINE to RESET ENVIRONMENT
             % pyenv("Version", "C:\Users\Ponce lab\.conda\envs\torch\python.exe"); %
+           case 'PONCELAB-ML2C' % MLc machine 
+            savedir = "C:\Users\ponce\Documents\Python\pytorch-pretrained-BigGAN\weights";
            otherwise
             savedir = "C:\Users\Poncelab-ML2a\Documents\Python\pytorch-pretrained-BigGAN\weights";
         end
