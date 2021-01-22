@@ -6,6 +6,7 @@ XX = cosd(theta_grid).* cosd(phi_grid);
 YY = sind(theta_grid) .* cosd(phi_grid);
 ZZ = sind(phi_grid);
 %% Integration Weight Matrix
+%  Integrate the area of the patch that each node governs
 phi1_grid = max(phi_grid - 9, -90) /180 *pi;
 phi2_grid = min(phi_grid + 9,  90) /180 *pi;
 theta1_grid = max(theta_grid - 9,  -90) /180 *pi;
@@ -16,7 +17,7 @@ poptabdir = "O:\Manif_Fitting\popstats";
 alfatab_pop = readtable(fullfile(poptabdir,"Alfa_Exp_all_KentStat_bsl_pole.csv"));
 betotab_pop = readtable(fullfile(poptabdir,"Beto_Exp_all_KentStat_bsl_pole.csv"));
 poptab = [alfatab_pop;betotab_pop];
-%%
+%% 
 tic
 for Animal = ["Alfa","Beto"]
 load(fullfile(mat_dir,Animal+"_ManifMapVarStats.mat"),'MapVarStats')
@@ -27,7 +28,7 @@ NPStats = [];
 for i = 1:numel(idxlist)
 Tab = poptab(idxlist(i),:);
 Expi = Tab.Expi; spi = Tab.space; ui = Tab.unitnum; ci = Tab.chan;
-for nm = ["Animal", "Expi", "unitstr", "unitnum", "chan", "prefchan", "space","F","F_P"]
+for nm = ["Animal", "Expi", "unitstr", "unitnum", "chan", "prefchan", "space","F","F_P"] % copy stats.
 S.(nm) = Tab.(nm);
 end
 iCh = find((MapVarStats(Expi).units.spikeID==ci & MapVarStats(Expi).units.unit_num_arr==ui));
@@ -72,6 +73,9 @@ S.Mtheta_P75 = Mtheta;
 S.Mphi_P75 = Mphi;
 S.Mrho_P75 = Mrho;
 NPStats = [NPStats, S];
+% Area under tuning map
+
+% Normalized area under tuning map.
 end
 %%
 toc
@@ -80,11 +84,11 @@ writetable(NPStatTab,fullfile(nonpardir,Animal+"_Driver_NonParamStat.csv"))
 end
 %
 NPtab = [];
-for Animal = ["Alfa","Beto"]
+for Animal = ["Alfa","Beto"] % merge the tabs for 2 monks
 NPStatTab = readtable(fullfile(nonpardir,Animal+"_Driver_NonParamStat.csv"));
 NPtab = [NPtab; NPStatTab];
 end
-NPtab.theta_max = NPtab.theta_max / 180 * pi;
+NPtab.theta_max = NPtab.theta_max / 180 * pi; % change unit 
 NPtab.phi_max = NPtab.phi_max / 180 * pi;
 writetable(NPtab,fullfile(nonpardir,"Both"+"_Driver_NonParamStat.csv"))
 
