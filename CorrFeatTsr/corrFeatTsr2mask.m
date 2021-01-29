@@ -1,9 +1,9 @@
 %% Code to create mask and merge on images from the masks stored in the correlation. 
 ccmat_dir = "E:\OneDrive - Washington University in St. Louis\CNNFeatCorr";
-MatStats_path = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
+mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 Animal = "Beto"; Expi = 29;  %thresh = "neg"; sum_method="max"; %"both"
-load(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
-load(fullfile(MatStats_path, compose("%s_Manif_stats.mat", Animal)), 'Stats')
+load(fullfile(mat_dir, compose("%s_Evol_stats.mat", Animal)), 'EStats')
+load(fullfile(mat_dir, compose("%s_Manif_stats.mat", Animal)), 'Stats')
 ccMskStats = repmat(struct(),1,length(EStats));
 %% Review the ccFeatTsr with respect to the evolution of the psth and images. 
 %  Actually this is the newer version of the visualization function
@@ -69,25 +69,29 @@ end
 end
 end
 %%
-save(fullfile(MatStats_path,compose("%s_Evol_ccFtMask.mat",Animal)),'ccMskStats')
+save(fullfile(mat_dir,compose("%s_Evol_ccFtMask.mat",Animal)),'ccMskStats')
 % end
 
 %% Reload the computed mask
+%%
+net = vgg16;
+%%
 Animal = "Beto";
-MatStats_path = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
+mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 ccmat_dir = "E:\OneDrive - Washington University in St. Louis\CNNFeatCorr";
-load(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
-load(fullfile(MatStats_path, compose("%s_Manif_stats.mat", Animal)), 'Stats')
-load(fullfile(MatStats_path, compose("%s_Evol_ccFtMask.mat",Animal)),'ccMskStats')
-load(fullfile(MatStats_path, compose("%s_ImageRepr.mat",Animal)),'ReprStats')
+load(fullfile(mat_dir, compose("%s_Evol_stats.mat", Animal)), 'EStats')
+load(fullfile(mat_dir, compose("%s_Manif_stats.mat", Animal)), 'Stats')
+load(fullfile(mat_dir, compose("%s_Evol_ccFtMask.mat",Animal)),'ccMskStats')
+load(fullfile(mat_dir, compose("%s_ImageRepr.mat",Animal)),'ReprStats')
 %% Interpolate and Visualize masks Together with images.
 savedir = "E:\OneDrive - Washington University in St. Louis\Repr_with_Mask";
-figure;set(12,'position',[566         372        1697         481])
+figure(12);set(12,'position',[566         372        1697         481])
 %%
-Expi = 29; ExpType = "Evol"; layername = "conv5_3"; sum_method = "L1";
-sup_boundary = true;bdr = 1;
+% Expi = 29; ExpType = "Evol"; layername = "conv5_3"; 
+sum_method = "L1"; % Method to sum up the feature dim
+sup_boundary = true;bdr = 1; % options and params for suppressing boundary activation
 cut_bdr = struct("conv3_3",3,"conv4_3",2,"conv5_3",1);
-for Expi = 1:45
+for Expi = 1:numel(EStats)
 prefchan_lab = EStats(Expi).units.unit_name_arr(EStats(Expi).units.pref_chan_id);
 for layername = ["conv3_3","conv4_3","conv5_3"]
 bdr = cut_bdr.(layername);
@@ -128,12 +132,13 @@ suptitle(compose("\n%s %s Exp%d Corr Coef Mask Channel compressed with %s thresh
     Animal,ExpType,Expi,"bi-sided",sum_method,prefchan_lab,50,200,strrep(layername,"_","-"),EStats(Expi).evol.imgpos(1),EStats(Expi).evol.imgpos(2),EStats(Expi).evol.imgsize))
 pause(0.2)
 saveas(12,fullfile(savedir, compose("%s_%s_Exp%d_%s-%s.jpg",Animal,ExpType,Expi,layername,sum_method)))
+saveas(12,fullfile(savedir, compose("%s_%s_Exp%d_%s-%s.pdf",Animal,ExpType,Expi,layername,sum_method)))
 end
 end
 %%
 
 %%
-
+data = 
 %%
 
 moviedir = "E:\OneDrive - Washington University in St. Louis\Evol_Manif_Movies";
