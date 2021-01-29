@@ -1,5 +1,5 @@
-%% Tightly connected to Manif_Imgs_Dissim_ExamplarImg.m
-% 
+%% Tightly connected to Manif_Imgs_Dissim_ExamplarImg.m, image version of that
+%  Plot the best and worst images in different image spaces in a montage.
 Animal = "Both"; Set_Path;
 mat_dir = "O:\Mat_Statistics";
 %%

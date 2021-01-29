@@ -1,7 +1,9 @@
 %% vis Kent
+%  This script is to show how the shape of a Kent function depends on the
+%  parameters. Showing a grid of Kents.
 addpath D:\Github\Fit_Spherical_Tuning
 addpath e:\Github_Projects\Fit_Spherical_Tuning
-[theta_grid2, phi_grid2] = meshgrid(-180:6:180, -90:6:90);
+[theta_grid2, phi_grid2] = meshgrid(-180:9:180, -90:9:90);
 theta_grid2d = theta_grid2/180*pi;
 phi_grid2d = phi_grid2/180*pi;
 
@@ -19,7 +21,7 @@ end
 title(T,"A=1, b=0, (\theta,\phi)=(0,0), \psi=\pi/4")
 %%
 demodir = "O:\Manuscript_Manifold\Figure2\Kent";
-savefig(3,fullfile(demodir,"KentFuncDemo.fig"))
-saveas(3,fullfile(demodir,"KentFuncDemo.png"))
-saveas(3,fullfile(demodir,"KentFuncDemo.pdf"))
+savefig(3,fullfile(demodir,"KentFuncDemo2.fig"))
+saveas(3,fullfile(demodir,"KentFuncDemo2.png"))
+saveas(3,fullfile(demodir,"KentFuncDemo2.pdf"))
 
