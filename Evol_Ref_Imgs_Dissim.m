@@ -84,7 +84,8 @@ end
 assert(numel(refimg_paths)==numel(EStats(Expi).ref.imgnm)) % Make sure the number of found path is the same as original ones. 
 EStats(Expi).ref.impaths = refimg_paths;
 end
-
+%%
+save(fullfile(mat_dir, Animal+'_Evol_stats.mat'),'EStats')
 %% Process: Compute the Dissimilarity
 EvoRefImDistStat = repmat(struct(),1,numel(EStats));
 D = torchImDist("squeeze");
