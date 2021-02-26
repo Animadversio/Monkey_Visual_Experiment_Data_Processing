@@ -1,15 +1,17 @@
 %% Code to create mask and merge on images from the masks stored in the correlation. 
+%  Also code to visualize and analyze the mask in below!
 ccmat_dir = "E:\OneDrive - Washington University in St. Louis\CNNFeatCorr";
 mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
-Animal = "Beto"; Expi = 29;  %thresh = "neg"; sum_method="max"; %"both"
+Animal = "Alfa"; %Expi = 29;  %thresh = "neg"; sum_method="max"; %"both"
 load(fullfile(mat_dir, compose("%s_Evol_stats.mat", Animal)), 'EStats')
 load(fullfile(mat_dir, compose("%s_Manif_stats.mat", Animal)), 'Stats')
+%%
 ccMskStats = repmat(struct(),1,length(EStats));
 %% Review the ccFeatTsr with respect to the evolution of the psth and images. 
 %  Actually this is the newer version of the visualization function
 ExpType = "Manif";
-doPlot = true; doSave = true;
-thresh = "both"; 
+doPlot = true; doSave = false;
+thresh = "pos"; 
 for Expi = 40:45
 ccMskStats(Expi).(ExpType).units = EStats.units;
 % winopen(fullfile(moviedir, compose("%s_Evol_Exp%02d_Best_PSTH.mov.avi",Animal,Expi)))
@@ -64,17 +66,109 @@ end
 if doSave,close(v);end
 end
 ccMskStats(Expi).(ExpType).(layername).(sum_method) = L1plotTsr(:,:,end);
-%
 end
 end
 end
 %%
 save(fullfile(mat_dir,compose("%s_Evol_ccFtMask.mat",Animal)),'ccMskStats')
-% end
 
-%% Reload the computed mask
+
 %%
-net = vgg16;
+% tabA = readtable(fullfile(mat_dir, "Alfa"+"_EvolTrajStats.csv"));
+% tabB = readtable(fullfile(mat_dir, "Beto"+"_EvolTrajStats.csv"));
+% ExpTab_cmb = cat(1, tabA, tabB); % load hte table for Evol Traject successfulness
+% sucs_msk = (ExpTab_cmb.t_p_initend<1E-3)&(ExpTab_cmb.t_p_initmax<1E-3);
+%%
+Animal = "Beto"; 
+load(fullfile(mat_dir, compose("%s_Evol_stats.mat", Animal)), 'EStats')
+% load(fullfile(mat_dir, compose("%s_Manif_stats.mat", Animal)), 'Stats')
+load(fullfile(mat_dir, compose("%s_ImageRepr.mat", Animal)), 'ReprStats')
+sucstab = readtable(fullfile(mat_dir, Animal+"_EvolTrajStats.csv"));
+%% Purely view the masks with different compression methods
+figdir = "E:\OneDrive - Washington University in St. Louis\CNNFeatCorr\Compress_Cmp";
+for ExpType = ["Evol"]%"Manif",
+doPlot = false; doSave = true;
+thresh = "pos"; ncol=5;
+figure(1);T=tiledlayout(3,ncol,'padd','compact','TileSp','compact');
+maplayers = ["conv3_3", "conv4_3", "conv5_3"]; % layers to plot the tensor
+methodlist = ["max","L1","L1signif"]; % compression methods to compare
+for Expi = 1:31%32:numel(EStats)
+ccMskStats(Expi).(ExpType).units = EStats.units;
+imgpos = EStats(Expi).evol.imgpos;
+imgsize = EStats(Expi).evol.imgsize;
+t_end = sucstab.t_initend(Expi);
+t_max = sucstab.t_initmax(Expi);
+DAOA_end = sucstab.DAOA_initend(Expi);
+DAOA_max = sucstab.DAOA_initmax(Expi);
+prefchanlab = EStats(Expi).units.unit_name_arr(EStats(Expi).units.pref_chan_id);
+% winopen(fullfile(moviedir, compose("%s_Evol_Exp%02d_Best_PSTH.mov.avi",Animal,Expi)))
+% winopen(fullfile(moviedir, compose("%s_Manif_Exp%02d_Avg_PSTH.mov.avi",Animal,Expi)))
+savedir = fullfile(ccmat_dir,compose("%s_%s_Exp%d",Animal,ExpType,Expi));
+for li = 1:numel(maplayers) %["conv5_3"]%"conv5_3";
+layername = maplayers(li);
+% if layername=="conv3_3" && Expi == 40, continue; end
+outfn = fullfile(ccmat_dir, compose("%s_%s_Exp%d_%s.mat",Animal,ExpType,Expi,layername));
+load(outfn,'cc_tsr','MFeat','StdFeat','wdw_vect','cc_refM','cc_refS');
+t_signif_tsr = (cc_tsr - cc_refM) ./ cc_refS;
+%
+if thresh == "both"
+maskTsr = abs(t_signif_tsr)>=5; % Bi sided thresholding 
+elseif thresh == "pos"
+maskTsr = t_signif_tsr>=5; % positively correlated thresholding
+elseif thresh == "neg"
+maskTsr = t_signif_tsr<=-5; % negatively correlated thresholding
+end
+maskN = squeeze(sum(maskTsr,[1,2,3])); % N of correlated units per
+ctmp = cc_tsr(:,:,:,end);
+ccmean = mean(ctmp(maskTsr(:,:,:,end)));
+ccthresh = min(ctmp(maskTsr(:,:,:,end)),[],'all');
+ccmax = max(ctmp,[],'all');
+ccprctl = prctile(ctmp,[99,99.9,99.99,99.999],'all');
+mskprct = maskN(end) / numel(ctmp);
+
+plotTsr = cc_tsr;
+plotTsr(~maskTsr) = 0; 
+for mi = 1:numel(methodlist)
+sum_method = methodlist(mi);
+if sum_method=="L1"
+L1plotTsr = squeeze(mean(abs(plotTsr),3));
+elseif sum_method=="L1signif"
+L1plotTsr = squeeze(sum(abs(plotTsr),3)./(sum(maskTsr,3)));
+elseif sum_method=="max"
+L1plotTsr = squeeze(max(abs(plotTsr),[],3));
+end
+nexttile(T,(li-1)*ncol+mi)
+imagesc(L1plotTsr(:,:,end));axis image;colorbar();%caxis(CLIM_arr(fi,:));
+title(compose("%s, %s compressed\n %d units (%.3f prc), mean cc %.3f",...
+    layername,sum_method,maskN(end),mskprct,ccmean))
+end
+nexttile(T,(li-1)*ncol+4)
+histogram(ctmp(:),'EdgeColor','none');box off
+xlim([-1,1]);if ~isempty(ccthresh),vline(ccthresh);end%caxis(CLIM_arr(fi,:));
+title(compose("%s, cc max %.3f, Prctle 99-99.99:\n [%.3f %.3f %.3f %.3f]",...
+    layername,ccmax,ccprctl(1),ccprctl(2),ccprctl(3),ccprctl(4)))
+end
+title(T,compose("%s %s Exp%d Corr Coef with VGG16, Ch%s %.1f deg [%.1f, %.1f]\nt_{end}=%.2f t_{max}=%.2f DAOA_{end}=%.2f DAOA_{max}=%.2f\nParam: rate in [%d,%d]ms, %s thresholded",...
+    Animal,ExpType,Expi,prefchanlab,imgsize,imgpos(1),imgpos(2),t_end,t_max,DAOA_end,DAOA_max,wdw_vect(end,1),wdw_vect(end,2),thresh))
+% Show the exemplar images!
+nexttile(T,(1-1)*ncol+5)
+imshow(ReprStats(Expi).Evol.BestBlockAvgImg);
+title("BestBlockAvg image")
+nexttile(T,(2-1)*ncol+5)
+imshow(ReprStats(Expi).Evol.BestImg);
+title("Best Evol Trial image")
+nexttile(T,(3-1)*ncol+5)
+imshow(ReprStats(Expi).Manif.BestImg);
+title("Best Manif image")
+if doSave
+    savefn = compose("%s_%s_Exp%d_%s_mask_summary",Animal,ExpType,Expi,thresh);
+    saveas(1, fullfile(figdir, savefn + ".png"));
+    saveas(1, fullfile(figdir, savefn + ".pdf"));
+end
+end
+end
+%% Reload the computed mask and create mask from it. 
+net = vgg16; % load the net to compute the receptive field structure. 
 %%
 Animal = "Beto";
 mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
@@ -90,7 +184,7 @@ figure(12);set(12,'position',[566         372        1697         481])
 % Expi = 29; ExpType = "Evol"; layername = "conv5_3"; 
 sum_method = "L1"; % Method to sum up the feature dim
 sup_boundary = true;bdr = 1; % options and params for suppressing boundary activation
-cut_bdr = struct("conv3_3",3,"conv4_3",2,"conv5_3",1);
+cut_bdr = struct("conv3_3",3,"conv4_3",2,"conv5_3",1); % how many border elements to cut!
 for Expi = 1:numel(EStats)
 prefchan_lab = EStats(Expi).units.unit_name_arr(EStats(Expi).units.pref_chan_id);
 for layername = ["conv3_3","conv4_3","conv5_3"]
@@ -138,7 +232,6 @@ end
 %%
 
 %%
-data = 
 %%
 
 moviedir = "E:\OneDrive - Washington University in St. Louis\Evol_Manif_Movies";

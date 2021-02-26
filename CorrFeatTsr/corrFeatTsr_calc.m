@@ -1,5 +1,6 @@
 %% The major Computational work horse of Correlation Coefficient Method.
-%  The func function will work in place of this! 
+%  The `corrFeatTsr_func` function will work in place of this, which has
+%  more functionality and more friendly towards memory. 
 net = vgg16;
 %%
 Animal = "Alfa";
@@ -46,6 +47,8 @@ dlimg = cell2mat(reshape(imgcol,1,1,1,[])); % put all the images along the 3rd d
 savedir = fullfile(result_dir,compose("%s_Manif_Exp%d",Animal,Expi));
 mkdir(savedir);
 for layername = ["conv1_2","conv2_2","conv3_1", "conv4_3", "conv5_3"]
+% Note the activation tensor from earlier layers is really memory intensive! 
+% Can stuck the whole system.
 % layername = 'conv4_3';
 T0 = tic;
 % dummy = activations(net, zeros(224,224,3), layername);

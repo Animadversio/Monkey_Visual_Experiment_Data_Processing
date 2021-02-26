@@ -1,5 +1,7 @@
 %% 
 % Plan of this script is quite similar to pre_stat.m
+% Use the correlated units to predict activities of the reference images. 
+% Use functionals to compactify the code! Looks really neat.
 
 global net
 net = vgg16;

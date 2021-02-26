@@ -1,3 +1,5 @@
+% Using the `corrFeatTsr_func` to compute the correlation tensor and store basic statistics into a stats mat!
+% 
 net = vgg16;
 %%
 savedir = "E:\OneDrive - Washington University in St. Louis\CNNFeatCorr";
@@ -97,10 +99,10 @@ totl_vox_num(iLayer) = nfeat;
 fid = fopen(fullfile(hier_savedir,Animal + "_Evol_all_VGG.log"),'w+');
 fprintf("Correlation layer %s (vox # %d)\n",layername,nfeat)
 fprintf(fid,"Correlation layer %s (vox # %d)\n",layername,nfeat);
-fi = 24; wdw = wdw_vect(fi,:);%ci=6; 
+fi = 24; wdw = wdw_vect(fi,:); % ci=6; 
 for fi = 1:24
 wdw = wdw_vect(fi,:);
-tcol = t_signif_tsr(:,:,:,fi);%yi,xi,
+tcol = t_signif_tsr(:,:,:,fi); % yi,xi,
 cc_tmp = cc_tsr(:,:,:,fi);
 signif_n = sum(tcol > 5 | tcol<-5,'all');
 fprintf("Firing rate in [%d, %d] ms Signif corr voxel num %d (%.1f), pos corr median %.3f (t=%.2f), neg corr median %.3f (t=%.2f)\n",...
@@ -124,9 +126,12 @@ save(fullfile(hier_savedir, compose("%s_%s_Exp%d_VGG16.mat",Animal,ExpType,Expi)
     "layernames","wdw_vect","totl_vox_num","corr_vox_num","corr_vox_prct","med_pos_cc","med_neg_cc","mean_pos_t","mean_neg_t");
 end
 %%
+
+
+
 % EStats(19).meta.stimuli = "N:\Stimuli\2019-Manifold\alfa-191210a\backup_12_10_2019_13_07_57";
 %% %%%%%%%%%%%%%%%%%%%
-%% Visualize Voxel numbers in a plot
+%% Visualize Voxel numbers and Pos Neg Correlated number in a plot
 hier_savedir = "E:\OneDrive - Washington University in St. Louis\corrFeatTsr_Hierarchy";
 moviedir = "E:\OneDrive - Washington University in St. Louis\Evol_Manif_Movies"; 
 Animal = "Beto";
