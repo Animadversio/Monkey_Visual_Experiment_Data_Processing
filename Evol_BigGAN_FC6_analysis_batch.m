@@ -1,3 +1,8 @@
+%% This script demonstrate the efficiency of using functionalized script to do analysis.
+%  It uses 
+%     Evol_BigGAN_FC6_Animation_fun.m
+%     Evol_BigGAN_FC6_Collect_Stats_fun.m
+
 Animal = "Alfa";
 Set_Path;
 ftrrows = find(contains(ExpRecord.ephysFN,["Alfa-25112020-003"]));%"Alfa-27102020-003", "Alfa-27102020-004"

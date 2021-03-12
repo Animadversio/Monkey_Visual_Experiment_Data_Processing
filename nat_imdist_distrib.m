@@ -1,4 +1,5 @@
 % Natural image distance distribution. 
+% And the distribution of im distance among GAN images, Gabor imges and Pasu images.
 global figroot 
 figroot = "E:\OneDrive - Washington University in St. Louis\ImDist_ref";
 D = torchImDist("squeeze");
@@ -106,14 +107,19 @@ figure;montage(imgs(:,:,:,1:49))
 saveas(gcf,fullfile(figroot,'BigGAN_rand_examples.png'))
 %% Print the summary string for each image space 
 figroot = "E:\OneDrive - Washington University in St. Louis\ImDist_ref";
+mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 load(fullfile(figroot,'ImageNet_test_dist.mat'),'ImgNet_imdist')
 load(fullfile(figroot,'FC6GAN_rand_img_dist.mat'),'FC6G_imdist')
 load(fullfile(figroot,'BigGAN_rand_img_dist.mat'),'BigGAN_imdist')
+load(fullfile(mat_dir, "gab_imdist.mat"),'gab_imdist')
+load(fullfile(mat_dir, "pasu_imdist.mat"),'pasu_imdist')
 %% 
 diary(fullfile(figroot,"ref_imdist_stats.log"))
 dist_summary(ImgNet_imdist,"ImageNet Random")
 dist_summary(FC6G_imdist,"FC6 Random")
 dist_summary(BigGAN_imdist,"BigGAN Random")
+dist_summary(gab_imdist,"Gabor ")
+dist_summary(pasu_imdist,"Pasupathy ")
 diary off
 
 function dist_summary(DistStruct,name)

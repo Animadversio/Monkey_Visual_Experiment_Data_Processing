@@ -1,5 +1,6 @@
 function BFEStats = Evol_BigGAN_FC6_Collect_Stats_fun(meta_new, rasters_new, Trials_new)
-    
+% Compress the information relevant to the preferred channel evolution into a small structure
+% Create a folder containing that structure.
 saveroot = "E:\OneDrive - Washington University in St. Louis\Evol_BigGAN_FC6_cmp"; 
 for Triali = 1:numel(meta_new)
 meta = meta_new{Triali};
@@ -114,6 +115,7 @@ expday = datetime(meta.expControlFN(1:6),'InputFormat','yyMMdd');
 % fdrnm = compose("%s-%s-Chan%02d-1",datestr(expday,'yyyy-mm-dd'), Animal, pref_chan(1));
 fdrnm = compose("%s-Chan%02d", stimparts{end-1}, pref_chan(1));
 figdir = fullfile(saveroot, fdrnm);
+if exist(figdir),warning("%s figure directory exist! Beware",figdir);end
 mkdir(figdir)
 EvolStat = BFEStats(Expi);
 save(fullfile(figdir,"EvolStat.mat"),'EvolStat')
