@@ -246,6 +246,7 @@ writetable(tab_all, fullfile(summarydir,"Both"+"_RadialTuningStatsTab_"+metname+
 % for ri = 1:size(tab_all,1)
 % anovaStats_exp = cellfun(@anova_cells,actmap_col);
 % end
+%% Visualization time! 
 %% Load the pre-computed tables. 
 summarydir = "E:\OneDrive - Washington University in St. Louis\ImMetricTuning\summary";
 tab_all = readtable(fullfile(summarydir,"Both"+"_RadialTuningStatsTab_squ.csv"));
@@ -289,7 +290,7 @@ xticks([1,2,3]); xticklabels(["GAN Manifold", "Pasupathy", "Gabor"])
 savefig(h3, fullfile(summarydir, Animal+"_AUC_scatt_squ.fig")) 
 saveas(h3, fullfile(summarydir, Animal+"_AUC_scatt_squ.png"))
 saveas(h3, fullfile(summarydir, Animal+"_AUC_scatt_squ.pdf"))
-%%
+%% Space scatter that separates 2 monks
 Animal = "Both";
 h4 = figure; hold on; set(h4,'pos',[816   312   622   684]);
 Alfamsk = (tab.Animal == "Alfa"); Betomsk = (tab.Animal == "Beto");
@@ -326,7 +327,7 @@ xticks([1,2,3,4]); xticklabels(["Natural", "GAN Manifold", "Pasupathy", "Gabor"]
 savefig(h4, fullfile(summarydir, Animal+"_peak_scatt_squ_nat.fig")) 
 saveas(h4, fullfile(summarydir, Animal+"_peak_scatt_squ_nat.png"))
 saveas(h4, fullfile(summarydir, Animal+"_peak_scatt_squ_nat.pdf"))
-%%
+%% Filter out Gabor filters! 
 Animal = "Both";
 gabrefmsk = logical(tab.is_evoref_gab);
 h4 = figure; hold on; set(h4,'pos',[816   312   622   684]);
@@ -390,13 +391,52 @@ Cord = colororder;
 plotJitScatterVar("AUC_", "UnNormalized Area Under Curve", {'m', Cord(1,:), Cord(3,:), 'g'}, tab, summarydir)
 plotJitScatterVar("normAUC_", "Normalized Area Under Curve", {'m', Cord(1,:), Cord(3,:), 'g'}, tab, summarydir)
 %%
+gabrefmsk = logical(tab.is_evoref_gab);
+validmsk = ~((tab.Animal=="Alfa") & (tab.Expi==10)) ;
+Fmsk = (tab.F_P<0.001);
+Alfamsk = (tab.Animal == "Alfa"); 
+Betomsk = (tab.Animal == "Beto");
+V1msk = tab.area == "V1";
+V4msk = tab.area == "V4";
+ITmsk = tab.area == "IT";
+%% AUC and norm AUC computed using different integration methods compared
+%  Lin is linear interpolation, raw is trapz on the raw scattered data. 
 plotJitScatterVar("AUC_lin_", "UnNormalized Area Under Curve(lin smooth)", {'m', Cord(1,:), Cord(3,:), 'g'}, tab, summarydir)
 plotJitScatterVar("normAUC_lin_", "Normalized Area Under Curve(lin smooth)", {'m', Cord(1,:), Cord(3,:), 'g'}, tab, summarydir)
 plotJitScatterVar("AUC_raw_", "UnNormalized Area Under Curve(raw trapz)", {'m', Cord(1,:), Cord(3,:), 'g'}, tab, summarydir)
 plotJitScatterVar("normAUC_raw_", "Normalized Area Under Curve(raw trapz)", {'m', Cord(1,:), Cord(3,:), 'g'}, tab, summarydir)
 
-%%
-
+%% Summarize AUCs
+diary(fullfile(summarydir, "SpaceCmpStats.log"))
+summarySpaces("normAUC_", [], tab, {[2,1],[2,3],[2,4]}, ...
+    "Normalized Area Under Curve, All")
+summarySpaces("normAUC_", ~gabrefmsk, tab, {[2,1],[2,3],[2,4]}, ...
+    "Normalized Area Under Curve, No Gabor Reference")
+summarySpaces("normAUC_", ~gabrefmsk&Alfamsk, tab, {[2,1],[2,3],[2,4]}, ...
+    "Normalized Area Under Curve, Alfa No Gabor Reference")
+summarySpaces("normAUC_", ~gabrefmsk&Betomsk, tab, {[2,1],[2,3],[2,4]}, ...
+    "Normalized Area Under Curve, Beto No Gabor Reference")
+summarySpaces("normAUC_", ~gabrefmsk&V1msk, tab, {[2,1],[2,3],[2,4]}, ...
+    "Normalized Area Under Curve, V1 No Gabor Reference")
+summarySpaces("normAUC_", ~gabrefmsk&V4msk, tab, {[2,1],[2,3],[2,4]}, ...
+    "Normalized Area Under Curve, V4 No Gabor Reference")
+summarySpaces("normAUC_", ~gabrefmsk&ITmsk, tab, {[2,1],[2,3],[2,4]}, ...
+    "Normalized Area Under Curve, IT No Gabor Reference")
+%%  
+summarySpaces("peak_", [], tab, {[2,1],[2,3],[2,4]}, ...
+    "Peak firing rate, All")
+summarySpaces("peak_", Alfamsk, tab, {[2,1],[2,3],[2,4]}, ...
+    "Peak firing rate, Alfa")
+summarySpaces("peak_", Betomsk, tab, {[2,1],[2,3],[2,4]}, ...
+    "Peak firing rate, Beto")
+summarySpaces("peak_", V1msk, tab, {[2,1],[2,3],[2,4]}, ...
+    "Peak firing rate, V1")
+summarySpaces("peak_", V4msk, tab, {[2,1],[2,3],[2,4]}, ...
+    "Peak firing rate, V4")
+summarySpaces("peak_", ITmsk, tab, {[2,1],[2,3],[2,4]}, ...
+    "Peak firing rate, IT")
+diary off
+%% 
 msk = (tab.F_P<0.001) & ~((tab.Animal=="Alfa") & (tab.Expi==10)) ; % maybe add F criterion to get rid of flat curves....
 V1msk = tab.area == "V1";
 V4msk = tab.area == "V4";
@@ -409,6 +449,7 @@ h = stripe_plot(tab_all, "normAUC_mani", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1
             "All Exp (driver PC23)", "area_sep",{[3,1],[2,1],[3,2]});
 h = stripe_minor_plot(tab_all, "normAUC_mani", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],...
     {msk&Alfamsk, msk&Betomsk}, ["Alfa","Beto"], "All Exp (driver PC23)", "area_anim", {[3,1],[2,1],[3,2]});
+
 %%
 Fmsk = (tab.F_P<0.001) & msk; 
 h = stripe_plot(tab_all, "normAUC_mani", {Fmsk&Alfamsk, Fmsk&Betomsk}, ["Alfa","Beto"], ...
@@ -418,7 +459,6 @@ h = stripe_plot(tab_all, "normAUC_mani", {Fmsk&V1msk, Fmsk&V4msk, Fmsk&ITmsk}, [
 h = stripe_minor_plot(tab_all, "normAUC_mani", {Fmsk&V1msk, Fmsk&V4msk, Fmsk&ITmsk}, ["V1","V4","IT"],...
     {Fmsk&Alfamsk, Fmsk&Betomsk}, ["Alfa","Beto"], "All Exp (driver PC23 P<0.001)", "area_anim_Fsig", {[3,1],[2,1],[3,2]});
 %%
-
 %%
 h = stripe_plot(tab_all, "normAUC_evoref", {msk&Alfamsk, msk&Betomsk}, ["Alfa","Beto"], ...
             "All Exp (driver)", "_anim_sep");
@@ -432,7 +472,26 @@ h = stripe_plot(tab_all, "normAUC_gab", {msk&Alfamsk, msk&Betomsk}, ["Alfa","Bet
             "All Exp (driver)", "_anim_sep");
 h = stripe_plot(tab_all, "normAUC_gab", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"], ...
             "All Exp (driver)", "_area_sep",{[3,1],[2,1],[3,2]});
-
+%% Summary strings across spaces
+function summarySpaces(varprefix, msk, tab, pairs_cmps, titlestr)
+% gabrefmsk = logical(tab.is_evoref_gab);
+% Alfamsk = (tab.Animal == "Alfa"); Betomsk = (tab.Animal == "Beto");
+if isempty(msk), msk = ones(size(tab,1),1,'logical'); end
+spacelist = ["evoref", "mani", "pasu", "gab"];
+statscol = arrayfun(@(space) tab.(varprefix+space)(msk), spacelist, 'uni', 0);
+fprintf("\n"+titlestr+"\n");
+for i = 1:numel(spacelist)
+fprintf("%s: %.3f+-%.3f(std %.3f) N=%d\n",spacelist(i),nanmean(statscol{i}),sem(statscol{i}),nanstd(statscol{i}),sum(~isnan(statscol{i})))
+end
+S = anova_cells(statscol);
+fprintf("One Way ANOVA F=%.3f(%.1e) df=%d\n",S.F,S.F_P,S.STATS.df)
+fprintf("Paired T comparison\n")
+for pi = 1:numel(pairs_cmps)
+    i = pairs_cmps{pi}(1); j = pairs_cmps{pi}(2);
+    [~,P,CI,TST] = ttest(statscol{i},statscol{j});
+    fprintf("%s - %s: P=%.1e t=%.3f(df=%d),CI=[%.3f,%.3f]\n",spacelist(i),spacelist(j),P,TST.tstat,TST.df,CI(1),CI(2));
+end
+end
 %% Plotting routines (some borrowed from Manif_Fit_summary)
 function plotJitScatterVar(varprefix, label, colors, tab, summarydir)
 Animal = "Both";

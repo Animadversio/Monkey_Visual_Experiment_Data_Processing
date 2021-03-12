@@ -1,6 +1,6 @@
 %% Manif_Imgs_Dissim_Merge
 %  This code is to plot the radial tuning curves for several different spaces together 
-% Load the relevant statistics
+%  Load the relevant statistics
 figdir = "E:\OneDrive - Washington University in St. Louis\ImMetricTuning";
 % for Animal = ["Beto", "Alfa"]%
 Animal = "Beto";
@@ -21,8 +21,8 @@ end
 pasu_val_msk = ~cellfun(@isempty,pasu_idx_vec);
 
 %% newer compact version of code
-flag.doEvoRef = 1;
-flag.doError = 1;
+flag.doEvoRef = 1; % plot reference images for evolution.
+flag.doError = 1; % plot errorbar 
 bestcorr = 0;
 Cord = colororder;
 metric_list = ["squ","SSIM","L2","FC6","FC6_corr"];
@@ -135,7 +135,6 @@ saveas(21,fullfile(figdir, savefnm + ".png"))
 savefig(21,fullfile(figdir, savefnm + ".fig"))
 saveas(21,fullfile(figdir, savefnm + ".pdf"))
 end
-% end
 %%
 
 %%
