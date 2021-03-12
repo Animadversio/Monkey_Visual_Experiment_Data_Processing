@@ -27,10 +27,14 @@ classdef torchStyleGAN2
    % ## Compile model code (CUDA, C++ code of operators)
    % 1. Open an Anaconda Prompt, activate that env: conda activate [envname]
    % 2. cd to ...\stylegan2-pytorch\op
+   % 2.0. Note we need to make some change to the code. So either you pull from my personal version of stylegan2-pytorch, or have to develop some change.
+   %     Basically it's to develop a setup.py and to compile the ops into package. Original repo used dynamic ops loading but usually don't work on my machine...
+   %     See https://github.com/Animadversio/stylegan2-pytorch for the setup.py 
    % 3. Compile the source code and install the operators as py package `python setup.py install` 
-   % 3.1. This is really easy to fail spectacularly... So finger crossed. 
-   % 3.2. Make sure you have a Visual Studio 2017 or 2019. VS2015 compiler
+   % 3.0. Make sure you installed CUDA and set the CUDA_HOME env var in the systel. cuDNN should be installed as well.
+   % 3.1. Make sure you have a Visual Studio 2017 or 2019. VS2015 compiler
    %      will not work
+   % 3.2. This is really easy to fail spectacularly... So finger crossed. 
    % 4. Check compilation: cd to ...\stylegan2-pytorch
    % python
    % > from model import Generator
