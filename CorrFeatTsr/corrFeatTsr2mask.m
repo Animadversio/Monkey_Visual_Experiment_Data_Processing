@@ -78,24 +78,28 @@ save(fullfile(mat_dir,compose("%s_Evol_ccFtMask.mat",Animal)),'ccMskStats')
 % tabB = readtable(fullfile(mat_dir, "Beto"+"_EvolTrajStats.csv"));
 % ExpTab_cmb = cat(1, tabA, tabB); % load hte table for Evol Traject successfulness
 % sucs_msk = (ExpTab_cmb.t_p_initend<1E-3)&(ExpTab_cmb.t_p_initmax<1E-3);
-%%
-Animal = "Beto"; 
+%% Prepare for the printing
+Animal = "Alfa"; 
 load(fullfile(mat_dir, compose("%s_Evol_stats.mat", Animal)), 'EStats')
 % load(fullfile(mat_dir, compose("%s_Manif_stats.mat", Animal)), 'Stats')
 load(fullfile(mat_dir, compose("%s_ImageRepr.mat", Animal)), 'ReprStats')
 sucstab = readtable(fullfile(mat_dir, Animal+"_EvolTrajStats.csv"));
 %% Purely view the masks with different compression methods
 figdir = "E:\OneDrive - Washington University in St. Louis\CNNFeatCorr\Compress_Cmp";
-for ExpType = ["Evol"]%"Manif",
+ccmat_dir = "E:\OneDrive - Washington University in St. Louis\CNNFeatCorr";
+mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 doPlot = false; doSave = true;
 thresh = "pos"; ncol=5;
+suffix = "_resize";%"";
+for ExpType = ["Manif"]%"Manif",
 figure(1);T=tiledlayout(3,ncol,'padd','compact','TileSp','compact');
 maplayers = ["conv3_3", "conv4_3", "conv5_3"]; % layers to plot the tensor
 methodlist = ["max","L1","L1signif"]; % compression methods to compare
-for Expi = 1:31%32:numel(EStats)
+for Expi = 1%27:numel(EStats)
 ccMskStats(Expi).(ExpType).units = EStats.units;
 imgpos = EStats(Expi).evol.imgpos;
 imgsize = EStats(Expi).evol.imgsize;
+imgpix = imgsize*40;
 t_end = sucstab.t_initend(Expi);
 t_max = sucstab.t_initmax(Expi);
 DAOA_end = sucstab.DAOA_initend(Expi);
@@ -103,11 +107,11 @@ DAOA_max = sucstab.DAOA_initmax(Expi);
 prefchanlab = EStats(Expi).units.unit_name_arr(EStats(Expi).units.pref_chan_id);
 % winopen(fullfile(moviedir, compose("%s_Evol_Exp%02d_Best_PSTH.mov.avi",Animal,Expi)))
 % winopen(fullfile(moviedir, compose("%s_Manif_Exp%02d_Avg_PSTH.mov.avi",Animal,Expi)))
-savedir = fullfile(ccmat_dir,compose("%s_%s_Exp%d",Animal,ExpType,Expi));
+% savedir = fullfile(ccmat_dir,compose("%s_%s_Exp%d",Animal,ExpType,Expi));
 for li = 1:numel(maplayers) %["conv5_3"]%"conv5_3";
 layername = maplayers(li);
 % if layername=="conv3_3" && Expi == 40, continue; end
-outfn = fullfile(ccmat_dir, compose("%s_%s_Exp%d_%s.mat",Animal,ExpType,Expi,layername));
+outfn = fullfile(ccmat_dir, compose("%s_%s_Exp%d_%s%s.mat",Animal,ExpType,Expi,layername,suffix));
 load(outfn,'cc_tsr','MFeat','StdFeat','wdw_vect','cc_refM','cc_refS');
 t_signif_tsr = (cc_tsr - cc_refM) ./ cc_refS;
 %
@@ -152,16 +156,16 @@ title(T,compose("%s %s Exp%d Corr Coef with VGG16, Ch%s %.1f deg [%.1f, %.1f]\nt
     Animal,ExpType,Expi,prefchanlab,imgsize,imgpos(1),imgpos(2),t_end,t_max,DAOA_end,DAOA_max,wdw_vect(end,1),wdw_vect(end,2),thresh))
 % Show the exemplar images!
 nexttile(T,(1-1)*ncol+5)
-imshow(ReprStats(Expi).Evol.BestBlockAvgImg);
+imshow(imresize(ReprStats(Expi).Evol.BestBlockAvgImg,[imgpix,imgpix],'Antialias',false));
 title("BestBlockAvg image")
 nexttile(T,(2-1)*ncol+5)
-imshow(ReprStats(Expi).Evol.BestImg);
+imshow(imresize(ReprStats(Expi).Evol.BestImg,[imgpix,imgpix],'Antialias',false));
 title("Best Evol Trial image")
 nexttile(T,(3-1)*ncol+5)
-imshow(ReprStats(Expi).Manif.BestImg);
+imshow(imresize(ReprStats(Expi).Manif.BestImg,[imgpix,imgpix],'Antialias',false));
 title("Best Manif image")
 if doSave
-    savefn = compose("%s_%s_Exp%d_%s_mask_summary",Animal,ExpType,Expi,thresh);
+    savefn = compose("%s_%s_Exp%d%s_%s_mask_summary",Animal,ExpType,Expi,suffix,thresh);
     saveas(1, fullfile(figdir, savefn + ".png"));
     saveas(1, fullfile(figdir, savefn + ".pdf"));
 end
