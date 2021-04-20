@@ -1,3 +1,8 @@
+Animal = "Alfa"; Set_Path;
+ftr = find(contains(ExpRecord.ephysFN,["Alfa-29122020","Alfa-30122020"]));  % "Alfa-06112020" "Alfa-04112020"
+ExpRecord(ftr,:)
+[meta_new,rasters_new,~,Trials_new] = loadExperiments(ftr(:),Animal,false);
+%%
 clearvars -except Trials* meta* rasters* ExpRecord*
 %%
 % Adapt the Masking Analysis Code 
@@ -8,8 +13,10 @@ ExpRecord(ftr,:)
 %%
 % resultroot = "OneDrive - Washington University in St. Louis";
 figroot = "E:\OneDrive - Washington University in St. Louis\VisualMask_PSTH";
-flag.plot_chan = false;
-for Triali = 4%3:numel(meta_new)
+flag.plot_chan = true; % plotting flags 
+flag.plot_imgsep = false;
+flag.plot_tuning = false;
+for Triali = 7:numel(meta_new)
 rasters = rasters_new{Triali};
 meta = meta_new{Triali};
 Trials = Trials_new{Triali};
@@ -36,8 +43,10 @@ fprintf("Experiment Configuration:\n")
 fprintf("Pre-Stimuli ISIs (med of category): %s \n",join(compose("%.1f(%d) ",preISI_arr',cellfun(@sum,preISI_msk)')));
 fprintf("Post-Stimuli ISIs (med of category): %s \n",join(compose("%.1f(%d) ",postISI_arr',cellfun(@sum,postISI_msk)')));
 fprintf("Stimuli Duration (med of category): %s \n",join(compose("%.1f(%d) ",dur_arr',cellfun(@sum,dur_msk)')));
-assert(numel(dur_arr)==1, "Multiple stimuli duration detected, modify your code!\n")
+% warning(numel(dur_arr)==1, "Multiple stimuli duration detected, examine your code!\n")
 %% Collect Statics for this 
+set(groot,'defaultAxesTickLabelInterpreter','none'); 
+if flag.plot_tuning
 figure(2); set(2,'pos',[1092, 339, 960, 480]);
 figure(3); set(3,'pos',[125, 339, 960, 480]);
 figure(4); set(4,'pos',[125, 339, 960, 480]);
@@ -100,10 +109,9 @@ for chid = 1:numel(meta.spikeID)
     saveas(3, fullfile(figdir,compose("tuningcurv_postISI_bsl_%s.png", unit_name_arr(chid))))
     saveas(4, fullfile(figdir,compose("tuningcurv_postISI_delay_%s.png", unit_name_arr(chid))))
 end
-figure(5);imagesc(arrayfun(@(S)S.F, stats_all))
+figure(5);imagesc(arrayfun(@(S)S.F, stats_all)) % Summary Heatmap
 yticks(1:numel(meta.spikeID));yticklabels(unit_name_arr)
-%%
-set(groot,'defaultAxesTickLabelInterpreter','none');  
+%% 
 nonoverlap_bnd = 150;
 postISI_far_msk = any(cat(1,postISI_msk{postISI_arr > nonoverlap_bnd}),1);
 stats_all = [];
@@ -153,23 +161,28 @@ for chid = 1:numel(meta.spikeID)
     saveas(7, fullfile(figdir,compose("tuningcurv_preISI_%s.png", unit_name_arr(chid))))
     saveas(8, fullfile(figdir,compose("tuningcurv_preISI_bsl_%s.png", unit_name_arr(chid))))
 end
-figure(6); imagesc(arrayfun(@(S)S.F, stats_all));colorbar()
+figure(6); imagesc(arrayfun(@(S)S.F, stats_all));colorbar() % Summary Heatmap
 yticks(1:numel(meta.spikeID));yticklabels(unit_name_arr)
+end
 %%
-if flag.plot_chan
+if flag.plot_chan % Plot PSTH for each chan
 %% Func of post onset
 clrseq = brewermap(numel(postISI_msk),'Spectral');
-smth = 9; dur = dur_arr(1); nonoverlap_bnd = 150;
+smth = 9; nonoverlap_bnd = 150; % dur = dur_arr(1); 
 for iCh = 1:numel(meta.spikeID)
 figure(9);clf;hold on;set(9,'pos',[1000         168         586         810]);
 T = tiledlayout(numel(postISI_msk),1,'Padding','compact','TileSpacing','compact');
 preISI_far_msk = any(cat(1,preISI_msk{preISI_arr > nonoverlap_bnd}),1); % (preISI_msk{4} | preISI_msk{5} | preISI_msk{6})
 for subfi = 1:numel(postISI_msk)
-nexttile(subfi)
-msk = preISI_far_msk & dur_msk{1} & postISI_msk{subfi}; 
-plot(wdw(1)+1:wdw(2), movmean(mean(rasters(iCh,:,msk),3),smth), 'Color',[clrseq(1,:),1], 'LineWidth',2)
-xlim([wdw(1),wdw(2)])
+nexttile(subfi);
+for duri = 1:numel(dur_msk)
+dur = dur_arr(duri);
+msk = preISI_far_msk & dur_msk{duri} & postISI_msk{subfi}; hold on
+plot(wdw(1)+1:wdw(2), movmean(mean(rasters(iCh,:,msk),3),smth), 'Color',[clrseq(duri,:),1], 'LineWidth',2)
 vline(0.0,'k-.');vline(dur,'k:'); vline(dur+postISI_arr(subfi),'r-.')
+end
+hold off
+xlim([wdw(1),wdw(2)])
 if subfi ~= numel(postISI_msk), xticklabels([]);end
 end
 align_tile_ylim(T);
@@ -186,10 +199,14 @@ T = tiledlayout(numel(preISI_msk),1,'Padding','compact','TileSpacing','compact')
 postISI_far_msk = any(cat(1, postISI_msk{postISI_arr > nonoverlap_bnd}),1); % (postISI_msk{4} | postISI_msk{5} | postISI_msk{6})
 for subfi = 1:numel(preISI_msk)
 nexttile(subfi)
-msk = postISI_far_msk & dur_msk{1} & preISI_msk{subfi}; 
-plot(wdw(1)+1:wdw(2), movmean(mean(rasters(iCh,:,msk),3),smth), 'Color',[clrseq(1,:),1], 'LineWidth',2)
-xlim([wdw(1),wdw(2)])
+for duri = 1:numel(dur_msk)
+dur = dur_arr(duri);
+msk = postISI_far_msk & dur_msk{duri} & preISI_msk{subfi}; hold on
+plot(wdw(1)+1:wdw(2), movmean(mean(rasters(iCh,:,msk),3),smth), 'Color',[clrseq(duri,:),1], 'LineWidth',2)
 vline(0.0,'k-.');vline(dur,'k:');vline( - preISI_arr(subfi),'r-.')
+end
+hold off
+xlim([wdw(1),wdw(2)])
 if subfi ~= numel(preISI_msk), xticklabels([]);end
 end
 align_tile_ylim(T);
@@ -199,7 +216,9 @@ saveas(10,fullfile(figdir,compose("Pre_offset_PSTH_allimg_Chan%s.png",unit_name_
 savefig(10,fullfile(figdir,compose("Pre_offset_PSTH_allimg_Chan%s.fig",unit_name_arr(iCh))))
 % pause;
 end
+end
 %% All Image plot separately pre offset
+if flag.plot_imgsep
 clrmap = brewermap(numel(imgmsks), 'Set3');
 smth = 9;
 preISI_far_msk = any(cat(1, preISI_msk{preISI_arr > nonoverlap_bnd}),1);
@@ -208,12 +227,15 @@ figure(12);clf;hold on;set(12,'pos',[1000         168         586         810]);
 T = tiledlayout(numel(postISI_msk),1,'Padding','compact','TileSpacing','compact');
 for figi = 1:numel(postISI_msk)
 nexttile(figi);hold on
+for duri = 1:numel(dur_msk)
+dur = dur_arr(duri);
 for imgi = 1:numel(imgmsks)
-msk = preISI_far_msk & postISI_msk{figi} & dur_msk{1} & imgmsks{imgi}'; 
+msk = preISI_far_msk & postISI_msk{figi} & dur_msk{duri} & imgmsks{imgi}'; 
 plot(wdw(1)+1:wdw(2), movmean(mean(rasters(iCh,:,msk),3),smth), 'Color',[clrmap(imgi,:),0.5], 'LineWidth',2)
 end
-xlim([wdw(1),wdw(2)])
 vline(0.0,'k-.');vline(dur,'k:');vline(dur + postISI_arr(figi),'r-.');
+xlim([wdw(1),wdw(2)])
+end
 end
 align_tile_ylim(T);
 xlabel("Time to Stimuli Onset")
@@ -229,12 +251,15 @@ figure(11);clf;hold on;set(11,'pos',[1000         168         586         810]);
 T = tiledlayout(numel(preISI_msk),1,'Padding','compact','TileSpacing','compact');
 for figi = 1:numel(preISI_msk)
 nexttile(figi);hold on
+for duri = 1:numel(dur_msk)
+dur = dur_arr(duri);
 for imgi = 1:numel(imgmsks)
-msk = preISI_msk{figi} & postISI_far_msk & dur_msk{1} & imgmsks{imgi}'; 
+msk = preISI_msk{figi} & postISI_far_msk & dur_msk{duri} & imgmsks{imgi}'; 
 plot(wdw(1)+1:wdw(2), movmean(mean(rasters(iCh,:,msk),3),smth), 'Color',[clrmap(imgi,:),0.5], 'LineWidth',2)
 end
 xlim([wdw(1),wdw(2)])
 vline(0.0,'k-.');vline(dur,'k:');vline(- preISI_arr(figi),'r-.');
+end
 end
 align_tile_ylim(T);
 xlabel("Time to Stimuli Onset")
@@ -244,6 +269,7 @@ savefig(11, fullfile(figdir,compose("Pre_offset_PSTH_imgsep_Chan%s.fig",unit_nam
 end
 end
 end
+
 
 
 
@@ -297,19 +323,29 @@ postISI_msk{end+1} = post_ISI >= delay_limit;
 preISI_arr = cellfun(@(idx) median(pre_ISI(idx)), preISI_msk);
 postISI_arr = cellfun(@(idx) median(post_ISI(idx)), postISI_msk);
 
+minor_categ = cellfun(@sum, preISI_msk) < trialNum / 20; 
+preISI_msk(minor_categ) = [];
+preISI_arr(minor_categ) = [];
+minor_categ = cellfun(@sum, postISI_msk) < trialNum / 20; 
+postISI_msk(minor_categ) = [];
+postISI_arr(minor_categ) = [];
+
 dur_qu = round(duration / frameD);
 dur_categ = unique(dur_qu);
 dur_msk = arrayfun(@(frN) dur_qu==frN, dur_categ, 'Uni', 0);
 dur_arr = cellfun(@(idx) median(duration(idx)), dur_msk);
-% get rid of some minority 
-minor_categ = cellfun(@(msk)sum(msk)<6,dur_msk);
+% get rid of some category with few trials (minority)
+minor_categ = cellfun(@sum, dur_msk) < trialNum / 20; 
 dur_msk(minor_categ) = [];
 dur_arr(minor_categ) = [];
 % hand coded categories
 % preISI_msk = cellfun(@(wdw) (pre_ISI > wdw(1)) & (pre_ISI < wdw(2)), {[0,30],[30,65],[65,100],[100,150],[150,250],[250,inf]}, 'Uni', 0);
 % postISI_msk = cellfun(@(wdw) (post_ISI > wdw(1)) & (post_ISI < wdw(2)), {[0,30],[30,65],[65,100],[100,150],[150,250],[250,inf]}, 'Uni', 0);
 end
+function [pre_ISI, post_ISI, duration, preISI_msk, postISI_msk, dur_msk] = postproc_timing(...
+    Trials,pre_ISI, post_ISI, duration, preISI_msk, postISI_msk, dur_msk, preISI_arr, postISI_arr, dur_arr)
 
+end
 function fdrnm = figdir_naming(meta, ExpRecord)
 Animal = meta.ephysFN(1:4);
 expday = datetime(meta.expControlFN(1:6),'InputFormat','yyMMdd');

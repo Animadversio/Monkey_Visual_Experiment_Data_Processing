@@ -78,6 +78,8 @@ classdef torchBigGAN
             setenv('path',['C:\Users\Ponce lab\.conda\envs\torch\Library\bin;', getenv('path')]); % this gives the path to the dll and binary files. Or import will fail.
             % WHEN IMPORT FAILS, RUN THIS LINE to RESET ENVIRONMENT
             % pyenv("Version", "C:\Users\Ponce lab\.conda\envs\torch\python.exe"); %
+           case 'PONCELAB-ML2C' % MLc machine 
+            savedir = "C:\Users\ponce\Documents\Python\pytorch-pretrained-BigGAN\weights";
            otherwise
             savedir = "C:\Users\Poncelab-ML2a\Documents\Python\pytorch-pretrained-BigGAN\weights";
         end
@@ -165,6 +167,19 @@ classdef torchBigGAN
        end
    end
    
+   %% sample_noise: function description
+   function [codes] = sample_noise(G, num, space)
+      if nargin<3, space="all"; end
+      if strcmp(space,"all")
+        truncnorm = truncate(makedist("Normal"),-2,2);
+        noisevecs = truncnorm.random([num,128]);
+        EmbedVects_mat = get_embedding(G);
+        clsidx = randsample(1000,num);
+        classvecs = EmbedVects_mat(:,clsidx)';
+        codes = [noisevecs, classvecs];
+      end
+   end
+
    function matimgs = visualize(G, code)
        % interface with generate integrated code, cmp to FC6GAN
        switch G.space % depending on the space concatenate the hidden vectors in certain way

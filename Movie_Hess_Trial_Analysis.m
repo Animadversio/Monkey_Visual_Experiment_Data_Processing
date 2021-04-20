@@ -4,8 +4,8 @@
 
 %% Movie Selectivity Analysis, Trial by Trial
 Animal="Alfa";Set_Path;setMatlabTitle("MovieStaticDynamics")
-ftr = find(contains(ExpRecord.ephysFN,"21102020"));
-[meta_new,rasters_new,~,Trials_new] = loadExperiments(ftr(3:6),Animal);
+ftr = find(contains(ExpRecord.ephysFN,"16122020"));
+[meta_new,rasters_new,~,Trials_new] = loadExperiments(ftr(1:5),Animal);
 
 %%
 [meta_,rasters_,lfps_,Trials_] = loadData('Alfa-21102020-005','expControlFN','201021_Alfa_selectivity_movie(1)', 'rasterWindow',[-250 2500]); %'sdf', 'raster') ;

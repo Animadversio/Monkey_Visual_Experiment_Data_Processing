@@ -13,12 +13,11 @@ pasu_path = "N:\Stimuli\2019-Manifold\pasupathy-wg-f-4-ori";
 imlist = dir(fullfile(pasu_path,"*.jpg"));
 imlist = struct2cell(imlist);
 imgnms = string(cellstr(imlist(1,:)))';
-imgi = 1;
-img = imread(fullfile(pasu_path, imgnms{imgi}));
+imgi = 1;img = imread(fullfile(pasu_path, imgnms{imgi}));
 imgs_all = arrayfun(@(nm)imread(fullfile(pasu_path, nm)),imgnms,'Uni',0);
 rsz_imgs_all = cellfun(@(img)repmat(imresize(img,[256,256]),1,1,3),imgs_all,'Uni',0);
 rsz_imgs_tsr = cell2mat(shiftdim(rsz_imgs_all,-3));
-%%
+%% Compute image distance metric between pasupathy patches.
 pasu_imdist = struct();
 %%
 tic
@@ -42,7 +41,7 @@ toc% 119sec
 %%
 save(fullfile(mat_dir,"pasu_imdist.mat"),'pasu_imdist')
 
-%% Gabor distance
+%% Load the Gabor patches.
 gab_nm_grid = cellfun(@(idx)unique(Stats(40).imageName(idx)),Stats(40).ref.gab_idx_grid,'Uni',1);
 gab_nm_grid = reshape(gab_nm_grid,[],1); % reshape into one row. But transpose to make similar object adjacent
 gab_nms = string(gab_nm_grid);
@@ -51,10 +50,10 @@ gab_path = "N:\Stimuli\2019-Manifold\gabor";
 gab_imgs_all = arrayfun(@(nm)imread(fullfile(gab_path, nm+".bmp")),gab_nms,'Uni',0);
 gab_rsz_imgs_all = cellfun(@(img)repmat(imresize(img,[256,256]),1,1,3),gab_imgs_all,'Uni',0);
 gab_rsz_imgs_tsr = cell2mat(shiftdim(gab_rsz_imgs_all,-3));
-%%
+%% Compute image distance between Gabor patches
 gab_imdist = struct();
 tic
-D=D.select_metric("squeeze");
+D = D.select_metric("squeeze");
 gab_imdist.squ = D.distmat(gab_rsz_imgs_tsr);
 toc
 L2dist = pdist(reshape(gab_rsz_imgs_tsr,[],size(gab_rsz_imgs_tsr,4))'/255.0);
@@ -77,7 +76,7 @@ save(fullfile(mat_dir,"gab_imdist.mat"),'gab_imdist')
 Animal = "Alfa";
 load(fullfile(mat_dir, Animal+'_Evol_stats.mat'), 'EStats') 
 load(fullfile(mat_dir, Animal+'_Manif_stats.mat'), 'Stats') 
-%% 
+%% Compute the ImDist using different metric functions
 ManifImDistStat = repmat(struct(),1,numel(Stats));
 for Expi=1:numel(Stats)
 tic;
@@ -106,7 +105,7 @@ toc
 end
 %%
 save(fullfile(mat_dir,Animal+"_Manif_ImDist.mat"),"ManifImDistStat")
-%% Adding a metric posthoc
+%% Adding a fc6 metric posthoc
 for Expi=1:numel(Stats)
 tic;
 fprintf("Processing exp %d\n",Expi)
@@ -122,6 +121,8 @@ end
 %%
 save(fullfile(mat_dir,Animal+"_Manif_ImDist.mat"),"ManifImDistStat")
 
+
+%% Compute the summary statistics for Firing rate ~ image distance. 
 %% Load image distance matrices
 Animal = "Beto";
 mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
@@ -131,7 +132,7 @@ load(fullfile(mat_dir,Animal+"_Manif_ImDist.mat"),"ManifImDistStat")
 load(fullfile(mat_dir, Animal+'_Evol_stats.mat'), 'EStats') 
 load(fullfile(mat_dir, Animal+'_Manif_stats.mat'), 'Stats') 
 figdir = "E:\OneDrive - Washington University in St. Louis\ImMetricTuning";
-%%
+%% 
 pasu_nm_grid = cellfun(@(idx)unique(Stats(1).imageName(idx)),Stats(1).ref.pasu_idx_grid,'Uni',0);
 pasu_nm_grid = reshape(pasu_nm_grid',[],1); % reshape into one row. But transpose to make similar object adjacent
 pasu_val_msk = ~cellfun(@isempty,pasu_nm_grid);
@@ -142,6 +143,8 @@ pasu_idx_vec = reshape(Stats(12).ref.pasu_idx_grid',[],1); % reshape into one ro
 pasu_val_msk = ~cellfun(@isempty,pasu_idx_vec);
 %% Compute Summary Statistics and Collect stats into a table.
 %  the relationship between the image metric and the firing. 
+%  This part get refactored into Manif_Imgs_Dissim_Summary.m which generate
+%  the csv in a more concise code. 
 %  Summarize it in a large csv
 Expi = 35;
 nanstrct = struct('Manif_squ_pear',nan,'Manif_squ_spear',nan,'Manif_FC6_pear',nan,'Manif_FC6_spear',nan,'Manif_squ_pear_max',nan,'Manif_squ_spear_max',nan,'Manif_FC6_pear_max',nan,'Manif_FC6_spear_max',nan,'Pasu_squ_pear',nan,'Pasu_squ_spear',nan,'Pasu_FC6_pear',nan,'Pasu_FC6_spear',nan,'Pasu_squ_pear_max',nan,'Pasu_squ_spear_max',nan,'Pasu_FC6_pear_max',nan,'Pasu_FC6_spear_max',nan,'Gabor_squ_pear',nan,'Gabor_squ_spear',nan,'Gabor_FC6_pear',nan,'Gabor_FC6_spear',nan,'Gabor_squ_pear_max',nan,'Gabor_squ_spear_max',nan,'Gabor_FC6_pear_max',nan,'Gabor_FC6_spear_max',nan,"Manif_squ_reg_b",nan(2,1),"Manif_squ_reg_Rsq",nan,"Manif_squ_reg_F",nan,"Manif_squ_reg_P",nan,"Manif_FC6_reg_b",nan(2,1),"Manif_FC6_reg_Rsq",nan,"Manif_FC6_reg_F",nan,"Manif_FC6_reg_P",nan,"Pasu_squ_reg_b",nan(2,1),"Pasu_squ_reg_Rsq",nan,"Pasu_squ_reg_F",nan,"Pasu_squ_reg_P",nan,"Pasu_FC6_reg_b",nan(2,1),"Pasu_FC6_reg_Rsq",nan,"Pasu_FC6_reg_F",nan,"Pasu_FC6_reg_P",nan,"Gabor_squ_reg_b",nan(2,1),"Gabor_squ_reg_Rsq",nan,"Gabor_squ_reg_F",nan,"Gabor_squ_reg_P",nan,"Gabor_FC6_reg_b",nan(2,1),"Gabor_FC6_reg_Rsq",nan,"Gabor_FC6_reg_F",nan,"Gabor_FC6_reg_P",nan);
@@ -414,11 +417,11 @@ saveas(22,fullfile(figdir,compose("%s_Exp%02d_pref%02d_bestcorr.png",Animal,Expi
 savefig(22,fullfile(figdir,compose("%s_Exp%02d_pref%02d_bestcorr.fig",Animal,Expi,Stats(Expi).units.pref_chan)))
 end
 
-%%
+%% Demo of computing image distance matrix
 % [b,bint,stats] = regress_(ManifImDistStat(Expi).squ(:,maxId),score_vec)
 %% Demo of Manifold Image Dissimilarity Computation.
 Expi=1;si=1;
-imnm_grid = string(cellfun(@(idx)Stats(Expi).imageName{idx(1)},Stats(Expi).manif.idx_grid{si},'UniformOutput',false));
+imnm_grid = string(cellfun(@(idx)Stats(Expi).imageName{idx(1)},Stats(Expi).manif.idx_grid{si},"Uni",0));
 manif_imgrid = arrayfun(@(nm)imread(fullfile(Stats(Expi).meta.stimuli,nm+".jpg")),imnm_grid,"Uni",0);
 manif_img_tsr = cell2mat(reshape(manif_imgrid,1,1,1,[]));
 tic

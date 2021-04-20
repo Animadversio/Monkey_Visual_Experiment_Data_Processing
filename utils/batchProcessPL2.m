@@ -8,6 +8,7 @@ if nargin == 0 % get today's animal
     if isempty(date)
         date = datetime();
     end
+    date = datetime(date,"InputFormat","yyyyMMdd");
     searchstr = string([animal,'-',datestr(date,"ddmmyyyy"),'*.pl2']);
     ephysFNs = string(ls("N:\Data-Ephys-Raw\"+searchstr));
     preMeta = arrayfun(@(fn)struct('ephysFN',fn{1}(1:end-4),'sdf',sdf), ephysFNs);
@@ -66,7 +67,7 @@ else
 error;
 end
 bigMatrixExists = exist(bigMatPath,'file');
-
+if bigMatrixExists, fprintf("Found sorted file %s pass!\n",bigMatPath); return; end %
 [spikeChans,lfpChans,timeline,spikeID,unitID,wvfms] = plxread_fullExperiment_vcrp(meta);
 % Save the source of the channel per isolated unit/hash
 if ~spikeID(1) 

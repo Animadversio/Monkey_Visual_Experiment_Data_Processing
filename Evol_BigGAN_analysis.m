@@ -5,6 +5,12 @@ expftr = contains(ExpRecord.expControlFN,["200807","200810"]); %& contains(ExpRe
 fllist = find(expftr);no_return=false;
 [meta_new,rasters_new,~,Trials_new] = Project_Manifold_Beto_loadRaw(fllist(1:end),Animal,no_return);%find(expftr)%find(expftr)
 %%
+Animal = "Both";Set_Path;
+expftr = contains(ExpRecord.expControlFN,["210112"]);
+fllist = find(expftr);no_return=false;
+[meta_new,rasters_new,~,Trials_new] = loadExperiments(fllist(1:end),Animal,no_return);%find(expftr)%find(expftr)
+
+%%
 median(param,1) 
 mean(param,1)
 %%

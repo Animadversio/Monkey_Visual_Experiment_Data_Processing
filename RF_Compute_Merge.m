@@ -1,16 +1,18 @@
-Animal = "Alfa";
+Animal = "Beto";
 
-savepath = "C:\Users\binxu\OneDrive - Washington University in St. Louis\Mat_Statistics";
+savepath = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 load(fullfile(savepath, compose("%s_Manif_RFstats.mat", Animal)), 'RFStats');
 %% Make masks from responses, in the new way and the interpolation way.
 % Prepare canvas of mask
-ntick = 201;
+ntick = 201; % -10:0.1:10 sampled with 0.1 step size
 visualField = [-10 10]; 
 coli = linspace(visualField(1),visualField(2),ntick);
 rowi = linspace(visualField(1),visualField(2),ntick);
 [gridX,gridY]  = meshgrid(coli,rowi);
 MaskStats = repmat(struct(),length(RFStats),1);
-
+%%
+RFStats(Mapi).psth.baseline_mean
+%%
 for Mapi = 1:length(RFStats)
 uniqpos = RFStats(Mapi).stim.uniqpos;
 xpos = RFStats(Mapi).stim.xpos;
@@ -20,7 +22,7 @@ y_vect = uniqpos(:,2); %reshape(posgrid(:,:,2),1,[]);
 nPos = size(uniqpos,1);
 posgrid = reshape([uniqpos, (1:nPos)'],[length(xpos),length(ypos),3]);
 %% Set up the visual field plot
-img_maskstack = zeros([size(gridX), nPos]);
+img_maskstack = zeros([size(gridX), nPos]); % size [spatial1, 2, presented location]
 img_radius = RFStats(Mapi).stim.imgsize_deg / 2;
 for iPos = 1:nPos
 xcent = uniqpos(iPos,1);
@@ -30,7 +32,8 @@ img_maskstack(:, :, iPos) = Dinf < img_radius;
 end
 % score_mat = zscore(reshape(RFStats(Mapi).psth.score_mean,[],nPos)',1); %
 % this is obsolete since the baseline can be negative! 
-
+psthmean = RFStats(Mapi).psth.psth_mean;
+RFStats(Mapi).psth.baseline_mean = cell2mat(reshape(cellfun(@(P)mean(P(:,1:50),2),psthmean,'Uni',0),[1,size(psthmean)]));
 % Subtract the mean baseline get the raw FR increase, and linearize spatial
 % dimension into [spatial, channel] matrix
 score_mat = reshape(RFStats(Mapi).psth.score_mean - mean(RFStats(Mapi).psth.baseline_mean,[2,3]), [], nPos)'; 
