@@ -3,7 +3,7 @@
 %  eigen-axes. Compatible for different versions of the naming convention. 
 %  Tested. 
 Animal = "Both";Set_Path;
-expftr = contains(ExpRecord.expControlFN,["200817"]);%& contains(ExpRecord.expControlFN, "selectivity");; %& ,"200812"contains(ExpRecord.Exp_collection,"BigGAN_Hessian");% & contains(ExpRecord.Exp_collection,"BigGAN");
+expftr = contains(ExpRecord.expControlFN,["210312_Alfa_selectivity_basic"]);%& contains(ExpRecord.expControlFN, "selectivity");; %& ,"200812"contains(ExpRecord.Exp_collection,"BigGAN_Hessian");% & contains(ExpRecord.Exp_collection,"BigGAN");
 % expftr = contains(ExpRecord.Exp_collection,"BigGAN_Hessian") & contains(ExpRecord.expControlFN, "selectivity");
 fllist = find(expftr);no_return=false;
 [meta_new,rasters_new,~,Trials_new] = loadExperiments(fllist(1:end),Animal,no_return);
@@ -12,36 +12,51 @@ Animal = "Both";Set_Path;
 % expftr = contains(ExpRecord.expControlFN,["200813"]); %& ,"200812"contains(ExpRecord.Exp_collection,"BigGAN_Hessian");% & contains(ExpRecord.Exp_collection,"BigGAN");
 expftr = contains(ExpRecord.Exp_collection,"BigGAN_Hessian") & contains(ExpRecord.expControlFN, "selectivity");
 fllist = find(expftr);no_return=false;
-[meta_new,rasters_new,~,Trials_new] = loadExperiments(fllist(1:end),Animal,no_return);
+[meta_new,rasters_new,~,Trials_new] = loadExperiments(fllist(end-5:end),Animal,no_return);
 
 % figdir = "E:\OneDrive - Washington University in St. Louis\HessBigGANTune\Beto_Exp04";
 % mkdir(figdir)
 %% Prepare Image Metric
 D = torchImDist();
 %%
-for Triali = 1:14
+saveroot = "E:\OneDrive - Washington University in St. Louis\HessBigGANTune";
+P=struct();
+P.plotTuneCurve=false;% TO IMplement.
+for Triali = numel(meta_new)-3:numel(meta_new)-2
 %%
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 % lfps = lfps_new{Triali};
 Trials = Trials_new{Triali};
-
 if contains(meta.ephysFN,"Alfa"),Animal = "Alfa";elseif contains(meta.ephysFN,"Beto"),Animal = "Beto";end
 exp_rowi = find(contains(ExpRecord.ephysFN, meta.ephysFN));
 Expi = ExpRecord.Expi(exp_rowi);
 fprintf("Processing  Exp %d:\n",Expi)
 fprintf([ExpRecord.comments{exp_rowi},'\n'])
+if contains(meta.ephysFN,'Alfa-13012021-003'), fprintf("This is a incomplete exp!"); end
 % Check the Expi match number
-prefchan = Trials.TrialRecord.User.prefChan;
-prefchan_ids = find(meta.spikeID == prefchan);
-figdir = fullfile("E:\OneDrive - Washington University in St. Louis\HessBigGANTune",compose("%s_Exp%02d",Animal,Expi));
-if meta.ephysFN == "Alfa-10082020-004", figdir = figdir + "_post"; end
-mkdir(figdir);fprintf("writing to %s\n",figdir)
-
-unit_name_arr = generate_unit_labels(meta.spikeID);
-[activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
+% unit_name_arr = generate_unit_labels(meta.spikeID);
+% [activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
+% newer version generate unit labels
+unit_num_arr = meta.unitID;
+unit_name_arr = generate_unit_labels_new(meta.spikeID, meta.unitID);
 imgname_uniq = unique(Trials.imageName); 
-keyboard
+prefchan = Trials.TrialRecord.User.prefChan;
+prefchan_ids = find(meta.spikeID == prefchan & meta.unitID>0);
+
+% Old naming convention
+% figdir = fullfile("E:\OneDrive - Washington University in St. Louis\HessBigGANTune",compose("%s_Exp%02d",Animal,Expi));
+% if meta.ephysFN == "Alfa-10082020-004", figdir = figdir + "_post"; end
+% mkdir(figdir);fprintf("writing to %s\n",figdir)
+
+stimparts = split(meta.stimuli,"\");
+expday = datetime(meta.expControlFN(1:6),'InputFormat','yyMMdd');
+fdrnm = compose("%s-Ch%02d", stimparts{end}, prefchan);
+% fdrnm = compose("%s-%s-Chan%02d-1",datestr(expday,'yyyy-mm-dd'), Animal, pref_chan(1));
+figdir = fullfile(saveroot, fdrnm);
+if exist(figdir,'dir'),warning("%s figure directory exist! Beware",figdir);keyboard;end
+mkdir(figdir)
+
 %% Load the images in the class space and noise space
 % Identify the naming convention used in this Exp. (Different version of py code...)
 [noise_pattern, noise_imgnm, class_pattern, class_imgnm] = parse_naming_convention(imgname_uniq);
@@ -50,6 +65,7 @@ namepart_uniq = regexp(imgname_uniq, noise_pattern, 'names');
 namepart_uniq = namepart_uniq(~cellfun(@isempty,namepart_uniq));
 eig_id_arr_nos = unique(cellfun(@(U)str2num(U.eig_id),namepart_uniq));
 dist_arr_nos = unique(cellfun(@(U)str2num(U.dist),namepart_uniq));
+if ~any(dist_arr_nos==0), dist_arr_nos = unique([dist_arr_nos;0]); end
 % collect image name and trial indices in cell
 imgnm_arr_nos = strings(length(eig_id_arr_nos), length(dist_arr_nos));
 idx_arr_nos = cell(length(eig_id_arr_nos), length(dist_arr_nos));

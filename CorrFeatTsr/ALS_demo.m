@@ -1,13 +1,14 @@
-%% A demo for alternative least square algorithm (no constraint) 
+%% A simple demo for alternative least square algorithm (no constraint) 
 % Observation is more then any regressor
 % If so the ALS fitting and convergence is fine! 
+%% Set up synthetic data: Factorized linear model + noise
 A = randn(10,15,100);
 %A = randn(10,15,20);
 Fa = randn(10,1);
 Fb = randn(15,1);
 out = einsum(einsum(A, Fa, 'ijk,il->jkl'), Fb, 'jk,ji->ki');
 target = out + 0.5 * randn(size(out));
-%%
+%% Main Algorithm for ALS
 fprintf("Un constraint ALS fiting\n")
 Fa_init = randn(10,1);
 Fb_init = randn(15,1);
@@ -25,7 +26,7 @@ pred = einsum(einsum(A, Facur, 'ijk,il->ljk'), Fbcur, 'ljk,jl->k') + bcur;
 res = target - pred;
 fprintf("residue max %.1f norm %.1f\n", max(res), norm(res))
 end
-%%
+%% Main Algorithm for ALS (non negative for one side.)
 fprintf("Fa non-negative ALS fiting\n")
 Fa_init = randn(10,1);
 Fb_init = randn(15,1);
