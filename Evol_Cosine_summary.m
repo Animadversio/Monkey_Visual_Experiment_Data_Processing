@@ -9,6 +9,9 @@ subfdrs = string(ls(saveroot+"\*Alfa*"));
 %         'Size', [5,8], 'BorderSize', 4,'ThumbnailSize',[656   875])
 mtg = imtile(fullfile(saveroot,deblank(subfdrs(6:end)),"online_scoretraj.png"),'GridSize', [4,9],'BorderSize', 4);
 imwrite(mtg,fullfile(saveroot,"CosineSummary","CosineTraj_summary.png"))
+%% Collect statistics of these fitting and tile into table.
+
+
 %%
 function refnmMap = get_refimg_map(stim_dir,parent)
 if nargin==1, parent=false; end

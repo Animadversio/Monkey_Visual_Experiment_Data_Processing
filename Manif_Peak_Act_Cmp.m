@@ -141,28 +141,30 @@ end
 peaksumtab = table(); csr = 1;
 for Animal = ["Alfa", "Beto"]
 	load(fullfile(mat_dir, Animal+'_Evol_stats.mat'), 'EStats') 
-   	load(fullfile(mat_dir, Animal+'_Manif_stats.mat'), 'Stats') 
-   	load(fullfile(mat_dir, Animal+"_PeakActCmp.mat"), "ActStats")
-   	for Expi = 1:numel(ActStats)
-   		for imspace = ["manif", "evoref", "pasu", "gab"]
-        if isempty(ActStats(Expi).(imspace).maxScore)
-        peaksumtab.(imspace+"maxActZ")(csr) = nan;
-   		peaksumtab.(imspace+"maxAct")(csr) = nan;
-        else
-   		peaksumtab.(imspace+"maxActZ")(csr) = ActStats(Expi).(imspace).maxScore_Z;
-   		peaksumtab.(imspace+"maxAct")(csr) = ActStats(Expi).(imspace).maxScore;
-        end
-   		end
-   		for varnm = ["bsl_rate_mean", "bsl_rate_std", "bsl_rate_sem", "act_rate_mean", "act_rate_std", "act_rate_sem"]
-			peaksumtab.(varnm)(csr) = ActStats(Expi).(varnm);
-   		end
-   		csr = csr + 1;
-   	end
+ 	load(fullfile(mat_dir, Animal+'_Manif_stats.mat'), 'Stats') 
+ 	load(fullfile(mat_dir, Animal+"_PeakActCmp.mat"), "ActStats")
+ 	for Expi = 1:numel(ActStats)
+ 		for imspace = ["manif", "evoref", "pasu", "gab"]
+      if isempty(ActStats(Expi).(imspace).maxScore)
+      peaksumtab.(imspace+"maxActZ")(csr) = nan;
+ 		peaksumtab.(imspace+"maxAct")(csr) = nan;
+      else
+ 		peaksumtab.(imspace+"maxActZ")(csr) = ActStats(Expi).(imspace).maxScore_Z;
+ 		peaksumtab.(imspace+"maxAct")(csr) = ActStats(Expi).(imspace).maxScore;
+      end
+ 		end
+ 		for varnm = ["bsl_rate_mean", "bsl_rate_std", "bsl_rate_sem", "act_rate_mean", "act_rate_std", "act_rate_sem"]
+		peaksumtab.(varnm)(csr) = ActStats(Expi).(varnm);
+ 		end
+ 		csr = csr + 1;
+ 	end
 end
 %%
 sumdir = "O:\Manif_NonParam\summary";
 writetable(peaksumtab,fullfile(sumdir,"Both_PeakActStats.csv"))
 %%
+sumdir = "O:\Manif_NonParam\summary";
+peaksumtab = readtable(fullfile(sumdir,"Both_PeakActStats.csv"));
 pair_ttest_print(peaksumtab.manifmaxAct, peaksumtab.evorefmaxAct, "Manif", "EvoRef", "Max Activation (Sp/s)");
 pair_ttest_print(peaksumtab.manifmaxActZ, peaksumtab.evorefmaxActZ, "Manif", "EvoRef", "Max Activation Zscored");
 pair_ttest_print(peaksumtab.manifmaxAct, peaksumtab.pasumaxAct, "Manif", "Pasupathy", "Max Activation (Sp/s)");
