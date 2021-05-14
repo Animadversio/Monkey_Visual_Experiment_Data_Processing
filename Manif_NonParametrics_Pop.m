@@ -216,7 +216,7 @@ lmstr = compose("Linear Regres %s = %.3f + %s * %.3f \n Intercept %.3f+-%.3f, Sl
                 lm.Rsquared.Ordinary);
 title_str = title_str + anovastr+lmstr;
 % disp(lm)
-disp(title_str);%+anovastr+lmstr
+disp(title_str);
 end
 
 function h = stripe_plot(tab, statname, masks, labels, titstr, savestr, Tpairs, varargin)

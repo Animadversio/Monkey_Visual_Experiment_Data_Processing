@@ -4,6 +4,7 @@
 %% Plot the evolution trajectory comparison
 Animal = "Both"; Set_Path;
 %%
+global figdir
 figdir = "E:\OneDrive - Washington University in St. Louis\Evol_ReducDim\summary";
 ExpType = "RDEvol";
 Animal = "Both";
@@ -16,8 +17,8 @@ load(fullfile(MatStats_path, Animal+"_RDEvol_stats.mat"), 'RDStats')
 end
 
 RDEvol_Stats = []; % struct list 
-unitnum_arr = zeros(1,length(RDStats));
-validmsk = ones(1, numel(RDStats), 'logical'); % whether the exp should be excluded. (unconventional optimizer setup)
+unitnum_arr = zeros(length(RDStats),1);
+validmsk = ones(numel(RDStats), 1, 'logical'); % whether the exp should be excluded. (unconventional optimizer setup)
 score_traces = cell(numel(RDStats), 2); 
 zscore_traces = cell(numel(RDStats), 2); 
 block_traces = cell(numel(RDStats), 2); % vector of block num for plotting
@@ -177,7 +178,12 @@ saveallform(figdir,fignm+"_Xlim");
 %% Test on individual Session and Collect T stats on population
 RDEvolTab = struct2table(RDEvol_Stats);
 writetable(RDEvolTab, fullfile(figdir, Animal+"_RDEvol_trajcmp.csv"))
-
+%% Test
+Alfamsk = (RDEvolTab.Animal=="Alfa");
+Betomsk = (RDEvolTab.Animal=="Beto");
+V1msk = (RDEvolTab.pref_chan<=48 & RDEvolTab.pref_chan>=33);
+V4msk = (RDEvolTab.pref_chan>48);
+ITmsk = (RDEvolTab.pref_chan<33);
 %% Test on the aggregated mean value at population level with a T test. 
 testProgression(RDEvolTab, "Dpr_int_norm", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], "area", ...
     "Both Monk All Exp");
@@ -188,11 +194,16 @@ testProgression(RDEvolTab, "last23_cmp_dpr", {V1msk&validmsk, V4msk&validmsk, IT
 testProgression(RDEvolTab, "middle_m_ratio", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], "area", ...
     "Both Monk All Exp");
 %%
-score2cmp = score_vec_col(:,2:3);
-S = score_cmp_stats(score2cmp, "init23");
-S = score_cmp_stats(score_vec_col(:,end-2:end-1), "last23", S);
+h = stripe_plot(RDEvolTab, "Dpr_int_norm", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], ...
+                    "Both Monk All Exp", "area_sep", {[1,2],[2,3],[1,3]},'MarkerEdgeAlpha',0.9);
 %%
-Dprime_integral(score_vec_col)
+h = stripe_minor_plot(RDEvolTab, "Dpr_int_norm", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], ...
+                   {Alfamsk, Betomsk}, ["Alfa", "Beto"], "Both Monk All Exp", "area_anim_sep", {[1,2],[2,3],[1,3]},'MarkerEdgeAlpha',0.9);
+%%
+% score2cmp = score_vec_col(:,2:3);
+% S = score_cmp_stats(score2cmp, "init23");
+% S = score_cmp_stats(score_vec_col(:,end-2:end-1), "last23", S);
+% Dprime_integral(score_vec_col)
 
 function S = Dprime_integral(score_traj2cmp, S)
 % score_traj2cmp: cell array of scores, 2-by-blocknum. 
