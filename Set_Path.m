@@ -28,7 +28,8 @@ end
 addpath(".\utils")
 addpath(".\DNN")
 addpath(".\NMF")
-addpath CorrFeatTsr
+addpath(".\stats_plot")
+addpath(".\CorrFeatTsr")
 % Depends on 
 % - brewermap
 % - shadedErrorBar

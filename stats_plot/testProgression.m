@@ -1,0 +1,24 @@
+function title_str=testProgression(StatsTab_sum, statname, masks, labels, sepvarnm, titstr)
+title_str = compose("Test progression of %s ~ %s, for %s\n",statname, sepvarnm, titstr);
+valuevec = [];
+predvec = [];
+for i = 1:numel(masks)
+    value = StatsTab_sum.(statname)(masks{i});
+    valuevec = [valuevec; value];
+    predvec = [predvec; ones(numel(value),1)*(i-1)];
+    title_str = title_str+compose("%s %.3f+-%.3f (n=%d)\t",labels(i),mean(value),sem(value),numel(value));
+end
+lm = fitlm(predvec, valuevec);
+[F_p,F_tbl] = anova1(valuevec,predvec,'off');
+Fval = F_tbl{2,5}; F_df = F_tbl{4,3};
+anovastr = compose("\nANOVA F=%.3f p=%.1e(df=%d,%d)\n",Fval,F_p,F_tbl{2,3},F_tbl{3,3});
+lmstr = compose("Linear Regres %s = %.3f + %s * %.3f \n Intercept %.3f+-%.3f, Slope %.3f+-%.3f\n Slope!=0: T=%.1f P=%.1e\n Fit Rsquare=%.3f",...
+                statname, lm.Coefficients.Estimate(1), sepvarnm, lm.Coefficients.Estimate(2),...
+                lm.Coefficients.Estimate(1), lm.Coefficients.SE(1), ...
+                lm.Coefficients.Estimate(2), lm.Coefficients.SE(2), ...
+                lm.Coefficients.tStat(2), lm.Coefficients.pValue(2), ...
+                lm.Rsquared.Ordinary);
+title_str = title_str + anovastr+lmstr;
+% disp(lm)
+disp(title_str);%+anovastr+lmstr
+end
