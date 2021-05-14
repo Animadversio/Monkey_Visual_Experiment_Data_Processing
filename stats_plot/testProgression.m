@@ -1,4 +1,13 @@
 function title_str=testProgression(StatsTab_sum, statname, masks, labels, sepvarnm, titstr)
+% A high level API for testing the Progression of one variable (statname) in table
+% w.r.t. another categorical variable (sepvar). the sepvar is given in a
+% series of masks e.g. {V1msk, V4msk, ITmsk}
+% 
+% Example:
+%  testProgression(RDEvolTab, "Dpr_int_norm", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], "area", ...
+%      "Both Monk All Exp");
+%  testProgression(poptab, "kappa", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"], "area", ...
+%      "Both Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
 title_str = compose("Test progression of %s ~ %s, for %s\n",statname, sepvarnm, titstr);
 valuevec = [];
 predvec = [];
@@ -18,7 +27,7 @@ lmstr = compose("Linear Regres %s = %.3f + %s * %.3f \n Intercept %.3f+-%.3f, Sl
                 lm.Coefficients.Estimate(2), lm.Coefficients.SE(2), ...
                 lm.Coefficients.tStat(2), lm.Coefficients.pValue(2), ...
                 lm.Rsquared.Ordinary);
-title_str = title_str + anovastr+lmstr;
+title_str = title_str + anovastr + lmstr;
 % disp(lm)
-disp(title_str);%+anovastr+lmstr
+disp(title_str);
 end
