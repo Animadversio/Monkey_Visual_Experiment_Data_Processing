@@ -1,3 +1,5 @@
+%% Process experiment with CMA vs GA optimizers. 
+%  loading => Collect Stats => Generate summary figure 
 !ExpRecordBackup.bat 
 %%
 Animal = "Both";Set_Path;
@@ -6,11 +8,13 @@ expftr = contains(ExpRecord.expControlFN,"generate") & ...
 row_idx = find(expftr);
 [meta_new, rasters_new, lfps_new, Trials_new] = loadExperiments(row_idx, Animal, false);
 %%
-score_traces = cell(length(meta_new), 2);
-zscore_traces = cell(length(meta_new), 2);
-block_traces = cell(length(meta_new), 2);
+% Data Structures to store score traj and zscore traj 
+% exp num-by-thread num, in each cell there is a 1d vector [1, image-num] 
+score_traces = cell(length(meta_new), 2); 
+zscore_traces = cell(length(meta_new), 2); 
+block_traces = cell(length(meta_new), 2); % vector of block num for plotting
 ref_traces = cell(length(meta_new), 2);
-ref_block_traces = cell(length(meta_new), 2);
+ref_block_traces = cell(length(meta_new), 2); % vector of block num for plotting
 for Triali = 1:length(meta_new)-1
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
@@ -29,7 +33,7 @@ unit_in_prefchan = Trials.TrialRecord.User.evoConfiguration{1,4};
 assert(pref_chan(1) == pref_chan(2))
 Exp_label_str = sprintf("Exp%d pref chan %d", Expi, pref_chan(1));
 try
-unit_name_arr = generate_unit_labels_new(meta.spikeID, meta.unit);
+unit_name_arr = generate_unit_labels_new(meta.spikeID, meta.unitID);
 catch
 unit_name_arr = generate_unit_labels(meta.spikeID);
 end
@@ -43,8 +47,8 @@ for i = 1:thread_num
     Optim_names = [Optim_names, string(Trials.TrialRecord.User.evoConfiguration{i,end})];
 end
 if contains(Optim_names(1),"CMAES")&&contains(Optim_names(2),"GA"),
-optimMap = [1,2];
-else
+optimMap = [1,2]; % make sure CMA in the 1st entry in summary cell. 
+else % make sure GA in the 2nd entry in summary cell. 
 optimMap = [2,1];
 end
 %% Sort the images
@@ -81,6 +85,7 @@ for threadi = 1:thread_num
         stdscore_syn(:, blocki, threadi)  = std(scores_tsr(:, gen_msk), 1, 2) / sqrt(sum(gen_msk));
         stdscore_nat(:, blocki, threadi)  = std(scores_tsr(:, nat_msk), 1, 2) / sqrt(sum(nat_msk));
     end
+    % Store the exp stats into the pools
     optimi=optimMap(threadi); % CMA at 1st GA at 2nd
     score_traces{Triali,optimi} = scores_tsr(pref_chan_id, row_gen & thread_msks{threadi});
     zscore_traces{Triali,optimi} = zscores_tsr(pref_chan_id, row_gen & thread_msks{threadi});
@@ -99,15 +104,15 @@ for blocki = 1:length(block_list)
 end
 end
 end
-%%
-
-%% Plot the Image Evolution Trajectory 
-figdir = "O:\Optimizer_Cmp\summary";
+%% A demo of testing the score of last 5 gen
 scores_tsr = squeeze(mean(rasters(:, 51:200, :), 2) - mean(rasters(:, 1:40, :), 2)); % [unit_num, img_nums]
 scores_thread1 = scores_tsr(pref_chan_id, row_gen & (block_arr > max(block_arr)-6) & thread_msks{1});
 scores_thread2 = scores_tsr(pref_chan_id, row_gen & (block_arr > max(block_arr)-6) & thread_msks{2});
 [~,Pval,CI] = ttest2(scores_thread1, scores_thread2);
-%%
+%% Plot the Score Evolution Trajectory of CMA vs GA
+%  Note the key is proper normalization to show all score traj together. 
+figdir = "O:\Optimizer_Cmp\summary";
+%% Scatter the zscored score trajectory
 figure;hold on;fignm="zscore_scatter_all";
 for Expi=1:size(zscore_traces,1)-1
     scatter(block_traces{Expi,1},zscore_traces{Expi,1},'MarkerEdgeColor','none','MarkerFaceColor',Corder(2,:),'MarkerFaceAlpha',0.05)
@@ -184,6 +189,7 @@ legend(["CMAES","GA-classic"])
 saveallform(figdir,fignm);
 xlim([0,50]);fignm="MaxNorm_scoreTraj_ColAvg_Xlim";
 saveallform(figdir,fignm);
+
 %% t test the last 5 generations 
 CMA_score = zeros(length(meta_new),1);
 CMA_err = zeros(length(meta_new),1);
