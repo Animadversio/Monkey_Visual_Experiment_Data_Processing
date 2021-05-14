@@ -54,6 +54,7 @@ block_traces{Expi, thr_i} = cat(1,block_vec_col{thr_i,1:end-1});
 % Collect Stats
 end
 midgen = round((size(score_vec_col,2) - 1)/2);
+S = optimtraj_integral(score_vec_col, S);
 S = Dprime_integral(score_vec_col,S);
 S = score_cmp_stats(score_vec_col(:,2:3), "init23", S);
 S = score_cmp_stats(score_vec_col(:,end-2:end-1), "last23", S);
@@ -62,6 +63,7 @@ else
 fprintf("Exp %02d, Skip Non standard optimnames",Expi)
 disp(RDStats(Expi).evol.optim_names)
 validmsk(Expi) = 0;
+S = optimtraj_integral({}, S);
 S = Dprime_integral({}, S);
 S = score_cmp_stats({}, "init23", S);
 S = score_cmp_stats({}, "last23", S);
@@ -178,6 +180,7 @@ saveallform(figdir,fignm+"_Xlim");
 %% Test on individual Session and Collect T stats on population
 RDEvolTab = struct2table(RDEvol_Stats);
 writetable(RDEvolTab, fullfile(figdir, Animal+"_RDEvol_trajcmp.csv"))
+save(fullfile(figdir, Animal+"_RDEvol_summaryStats.mat"), "RDEvol_Stats")
 %% Test
 Alfamsk = (RDEvolTab.Animal=="Alfa");
 Betomsk = (RDEvolTab.Animal=="Beto");
@@ -191,8 +194,14 @@ testProgression(RDEvolTab, "middle_cmp_dpr", {V1msk&validmsk, V4msk&validmsk, IT
     "Both Monk All Exp");
 testProgression(RDEvolTab, "last23_cmp_dpr", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], "area", ...
     "Both Monk All Exp");
+%%
+testProgression(RDEvolTab, "last23_m_ratio", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], "area", ...
+    "Both Monk All Exp");
 testProgression(RDEvolTab, "middle_m_ratio", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], "area", ...
     "Both Monk All Exp");
+%%
+h = stripe_plot(RDEvolTab, "last23_cmp_dpr", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], ...
+                    "Both Monk All Exp", "area_sep", {[1,2],[2,3],[1,3]},'MarkerEdgeAlpha',0.9);
 %%
 h = stripe_plot(RDEvolTab, "Dpr_int_norm", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], ...
                     "Both Monk All Exp", "area_sep", {[1,2],[2,3],[1,3]},'MarkerEdgeAlpha',0.9);
@@ -200,12 +209,48 @@ h = stripe_plot(RDEvolTab, "Dpr_int_norm", {V1msk&validmsk, V4msk&validmsk, ITms
 h = stripe_minor_plot(RDEvolTab, "Dpr_int_norm", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], ...
                    {Alfamsk, Betomsk}, ["Alfa", "Beto"], "Both Monk All Exp", "area_anim_sep", {[1,2],[2,3],[1,3]}, 'marker', 'MarkerEdgeAlpha',0.9);
 %%
+h = stripe_minor_plot(RDEvolTab, "traj_int_ratio", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], ...
+                   {Alfamsk, Betomsk}, ["Alfa", "Beto"], "Both Monk All Exp", "area_anim_sep", {[1,2],[2,3],[1,3]}, 'marker', 'MarkerEdgeAlpha',0.9);
+%%
 % score2cmp = score_vec_col(:,2:3);
 % S = score_cmp_stats(score2cmp, "init23");
 % S = score_cmp_stats(score_vec_col(:,end-2:end-1), "last23", S);
 % Dprime_integral(score_vec_col)
 
+function S = optimtraj_integral(score_traj2cmp, S)
+% Integrate the area under the optimization trajectory.
+% Return a structure. 
+% 
+% score_traj2cmp: cell array of scores, 2-by-blocknum. 
+%      in each cell is a 1-by-N array of single trial image scores. 
+% this function will clip the last generation for stability. 
+% No need to clip the score trajectory before entering.
+if nargin <= 1, S=struct(); end
+if isempty(score_traj2cmp), % use this to generate nan default dict
+    S.("traj_int") = nan(1, 2);
+    S.("traj_int_norm") = nan(1, 2);
+    S.("traj_int_ratio") = nan;
+    S.("traj_incr_int") = nan(1, 2);
+    S.("traj_incr_int_norm") = nan(1, 2);
+    S.("traj_incr_int_ratio") = nan;
+    return; 
+end
+score_m_arr = cellfun(@mean, score_traj2cmp(:,1:end-1));
+traj_int = sum(score_m_arr,2)'; % AUC without subtracting 1st gen scores
+traj_int_norm = mean(score_m_arr,2)';
+traj_incr_int = sum(score_m_arr-score_m_arr(:,1),2)'; % AUC with subtracting 1st gen scores 
+traj_incr_int_norm = mean(score_m_arr-score_m_arr(:,1),2)'; % Area for only increased activation.
+S.("traj_int") = traj_int;
+S.("traj_int_norm") = traj_int_norm;
+S.("traj_int_ratio") = traj_int(2) / traj_int(1);
+S.("traj_incr_int") = traj_incr_int;
+S.("traj_incr_int_norm") = traj_incr_int_norm;
+S.("traj_incr_int_ratio") = traj_incr_int(2) / traj_incr_int(1);
+end
+
 function S = Dprime_integral(score_traj2cmp, S)
+% Integrate D prime between 2 threads. 
+% 
 % score_traj2cmp: cell array of scores, 2-by-blocknum. 
 %      in each cell is a 1-by-N array of single trial image scores. 
 % this function will clip the last generation for stability. 
