@@ -1,5 +1,6 @@
 %% Create the summary plots for Compare evolution scores for Alfa/Beto.
-%  See if the Evolution works
+%  See if the Evolution works 
+%  (Newer Refactored version. May 2021)
 %% 
 %% Plot the evolution trajectory comparison
 Animal = "Both"; Set_Path;
@@ -18,6 +19,7 @@ end
 
 RDEvol_Stats = []; % struct list 
 unitnum_arr = zeros(length(RDStats),1);
+prefchan_arr = zeros(length(RDStats),1);
 validmsk = ones(numel(RDStats), 1, 'logical'); % whether the exp should be excluded. (unconventional optimizer setup)
 score_traces = cell(numel(RDStats), 2); 
 zscore_traces = cell(numel(RDStats), 2); 
@@ -152,6 +154,40 @@ for mski=1:3
 end
 saveallform(figdir,fignm+"_Xlim");
 %%
+%% Area average with individual curves plotted on it.
+V1msk = prefchan_arr <=48 & prefchan_arr>=33;
+V4msk = prefchan_arr <=64 & prefchan_arr>=49;
+ITmsk = prefchan_arr <=32 & prefchan_arr>=1;
+msk_col = {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk};
+label_col = ["V1", "V4", "IT"];
+h=figure; fignm=compose("%s_MaxNorm_scoreTraj_avg_ws_indiv_Area", Animal);
+set(h,'pos',[285         388        1644         549])
+T = tiledlayout(1,numel(msk_col),"pad",'compact');
+for mski=1:3
+nexttile(T,mski);hold on
+msk = msk_col{mski};
+[score_C_col_m,score_C_col_s,block_colvec] = sort_scoreblock(cat(2,block_trajs{msk}),cat(2,score_C_m_trajs{msk}));
+[score_G_col_m,score_G_col_s,block_colvec] = sort_scoreblock(cat(2,block_trajs{msk}),cat(2,score_G_m_trajs{msk}));
+shadedErrorBar(block_colvec,score_C_col_m,score_C_col_s,'lineProps',{'Color',Corder(2,:),'LineWidth',1.5})
+shadedErrorBar(block_colvec,score_G_col_m,score_G_col_s,'lineProps',{'Color',Corder(1,:),'LineWidth',1.5})
+for Expi = find(msk)'
+    plot(block_trajs{Expi},movmean(score_C_m_trajs{Expi},3),'Color',[Corder(2,:),0.4],'lineWidth',0.5)
+    plot(block_trajs{Expi},movmean(score_G_m_trajs{Expi},3),'Color',[Corder(1,:),0.4],'lineWidth',0.5)
+end
+xlabel("Generation")
+ylabel("Activation / Max each session")
+title(compose("Averaged Optimization Trajectory %s (n=%d)",label_col(mski),sum(msk)))
+legend(["Full","50D"])
+end
+title(T, compose("%s Summary of mean evol trajectory for each area",Animal), 'FontSize',16)
+saveallform(figdir,fignm);
+for mski=1:3
+   nexttile(T,mski)
+   msk = msk_col{mski};
+   xlim([1,prctile(cellfun(@numel,block_trajs(msk)),80)]);
+end
+saveallform(figdir,fignm+"_Xlim");
+%%
 h=figure; fignm=compose("%s_MaxNorm_scoreTraj_indiv_Area", Animal);
 set(h,'pos',[285         388        1644         549])
 T = tiledlayout(1,numel(msk_col),"pad",'compact');
@@ -175,13 +211,12 @@ for mski=1:3
    xlim([1,prctile(cellfun(@numel,block_trajs(msk)),80)]);
 end
 saveallform(figdir,fignm+"_Xlim");
-%% Collect stats 
-
-%% Test on individual Session and Collect T stats on population
+%% Collect stats and save
 RDEvolTab = struct2table(RDEvol_Stats);
 writetable(RDEvolTab, fullfile(figdir, Animal+"_RDEvol_trajcmp.csv"))
 save(fullfile(figdir, Animal+"_RDEvol_summaryStats.mat"), "RDEvol_Stats")
-%% Test
+%% Test on individual Session and Collect T stats on population
+
 Alfamsk = (RDEvolTab.Animal=="Alfa");
 Betomsk = (RDEvolTab.Animal=="Beto");
 V1msk = (RDEvolTab.pref_chan<=48 & RDEvolTab.pref_chan>=33);
@@ -202,9 +237,14 @@ testProgression(RDEvolTab, "middle_m_ratio", {V1msk&validmsk, V4msk&validmsk, IT
 %%
 h = stripe_plot(RDEvolTab, "last23_cmp_dpr", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], ...
                     "Both Monk All Exp", "area_sep", {[1,2],[2,3],[1,3]},'MarkerEdgeAlpha',0.9);
+                
 %%
 h = stripe_plot(RDEvolTab, "Dpr_int_norm", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], ...
                     "Both Monk All Exp", "area_sep", {[1,2],[2,3],[1,3]},'MarkerEdgeAlpha',0.9);
+
+%%
+h = stripe_minor_plot(RDEvolTab, "last23_cmp_dpr", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], ...
+                    {Alfamsk, Betomsk}, ["Alfa", "Beto"], "Both Monk All Exp", "area_anim_sep", {[1,2],[2,3],[1,3]}, 'marker','MarkerEdgeAlpha',0.9);                
 %%
 h = stripe_minor_plot(RDEvolTab, "Dpr_int_norm", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], ...
                    {Alfamsk, Betomsk}, ["Alfa", "Beto"], "Both Monk All Exp", "area_anim_sep", {[1,2],[2,3],[1,3]}, 'marker', 'MarkerEdgeAlpha',0.9);
