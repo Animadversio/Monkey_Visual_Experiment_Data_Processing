@@ -2,6 +2,8 @@ function title_str=testProgression(StatsTab_sum, statname, masks, labels, sepvar
 % A high level API for testing the Progression of one variable (statname) in table
 % w.r.t. another categorical variable (sepvar). the sepvar is given in a
 % series of masks e.g. {V1msk, V4msk, ITmsk}
+% Currently it does Spearman correlation, ANOVA and linear regression model.
+% and then generate and return the summary string. 
 % 
 % Example:
 %  testProgression(RDEvolTab, "Dpr_int_norm", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], "area", ...
@@ -29,7 +31,7 @@ lmstr = compose("Linear Regres %s = %.3f + %s * %.3f \n Intercept %.3f+-%.3f, Sl
                 lm.Coefficients.Estimate(2), lm.Coefficients.SE(2), ...
                 lm.Coefficients.tStat(2), lm.Coefficients.pValue(2), ...
                 lm.Rsquared.Ordinary);
-title_str = title_str + corrstr + anovastr + lmstr;
+title_str = title_str + anovastr + corrstr + lmstr;
 % disp(lm)
 disp(title_str);
 end
