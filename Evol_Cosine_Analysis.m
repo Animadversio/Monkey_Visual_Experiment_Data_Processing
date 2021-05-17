@@ -1,19 +1,12 @@
+%%  This is all in one analysis for Cosine Evolution Experiment
+%%
 !ExpRecordBackup.bat 
 %%
 Animal = "Alfa";Set_Path;
-ftrrows = find(contains(ExpRecord.expControlFN,["generate_BigGAN_cosine"])&contains(ExpRecord.expControlFN,["210218","210408","210413","210415"]));%...
+ftrrows = find(contains(ExpRecord.expControlFN,["generate_BigGAN_cosine"]));%&contains(ExpRecord.expControlFN,["210218","210408","210413","210415"]));%...
     %&~contains(ExpRecord.ephysFN,["Alfa-02032021","Alfa-04032021"]));%&..."Alfa-18022021"
 %     contains(ExpRecord.ephysFN,["Alfa-12022021"]));%,"Alfa-09022021""Alfa-27102020-003", "Alfa-27102020-004"
 [meta_new, rasters_new, lfps_new, Trials_new] = loadExperiments(ftrrows, Animal, false);
-%%
-% formattedMatPath = "S:\Data-Ephys-MAT\Alfa-30032021-012_formatted";
-% load(formattedMatPath);
-% lfps = lfps(1:end-1,:,:);
-% rasters = rasters(1:end-1,:,:);
-% meta.spikeID = meta.spikeID(1:end-1);
-% % meta.stimuli = 
-% save(formattedMatPath,'Trials','lfps','meta','rasters')
-%%
 %%
 saveroot = "O:\Evol_Cosine";
 mkdir(saveroot)
@@ -82,7 +75,7 @@ saveas(figh0,fullfile(figdir,"online_scoretraj.png"))
 saveas(figh0,fullfile(figdir,"online_scoretraj.pdf"))
 % save(fullfile(figdir,"EvolStat.mat"),'EvolStat')
 % fprintf("ExpStats saved to %s EvolStat.mat!\n",figdir)
-%%
+%% Form the activation
 act_mat = squeeze(mean(rasters(:,51:200,:),2));
 % bsl_mat = squeeze(mean(rasters(:,1:50,:),[2,3])); % baseline matrix for each channel
 bsl_mat = squeeze(mean(rasters(:,1:50,:),[2,3])); % baseline matrix for each channel
@@ -110,9 +103,7 @@ targimg = imread(targmap(targetName)); % get the target image
 objMask = parse_mode2mask(mode); % Parse out the chanXunit mask used to evaluate objective. (area specific)
 maskMat = objMask & FMat & ~isnan(targetActMat); % Channel Selection & F significant
 % score_recalc = squeeze(nansum(((act_tsr - meanActMat)./stdActMat).*....*targetActMat.*maskMat,[1,2]));
-%                     ((targetActMat- meanActMat)./stdActMat).*maskMat,[1,2]));
-% gen_score_col = cellfun(@(idx)score_recalc(idx),gen_idx_seq,'uni',0);
-% nat_score_col = cellfun(@(idx)score_recalc(idx),nat_idx_seq,'uni',0);
+%                       ((targetActMat- meanActMat)./stdActMat).*maskMat,[1,2]));
 % Note to baseline subtract! or correlation will be bad.
 vec_reprs = reshape(act_tsr(repmat(maskMat,1,1,size(act_tsr,3))),[],size(act_tsr,3)) - bslMat(maskMat); 
 vec_targs = targetActMat(maskMat);
@@ -188,10 +179,12 @@ end
 [sortchan,sortidx] = sort(vecchan);
 getChanX(sortchan)
 
-%%
-
+%% 
 function movh = summary_movie(imgscore_vec, scorestr, reprMat, targVec, chanArr, ...
     gen_idx_seq, nat_idx_seq, imageName, stimpath, targimg, Animal, ExempN, h)
+% Generate overall movie summary for each experiment: 
+%   Showing the population vector, target image, evolved image and scoring. 
+%   
 global figdir explabel
 if nargin <=11, ExempN=4; end % best 3 vs worst 3.
 if nargin <=12, movh=figure; else, movh = figure(h); end
@@ -355,7 +348,8 @@ function chanmsk = parse_mode2mask(mode, chan_arr, unit_arr)
 % Parse the score_mode string into a channel mask of which channels are
 % used in the exp.
 % chanmsk = parse_mode2mask("corr_V4IT");
-if nargin ==1, chan_arr=[1:64]'; unit_arr = 0:4; end
+MAXUNUM = 4;
+if nargin ==1, chan_arr=[1:64]'; unit_arr = 0:MAXUNUM; end
 chanMat = repmat(chan_arr,1,numel(unit_arr));
 unitMat = repmat(unit_arr,numel(chan_arr),1);
 if ~contains(mode,["V1","V4","IT"])
@@ -377,6 +371,13 @@ end
 function [figh, mean_corr_gen, sem_corr_gen, mean_corr_nat, sem_corr_nat] = ...
 	plotStatsTraj(Stat_vec,statname,savestr,gen_idx_seq,nat_idx_seq,block_arr,figh)
 % Plot trajectory of certain stats through out the evolution exp.
+% Stat_vec: A vector, same length as trial num. This func will sort the
+%   stat into each block and generated and natural. Then the scores will be
+%   displayed as errorbar plot. The function will automatically clip out the last 
+%   generation since it's usually incomplete. 
+% block_arr: The block numbering, same length as Stat_vec. 
+% 
+% Rely on global variable `figdir` and `explabel`. 
 if nargin<7, figh = figure; else, clf(figh); end
 global figdir explabel
 mean_corr_gen = cellfun(@(idx)mean(Stat_vec(idx)),gen_idx_seq(1:end-1));
@@ -448,3 +449,11 @@ for threadi = 1:thread_num
     end
 end
 end
+%%
+% formattedMatPath = "S:\Data-Ephys-MAT\Alfa-30032021-012_formatted";
+% load(formattedMatPath);
+% lfps = lfps(1:end-1,:,:);
+% rasters = rasters(1:end-1,:,:);
+% meta.spikeID = meta.spikeID(1:end-1);
+% % meta.stimuli = 
+% save(formattedMatPath,'Trials','lfps','meta','rasters')
