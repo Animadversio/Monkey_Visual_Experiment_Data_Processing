@@ -25,6 +25,7 @@ else
 end
 %winopen("S:\ExpSpecTable_Augment.xlsx")
 %winopen("S:\Exp_Record_Alfa.xlsx")
+matdir = "O:\Mat_Statistics";
 addpath(".\utils")
 addpath(".\DNN")
 addpath(".\NMF")
