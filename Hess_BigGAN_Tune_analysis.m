@@ -13,7 +13,6 @@ Animal = "Both";Set_Path;
 expftr = contains(ExpRecord.Exp_collection,"BigGAN_Hessian") & contains(ExpRecord.expControlFN, "selectivity");
 fllist = find(expftr);no_return=false;
 [meta_new,rasters_new,~,Trials_new] = loadExperiments(fllist(end-5:end),Animal,no_return);
-
 % figdir = "E:\OneDrive - Washington University in St. Louis\HessBigGANTune\Beto_Exp04";
 % mkdir(figdir)
 %% Prepare Image Metric

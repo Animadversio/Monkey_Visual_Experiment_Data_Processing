@@ -1,8 +1,11 @@
-Animal = "Beto"; Set_Path; setMatlabTitle();
-ftrrows = find(contains(ExpRecord.expControlFN,"generate_") & (ExpRecord.Exp_collection=="BigGAN_fc6" |...
-               ExpRecord.Exp_collection=="BigGAN_FC6"));
 saveroot = "E:\OneDrive - Washington University in St. Louis\Evol_BigGAN_FC6_cmp"; 
-[meta_new, rasters_new, lfps_new, Trials_new] = loadExperiments(ftrrows, Animal, false);
+setMatlabTitle("BigGAN_FC6 compare");
+
+Animal = "Alfa"; Set_Path; 
+ftrrows = find(contains(ExpRecord.expControlFN,"generate_") & (ExpRecord.Exp_collection=="BigGAN_fc6" |...
+               ExpRecord.Exp_collection=="BigGAN_FC6" | ExpRecord.Exp_collection=="BigGAN_FC6_CMAHess"));
+disp(ExpRecord(ftrrows,:))
+[meta_new, rasters_new, lfps_new, Trials_new] = loadExperiments(ftrrows(30:end), Animal, false);
 
 %% Evol_BigGAN_FC6_Collect_Stats.m
 BFEStats = repmat(struct(),1,numel(meta_new));
@@ -123,6 +126,5 @@ end
 %%
 mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics"; 
 save(fullfile(mat_dir, Animal + "_BigGAN_FC6_Evol_Stats.mat"), 'BFEStats'); 
-
 %% 
 
