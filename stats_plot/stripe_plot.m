@@ -3,7 +3,8 @@ function h = stripe_plot(tab, statname, masks, labels, titstr, savestr, Tpairs, 
 %  tab: table contain all stats
 %  statname: variable / stats to plot on y axis
 %  masks: cell array of masks to separate the variable into columns. 
-%  labels: labels correponding to these labels. Will be plotted as x tick label
+%  labels: labels correponding to these labels. Will be plotted as
+%           x tick label and legend 
 %  Tpairs: a cell array of 1-by-2 arrays, indicating which pairs of columns to test between. Like {[1,2],[3,4]}
 %  
 % Example:
