@@ -14,9 +14,14 @@ set(0,'defaultTextInterpreter','none');
 saveroot = "O:\corrFeatVis_FactorPredict";
 P = struct();
 P.plotTuneCurve = false;% TO IMplement.
-P.savefig = true;
+P.plotTuneImage = false;true;% Plot best image in each class of tuning
+P.savefig = false;true;
 P.interactive = false;
+P.vis = false;
+P.savestat = true;
+P.collectstat = true;
 global ax1 imcanvs groupdict imgname_uniq
+if P.collectstat, S_col = []; end
 for Triali = 1:numel(meta_new)%-3:numel(meta_new)-2
 %
 meta = meta_new{Triali};
@@ -84,9 +89,11 @@ group_score_col = cellfun(@(idx) evkbsl_trials(idx), group_idxarr,'uni',0);
 group_mean = cellfun(@mean, group_score_col);
 group_sem = cellfun(@sem, group_score_col);
 
+if P.interactive && P.vis
 imcanvs = figure(1);clf;ax1 = subplot(1,1,1);set(1,'Name','Stimuli Viewer');hold on
 Cord = colororder;
-
+end
+if P.vis
 figure(2); set(2,'pos',[705   425   975   435])
 X = categorical(grouplabs);
 X = reordercats(X,grouplabs);
@@ -96,10 +103,9 @@ title(compose("%s\nImage Group Summary",explabel))
 set(gca,'TickLabelInterpreter','none')
 box off; B.DataTipTemplate.Interpreter = 'none';
 if P.savefig
-savefig(2,fullfile(figdir,"group_summary_prfchan.fig"))
-saveas(2,fullfile(figdir,"group_summary_prfchan.png"))
+    saveallform(figdir, "group_summary_prfchan", 2);
 end
-%
+
 figure(3);clf; set(3,'pos',[1000    150   1325   825])
 subplot(211);hold on; 
 E = errorbar([],group_mean,group_sem,'o','LineWidth',1.5);
@@ -134,16 +140,106 @@ if P.interactive
     set(ERR,'ButtonDownFcn',@selectpoint, 'HitTest','on')
 end
 if P.savefig
-savefig(3,fullfile(figdir,"group_img_scatter_prfchan.fig"))
-saveas(3,fullfile(figdir,"group_img_scatter_prfchan.png"))
+    saveallform(figdir, "group_img_scatter_prfchan", 3);
 end
-%% Best image summary 
+%% Best image (or 2) for each category summary 
+if P.plotTuneImage
+[maxscore_ingroup,maxid_ingroup] = cellfun(@(idx)max(img_score_mean(idx)),group_uniqidxs);
+bestimgnms = arrayfun(@(gi)imgname_uniq{group_uniqidxs{gi}(maxid_ingroup(gi))},1:numel(group_uniqidxs),'uni',0);
+bestfns = cellfun(@(imgnm)mapper(imgnm),bestimgnms,'uni',0);
+bestimgs = cellfun(@(imgnm)imread(mapper(imgnm)),bestimgnms,'uni',0);
+%%
+figure(4); clf; set(4,'pos',[300   125   1500   720])
+T=tiledlayout(2,1,'Padding','compact','TileSpac','compact');
+nexttile(T,1);hold on
+X = categorical(grouplabs);
+X = reordercats(X,grouplabs);
+B = bar(X,group_mean);
+for gi = 1:length(groupdict)
+%     SPminor = 0.5 / numel(group_uniqidxs{gi});
+%     xarr = gi + [1:numel(group_uniqidxs{gi})]*SPminor;xarr
+    ER = errorbar(repmat(X(gi),numel(group_uniqidxs{gi}),1), img_score_mean(group_uniqidxs{gi}), img_score_sem(group_uniqidxs{gi}),...
+        'o','color',[1,0,0,0.7],'LineWidth',0.1,'MarkerSize',3);
+    ER.DataTipTemplate.Interpreter = 'none';
+end
+ylabel("Evoke - Bsl (sp/s)");xlabel("Image Groups");
+title(T,compose("%s\nImage Group Summary",explabel))
+set(gca,'TickLabelInterpreter','none')
+box off; B.DataTipTemplate.Interpreter = 'none';
+nexttile(T,2)
+% imshow(imtile(bestimgs,'GridSize',[1,numel(bestimgs)]))
+if numel(bestimgs)>13, imshow(tile_zigzag(bestimgs, 2));
+else, imshow(tile_zigzag(bestimgs, 1));end
+if P.savefig
+    saveallform(figdir, "group_summary_bestImg_prfchan", 4);
+end
+end
+end
+%%
+if P.savestat
+    S = struct();
+    S.Animal = Animal;
+    S.meta = meta;
+    S.meta.expday = expday;
+    S.meta.fdrnm = fdrnm;
+    S.meta.figdir = figdir;
+    S.meta.explabel = explabel;
+    S.imageName = Trials.imageName;
+    S.unit.unit_num_arr = unit_num_arr;
+    S.unit.unit_name_arr = unit_name_arr;
+    S.unit.prefchan = prefchan;
+    S.unit.prefunit = prefUi;
+    S.unit.prefchan_id = prefchan_id;
 
+    S.stim.imgfn_mapper = mapper;
+    S.stim.imgfps = imgfps;
+    S.stim.impos = impos;
+    S.stim.imsize_pix = imsize_pix;
+    S.stim.imsize_deg = imsize_deg;
+    S.stim.imgname_uniq = imgname_uniq;
+    S.stim.img_idxarr = img_idxarr;
+    S.stim.groupdict = groupdict;
+    S.stim.group_uniqidxs = group_uniqidxs;
+    S.stim.grouplabs = grouplabs;
+    S.stim.group_idxarr = group_idxarr;
+    
+    S.prefresp.psth_arr = psth_arr;
+    S.prefresp.img_evoke_col = score_col;
+    S.prefresp.img_score_col = score_bsl_col;
+    S.prefresp.group_score_col = group_score_col;
+    S.prefresp.img_mean = img_score_mean;
+    S.prefresp.img_sem = img_score_sem;
+    S.prefresp.group_mean = group_mean;
+    S.prefresp.group_sem = group_sem;
+    S.prefresp.bestimgnms = bestimgnms;
+    save(fullfile(figdir, "ExpStat.mat"), "S");
+    if P.collectstat, S_col = [S_col,S]; end
+end
 %% Saving zone 
-% save(fullfile(figdir,compose(".mat")),)
 
 end
 %%
+% figure(5);imshow(tile_zigzag(bestimgs, 3))
+function img_mtg = tile_zigzag(imgcol,rown)
+imgpix = 256;
+brdrpix=2;
+imgN = numel(imgcol);
+imgrow_mtg = {};
+for rowi = 1:rown
+imgrow_mtg{rowi}=imtile(imgcol(rowi:rown:end),'GridSize',[1,numel(imgcol(rowi:rown:end))],'BorderSize', brdrpix);
+end
+padimgrow_mtg = {};
+rowlen = 1 + (imgN - 1) * (1 / rown);
+rowpix = ceil(rowlen*(imgpix+2*brdrpix));
+for rowi = 1:rown
+    prepad = round((rowi-1)/rown*(imgpix+2*brdrpix));
+    postpad = rowpix - prepad - size(imgrow_mtg{rowi}, 2);
+    pre_padarr = zeros(imgpix+2*brdrpix,prepad,3,class(imgrow_mtg{rowi}));
+    post_padarr = zeros(imgpix+2*brdrpix,postpad,3,class(imgrow_mtg{rowi}));
+    padimgrow_mtg{rowi}=cat(2,pre_padarr,imgrow_mtg{rowi},post_padarr);
+end
+img_mtg = cat(1,padimgrow_mtg{:});
+end
 
 function [groups, uniqnm_idxs, grouplabs] = uniqimg_grouping(imgname_uniq, mode)
 % group the uniq image names into groups
@@ -187,7 +283,11 @@ elseif strcmp(mode, "type_shfl")
     cNum = max(factor_id)+1;
     groups = containers.Map();
     groups("evol_best") = find(contains(imgname_uniq,"evol_best_"));
-    groups("fact_tsr") = find(contains(imgname_uniq,"facttsr_"));
+    groups("fact_tsr") = find(contains(imgname_uniq,"facttsr_")...
+                             & ~contains(imgname_uniq,"facttsr_map_patchshuffle")...
+                             & ~contains(imgname_uniq,"facttsr_maponly_patchshuffle"));
+    groups("fact_tsr_mapfeat_patchshfl") = find(contains(imgname_uniq,"facttsr_map_patchshuffle"));
+    groups("fact_tsr_maponly_patchshfl") = find(contains(imgname_uniq,"facttsr_maponly_patchshuffle"));
     groups("full_tsr") = find(contains(imgname_uniq,"tsr_") & ~contains(imgname_uniq,"facttsr_"));
     for ci = min(factor_id):max(factor_id)
     groups(compose("fact%d_cntpnt",ci)) = find(contains(imgname_uniq,compose("fac%d_cntpnt_",ci)) & ~contains(imgname_uniq,compose("fac%d_cntpnt_shuffle",ci)));
@@ -196,11 +296,11 @@ elseif strcmp(mode, "type_shfl")
                                           & ~contains(imgname_uniq,compose("fac%d_map_shuffle",ci))...
                                           & ~contains(imgname_uniq,compose("fac%d_map_map_patchshuffle",ci))...
                                           & ~contains(imgname_uniq,compose("fac%d_map_maponly_patchshuffle",ci)));
-    groups(compose("fact%d_wmap_patchshflmap",ci)) = find(contains(imgname_uniq,compose("fac%d_map_maponly_patchshuffle",ci)));
-    groups(compose("fact%d_cntpnt_shfl",ci)) = find(contains(imgname_uniq,compose("fac%d_cntpnt_shuffle",ci)));
-    groups(compose("fact%d_full_shfl",ci)) = find(contains(imgname_uniq,compose("fac%d_full_shuffle",ci)));
-    groups(compose("fact%d_wmap_shfl",ci)) = find(contains(imgname_uniq,compose("fac%d_map_shuffle",ci)));
-    groups(compose("fact%d_wmap_patchshfl",ci)) = find(contains(imgname_uniq,compose("fac%d_map_map_patchshuffle",ci)));
+    groups(compose("fact%d_wmap_maponly_patchshfl",ci)) = find(contains(imgname_uniq,compose("fac%d_map_maponly_patchshuffle",ci)));
+    groups(compose("fact%d_cntpnt_feat_shfl",ci)) = find(contains(imgname_uniq,compose("fac%d_cntpnt_shuffle",ci)));
+    groups(compose("fact%d_full_feat_shfl",ci)) = find(contains(imgname_uniq,compose("fac%d_full_shuffle",ci)));
+    groups(compose("fact%d_wmap_feat_shfl",ci)) = find(contains(imgname_uniq,compose("fac%d_map_shuffle",ci)));
+    groups(compose("fact%d_wmap_featmap_patchshfl",ci)) = find(contains(imgname_uniq,compose("fac%d_map_map_patchshuffle",ci)));
     end
     grouplabs = groups.keys;
     uniqnm_idxs = groups.values;
