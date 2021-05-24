@@ -93,6 +93,12 @@ if P.interactive && P.vis
 imcanvs = figure(1);clf;ax1 = subplot(1,1,1);set(1,'Name','Stimuli Viewer');hold on
 Cord = colororder;
 end
+%% Best image (or 2) for each category summary 
+[maxscore_ingroup,maxid_ingroup] = cellfun(@(idx)max(img_score_mean(idx)),group_uniqidxs);
+bestimgnms = arrayfun(@(gi)imgname_uniq{group_uniqidxs{gi}(maxid_ingroup(gi))},1:numel(group_uniqidxs),'uni',0);
+bestfns = cellfun(@(imgnm)mapper(imgnm),bestimgnms,'uni',0);
+bestimgs = cellfun(@(imgnm)imread(mapper(imgnm)),bestimgnms,'uni',0);
+
 if P.vis
 figure(2); set(2,'pos',[705   425   975   435])
 X = categorical(grouplabs);
@@ -142,13 +148,9 @@ end
 if P.savefig
     saveallform(figdir, "group_img_scatter_prfchan", 3);
 end
-%% Best image (or 2) for each category summary 
-if P.plotTuneImage
-[maxscore_ingroup,maxid_ingroup] = cellfun(@(idx)max(img_score_mean(idx)),group_uniqidxs);
-bestimgnms = arrayfun(@(gi)imgname_uniq{group_uniqidxs{gi}(maxid_ingroup(gi))},1:numel(group_uniqidxs),'uni',0);
-bestfns = cellfun(@(imgnm)mapper(imgnm),bestimgnms,'uni',0);
-bestimgs = cellfun(@(imgnm)imread(mapper(imgnm)),bestimgnms,'uni',0);
+
 %%
+if P.plotTuneImage
 figure(4); clf; set(4,'pos',[300   125   1500   720])
 T=tiledlayout(2,1,'Padding','compact','TileSpac','compact');
 nexttile(T,1);hold on
