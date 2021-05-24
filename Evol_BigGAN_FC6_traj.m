@@ -1,3 +1,8 @@
+%
+% Analyze Optimization Trajectory in paired BigGAN and FC6 experiment. 
+% Code pattern from Evol_Optimizer_CMAGA_cmp.m and Evol_RedDim_TrajsummaryPlot.m
+%
+
 mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics"; 
 saveroot = "E:\OneDrive - Washington University in St. Louis\Evol_BigGAN_FC6_cmp"; 
 figdir = fullfile(saveroot,"summary");
@@ -21,7 +26,7 @@ block_traces{iTr,GANi} = cat(1,block_col{GANi,:});
 end
 end
 %%
-%%
+%% Normalize code 
 score_C_m_traj_col = [];
 score_G_m_traj_col = [];
 block_traj_col = [];
