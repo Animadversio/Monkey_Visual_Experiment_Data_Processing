@@ -16,7 +16,7 @@ function h=stripe_simple_plot(statscol, statname, labels, figdir, savestr, varar
 %                    "all chan ANOVA P<1E-3", "drv_cmp", {[1,2]},'MarkerEdgeAlpha',0.3);
 if nargin<=1, statname="stat";end
 if nargin<=2, labels=[""]; savestr=""; figdir=""; end
-if nargin<=4, labels=[""]; savestr=""; end
+if nargin<=4, savestr=""; end
 % if nargin<7, Tpairs = {}; end
 % global figdir
 h = figure;clf;hold on; set(h,'pos',[1686         323         369         531])
@@ -31,8 +31,16 @@ scatter(i+xjitter, statscol{i},'DisplayName',legstr,varargin{:});
 end
 xticks(1:numel(statscol)); xticklabels(labels)
 FStat = anova_cells(statscol);
-title_str = compose("Comparison of %s for\n channels %s\nANOVA F:%.3f(p=%.1e)",...
-    statname,FStat.F,FStat.F_P);
+% title_str = compose("Comparison of %s for\n channels %s\nANOVA F:%.3f(p=%.1e)",...
+%     statname,FStat.F,FStat.F_P);
+title_str = compose("Comparison of %s",statname);
+for gi = 1:numel(statscol)
+[~,~,sumstr,] = ttest_print(statscol{gi},labels{gi});
+title_str = title_str+compose("\n")+sumstr;
+% [~,P,CI,TST] = ttest(statscol{gi});
+% tval = TST.tstat; pval = P;
+% sumstr = sprintf("\n%s (%.1f)-0: t=%.3f(df=%d), P=%.1e, CI=[%.1f,%.1f]",labels{fi},g1_mean,tval,TST.df,pval,CI(1),CI(2));
+end
 % for pi = 1:numel(Tpairs)
 % pair = Tpairs{pi};
 % [~,P,~,TSTAT]=ttest2(statscol{pair(1)},statscol{pair(2)});
