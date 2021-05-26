@@ -34,8 +34,8 @@ for  iTr = 1:numel(S_col)
     fulltsr_imgfn = S_col(iTr).stim.imgfn_mapper(S_col(iTr).prefresp.bestimgnms{fulltsr_gi});
     examp_col{iTr,1} = imread(evobest_imgfn);
     examp_col{iTr,2} = imread(fulltsr_imgfn);
-%     [~,P,CI,TST] = ttest2(S_col(iTr).prefresp.group_score_col{fulltsr_gi},S_col(iTr).prefresp.group_score_col{evobest_gi});
-%     fprintf("fulltsr - evobest: P=%.1e t=%.3f(df=%d),CI=[%.1f,%.1f]\n",P,TST.tstat,TST.df,CI(1),CI(2));
+    % [~,P,CI,TST] = ttest2(S_col(iTr).prefresp.group_score_col{fulltsr_gi},S_col(iTr).prefresp.group_score_col{evobest_gi});
+    % fprintf("fulltsr - evobest: P=%.1e t=%.3f(df=%d),CI=[%.1f,%.1f]\n",P,TST.tstat,TST.df,CI(1),CI(2));
     % [tval,pval,sumstr,mean_arr,sem_arr] = ttest2_print(S_col(iTr).prefresp.group_score_col{fulltsr_gi},S_col(iTr).prefresp.group_score_col{evobest_gi},"fulltsr","evolbest");
     % tval_arr = [tval_arr,tval];
     % mean_mat = [mean_mat;mean_arr];
@@ -44,6 +44,7 @@ end
 %%
 figure(6); set(6, 'pos', [40   280   2520   420])
 montage(examp_col(:),'Size',[2,18])%,'Parent',gca
+title("Comparing Evolved Best Image and Re-evolved from the Linear Model")
 saveallform(sumdir, "FullTsrOptim_BestEvol_image_cmp")
 %%
 figure(7); clf; set(7, 'pos', [1000  489  500  500])
@@ -56,6 +57,9 @@ title(compose("Comparing Neeural Responses of Projection of Full \nTensor Model 
 add_diagonal(gca,'k:');
 saveallform(sumdir, "FullTsrOptim_BestEvol_score_cmp")
 %%
-h=stripe_simple_plot(tval_arr,"tval","FullTsr-BestEvol",sumdir);
+h=stripe_simple_plot(tval_arr,"tval","FullTsr-BestEvol",sumdir,"");
 %%
 
+EvolFactStats = S_col;
+save(fullfile(sumdir, Animal+"_EvolFactStats.mat"), "EvolFactStats")
+save(fullfile(matdir, Animal+"_EvolFactStats.mat"), "EvolFactStats")

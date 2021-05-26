@@ -1,5 +1,9 @@
 % Analyze the new Evolution decomposition experiments. 
 % 
+Animal = "Both";Set_Path;
+expftr = contains(ExpRecord.expControlFN,["210525_Alfa"]);%& contains(ExpRecord.expControlFN, "selectivity");; %& ,"200812"contains(ExpRecord.Exp_collection,"BigGAN_Hessian");% & contains(ExpRecord.Exp_collection,"BigGAN");
+fllist = find(expftr);no_return=true;
+loadExperiments(fllist(1:end),Animal,no_return);%[meta_new,rasters_new,~,Trials_new] = 
 
 %%
 Animal = "Alfa";Set_Path;
