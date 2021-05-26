@@ -10,13 +10,13 @@ figdir = "E:\OneDrive - Washington University in St. Louis\Evol_ReducDim\summary
 ExpType = "RDEvol";
 Animal = "Both";
 if strcmp(Animal,"Both") % load stats
-A = load(fullfile(MatStats_path, "Alfa"+"_RDEvol_stats.mat"), 'RDStats');
-B = load(fullfile(MatStats_path, "Beto"+"_RDEvol_stats.mat"), 'RDStats');
+A = load(fullfile(matdir, "Alfa"+"_RDEvol_stats.mat"), 'RDStats');
+B = load(fullfile(matdir, "Beto"+"_RDEvol_stats.mat"), 'RDStats');
 RDStats = [A.RDStats, B.RDStats];
 else
-load(fullfile(MatStats_path, Animal+"_RDEvol_stats.mat"), 'RDStats')
+load(fullfile(matdir, Animal+"_RDEvol_stats.mat"), 'RDStats')
 end
-
+%%
 RDEvol_Stats = []; % struct list 
 unitnum_arr = zeros(length(RDStats),1);
 prefchan_arr = zeros(length(RDStats),1);
@@ -73,6 +73,12 @@ S = score_cmp_stats({}, "middle", S);
 end
 RDEvol_Stats = [RDEvol_Stats, S];
 end
+%%
+%% Collect stats and save
+RDEvolTab = struct2table(RDEvol_Stats);
+writetable(RDEvolTab, fullfile(figdir, Animal+"_RDEvol_trajcmp.csv"))
+save(fullfile(figdir, Animal+"_RDEvol_summaryStats.mat"), "RDEvol_Stats")
+
 %% Re-normalize the trajectories to show together.
 score_C_m_trajs = {};
 score_G_m_trajs = {};
@@ -211,29 +217,41 @@ for mski=1:3
    xlim([1,prctile(cellfun(@numel,block_trajs(msk)),80)]);
 end
 saveallform(figdir,fignm+"_Xlim");
-%% Collect stats and save
-RDEvolTab = struct2table(RDEvol_Stats);
-writetable(RDEvolTab, fullfile(figdir, Animal+"_RDEvol_trajcmp.csv"))
-save(fullfile(figdir, Animal+"_RDEvol_summaryStats.mat"), "RDEvol_Stats")
-%% Test on individual Session and Collect T stats on population
 
+
+
+%% Replicate Analysis from Table and Stats
+figdir = "E:\OneDrive - Washington University in St. Louis\Evol_ReducDim\summary";
+ExpType = "RDEvol";
+Animal = "Both";
+load(fullfile(figdir, Animal+"_RDEvol_summaryStats.mat"), "RDEvol_Stats")
+RDEvolTab = readtable(fullfile(figdir, Animal+"_RDEvol_trajcmp.csv"));
+%% Test on individual Session and Collect T stats on population
+validmsk = ones(numel(RDStats), 1, 'logical');
+for iTr=1:numel(RDStats)
+if ~all(RDStats(iTr).evol.optim_names == ["ZOHA Sphere lr euclid", "ZOHA Sphere lr euclid ReducDim"])
+validmsk(iTr) = false;
+end
+end
 Alfamsk = (RDEvolTab.Animal=="Alfa");
 Betomsk = (RDEvolTab.Animal=="Beto");
 V1msk = (RDEvolTab.pref_chan<=48 & RDEvolTab.pref_chan>=33);
 V4msk = (RDEvolTab.pref_chan>48);
 ITmsk = (RDEvolTab.pref_chan<33);
 %% Test on the aggregated mean value at population level with a T test. 
+diary(fullfile(figdir,"progression_summary.log"))
 testProgression(RDEvolTab, "Dpr_int_norm", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], "area", ...
     "Both Monk All Exp");
 testProgression(RDEvolTab, "middle_cmp_dpr", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], "area", ...
     "Both Monk All Exp");
 testProgression(RDEvolTab, "last23_cmp_dpr", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], "area", ...
     "Both Monk All Exp");
-%%
+%
 testProgression(RDEvolTab, "last23_m_ratio", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], "area", ...
     "Both Monk All Exp");
 testProgression(RDEvolTab, "middle_m_ratio", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], "area", ...
     "Both Monk All Exp");
+diary off
 %%
 h = stripe_plot(RDEvolTab, "last23_cmp_dpr", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], ...
                     "Both Monk All Exp", "area_sep", {[1,2],[2,3],[1,3]},'MarkerEdgeAlpha',0.9);
