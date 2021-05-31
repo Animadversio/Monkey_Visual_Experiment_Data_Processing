@@ -4,6 +4,7 @@
 %% 
 %% Plot the evolution trajectory comparison
 Animal = "Both"; Set_Path;
+Corder = colororder;
 %%
 global figdir
 figdir = "E:\OneDrive - Washington University in St. Louis\Evol_ReducDim\summary";
@@ -78,7 +79,7 @@ end
 RDEvolTab = struct2table(RDEvol_Stats);
 writetable(RDEvolTab, fullfile(figdir, Animal+"_RDEvol_trajcmp.csv"))
 save(fullfile(figdir, Animal+"_RDEvol_summaryStats.mat"), "RDEvol_Stats")
-
+Corder = colororder;
 %% Re-normalize the trajectories to show together.
 score_C_m_trajs = {};
 score_G_m_trajs = {};
@@ -99,9 +100,14 @@ for Expi=1:size(score_traces,1)
     score_G_s_trajs{Expi} = score_G_s/scaling;
     block_trajs{Expi} = blockvec;
 end
-%%
-%% Plot the trajectory comparison 
-Corder = colororder;
+%% Filtering Array
+Animal_arr = struct2table(RDEvol_Stats).Animal;
+Alfamsk = Animal_arr=="Alfa";
+Betomsk = Animal_arr=="Beto";
+V1msk = prefchan_arr <=48 & prefchan_arr>=33;
+V4msk = prefchan_arr <=64 & prefchan_arr>=49;
+ITmsk = prefchan_arr <=32 & prefchan_arr>=1;
+%% Plot trajectory comparison for each individual session.
 h=figure;hold on;fignm=compose("%s_MaxNorm_scoreTraj_indiv_all", Animal);
 set(h,'pos',[1000         315         765         663])
 for Expi=1:numel(block_trajs)
@@ -116,7 +122,7 @@ legend(["Full","50D"])
 saveallform(figdir,fignm);
 xlim([0,35]);fignm = fignm+"_Xlim";
 saveallform(figdir,fignm);
-%%
+%% Plot trajectory comparison averaging all sessions.
 h=figure;hold on;fignm=compose("%s_MaxNorm_scoreTraj_avg_all", Animal);
 set(h,'pos',[1000         315         765         663])
 [score_C_col_m,score_C_col_s,block_colvec] = sort_scoreblock(cat(2,block_trajs{:}),cat(2,score_C_m_trajs{:}));
@@ -130,10 +136,7 @@ legend(["Full","50D"])
 saveallform(figdir,fignm);
 xlim([0,35]);fignm = fignm+"_Xlim";
 saveallform(figdir,fignm);
-%%
-V1msk = prefchan_arr <=48 & prefchan_arr>=33;
-V4msk = prefchan_arr <=64 & prefchan_arr>=49;
-ITmsk = prefchan_arr <=32 & prefchan_arr>=1;
+%% Plot trajectory comparison averaging sessions with pref chan in V1, V4, IT
 msk_col = {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk};
 label_col = ["V1", "V4", "IT"];
 h=figure; fignm=compose("%s_MaxNorm_scoreTraj_avg_Area", Animal);
@@ -159,11 +162,77 @@ for mski=1:3
    xlim([1,prctile(cellfun(@numel,block_trajs(msk)),80)]);
 end
 saveallform(figdir,fignm+"_Xlim");
-%%
+
+%% Plot trajectory comparison averaging sessions with pref chan in V1, V4, IT
+msk_col = {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk};
+label_col = ["V1", "V4", "IT"];
+h=figure; fignm=compose("%s_MaxNorm_scoreTraj_avg_Area_movmean", Animal);
+set(h,'pos',[285         388        1644         549])
+T = tiledlayout(1,numel(msk_col),"pad",'compact');
+for mski=1:3
+nexttile(T,mski)
+msk = msk_col{mski};
+[score_C_col_m,score_C_col_s,block_colvec] = sort_scoreblock(cat(2,block_trajs{msk}),cat(2,score_C_m_trajs{msk}));
+[score_G_col_m,score_G_col_s,block_colvec] = sort_scoreblock(cat(2,block_trajs{msk}),cat(2,score_G_m_trajs{msk}));
+score_C_col_mov_m = movmean(score_C_col_m,3);
+score_G_col_mov_m = movmean(score_G_col_m,3);
+score_C_col_mov_s = movmean(score_C_col_s,3);
+score_G_col_mov_s = movmean(score_G_col_s,3);
+shadedErrorBar(block_colvec,score_C_col_mov_m,score_C_col_mov_s,'lineProps',{'Color',Corder(2,:)})
+shadedErrorBar(block_colvec,score_G_col_mov_m,score_G_col_mov_s,'lineProps',{'Color',Corder(1,:)})
+xlabel("Generation")
+ylabel("Activation / Max each session")
+title(compose("Averaged Optimization Trajectory %s (n=%d)",label_col(mski),sum(msk)))
+legend(["Full","50D"])
+end
+title(T, compose("%s Summary of mean evol trajectory for each area",Animal), 'FontSize',16)
+saveallform(figdir,fignm);
+for mski=1:3 % relimit x axis by 80 percentile of block number
+   nexttile(T,mski)
+   msk = msk_col{mski};
+   xlim([1,prctile(cellfun(@numel,block_trajs(msk)),80)]);
+end
+saveallform(figdir,fignm+"_Xlim");
+%% Plot trajectory comparison averaging sessions with pref chan in V1, V4, IT in A B
+msk_col = {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk};
+anim_msks = {Alfamsk&validmsk, Betomsk&validmsk};
+label_col = ["V1", "V4", "IT"];
+anim_col = ["Alfa","Beto"];
+h=figure; fignm=compose("%s_MaxNorm_scoreTraj_avg_Area_Anim_movmean", Animal);
+set(h,'pos',[125   258   935   715])
+T = tiledlayout(2,numel(msk_col),"pad",'compact',"tilespac",'compact');
+for animi=1:2
+for mski=1:3
+nexttile(T,mski+3*(animi-1))
+msk = msk_col{mski} & anim_msks{animi};
+[score_C_col_m,score_C_col_s,block_colvec] = sort_scoreblock(cat(2,block_trajs{msk}),cat(2,score_C_m_trajs{msk}));
+[score_G_col_m,score_G_col_s,block_colvec] = sort_scoreblock(cat(2,block_trajs{msk}),cat(2,score_G_m_trajs{msk}));
+score_C_col_mov_m = movmean(score_C_col_m,3);
+score_G_col_mov_m = movmean(score_G_col_m,3);
+score_C_col_mov_s = movmean(score_C_col_s,3);
+score_G_col_mov_s = movmean(score_G_col_s,3);
+shadedErrorBar(block_colvec,score_C_col_mov_m,score_C_col_mov_s,'lineProps',{'Color',Corder(2,:)})
+shadedErrorBar(block_colvec,score_G_col_mov_m,score_G_col_mov_s,'lineProps',{'Color',Corder(1,:)})
+xlabel("Generation")
+ylabel("Activation / Max each session")
+title(compose("Averaged Optimization Trajectory\n%s %s (n=%d)",anim_col(animi),label_col(mski),sum(msk)))
+legend(["Full","50D"])
+end
+end
+title(T, compose("%s Summary of mean evol trajectory (3 block movmean) for each area",Animal), 'FontSize',16)
+saveallform(figdir,fignm);
+for animi=1:2
+for mski=1:3
+    nexttile(T,mski+3*(animi-1))
+    msk = msk_col{mski} & anim_msks{animi};
+    xlim([1,prctile(cellfun(@numel,block_trajs(msk)),80)]);
+end
+end
+saveallform(figdir,fignm+"_Xlim");
+
+
+
 %% Area average with individual curves plotted on it.
-V1msk = prefchan_arr <=48 & prefchan_arr>=33;
-V4msk = prefchan_arr <=64 & prefchan_arr>=49;
-ITmsk = prefchan_arr <=32 & prefchan_arr>=1;
 msk_col = {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk};
 label_col = ["V1", "V4", "IT"];
 h=figure; fignm=compose("%s_MaxNorm_scoreTraj_avg_ws_indiv_Area", Animal);
@@ -176,7 +245,7 @@ msk = msk_col{mski};
 [score_G_col_m,score_G_col_s,block_colvec] = sort_scoreblock(cat(2,block_trajs{msk}),cat(2,score_G_m_trajs{msk}));
 shadedErrorBar(block_colvec,score_C_col_m,score_C_col_s,'lineProps',{'Color',Corder(2,:),'LineWidth',1.5})
 shadedErrorBar(block_colvec,score_G_col_m,score_G_col_s,'lineProps',{'Color',Corder(1,:),'LineWidth',1.5})
-for Expi = find(msk)'
+for Expi = find(msk)' % plot individual experiments' optim traj in the mask. 
     plot(block_trajs{Expi},movmean(score_C_m_trajs{Expi},3),'Color',[Corder(2,:),0.4],'lineWidth',0.5)
     plot(block_trajs{Expi},movmean(score_G_m_trajs{Expi},3),'Color',[Corder(1,:),0.4],'lineWidth',0.5)
 end
@@ -220,13 +289,14 @@ saveallform(figdir,fignm+"_Xlim");
 
 
 
-%% Replicate Analysis from Table and Stats
+%% Load summary statistics for trajectories and plot them.
+%  Replicate Analysis from Table and Stats
 figdir = "E:\OneDrive - Washington University in St. Louis\Evol_ReducDim\summary";
 ExpType = "RDEvol";
 Animal = "Both";
 load(fullfile(figdir, Animal+"_RDEvol_summaryStats.mat"), "RDEvol_Stats")
 RDEvolTab = readtable(fullfile(figdir, Animal+"_RDEvol_trajcmp.csv"));
-%% Test on individual Session and Collect T stats on population
+%% Masks for testing 
 validmsk = ones(numel(RDStats), 1, 'logical');
 for iTr=1:numel(RDStats)
 if ~all(RDStats(iTr).evol.optim_names == ["ZOHA Sphere lr euclid", "ZOHA Sphere lr euclid ReducDim"])
@@ -238,6 +308,7 @@ Betomsk = (RDEvolTab.Animal=="Beto");
 V1msk = (RDEvolTab.pref_chan<=48 & RDEvolTab.pref_chan>=33);
 V4msk = (RDEvolTab.pref_chan>48);
 ITmsk = (RDEvolTab.pref_chan<33);
+%% Test on individual Session and Collect T stats on population
 %% Test on the aggregated mean value at population level with a T test. 
 diary(fullfile(figdir,"progression_summary.log"))
 testProgression(RDEvolTab, "Dpr_int_norm", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], "area", ...
@@ -252,6 +323,10 @@ testProgression(RDEvolTab, "last23_m_ratio", {V1msk&validmsk, V4msk&validmsk, IT
 testProgression(RDEvolTab, "middle_m_ratio", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], "area", ...
     "Both Monk All Exp");
 diary off
+%%
+h = stripe_plot(RDEvolTab, "last23_m_ratio", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], ...
+                    "Both Monk All Exp", "area_sep", {[1,2],[2,3],[1,3]},'MarkerEdgeAlpha',0.9);
+
 %%
 h = stripe_plot(RDEvolTab, "last23_cmp_dpr", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], ...
                     "Both Monk All Exp", "area_sep", {[1,2],[2,3],[1,3]},'MarkerEdgeAlpha',0.9);
@@ -300,7 +375,7 @@ traj_incr_int = sum(score_m_arr-score_m_arr(:,1),2)'; % AUC with subtracting 1st
 traj_incr_int_norm = mean(score_m_arr-score_m_arr(:,1),2)'; % Area for only increased activation.
 S.("traj_int") = traj_int;
 S.("traj_int_norm") = traj_int_norm;
-S.("traj_int_ratio") = traj_int(2) / traj_int(1);
+S.("traj_int_ratio") = traj_int(2) / traj_int(1); % ratio between 2 AUC
 S.("traj_incr_int") = traj_incr_int;
 S.("traj_incr_int_norm") = traj_incr_int_norm;
 S.("traj_incr_int_ratio") = traj_incr_int(2) / traj_incr_int(1);
