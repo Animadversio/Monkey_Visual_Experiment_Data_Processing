@@ -18,15 +18,15 @@ set(0,'defaultTextInterpreter','none');
 saveroot = "O:\corrFeatVis_FactorPredict";
 P = struct();
 P.plotTuneCurve = false;% TO IMplement.
-P.plotTuneImage = false;true;% Plot best image in each class of tuning
-P.savefig = false;true;
+P.plotTuneImage = true;true;% Plot best image in each class of tuning
+P.savefig = true;true;
 P.interactive = false;
-P.vis = false;
+P.vis = true;
 P.savestat = true;
 P.collectstat = true;
 global ax1 imcanvs groupdict imgname_uniq
 if P.collectstat, S_col = []; end
-for Triali = 1:numel(meta_new)%-3:numel(meta_new)-2
+for Triali = 18:numel(meta_new)%-3:numel(meta_new)-2
 %
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};

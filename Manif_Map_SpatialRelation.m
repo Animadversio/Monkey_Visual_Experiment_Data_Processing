@@ -50,7 +50,7 @@ sgtr_corrmat = corrcoef(actmat');
 res_col = cellfun(@(A)A-mean(A), MapVarStats(Expi).manif.act_col{si}, 'uni',0);
 resmat = cell2mat(reshape(res_col, 1, []));
 res_corrmat = corrcoef(resmat');
-% Avg activity correlation
+% Avg activity correlation (Signal Correlation)
 avgact_col = cellfun(@(A)mean(A,2),MapVarStats(Expi).manif.act_col{si},'uni',0);
 acgact_tsr = cell2mat(reshape(avgact_col,1,11,11));
 corrmat1d = map_corr(acgact_tsr, "corr1d");
