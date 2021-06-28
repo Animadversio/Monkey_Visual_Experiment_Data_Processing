@@ -14,6 +14,12 @@ expftr = contains(ExpSpecTable_Aug.expControlFN,"generate") & ...
      ExpSpecTable_Aug.Expi > 6;
 [meta_new,rasters_new,lfps_new,Trials_new] = LoadRaw_and_Append_Coll(find(expftr), meta_new, rasters_new, lfps_new, Trials_new);
 %%
+Animal = "Both";Set_Path;
+expftr = contains(ExpRecord.expControlFN,"generate") & ...
+        contains(ExpRecord.Exp_collection, "CMAGA_cmp");
+row_idx = find(expftr);
+[meta_new, rasters_new, lfps_new, Trials_new] = loadExperiments(row_idx, Animal, false);
+%%
 savepath = fullfile(result_dir, "summary"); 
 mkdir(savepath);
 %% Prepare figure frames 
