@@ -80,7 +80,7 @@ S.normAUS_bsl = integ / (maxAct - bslmean); % Normalized area under tuning map -
 NPStats = [NPStats, S];
 end
 toc % Around 21 sec for an animal.
-NPStatTab = struct2table(NPStats);
+NPStatTab = struct2table(NPStats); % center, peak, width
 writetable(NPStatTab,fullfile(nonpardir,Animal+"_Pop_NonParamStat.csv"))
 end
 %

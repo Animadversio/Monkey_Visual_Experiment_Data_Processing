@@ -44,13 +44,14 @@ Expi = Tab.Expi; spi = Tab.space; ui = Tab.unitnum; ci = Tab.chan;
 for nm = ["Animal", "Expi", "unitstr", "unitnum", "chan", "prefchan", "space","F","F_P"] % copy stats.
 S.(nm) = Tab.(nm);
 end
-if Tab.chan < 33
-S.area = "IT";
-elseif Tab.chan < 49
-S.area = "V1";  
-else
-S.area = "V4"; 
-end
+S.area = area_map(Tab.chan);
+% if Tab.chan < 33
+% S.area = "IT";
+% elseif Tab.chan < 49
+% S.area = "V1";  
+% else
+% S.area = "V4"; 
+% end
 
 iCh = find((MapVarStats(Expi).units.spikeID==ci & MapVarStats(Expi).units.unit_num_arr==ui));
 S.iCh = iCh;
@@ -93,10 +94,10 @@ end
 % NPtab.phi_max = NPtab.phi_max / 180 * pi;
 writetable(NPtab,fullfile(nonpardir,"Both"+"_Driver_NonParamWidth.csv"))
 
+
 %% Reload the tabs to plot the final statistics! 
 nonpardir = "O:\Manif_NonParam\summary";
 NPtab = readtable(fullfile(nonpardir,"Both"+"_Driver_NonParamWidth.csv"));
-
 global figdir
 figdir = "O:\Manif_NonParam\summary";
 msk = NPtab.F_P < 1E-3;

@@ -1,5 +1,6 @@
 sumdir = "E:\OneDrive - Washington University in St. Louis\CortiDistCorr\summary";
-%%
+SUMUdir = "E:\OneDrive - Washington University in St. Louis\Manif_SUHash\summary";
+%% Load the tuning map similarity matrix 
 Animal = "Both";Set_Path;
 mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 if strcmp(Animal,"Both") % load stats
@@ -130,7 +131,31 @@ violinplot_cell(cc_col, label_arr,'showData',false,'GroupOrder',cellstr(label_ar
 ylabel("Correlation")
 saveallform(sumdir,"SUMU_other_area_sep_cmp_violin_pure",h)
 %%
-get_SUMUpair_ids(unit_num_arr', spikeID, Fmsk&areamsk)
+Expi = 11;
+unit_num_arr = CortiDisCorr(Expi).units.unit_num_arr;
+spikeID = CortiDisCorr(Expi).units.spikeID;
+Fmsk = struct2table(CortiDisCorr(Expi).FStats).F_P<1E-2;
+valmsk = unit_num_arr>0;
+V1msk = (spikeID < 49) & (spikeID > 32);
+V4msk =  spikeID > 48;
+ITmsk =  spikeID < 33;
+get_SUMUpair_ids(unit_num_arr', spikeID, Fmsk&V4msk)
+%% Tune map pair comparison 
+Animal="Alfa"; Expi = 15;
+unit_num_arr = CortiDisCorr(Expi).units.unit_num_arr;
+spikeID = CortiDisCorr(Expi).units.spikeID;
+Fmsk = struct2table(CortiDisCorr(Expi).FStats).F_P<1E-2;
+valmsk = unit_num_arr>0;
+V1msk = (spikeID < 49) & (spikeID > 32);
+V4msk =  spikeID > 48;
+ITmsk =  spikeID < 33;
+pairs = get_SUMUpair_ids(unit_num_arr', spikeID, valmsk&Fmsk);%&ITmsk
+for rowi = 1:size(pairs,1)
+Manif_Map_show_fun(MapVarStats, "Alfa", Expi, pairs(rowi,:))
+pause
+end
+%%
+saveallform(SUMUdir, compose("SUMUpair_cmp_%s_Exp%02d_%s",Animal,Expi,strrep(num2str(pairs(rowi,:)),"  ","_")))
 function corrvec = get_submat_value(corrmat, msk, exclude_linidx)
 linidxmat = reshape(1:numel(corrmat),size(corrmat));
 linidx_submat = linidxmat(msk,msk);
