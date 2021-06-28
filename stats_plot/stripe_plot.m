@@ -36,7 +36,8 @@ Ns = cellfun(@sum,masks);
 ylabel(statname,'interpreter','none'); title(title_str,'interpreter','none'); % xlabel(statname) 
 % legend(compose("%s(%d)",labels',Ns')) % ["Driver", "Non-Drivers"]
 legend('Location','best')
-saveas(h,fullfile(figdir,compose("%s_%s_stripcmp.png", statname, savestr)))
-saveas(h,fullfile(figdir,compose("%s_%s_stripcmp.pdf", statname, savestr)))
-savefig(h,fullfile(figdir,compose("%s_%s_stripcmp.fig", statname, savestr)))
+saveallform(figdir,compose("%s_%s_stripcmp", statname, savestr),h)
+% saveas(h,fullfile(figdir,compose("%s_%s_stripcmp.png", statname, savestr)))
+% saveas(h,fullfile(figdir,compose("%s_%s_stripcmp.pdf", statname, savestr)))
+% savefig(h,fullfile(figdir,compose("%s_%s_stripcmp.fig", statname, savestr)))
 end
