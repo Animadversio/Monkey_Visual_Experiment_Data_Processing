@@ -14,10 +14,12 @@ if strcmp(getenv('COMPUTERNAME'), "DESKTOP-MENSD6S")  % At home
 % 	copyfile("E:\Monkey_Data\ExpSpecTable_Augment.xlsx", ".\ExpSpecTable_Augment.xlsx")
 % 	copyfile("E:\Monkey_Data\Exp_Record_Alfa.xlsx", ".\Exp_Record_Alfa.xlsx")
 elseif exist("S:\",'dir') % Currently I set up S:\ at home as well, so everything should match
-	ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xlsx");
-	ExpSpecTable_Aug_alfa = readtable("S:\Exp_Record_Alfa.xlsx");
+	ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xlsx",'Format','auto');
+	ExpSpecTable_Aug_alfa = readtable("S:\Exp_Record_Alfa.xlsx",'Format','auto');
 	copyfile("S:\ExpSpecTable_Augment.xlsx", ".\ExpSpecTable_Augment.xlsx")
 	copyfile("S:\Exp_Record_Alfa.xlsx", ".\Exp_Record_Alfa.xlsx")
+    writetable(ExpSpecTable_Aug, ".\Exp_Record_Beto.csv")
+    writetable(ExpSpecTable_Aug_alfa, ".\Exp_Record_Alfa.csv")
 else
     fprintf("load local exprecord in folder %s instead\n", pwd)
     keyboard;
