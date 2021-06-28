@@ -1,24 +1,25 @@
 % Analyze the new Evolution decomposition experiments. 
 % 
 Animal = "Both";Set_Path;
-expftr = contains(ExpRecord.expControlFN,["210525_Alfa"]);%& contains(ExpRecord.expControlFN, "selectivity");; %& ,"200812"contains(ExpRecord.Exp_collection,"BigGAN_Hessian");% & contains(ExpRecord.Exp_collection,"BigGAN");
+expftr = contains(ExpRecord.expControlFN,["210623_Alfa"]);%& contains(ExpRecord.expControlFN, "selectivity");; %& ,"200812"contains(ExpRecord.Exp_collection,"BigGAN_Hessian");% & contains(ExpRecord.Exp_collection,"BigGAN");
 fllist = find(expftr);no_return=true;
 loadExperiments(fllist(1:end),Animal,no_return);%[meta_new,rasters_new,~,Trials_new] = 
 
 %%
 Animal = "Alfa";Set_Path;
 ftrrows = find(...
+               contains(ExpRecord.expControlFN,["210621_Alfa"])&...
                contains(ExpRecord.expControlFN,["select"])&...
-               contains(ExpRecord.Exp_collection,["FC6Evol_Decomp"])&...
-               ~isnan(ExpRecord.Expi)...
+               contains(ExpRecord.Exp_collection,["FC6Evol_Decomp"])...
                );
+%                &~isnan(ExpRecord.Expi)...
 [meta_new, rasters_new, lfps_new, Trials_new] = loadExperiments(ftrrows, Animal, false);
 %%
 set(0,'defaultTextInterpreter','none');
 saveroot = "O:\corrFeatVis_FactorPredict";
 P = struct();
 P.plotTuneCurve = false;% TO IMplement.
-P.plotTuneImage = true;true;% Plot best image in each class of tuning
+P.plotTuneImage = true;% Plot best image in each class of tuning
 P.savefig = true;true;
 P.interactive = false;
 P.vis = true;
@@ -26,8 +27,8 @@ P.savestat = true;
 P.collectstat = true;
 global ax1 imcanvs groupdict imgname_uniq
 if P.collectstat, S_col = []; end
-for Triali = 18:numel(meta_new)%-3:numel(meta_new)-2
-%
+Cord = colororder;
+for Triali = 1:numel(meta_new)%-3:numel(meta_new)-2
 meta = meta_new{Triali};
 rasters = rasters_new{Triali};
 % lfps = lfps_new{Triali};
@@ -72,7 +73,13 @@ group_idxarr = cellfun(@(idxuniq) cell2mat(img_idxarr(idxuniq)), group_uniqidxs,
 %%
 evkwdw = [51:200];
 bslwdw = [1:50];
-for iCh = prefchan_id
+for iCh = prefchan_ids'
+chanstr = unit_name_arr(iCh);
+if iCh == prefchan_id
+chanlabel = "prfchan_"+chanstr;
+else
+chanlabel = chanstr;
+end
 % score, evoked per trial
 score_trials  = squeeze(mean(rasters(iCh, evkwdw, :),[2]) - mean(rasters(iCh, bslwdw, :),[2])); % - single trial bsl score
 evoke_trials  = squeeze(mean(rasters(iCh, evkwdw, :),[2])); % evoked firing rate
@@ -87,15 +94,22 @@ score_bsl_col = cellfun(@(idx)squeeze(mean(rasters(iCh,evkwdw,idx),2)) ...
 % score summary for each image
 img_score_mean = cellfun(@mean, score_bsl_col); % trial mean for each img (imgN, 1)
 img_score_sem = cellfun(@sem, score_bsl_col); % trial sem for each img (imgN, 1)
-end
-%%
+[img_m_sort,img_sort_idx]=sort(img_score_mean,'Descend');
+% score summary for each group
 group_score_col = cellfun(@(idx) evkbsl_trials(idx), group_idxarr,'uni',0);
 group_mean = cellfun(@mean, group_score_col);
 group_sem = cellfun(@sem, group_score_col);
-
+[group_m_sort,sort_idx]=sort(group_mean,'Descend');
+fprintf("\nBest Activating Image Categories:\n")
+for idx = 1:10
+    fprintf("%s :%.1f\n",grouplabs{sort_idx(idx)},group_m_sort(idx))
+end
+fprintf("\nBest Activating Images:\n")
+for idx = 1:10
+    fprintf("%s :%.1f\n",imgname_uniq{img_sort_idx(idx)},img_m_sort(idx))
+end
 if P.interactive && P.vis
 imcanvs = figure(1);clf;ax1 = subplot(1,1,1);set(1,'Name','Stimuli Viewer');hold on
-Cord = colororder;
 end
 %% Best image (or 2) for each category summary 
 [maxscore_ingroup,maxid_ingroup] = cellfun(@(idx)max(img_score_mean(idx)),group_uniqidxs);
@@ -113,7 +127,7 @@ title(compose("%s\nImage Group Summary",explabel))
 set(gca,'TickLabelInterpreter','none')
 box off; B.DataTipTemplate.Interpreter = 'none';
 if P.savefig
-    saveallform(figdir, "group_summary_prfchan", 2);
+    saveallform(figdir, compose("group_summary_%s",chanlabel), 2);
 end
 
 figure(3);clf; set(3,'pos',[1000    150   1325   825])
@@ -124,7 +138,7 @@ E.DataTipTemplate.DataTipRows(end+1) = row;
 E.DataTipTemplate.Interpreter = 'none';
 xticks(1:numel(group_mean)); xticklabels(grouplabs); xtickangle(30);
 set(gca,'TickLabelInterpreter','none');box off
-ylabel("Evoke - Bsl");suptitle(compose("%s\nImage Group Summary",explabel))%xlabel("Image Groups");
+ylabel("Evoke - Bsl");sgtitle(compose("%s\nImage Group Summary",explabel+" "+chanstr))%xlabel("Image Groups");
 for gi = 1:length(groupdict)
     SPminor = 0.5 / numel(group_uniqidxs{gi});
     xarr = gi + [1:numel(group_uniqidxs{gi})]*SPminor;
@@ -150,7 +164,7 @@ if P.interactive
     set(ERR,'ButtonDownFcn',@selectpoint, 'HitTest','on')
 end
 if P.savefig
-    saveallform(figdir, "group_img_scatter_prfchan", 3);
+    saveallform(figdir, compose("group_img_scatter_%s",chanlabel), 3);
 end
 
 %%
@@ -169,7 +183,7 @@ for gi = 1:length(groupdict)
     ER.DataTipTemplate.Interpreter = 'none';
 end
 ylabel("Evoke - Bsl (sp/s)");xlabel("Image Groups");
-title(T,compose("%s\nImage Group Summary",explabel))
+title(T,compose("%s\nImage Group Summary",explabel+" "+chanstr))
 set(gca,'TickLabelInterpreter','none')
 box off; B.DataTipTemplate.Interpreter = 'none';
 nexttile(T,2)
@@ -177,7 +191,8 @@ nexttile(T,2)
 if numel(bestimgs)>13, imshow(tile_zigzag(bestimgs, 2));
 else, imshow(tile_zigzag(bestimgs, 1));end
 if P.savefig
-    saveallform(figdir, "group_summary_bestImg_prfchan", 4);
+    saveallform(figdir, compose("group_summary_bestImg_%s",chanlabel), 4);
+end
 end
 end
 end
