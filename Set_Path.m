@@ -1,6 +1,7 @@
 %% Set Path 
 system("subst S: E:\Network_Data_Sync") % set this alias! so that copying and syncing could work 
 system('subst O: "E:\OneDrive - Washington University in St. Louis"')
+system('subst N: \\storage1.ris.wustl.edu\crponce\Active')
 %result_dir = "C:\\Users\\ponce\\OneDrive - Washington University in St. Louis\\PC_space_tuning";
 % it will load the newest version of ExpSpecTable and compute pref_chan_arr
 % and norm_arr from it! 
@@ -26,11 +27,13 @@ end
 %winopen("S:\ExpSpecTable_Augment.xlsx")
 %winopen("S:\Exp_Record_Alfa.xlsx")
 matdir = "O:\Mat_Statistics";
+mat_dir = "O:\Mat_Statistics";
 addpath(".\utils")
 addpath(".\DNN")
 addpath(".\NMF")
 addpath(".\stats_plot")
 addpath(".\CorrFeatTsr")
+addpath("D:\Github\Fit_Spherical_Tuning")
 % Depends on 
 % - brewermap
 % - shadedErrorBar
