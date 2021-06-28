@@ -9,7 +9,7 @@ for iTr = 1:numel(meta_new)
 Trials = Trials_new{iTr}; 
 rasters = rasters_new{iTr}; 
 meta = meta_new{iTr};
-if isempty(meta), continue;end 
+if isempty(meta), continue; end 
 fprintf("Processing RFMap %d\n",iTr)
 S = struct();
 if isfield(meta,"unitID")

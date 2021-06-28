@@ -7,9 +7,10 @@ rowis = rowis(rowis>=find(strcmp(ExpRecord.ephysFN,"Alfa-05012021-004")));
 %%
 loadExperiments(rowis,Animal,true,true); % sort the spikes
 %% 
-expftr = contains(ExpRecord.expControlFN, "rfMapper");%&...ExpRecord.Expi > 0); 
+expftr = contains(ExpRecord.expControlFN, "rfMapper")...
+         & contains(ExpRecord.ephysFN, "");%&...ExpRecord.Expi > 0); 
 rowis = find(expftr); 
-rowis = rowis(rowis>=find(strcmp(ExpRecord.ephysFN,"Alfa-05012021-004")));
+% rowis = rowis(rowis>=find(strcmp(ExpRecord.ephysFN,"Alfa-05012021-004")));
 [meta_new,rasters_new,lfps_new,Trials_new] = loadExperiments(rowis,Animal,false,true);%Project_Manifold_Beto_loadRaw(rowis,Animal,false,true);
 %%
 S_col = RF_Calc_Stats_fun(meta_new, rasters_new, Trials_new);
