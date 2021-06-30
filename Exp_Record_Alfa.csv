@@ -4754,7 +4754,11 @@ Hash 4.5/5
 Chan 19 seems posibble but wilol take fowever
 19  [-0.3  -2.6]  6  1
 Aborted",Alfa-25062021-006,210625_Alfa_generate_BigGAN(2),19,NaN,NaN,
-NaN,,NaN,,"",Alfa-28062021-001,210628_Alfa_rfMapper_basic,NaN,NaN,NaN,
+NaN,,NaN,,"001 RFmapping 
+Starts 6.28 12:06 8 mins
+50  [-0.7  -3.8]  6  1
+34  [0  -0.2]  1.5  1
+47  [-0.1  -0.2]  1.5  1",Alfa-28062021-001,210628_Alfa_rfMapper_basic,NaN,NaN,NaN,
 4,FC6Evol_Decomp,41,,"002 Generate BigGAN
 50  [-0.7  -3.8]  6  1
 Hash 4/5
