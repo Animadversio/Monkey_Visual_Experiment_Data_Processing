@@ -143,24 +143,7 @@ end
 RDEvolCmpTable = struct2table(RDEvolCmpStats);
 %%
 writetable(RDEvolCmpTable, fullfile(savedir,compose("%s_RDEvolcompare.csv",Animal)))
-%% (Beto obsolete version)
-% initacts_sem = arrayfun(@(R)cellfun(@sem,R.initacts), RDThreadStats, 'Uni', false); %initacts_sem{6}(1,2)=nan;
-% initacts_sem = cell2mat(initacts_sem');
-% peakacts_sem = arrayfun(@(R)cellfun(@sem,R.peakacts), RDThreadStats, 'Uni', false); %peakacts_sem{6}(1,2)=nan;
-% peakacts_sem = cell2mat(peakacts_sem');
-% textacts_sem = arrayfun(@(R)cellfun(@sem,R.textacts), RDThreadStats, 'Uni', false); %textacts_sem{6}(1,2)=nan;
-% textacts_sem = cell2mat(textacts_sem');
-% initacts_m = arrayfun(@(R)cellfun(@mean,R.initacts), RDThreadStats, 'Uni', false); %initacts_m{6}(1,2)=nan;
-% initacts_m = cell2mat(initacts_m');
-% peakacts_m = arrayfun(@(R)cellfun(@mean,R.peakacts), RDThreadStats, 'Uni', false); %peakacts_m{6}(1,2)=nan;
-% peakacts_m = cell2mat(peakacts_m');
-% textacts_m = arrayfun(@(R)cellfun(@mean,R.textacts), RDThreadStats, 'Uni', false); %textacts_m{6}(1,2)=nan;
-% textacts_m = cell2mat(textacts_m');
-%% Beto obsolete version
-% V1msk = prefchan_arr <=48 & prefchan_arr>=33 & (1:36 ~= 4);
-% V4msk = prefchan_arr <=64 & prefchan_arr>=49 & (1:36 ~= 4);
-% ITmsk = prefchan_arr <=32 & prefchan_arr>=1 & (1:36 ~= 4);
-% msk.V1 = V1msk;msk.V4 = V4msk; msk.IT = ITmsk; msk.all = ones(1,length(RDStats),'logical');
+
 %% Statistics for activations each group, recorded in RDEvolCmpStats 
 initacts_m = RDEvolCmpTable.init_mean;
 initacts_sem = RDEvolCmpTable.init_sem;
@@ -348,3 +331,21 @@ legend(["V1","V4","IT"])
 title("peak activation for reduced dimension evolution")
 xlabel("Full space evolution");ylabel("Reduced space evolution")
 %%
+%% (Beto obsolete version)
+% initacts_sem = arrayfun(@(R)cellfun(@sem,R.initacts), RDThreadStats, 'Uni', false); %initacts_sem{6}(1,2)=nan;
+% initacts_sem = cell2mat(initacts_sem');
+% peakacts_sem = arrayfun(@(R)cellfun(@sem,R.peakacts), RDThreadStats, 'Uni', false); %peakacts_sem{6}(1,2)=nan;
+% peakacts_sem = cell2mat(peakacts_sem');
+% textacts_sem = arrayfun(@(R)cellfun(@sem,R.textacts), RDThreadStats, 'Uni', false); %textacts_sem{6}(1,2)=nan;
+% textacts_sem = cell2mat(textacts_sem');
+% initacts_m = arrayfun(@(R)cellfun(@mean,R.initacts), RDThreadStats, 'Uni', false); %initacts_m{6}(1,2)=nan;
+% initacts_m = cell2mat(initacts_m');
+% peakacts_m = arrayfun(@(R)cellfun(@mean,R.peakacts), RDThreadStats, 'Uni', false); %peakacts_m{6}(1,2)=nan;
+% peakacts_m = cell2mat(peakacts_m');
+% textacts_m = arrayfun(@(R)cellfun(@mean,R.textacts), RDThreadStats, 'Uni', false); %textacts_m{6}(1,2)=nan;
+% textacts_m = cell2mat(textacts_m');
+%% Beto obsolete version
+% V1msk = prefchan_arr <=48 & prefchan_arr>=33 & (1:36 ~= 4);
+% V4msk = prefchan_arr <=64 & prefchan_arr>=49 & (1:36 ~= 4);
+% ITmsk = prefchan_arr <=32 & prefchan_arr>=1 & (1:36 ~= 4);
+% msk.V1 = V1msk;msk.V4 = V4msk; msk.IT = ITmsk; msk.all = ones(1,length(RDStats),'logical');

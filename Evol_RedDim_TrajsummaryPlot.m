@@ -1,15 +1,14 @@
 %% Create the summary plots for Compare evolution scores for Alfa/Beto.
 %  See if the Evolution works 
-%  (Newer Refactored version. May 2021)
-%% 
-%% Plot the evolution trajectory comparison
+%  (Newer Refactored version using new plotting API comparing to Evol_RedDim_summary.m. May. 2021)
+%  Plot the evolution trajectory comparison
+%  With handy stats function below. 
+
+%% Set path and load most basic exp summary
 Animal = "Both"; Set_Path;
-Corder = colororder;
-%%
 global figdir
-figdir = "E:\OneDrive - Washington University in St. Louis\Evol_ReducDim\summary";
+figdir = "O:\Evol_ReducDim\summary";
 ExpType = "RDEvol";
-Animal = "Both";
 if strcmp(Animal,"Both") % load stats
 A = load(fullfile(matdir, "Alfa"+"_RDEvol_stats.mat"), 'RDStats');
 B = load(fullfile(matdir, "Beto"+"_RDEvol_stats.mat"), 'RDStats');
@@ -17,8 +16,9 @@ RDStats = [A.RDStats, B.RDStats];
 else
 load(fullfile(matdir, Animal+"_RDEvol_stats.mat"), 'RDStats')
 end
-%%
-RDEvol_Stats = []; % struct list 
+Corder = colororder; % default color seq
+%% 
+RDEvol_Stats = []; % struct list, higher level summary, easy for plotting and testing.
 unitnum_arr = zeros(length(RDStats),1);
 prefchan_arr = zeros(length(RDStats),1);
 validmsk = ones(numel(RDStats), 1, 'logical'); % whether the exp should be excluded. (unconventional optimizer setup)
@@ -65,7 +65,7 @@ S = score_cmp_stats(score_vec_col(:,midgen:midgen+1), "middle", S);
 else
 fprintf("Exp %02d, Skip Non standard optimnames",Expi)
 disp(RDStats(Expi).evol.optim_names)
-validmsk(Expi) = 0;
+validmsk(Expi) = 0; % Mask out this exp when computing stats. 
 S = optimtraj_integral({}, S);
 S = Dprime_integral({}, S);
 S = score_cmp_stats({}, "init23", S);
@@ -79,7 +79,7 @@ end
 RDEvolTab = struct2table(RDEvol_Stats);
 writetable(RDEvolTab, fullfile(figdir, Animal+"_RDEvol_trajcmp.csv"))
 save(fullfile(figdir, Animal+"_RDEvol_summaryStats.mat"), "RDEvol_Stats")
-Corder = colororder;
+
 %% Re-normalize the trajectories to show together.
 score_C_m_trajs = {};
 score_G_m_trajs = {};
@@ -100,6 +100,7 @@ for Expi=1:size(score_traces,1)
     score_G_s_trajs{Expi} = score_G_s/scaling;
     block_trajs{Expi} = blockvec;
 end
+
 %% Filtering Array
 Animal_arr = struct2table(RDEvol_Stats).Animal;
 Alfamsk = Animal_arr=="Alfa";
@@ -122,6 +123,7 @@ legend(["Full","50D"])
 saveallform(figdir,fignm);
 xlim([0,35]);fignm = fignm+"_Xlim";
 saveallform(figdir,fignm);
+
 %% Plot trajectory comparison averaging all sessions.
 h=figure;hold on;fignm=compose("%s_MaxNorm_scoreTraj_avg_all", Animal);
 set(h,'pos',[1000         315         765         663])
@@ -136,6 +138,7 @@ legend(["Full","50D"])
 saveallform(figdir,fignm);
 xlim([0,35]);fignm = fignm+"_Xlim";
 saveallform(figdir,fignm);
+
 %% Plot trajectory comparison averaging sessions with pref chan in V1, V4, IT
 msk_col = {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk};
 label_col = ["V1", "V4", "IT"];
@@ -193,7 +196,8 @@ for mski=1:3 % relimit x axis by 80 percentile of block number
    xlim([1,prctile(cellfun(@numel,block_trajs(msk)),80)]);
 end
 saveallform(figdir,fignm+"_Xlim");
-%% Plot trajectory comparison averaging sessions with pref chan in V1, V4, IT in A B
+
+%% Plot trajectory comparison averaging sessions with pref chan in V1, V4, IT in A B (Final version)
 msk_col = {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk};
 anim_msks = {Alfamsk&validmsk, Betomsk&validmsk};
 label_col = ["V1", "V4", "IT"];
@@ -230,8 +234,6 @@ end
 end
 saveallform(figdir,fignm+"_Xlim");
 
-
-
 %% Area average with individual curves plotted on it.
 msk_col = {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk};
 label_col = ["V1", "V4", "IT"];
@@ -262,6 +264,7 @@ for mski=1:3
    xlim([1,prctile(cellfun(@numel,block_trajs(msk)),80)]);
 end
 saveallform(figdir,fignm+"_Xlim");
+
 %%
 h=figure; fignm=compose("%s_MaxNorm_scoreTraj_indiv_Area", Animal);
 set(h,'pos',[285         388        1644         549])
@@ -286,8 +289,6 @@ for mski=1:3
    xlim([1,prctile(cellfun(@numel,block_trajs(msk)),80)]);
 end
 saveallform(figdir,fignm+"_Xlim");
-
-
 
 %% Load summary statistics for trajectories and plot them.
 %  Replicate Analysis from Table and Stats
@@ -323,27 +324,27 @@ testProgression(RDEvolTab, "last23_m_ratio", {V1msk&validmsk, V4msk&validmsk, IT
 testProgression(RDEvolTab, "middle_m_ratio", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], "area", ...
     "Both Monk All Exp");
 diary off
-%%
+
+%% Statistics Separate by Area. 
 h = stripe_plot(RDEvolTab, "last23_m_ratio", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], ...
                     "Both Monk All Exp", "area_sep", {[1,2],[2,3],[1,3]},'MarkerEdgeAlpha',0.9);
-
-%%
+%
 h = stripe_plot(RDEvolTab, "last23_cmp_dpr", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], ...
                     "Both Monk All Exp", "area_sep", {[1,2],[2,3],[1,3]},'MarkerEdgeAlpha',0.9);
-                
-%%
+%
 h = stripe_plot(RDEvolTab, "Dpr_int_norm", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], ...
                     "Both Monk All Exp", "area_sep", {[1,2],[2,3],[1,3]},'MarkerEdgeAlpha',0.9);
 
-%%
+%% Statistics Separate by Area and Animal. 
 h = stripe_minor_plot(RDEvolTab, "last23_cmp_dpr", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], ...
                     {Alfamsk, Betomsk}, ["Alfa", "Beto"], "Both Monk All Exp", "area_anim_sep", {[1,2],[2,3],[1,3]}, 'marker','MarkerEdgeAlpha',0.9);                
-%%
+%
 h = stripe_minor_plot(RDEvolTab, "Dpr_int_norm", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], ...
                    {Alfamsk, Betomsk}, ["Alfa", "Beto"], "Both Monk All Exp", "area_anim_sep", {[1,2],[2,3],[1,3]}, 'marker', 'MarkerEdgeAlpha',0.9);
-%%
+%
 h = stripe_minor_plot(RDEvolTab, "traj_int_ratio", {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk}, ["V1","V4","IT"], ...
                    {Alfamsk, Betomsk}, ["Alfa", "Beto"], "Both Monk All Exp", "area_anim_sep", {[1,2],[2,3],[1,3]}, 'marker', 'MarkerEdgeAlpha',0.9);
+
 %%
 % score2cmp = score_vec_col(:,2:3);
 % S = score_cmp_stats(score2cmp, "init23");
@@ -407,7 +408,7 @@ end
 function S = score_cmp_stats(score2cmp, prefix, S)
 % score2cmp: a cell array of scores, 2 rows, each row is a thread / optimizer
 % prefix: prefix to name the fields of the struct.
-% S: Struct containing the stats 
+% S: Struct containing the stats, if given then write the stats into it; if not, create a new one.  
 %
 % Example: 
 % S = score_cmp_stats(score_vec_col(:,2:3), "init23");
