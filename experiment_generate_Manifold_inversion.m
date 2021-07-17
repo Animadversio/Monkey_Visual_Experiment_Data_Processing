@@ -1,19 +1,25 @@
 G = FC6Generator();
+[eigvals,eigvect] = loadH();
 % Input the experimental backup folder containing the mat codes files.
 global newimg_dir
-newimg_dir = "N:\Stimuli\2021-ProjectPFC\Manifold_Demo\Banana_manifold";
-mkdir(newimg_dir)
-fprintf("Save new images to folder %s\n", newimg_dir)
-%% Spherical interpolation
-orig_img = imread("N:\Stimuli\2021-ProjectPFC\2021-Selectivity\bigSet\fruit (8).jpg");
-target_img = imresize(orig_img, [256,256]);
-[code_invert, img_fit, loss] = GAN_invert_fun(G, target_img, 200);
-code_invert = double(code_invert);
-orthonormalize2vect(code_invert, randn(2, 4096))
-%%
-[img_list] = explore_from_code(G,code_invert, rand_vec2, "RND12", ["RND1","RND2"]);
 %%
 
+%% Spherical interpolation
+manifold_root = "S:\Manifold_Demo";
+imgname = "Banana";
+orig_img = imread("N:\Stimuli\2021-ProjectPFC\2021-Selectivity\bigSet\fruit (8).jpg");
+target_img = imresize(orig_img, [256,256]);
+newimg_dir = fullfile(manifold_root, compose("%s_manifold",imgname));
+mkdir(newimg_dir);fprintf("Save new images to folder %s\n", newimg_dir);
+[code_invert, img_fit, loss] = GAN_invert_fun(G, target_img, 200);
+figure;imshow(imtile({target_img,img_fit}))
+code_invert = double(code_invert);
+%%
+rand_tanvec2 = orthonormalize2vect(code_invert, randn(2, 4096));
+[img_list] = explore_from_code(G,code_invert, rand_tanvec2, "RND12", ["RND1","RND2"]);
+%%
+EIG_tanvec2 = orthonormalize2vect(code_invert, eigvect(:, 1:2)');
+[img_list] = explore_from_code(G,code_invert, EIG_tanvec2, "eig12", ["eig1","eig2"]);
 function vects = orthonormalize2vect(centvect, vects)
 % tmp = orthonormalize2vect([1,zeros(1,4095)],randn(5,4096));
 % tmp = orthonormalize2vect(randn(5,4096));
@@ -62,11 +68,20 @@ for j = -5:5
         img = G.visualize(code_vec);
         img_list{end+1} = img;
         imwrite(img, fullfile(newimg_dir, compose("norm_%d_%s_%d_%s_%d.jpg", ...
-            sphere_norm, axes_str(1), Theta_step * j, axes_str(2), Phi_step* k)));
+            int32(sphere_norm), axes_str(1), Theta_step * j, axes_str(2), Phi_step* k)));
     end
 end
 mtg = imtile(img_list,'GridSize',[11,11], 'BorderSize',4,'ThumbnailSize',[256,256]);
 imwrite(mtg,fullfile(newimg_dir,compose("%s_Montage.png", space_str)));
 save(fullfile(newimg_dir, compose("%s_tan_vect_data.mat", space_str)), ...
     "code_invert", "tang_vecs", "sphere_norm", "Theta_step", "Phi_step");
+end
+
+function [eigvals,eigvect] = loadH()
+py.importlib.import_module("numpy");
+data = py.numpy.load("N:\Data-Computational\Evolution_Avg_Hess.npz");
+eigvect = data.get("eigvect_avg").double; % each column is an eigen vector. 
+eigvals = data.get("eigv_avg").double;
+eigvals = eigvals(end:-1:1);
+eigvect = eigvect(:,end:-1:1);
 end
