@@ -2,7 +2,7 @@ function [h,score_m,score_s,blockvec] = summarize_trajs_merge(traj_col,norm_mode
 % msk on the experimental session level. 
 % Merge the trajectories in each tile. 
 % Same logic as `summarize_trajs_tile`
-% 
+% traj_col: 1d cell array of trajectories
 % msk_col = {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk};
 % anim_msks = {Alfamsk&validmsk, Betomsk&validmsk};
 % label_col = ["V1", "V4", "IT"];

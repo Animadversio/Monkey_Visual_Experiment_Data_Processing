@@ -60,7 +60,8 @@ title(title_str,'interpreter','none')
 % Ns = cellfun(@sum,masks);
 % legend(compose("%s(%d)",labelcol',Ns'),'Location','best') % ["Driver", "Non-Drivers"]
 legend('Location','best')%
-saveas(h,fullfile(figdir,compose("%s_%s_stripcmpmarker.png", statname, savestr)))
-saveas(h,fullfile(figdir,compose("%s_%s_stripcmpmarker.pdf", statname, savestr)))
-savefig(h,fullfile(figdir,compose("%s_%s_stripcmpmarker.fig", statname, savestr)))
+saveallform(figdir,compose("%s_%s_stripcmpmarker", statname, savestr),h)
+% saveas(h,fullfile(figdir,compose("%s_%s_stripcmpmarker.png", statname, savestr)))
+% saveas(h,fullfile(figdir,compose("%s_%s_stripcmpmarker.pdf", statname, savestr)))
+% savefig(h,fullfile(figdir,compose("%s_%s_stripcmpmarker.fig", statname, savestr)))
 end

@@ -2,6 +2,7 @@ function [score_m,score_s,blockvec] = sort_scoreblock(blockarr,scorearr)
 % sort an array of scores according to the block array labels. compute the
 % mean and std for each block. 
 % If `blockarr` and `scorearr` are cell array it will be concatenated to be an array
+% else, they will be array or vector. 
 % 
 % Note: really useful function to summarize multiple evolution trajectories into
 % a mean one. 

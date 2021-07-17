@@ -1,6 +1,7 @@
 function [tval,pval,sumstr,mean_arr,sem_arr] = ttest2_print(group1,group2,g1label,g2label,paired)
 if nargin==2, paired=false;g1label="Group 1";g2label="Group 2";end
 if nargin==3, paired=g1label;g1label="Group 1";g2label="Group 2";end
+if nargin==4, paired=false;end
 g1_mean = nanmean(group1);
 g2_mean = nanmean(group2);
 g1_sem = sem(group1);
