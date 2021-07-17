@@ -4790,3 +4790,36 @@ facttsr_corrresnet50_linf8-layer3_03,
 fac0_map_corrresnet50_linf8-layer3_03,
 fac1_map_corrresnet50_linf8-layer3_02
 Super successful.",Alfa-28062021-005,210628_Alfa_selectivity_basic(1),34,1,1.5,N:\Stimuli\2021-EvolDecomp\2021-06-28-Alfa-02-decomp
+NaN,,NaN,,"001 RFMapper
+10:48 starts
+60% performance at first exp, not good sign
+56  57  62 non good signal
+35  [0,     0]    2.5  1 SU 1/5
+21  [1,  -1.5]   5  1 Hash 5/5
+41  [0,     -1]    3  1 Hash 5/5
+24
+002 Generate BigGAN
+35  [0,     0]    2.5  1 SU 1/5
+Foget to copy ref, again
+aborted",Alfa-09072021-001,210709_Alfa_rfMapper_basic,NaN,NaN,NaN,
+1,FC6Evol_Decomp,43,,"003 Generate BigGAN
+35  [0,     0]    2.5  1 SU 1/5
+Dramatic evolution.
+30->120 stuck around 117
+Stays around 124
+50 % performance for one day. First evolution god.
+4
+21  [1,  -1.5]   5  1 Hash 5/5
+Monk not really working and evolution stays put.
+An then exp crashed since we run out of space on Cdisk.
+Not saving, not working
+210709_Alfa_generate_BigGAN(2) may be broken
+Then monkeylogic broken
+Reinstalling monkeylogic......",Alfa-09072021-003,210709_Alfa_generate_BigGAN(1),35,1,2.5,N:\Stimuli\2021-EvolDecomp\2021-07-09-Alfa-01\2021-07-09-11-14-29
+1,FC6Evol_Decomp,43,,"005 Evol Factorization
+Data looks pretty, but monkey doing worst.
+86 mins 5 block????????
+F**KIng Stupid monkey.
+facttsr_corrresnet50_linf8-layer3_01,
+fac0_map_corrresnet50_linf8-layer3_02,
+fac1_cntpnt_corrresnet50_linf8-layer3_03",Alfa-09072021-005,210709_Alfa_selectivity_basic,35,1,2.5,N:\Stimuli\2021-EvolDecomp\2021-07-09-Alfa-01-decomp

@@ -45,7 +45,7 @@ end
 
 function [loss, grad] = FitImgLoss(G, code, tar_img)
 out = G.dlforward(code); % color channel doesn't get converted still 
-loss = mean(abs(out(:,:,[3,2,1],:) - tar_img), [1,2,3]);
+loss = mean(abs(out(:,:,[3,2,1],:) - tar_img), [1,2,3]); % L1 loss
 losssum = sum(loss);
 grad = dlgradient(losssum, code);
 end
