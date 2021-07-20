@@ -7,7 +7,7 @@ load(fullfile(mat_dir, Animal+'_Manif_stats.mat'),'Stats')
 load(fullfile(mat_dir, Animal+'_Evol_stats.mat'),'EStats')
 load(fullfile(mat_dir,Animal+"_ManifRadiTuneStats.mat"),'RadTuneStats')
 load(fullfile(mat_dir,Animal+"_EvoRef_ImDist.mat"),"EvoRefImDistStat")
-%% Build a list of ref images to search for
+%% Build a pool of ref images to search for
 refroot = "N:\Stimuli\2019-Selectivity\2019-Selectivity-Big-Set-01";
 refroot1 = "N:\Stimuli\2019-Selectivity\2019-Selectivity-Big-Set-01\forTesting";
 refroot2 = "N:\Stimuli\2020-manifold-references";
@@ -20,7 +20,7 @@ files = dir((fdr+"\*"));
 allrefimg = arrayfun(@(F)fdr+"\"+string(F.name),files);
 allimgs = [allimgs;allrefimg];
 end
-%% Find all the reference images and put them in place.
+%% PreProc: Find all the reference images and put them in place! 
 for Expi = 1:numel(EStats)
 fprintf("Process Experiment %d\n",Expi)
 parts = split(EStats(Expi).meta.stimuli,"\");
@@ -84,8 +84,9 @@ end
 assert(numel(refimg_paths)==numel(EStats(Expi).ref.imgnm)) % Make sure the number of found path is the same as original ones. 
 EStats(Expi).ref.impaths = refimg_paths;
 end
-
-%% Compute the Dissimilarity
+%%
+save(fullfile(mat_dir, Animal+'_Evol_stats.mat'),'EStats')
+%% Process: Compute the Dissimilarity
 EvoRefImDistStat = repmat(struct(),1,numel(EStats));
 D = torchImDist("squeeze");
 D=D.load_net();
@@ -120,16 +121,16 @@ toc %% SSIM can take quite a while
 end
 %%
 save(fullfile(mat_dir,Animal+"_EvoRef_ImDist.mat"),"EvoRefImDistStat")
-
-%% Compute Radial tuning correlation and save to stats 
+%% Summary Part
+%% Compute Radial tuning curves, corr and AUC and save to stats 
 Animal = "Alfa";Set_Path;
 mat_dir = "O:\Mat_Statistics";
-load(fullfile(mat_dir, Animal+'_Manif_stats.mat'),'Stats')
-load(fullfile(mat_dir, Animal+'_Evol_stats.mat'),'EStats')
-load(fullfile(mat_dir,Animal+"_ManifRadiTuneStats.mat"),'RadTuneStats')
-load(fullfile(mat_dir,Animal+"_EvoRef_ImDist.mat"),"EvoRefImDistStat")
-%%
-metric_list = ["squ","SSIM","L2","FC6","FC6_corr"];
+load(fullfile(mat_dir, Animal+'_Manif_stats.mat'),'Stats') % Manifold Stats 
+load(fullfile(mat_dir, Animal+'_Evol_stats.mat'),'EStats') % Evolution Stats
+load(fullfile(mat_dir,Animal+"_ManifRadiTuneStats.mat"),'RadTuneStats') % Collection of Radial Tuning Curves in all Spaces
+load(fullfile(mat_dir,Animal+"_EvoRef_ImDist.mat"),"EvoRefImDistStat") % Image Distance between reference images. 
+%% Adding the `evoref` field to `RadTuneStats` collecting the stats in this space. 
+metric_list = ["squ","SSIM","L2","FC6","FC6_corr"]; % all the metrics we want to use to measure distance 
 label_list = ["LPIPS (SqueezeNet)", "SSIM", "L2", "FC6 (L2)", "FC6 (1 - corr)"];
 tic
 for Expi=1:numel(Stats)
@@ -158,8 +159,11 @@ for mi = 1:numel(metric_list) % Loop through different distance metrics
 end
 toc
 end
-%%
+%% Save the Radial Tuning Stats back to the mat file. 
 save(fullfile(mat_dir,Animal+"_ManifRadiTuneStats.mat"),'RadTuneStats')
+%  For comparisons of interplotation and AUC integration methods see
+%  `vis_cmp_smooth_method.m` 
+
 
 function [gpr_fit, xlinsp, AOC, gprMdl] = GPRfitting(X, Y)
 gprMdl = fitrgp(X, Y, 'SigmaLowerBound', 5E-3); % Edit this lower bound if encoutering fitting problem! 
@@ -169,6 +173,21 @@ AOC = trapz(xlinsp, gpr_fit);  % integrate under the gaussian process fitting cu
 % Plot curve on a fig
 % plot(xlinsp, gpr_fit, vargin{:})%,'HandleVisibility','off' % adding these arguments will remove it from legend
 end
+
+
+function [smth_fit, xlinsp, AOC, smthcrv] = BinSmoothing(X, Y, interpmethod)
+if nargin==2, varargin={}; interpmethod = 'linear'; 
+elseif nargin==3, varargin={}; end
+smthcrv = smooth(X,Y);
+xlinsp = linspace(0,max(X),100);
+[uniqX, iX, iUniq] = unique(X); % get rid of redundancy in X if there is any.
+smth_fit = interp1(X(iX),smthcrv(iX),xlinsp,interpmethod,'extrap'); %'spline'
+AOC = trapz(xlinsp, smth_fit);  % integrate under the gaussian process fitting curve. 
+% % Plot curve on a fig
+% scatter(X, smthcrv, 'DisplayName', 'Data Smooth')
+% plot(xlinsp, smth_fit,'Disp',strcat('smooth+interp ',interpmethod), varargin{:})%,'HandleVisibility','off' % adding these arguments will remove it from legend
+end
+
 function [r,m,b] = Linearfitting(X, Y, varargin) % Util function to add a linear reg line to a scatter
 if nargin==2, varargin={};end
 [r,m,b] = regression(X, Y);

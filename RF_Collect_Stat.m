@@ -1,11 +1,11 @@
 %% Collect the PSTH and Score in the more raw form
-Animal = "Alfa"; Set_Path;
+Animal = "Beto"; Set_Path;
 %expftr = (contains(ExpRecord.expControlFN,"200319"));
 expftr = (contains(ExpRecord.Exp_collection,"Manifold") &...
             contains(ExpRecord.expControlFN, "rf"));%&...
             %ExpRecord.Expi > 0); 
-rowis = find(expftr);
-[meta_new,rasters_new,lfps_new,Trials_new] = Project_Manifold_Beto_loadRaw(rowis,Animal,false,true);
+rowis = find(expftr);   
+[meta_new,rasters_new,lfps_new,Trials_new] = loadExperiments(rowis,Animal,false,true);%Project_Manifold_Beto_loadRaw(rowis,Animal,false,true);
 %%
 % addpath D:\Lab_Codeshare\project_rfmap
 RFStats = repmat(struct(),length(meta_new),1);

@@ -1,4 +1,7 @@
 % Create Animation for Dual evolution in Reduced Dimension Evolution
+% This script is useful for batch processing of BigGAN_FC6 experiments. not
+% so much for single experiment.
+
 Animal = "Beto";
 MatStats_path = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 load(fullfile(MatStats_path, Animal+"_HessBGEvolStats.mat"), 'HEStats')

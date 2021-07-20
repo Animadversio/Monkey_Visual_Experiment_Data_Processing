@@ -77,7 +77,7 @@ histogram(shfl_Scol(:,3),'Norm','pdf');
 title("Dirichlet Energy")
 legend(["Trial Resampled", "Matrix Shuffled"])
 title(h,"Smooth Energy Compared")
-%%
+
 %%
 [PHI, THETA] = meshgrid(-90:18:90,-90:18:90); 
 detJac = abs(cosd(PHI));
@@ -135,7 +135,7 @@ SmthStatTab(cnt).spaceId = si;
 actmap = cellfun(@(P)mean(P(ui,51:200,:),'all'),Stats(Expi).manif.psth{si});
 act_col = cellfun(@(P)squeeze(mean(P(ui,51:200,:),2)),Stats(Expi).manif.psth{si},'uni',0);
 cntmap = cellfun(@(P)size(P,3),Stats(Expi).manif.psth{si});
-% Spherical Version
+%% Calculate shuffled/Boostrapped statistics (Spherical)
 [D2E_sp, TVE_sp, D1E_sp, D2map_sp, GPmap_sp, detJac_map] = sph_map_energy(actmap);
 btrp_Scol_sp = [];
 for rep = 1:1000
@@ -181,7 +181,7 @@ SmthStatTab(cnt).TVE_sp_Dpr = Dpr_TVE_sp;
 SmthStatTab(cnt).D1E_sp_t = tSt_D1E_sp.tstat;
 SmthStatTab(cnt).D1E_sp_P = P_D1E_sp;
 SmthStatTab(cnt).D1E_sp_Dpr = Dpr_D1E_sp;
-% Euclidean Version
+% Calculate Euclidean Version of statistics 
 [D2E, TVE, D1E, D2map, GPmap] = map_energy(actmap);
 btrp_Scol = [];
 for rep = 1:1000
@@ -228,7 +228,8 @@ SmthStatTab(cnt).D1E_t = tSt_D1E.tstat;
 SmthStatTab(cnt).D1E_P = P_D1E;
 SmthStatTab(cnt).D1E_Dpr = Dpr_D1E;
 cnt = cnt+1;
-%%
+
+%% Spherical version D1E, TVE distribution comparison 
 set(0,'CurrentFigure',h);clf;
 T = tiledlayout(1,3,'Padding','compact','TileSpacing','compact');
 nexttile(T,1);hold on
@@ -249,7 +250,8 @@ title(compose("Dirichlet Energy\n t=%.2f(%.1e) d'=%.2f",tSt_D1E_sp.tstat,P_D1E_s
 legend(["Trial Resampled", "Matrix Shuffled"])
 title(T,["Map Smoothness Energy (Sphere) Compared",compose("Exp %d Space%d(%s) Unit %s",Expi,si,splab,unitlab)])
 saveas(h, fullfile(figdir, compose("Smooth_DE_sph_hist_cmp_%s_Exp%d_%s_%s.png",Animal,Expi,splab,unitlab)))
-%%
+
+%% Spherical version map comparison 
 set(0,'CurrentFigure',h2);clf;
 T = tiledlayout(2,4,'Padding','compact','TileSpacing','compact');
 nexttile(T,1);
@@ -273,7 +275,6 @@ imagesc(abs(D2map_sp_btrp))
 axis image;colorbar
 title(["Laplacian Filtered Amplitude",compose("Laplacian Filtered Energy\n t=%.2f(%.1e) d'=%.2f",tSt_D2E_sp.tstat,P_D2E_sp,Dpr_D2E_sp)])
 xlabel("PC3 Phi")
-
 nexttile(T,5);
 imagesc(actmap_shfl)
 axis image;colorbar
@@ -298,7 +299,7 @@ xlabel("PC3 Phi")
 title(T,compose("Filtered map Compared (Sphere)\nExp %d Space%d(%s) Unit %s",Expi,si,splab,unitlab))
 saveas(h2, fullfile(figdir, compose("Smooth_Map_sph_cmp_%s_Exp%d_%s_%s.png",Animal,Expi,unitlab,splab)))
 
-
+%% Euclidean version Distribution comparison of shuffled and bootstrapped distributions
 set(0,'CurrentFigure',h3);clf;
 T = tiledlayout(1,3,'Padding','compact','TileSpacing','compact');
 nexttile(T,1);hold on
@@ -319,7 +320,8 @@ title(compose("Dirichlet Energy\n t=%.2f(%.1e) d'=%.2f",tSt_D1E.tstat,P_D1E,Dpr_
 legend(["Trial Resampled", "Matrix Shuffled"])
 title(T,["Map Smoothness Energy Compared",compose("Exp %d Space%d(%s) Unit %s",Expi,si,splab,unitlab)])
 saveas(h3, fullfile(figdir, compose("Smooth_DE_hist_cmp_%s_Exp%d_%s_%s.png",Animal,Expi,splab,unitlab)))
-%%
+
+%% Euclidean version map comparison 
 set(0,'CurrentFigure',h4);clf;
 T = tiledlayout(2,4,'Padding','compact','TileSpacing','compact');
 nexttile(T,1);
@@ -343,7 +345,6 @@ imagesc(abs(D2map_btrp))
 axis image;colorbar
 title(["Laplacian Filtered Amplitude",compose("Laplacian Filtered Energy\n t=%.2f(%.1e) d'=%.2f",tSt_D2E.tstat,P_D2E,Dpr_D2E)])
 xlabel("PC3 Phi")
-
 nexttile(T,5);
 imagesc(actmap_shfl)
 axis image;colorbar
@@ -379,6 +380,7 @@ SmthStatTable = struct2table(SmthStatTab);
 D1E_Dpr_V1 = SmthStatTable.D1E_Dpr((SmthStatTable.chan<=48)&(SmthStatTable.chan>=33));
 D1E_Dpr_V4 = SmthStatTable.D1E_Dpr((SmthStatTable.chan>48)&(SmthStatTable.chan>=33));
 D1E_Dpr_IT = SmthStatTable.D1E_Dpr((SmthStatTable.chan<=48)&(SmthStatTable.chan<33));
+
 %% Visualize effect of bootstrapping on the activation maps. 
 figure(7);
 s = RandStream('mrg32k3a');

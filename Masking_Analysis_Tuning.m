@@ -13,7 +13,7 @@ ExpRecord(ftr,:)
 %%
 % resultroot = "OneDrive - Washington University in St. Louis";
 figroot = "E:\OneDrive - Washington University in St. Louis\VisualMask_PSTH";
-flag.plot_chan = true;
+flag.plot_chan = true; % plotting flags 
 flag.plot_imgsep = false;
 flag.plot_tuning = false;
 for Triali = 7:numel(meta_new)

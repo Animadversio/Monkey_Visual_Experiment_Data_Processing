@@ -1,4 +1,4 @@
-%% correlation tensor for GAN layer instead of cnn layers.
+%% correlation tensor for GAN layer instead of cnn layers!
 global G 
 G = FC6Generator("matlabGANfc6.mat");
 %% Animal specific data.

@@ -32,6 +32,9 @@
 %   % WHEN IMPORT FAILS, RUN THIS LINE ABOVE
 % 
 % This add to path should be run each time. So I add it to init code
+% **Note**: as the path is appended each time, the path list will keep getting
+% longer if matlab is not restarted. THat can cause import error if the
+% path get long enough and get rid of some important ones. 
 %   
 %   Binxu July.20th, 2020. Updated Oct. 9th
 classdef torchBigGAN

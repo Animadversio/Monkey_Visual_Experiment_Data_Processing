@@ -2,7 +2,6 @@
 %% Analysis Code for Comparing Optimizers on a same unit. 
 % much adapted from Evol_Traj_Cmp code, inspired Evol_Traj_analysis code.
 % (it's kind of a multi-thread) version of Evol Traj analysis
-
 Set_Path;
 result_dir = "C:\Users\ponce\OneDrive - Washington University in St. Louis\Optimizer_Cmp";
 
@@ -14,6 +13,12 @@ expftr = contains(ExpSpecTable_Aug.expControlFN,"generate") & ...
      contains(ExpSpecTable_Aug.Exp_collection, "Optimizer_cmp") &...
      ExpSpecTable_Aug.Expi > 6;
 [meta_new,rasters_new,lfps_new,Trials_new] = LoadRaw_and_Append_Coll(find(expftr), meta_new, rasters_new, lfps_new, Trials_new);
+%%
+Animal = "Both";Set_Path;
+expftr = contains(ExpRecord.expControlFN,"generate") & ...
+        contains(ExpRecord.Exp_collection, "CMAGA_cmp");
+row_idx = find(expftr);
+[meta_new, rasters_new, lfps_new, Trials_new] = loadExperiments(row_idx, Animal, false);
 %%
 savepath = fullfile(result_dir, "summary"); 
 mkdir(savepath);

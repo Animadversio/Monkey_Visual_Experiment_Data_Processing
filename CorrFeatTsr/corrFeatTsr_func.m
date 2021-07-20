@@ -63,7 +63,12 @@ while curN < imgN
     csr_end = min(imgN, csr + Bsz -1);
     rsp = score_shuffle(csr:csr_end,:); % change this into 
     if ~flags.load_all_img && flags.loadIMG
+    if isfield(flags,'resize')&&flags.resize
+    imgcol = cellfun(@(imgnm) imresize(imresize(imread(fullfile(imgnm)),[flags.imgpix,flags.imgpix],'Antial',true),...
+        [224,224],'Antial',true), images, 'Uni', 0);
+    else
     imgcol = cellfun(@(imgnm) imresize(imread(fullfile(imgnm)),[224,224]), images(csr:csr_end), 'UniformOutput', false);
+    end
     dlimg = cell2mat(reshape(imgcol,1,1,1,[]));
     T1 = toc(T0);
     feat_tsr_tmp = activations(net, dlimg, layername);
@@ -104,7 +109,12 @@ MFeat = reshape(MFeat, ft_shape);
 StdFeat = reshape(StdFeat, ft_shape);
 else % Commpute feature tensor over 3000+ images directly using activations. (faster then doing loop)
 T0 = tic;
+if isfield(flags,'resize')&&flags.resize
+imgcol = cellfun(@(imgnm) imresize(imresize(imread(fullfile(imgnm)),[flags.imgpix,flags.imgpix],'Antial',true),...
+        [224,224],'Antial',true), images, 'Uni', 0);
+else
 imgcol = cellfun(@(imgnm) imresize(imread(fullfile(imgnm)),[224,224]), images, 'UniformOutput', false);
+end
 dlimg = cell2mat(reshape(imgcol,1,1,1,[]));
 T1 = toc(T0);
 feat_tsr = activations(net, dlimg, layername, 'MiniBatchSize', Bsz);

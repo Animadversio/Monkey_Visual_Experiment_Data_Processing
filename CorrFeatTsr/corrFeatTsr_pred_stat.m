@@ -5,6 +5,8 @@ net = vgg16;
 %  use the Evolution to predict manifold experiments and vice versa.
 %  Use the correlated voxels to predict 
 %  Fit a model on Evolution experiment and test on manifold
+%  This script does large scale computation of all experiments and collect the stats into a table.
+%  
 %  
 Animal="Alfa";
 savedir = "E:\OneDrive - Washington University in St. Louis\CNNFeatCorr";
@@ -28,7 +30,7 @@ EStats(19).meta.stimuli = "N:\Stimuli\2019-Manifold\alfa-191210a\backup_12_10_20
 %% 
 Animal="Alfa"; Expi = 11; layername = "fc6"; 
 for Expi = 1:46
-[imgfullnm_Evol, score_Evol] = loadManifData(Stats, EStats, Animal, "Evol", Expi, struct());
+[imgfullnm_Evol, score_Evol] = loadManifData(Stats, EStats, Animal, "Evol", Expi, struct()); % uniform interface to load spikes and data
 [imgfullnm_Manif, score_Manif] = loadManifData(Stats, EStats, Animal, "Manif", Expi, struct());
 predStats(Expi).score_Evol = score_Evol;
 predStats(Expi).score_Manif = score_Manif;
@@ -138,7 +140,7 @@ nlpredcorr = corr(NLpred_manif(:,end),score_Manif(:,end));
 lpredcorr = corr(pred_manif_rsp(:,end),score_Manif(:,end));
 nlpredrsquare = 1 - var(NLpred_manif(:,end)-score_Manif(:,end)) / var(score_Manif(:,end));
 toc
-%%
+%% Save some stats
 predStats(Expi).E2M.nlfunc = relufit;
 predStats(Expi).E2M.lfitscore = lfitscore_evol;
 predStats(Expi).E2M.nlfitscore = nlfitscore_evol;
@@ -151,7 +153,7 @@ predStats(Expi).E2M.nlpredcorr = nlpredcorr;
 predStats(Expi).E2M.lpredcorr = lpredcorr;
 predStats(Expi).E2M.nlpredrsquare = nlpredrsquare;
 %%
-%% Visualization
+%% Visualization individual experiments
 figure(1);clf;%set(1,'position',[40         187        1904         595])
 subtightplot(1,3,1,[0.02,0.02],0.08,0.03)
 imagesc(reshape(score_Manif(:,end),[11,11]));
@@ -208,6 +210,7 @@ t_signif_tsr = (cc_tsr - cc_refM) ./ cc_refS;
 end
 
 function [imgfullnm_vect, score_vect] = loadManifData(Stats, EStats, Animal, ExpType, Expi, flags)
+% uniform interface to load spikes and data, really well done!
 ui=1;si=1;
 assert(EStats(Expi).Animal == Animal && Stats(Expi).Animal == Animal)
 fprintf("Processing %s Exp %d pref chan %d\n",ExpType,Expi,EStats(Expi).units.pref_chan)
