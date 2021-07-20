@@ -21,8 +21,8 @@ rand_tanvec2 = orthonormalize2vect(code_invert, randn(2, 4096));
 EIG_tanvec2 = orthonormalize2vect(code_invert, eigvect(:, 1:2)');
 [img_list] = explore_from_code(G,code_invert, EIG_tanvec2, "eig12", ["eig1","eig2"],30,7);
 %%
-EIG_tanvec2 = orthonormalize2vect(code_invert, eigvect(:, 1:2)');
-[img_list] = explore_from_code(G,code_invert, EIG_tanvec2, "eig12", ["eig1","eig2"],30,7);
+EIG_tanvec2 = orthonormalize2vect(code_invert, eigvect(:, [8,10])');
+[img_list] = explore_from_code(G,code_invert, EIG_tanvec2, "eig810", ["eig8","eig10"],40,7,false);
 
 function vects = orthonormalize2vect(centvect, vects)
 % tmp = orthonormalize2vect([1,zeros(1,4095)],randn(5,4096));
@@ -42,10 +42,20 @@ end
 % rand_vec2(2,:) = rand_vec2(2,:) - (rand_vec2(2,:) * rand_vec2(1,:)') * rand_vec2(1,:) / vecnorm(rand_vec2(1,:),2,2).^2;
 % rand_vec2 = rand_vec2 ./ vecnorm(rand_vec2,2,2); %np.sqrt((rand_vec2**2).sum(axis=1))[:, np.newaxis]
 
-function [img_list] = explore_from_code(G, code_invert, tang_vecs, space_str, axes_str, ANGLE_SPAN, imgN_per_arc)
+function [img_list] = explore_from_code(G, code_invert, tang_vecs, space_str, axes_str, ...
+    ANGLE_SPAN, imgN_per_arc, DOSAVE)
+% code_invert: center code, that you invert.
+% tang_vecs: tangent vectors to explore along. 
+% space_str: name of the space, for file labelling. e.g. "eig12"
+% axes_str: string array containing the names of the axes. ["eig1","eig2"]
+% ANGLE_SPAN: angle span of exploration, two sided. e.g. 148
+% imgN_per_arc: final grid will be imgN_per_arc-by-imgN_per_arc, step size
+%               will be ANGLE_SPAN/(imgN_per_arc - 1). e.g. 7
+% DOSAVE: if you are trying out parameters set DOSAVE to false.
 global newimg_dir
 if nargin<=5, ANGLE_SPAN = 180; end
 if nargin<=6, imgN_per_arc = 11; end
+if nargin<=7, DOSAVE = true; end
 assert(length(code_invert)==4096)
 code_invert = reshape(code_invert,1,4096);
 if size(tang_vecs,1)==4096
@@ -71,14 +81,19 @@ for j = -(imgN_per_arc-1)/2:(imgN_per_arc-1)/2
         code_vec = code_vec / norm(code_vec) * sphere_norm;
         img = G.visualize(code_vec);
         img_list{end+1} = img;
+        if DOSAVE
         imwrite(img, fullfile(newimg_dir, compose("norm_%d_%s_%d_%s_%d.jpg", ...
             int32(sphere_norm), axes_str(1), int32(Theta_step * j), axes_str(2), int32(Phi_step* k))));
+        end
     end
 end
 mtg = imtile(img_list,'GridSize',[imgN_per_arc,imgN_per_arc], 'BorderSize',4,'ThumbnailSize',[256,256]);
-imwrite(mtg,fullfile(newimg_dir,compose("norm_%d_%s_Montage.png", int32(sphere_norm), space_str)));
+figure;imshow(mtg)
+if DOSAVE
+imwrite(mtg,fullfile(newimg_dir, compose("norm_%d_Span%d_%dperArc_%s_Montage.png", int32(sphere_norm), ANGLE_SPAN, imgN_per_arc, space_str)));
 save(fullfile(newimg_dir, compose("%s_tan_vect_data.mat", space_str)), ...
     "code_invert", "tang_vecs", "sphere_norm", "Theta_step", "Phi_step");
+end
 end
 
 function [eigvals,eigvect] = loadH()
