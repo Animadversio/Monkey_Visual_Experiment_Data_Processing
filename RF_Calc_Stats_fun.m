@@ -1,10 +1,16 @@
 function S_col = RF_Calc_Stats_fun(meta_new, rasters_new, Trials_new)
+% Newer version functional to compute and potentially visualize receptive
+% fields from the sorting. 
+% meta_new, rasters_new, Trials_new: presumably cell arrays of meta,
+%       rasters and Trials
+% P.collectstat : if true then output array of Stats for these experiments.
+% P.plotEachChan : if true plot the RF for each Chan. 
 pixperdeg = 40;
 P = struct();
 P.plotEachChan = false;
 P.collectstat = false;
-savedir = "O:\RFstats";
 if P.collectstat, S_col = []; end
+savedir = "O:\RFstats";
 for iTr = 1:numel(meta_new)
 Trials = Trials_new{iTr}; 
 rasters = rasters_new{iTr}; 
@@ -12,11 +18,11 @@ meta = meta_new{iTr};
 if isempty(meta), continue; end 
 fprintf("Processing RFMap %d\n",iTr)
 S = struct();
-if isfield(meta,"unitID")
+if isfield(meta,"unitID") % newer version meta.
 unit_num_arr = meta.unitID;
 unit_name_arr = generate_unit_labels_new(meta.spikeID, meta.unitID);
 activ_msk = unit_num_arr~=0;
-else
+else % older version meta.
 unit_name_arr = generate_unit_labels(meta.spikeID);
 [activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
 end

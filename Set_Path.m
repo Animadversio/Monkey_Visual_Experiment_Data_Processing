@@ -13,6 +13,11 @@ if strcmp(getenv('COMPUTERNAME'), "DESKTOP-MENSD6S")  % At home
     system("subst N: E:\Network_Data_Sync")
 % 	copyfile("E:\Monkey_Data\ExpSpecTable_Augment.xlsx", ".\ExpSpecTable_Augment.xlsx")
 % 	copyfile("E:\Monkey_Data\Exp_Record_Alfa.xlsx", ".\Exp_Record_Alfa.xlsx")
+elseif strcmp(getenv('COMPUTERNAME'), 'LAPTOP-U8TSR4RE')
+    keyboard;
+    ExpSpecTable_Aug = readtable("ExpSpecTable_Augment.xlsx");
+	ExpSpecTable_Aug_alfa = readtable("Exp_Record_Alfa.xlsx");
+    system("subst N: D:\Network_Data_Sync")
 elseif exist("S:\",'dir') % Currently I set up S:\ at home as well, so everything should match
 	ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xlsx",'Format','auto');
 	ExpSpecTable_Aug_alfa = readtable("S:\Exp_Record_Alfa.xlsx",'Format','auto');
