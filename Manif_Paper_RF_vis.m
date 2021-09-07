@@ -115,3 +115,34 @@ end
 % plot contour
 %%
 saveallform("O:\Manif_RF",Animal+"_RF_Demo_cmb",2)
+
+%% Newer version of API
+Animal="Beto";Set_Path;
+%%
+ExpRecord(find(contains(ExpRecord.expControlFN,"rf")),:)
+%%
+% expidx = find(contains(ExpRecord.ephysFN,'Beto-23042020-001'));
+ephysFN = ["Beto-20042020-001","Beto-23042020-001","Beto-27042020-001"];
+expidx = find(contains(ExpRecord.ephysFN,ephysFN));%
+[meta_new,rasters_new,lfps_new,Trials_new] = loadExperiments(expidx,"Beto");
+S_col = RF_Calc_Stats_fun(meta_new, rasters_new, Trials_new);
+%%
+for Si = 1:numel(S_col)
+h=RF_contour_plot(S_col(Si));
+% saveallform("O:\RFstats\RF_contours",S_col(Si).meta.ephysFN+"_RF_merge",h);
+end
+%%
+ephysFN = "Beto-05122019-001";
+expidx = find(contains(ExpRecord.ephysFN,ephysFN));%
+[meta_new,rasters_new,lfps_new,Trials_new] = loadExperiments(expidx,"Beto");
+S_col = RF_Calc_Stats_fun(meta_new, rasters_new, Trials_new);
+%%
+S_col = RF_Calc_Stats_fun({meta}, {rasters}, {Trials});
+h=RF_contour_plot(S_col(Si));
+saveallform("O:\RFstats\RF_contours",S_col(Si).meta.ephysFN+"_RF_merge",h);
+%%
+h=RF_contour_plot(S_col(Si));
+saveallform("O:\RFstats\RF_contours",S_col(Si).meta.ephysFN+"_RF_merge",h);
+%%
+h=RF_contour_plot(S_col(Si),'fill');
+saveallform("O:\RFstats\RF_contours",S_col(Si).meta.ephysFN+"_RF_merge_filled",h);
