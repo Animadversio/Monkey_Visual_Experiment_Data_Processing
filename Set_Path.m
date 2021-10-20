@@ -1,7 +1,13 @@
 %% Set Path 
 system("subst S: E:\Network_Data_Sync") % set this alias! so that copying and syncing could work 
-system('subst O: "E:\OneDrive - Washington University in St. Louis"')
 system('subst N: \\storage1.ris.wustl.edu\crponce\Active')
+if strcmp(getenv('COMPUTERNAME'), 'LAPTOP-U8TSR4RE')
+    system('subst O: "D:\OneDrive - Washington University in St. Louis"')
+    system("subst S: D:\Network_Data_Sync") % set this alias! so that copying and syncing could work 
+else
+    system('subst O: "E:\OneDrive - Washington University in St. Louis"')
+    system("subst S: E:\Network_Data_Sync") % set this alias! so that copying and syncing could work 
+end
 %result_dir = "C:\\Users\\ponce\\OneDrive - Washington University in St. Louis\\PC_space_tuning";
 % it will load the newest version of ExpSpecTable and compute pref_chan_arr
 % and norm_arr from it! 
@@ -13,6 +19,13 @@ if strcmp(getenv('COMPUTERNAME'), "DESKTOP-MENSD6S")  % At home
     system("subst N: E:\Network_Data_Sync")
 % 	copyfile("E:\Monkey_Data\ExpSpecTable_Augment.xlsx", ".\ExpSpecTable_Augment.xlsx")
 % 	copyfile("E:\Monkey_Data\Exp_Record_Alfa.xlsx", ".\Exp_Record_Alfa.xlsx")
+elseif strcmp(getenv('COMPUTERNAME'), 'LAPTOP-U8TSR4RE') % new BInxu laptop
+%     keyboard;
+    ExpSpecTable_Aug = readtable("ExpSpecTable_Augment.xlsx");
+	ExpSpecTable_Aug_alfa = readtable("Exp_Record_Alfa.xlsx");
+    system("subst N: D:\Network_Data_Sync")
+    copyfile(".\ExpSpecTable_Augment.xlsx", "S:\ExpSpecTable_Augment.xlsx")
+	copyfile(".\Exp_Record_Alfa.xlsx", "S:\Exp_Record_Alfa.xlsx")
 elseif exist("S:\",'dir') % Currently I set up S:\ at home as well, so everything should match
 	ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xlsx",'Format','auto');
 	ExpSpecTable_Aug_alfa = readtable("S:\Exp_Record_Alfa.xlsx",'Format','auto');
@@ -39,6 +52,10 @@ addpath("D:\Github\Fit_Spherical_Tuning")
 % Depends on 
 % - brewermap
 % - shadedErrorBar
+if ~ (exist('Animal','var') == 1)
+    Animal = "Both";
+end
+    
 switch Animal
     case "Alfa"
         ExpRecord = ExpSpecTable_Aug_alfa;

@@ -1,12 +1,19 @@
 function S_col = RF_Calc_Stats_fun(meta_new, rasters_new, Trials_new)
-% New combined function for calculating stats for RF. 
-% 
+% Newer version functional to compute and potentially visualize receptive
+% fields from the sorting. 
+% Super useful tool to visualize and quickly intuit RFmapping experiments. 
+% Inputs:
+% meta_new, rasters_new, Trials_new: cell arrays of meta,
+%       rasters and Trials
+% P.collectstat : if true then output array of Stats for these experiments.
+% P.plotEachChan : if true plot the RF for each Chan. 
 pixperdeg = 40;
 P = struct();
 P.plotEachChan = false;
-P.collectstat = false;
-savedir = "O:\RFstats";
+% P.plotRFMerge = true;
+P.collectstat = true;
 if P.collectstat, S_col = []; end
+savedir = "O:\RFstats";
 for iTr = 1:numel(meta_new)
 Trials = Trials_new{iTr}; 
 rasters = rasters_new{iTr}; 
@@ -14,11 +21,11 @@ meta = meta_new{iTr};
 if isempty(meta), continue; end 
 fprintf("Processing RFMap %d\n",iTr)
 S = struct();
-if isfield(meta,"unitID")
+if isfield(meta,"unitID") % newer version meta.
 unit_num_arr = meta.unitID;
 unit_name_arr = generate_unit_labels_new(meta.spikeID, meta.unitID);
 activ_msk = unit_num_arr~=0;
-else
+else % older version meta.
 unit_name_arr = generate_unit_labels(meta.spikeID);
 [activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
 end
@@ -29,10 +36,24 @@ S.unit.chan_num_arr = meta.spikeID;
 S.meta = meta;
 
 xy_all = Trials.TrialRecord.User.xy; % basis to sort the trials 
-size_all = Trials.width(:,1);
+if size(xy_all,1) ~= size(rasters,3), % in older version code this happened.... 
+    xy_all = cell2mat(Trials.XY);
+end
+if iscell(Trials.width)
+    width_mat = cell2mat(Trials.width);
+    size_all = width_mat(:,1);
+else
+    size_all = Trials.width(:,1);
+end
 uniqsize_all = sort(unique(size_all));
-uniqsize_deg_all = sort(Trials.TrialRecord.User.uniqueSizes_deg); % in deg
-nImSize = length(uniqsize_deg_all); % before its always 1, recently, we use multiple image sizes! 
+if isfield(Trials.TrialRecord.User,'uniqueSizes_deg') 
+    uniqsize_deg_all = sort(Trials.TrialRecord.User.uniqueSizes_deg); % in deg
+    nImSize = length(uniqsize_deg_all); % before its always 1, recently, we use multiple image sizes! 
+else % before there is only one deg
+   uniqsize_deg_all = round(uniqsize_all/pixperdeg);
+   fprintf("Image size %d pixel rounded to %.1f deg\n",uniqsize_all,uniqsize_deg_all)
+   nImSize = 1; 
+end
 S.stim.xy_all = xy_all;
 S.stim.size_all = size_all;
 S.stim.size_deg = size_all / pixperdeg;
@@ -117,7 +138,7 @@ rsp_vec = squeeze(mean(rasters(:,wdwevk,:),[2]));
 S.psth.bsl_mean = bsl_mean; % baseline is the same across sizes (assume). nChan by 1 
 S.psth.bsl_sem  = bsl_sem;  % nChan by 1 
 S.psth.rsp_vec  = squeeze(mean(rasters(:,wdwevk,:),[2])); % nChan by nTrial 
-re_tmp = regexp(meta.ephysFN,"(?<Animal>.*)-(?<datestr>.*)-",'names');
+re_tmp = regexp(meta.ephysFN,"(?<Animal>.*)-(?<datestr>.*)-",'names'); % read animal name and date from ephysFN
 Animal = string(re_tmp.Animal);
 date_str = string(re_tmp.datestr);
 S.Animal = Animal;
@@ -131,7 +152,7 @@ allF_P = zeros(size(rasters,1),1);
 allT = zeros(size(rasters,1),1);
 allT_P = zeros(size(rasters,1),1);
 for iCh = 1:size(rasters,1) % Go through all channels see if there is some modulation (w/ ANOVA)
-    [~,p,~,TST] = ttest(rsp_vec(iCh,:));
+    [~,p,~,TST] = ttest(rsp_vec(iCh,:)-bsl_mean(iCh)); % Debug at Sep.6,2021
     allT(iCh,1) = TST.tstat;
     allT_P(iCh,1) = p;
     STS = anova_cells(cellfun(@(act)act(iCh,:),act_col_vec,'uni',0));
