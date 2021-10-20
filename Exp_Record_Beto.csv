@@ -1687,7 +1687,7 @@ NaN,BigGAN,NaN,,"Hp at 1001
 although RF looking sad...
 5 (-0.7,1) 2
 completed",Beto-22072020-001,200722_Beto_rfMapper_basic,NaN,NaN,NaN,
-NaN,BigGAN,1,,"002 at 1014 on 07/22/2020
+NaN,BigGAN_FC6,1,,"002 at 1014 on 07/22/2020
 5 (-0.7, 1) 3 2 CMAES,
 fc6
 biggan
@@ -1705,7 +1705,7 @@ NaN,BigGAN,NaN,,"Hp at around 340 PM
 001 at 352 PM
 rf maping
 29 looking great at (-0.8,1)",Beto-23072020-001,200723_Beto_rfMapper_basic,NaN,NaN,NaN,
-NaN,BigGAN,3,,"002 at 359 PM
+NaN,BigGAN_FC6,3,,"002 at 359 PM
 29 (-0.8 1) 3 2 CMAES with both
 fc6 (1) 
 biggan_class (2)
@@ -1713,7 +1713,7 @@ great psths so far",Beto-23072020-002,200723_Beto_generate_BigGAN,29,NaN,NaN,N:\
 NaN,BigGAN,NaN,,"Hp 205
 001 at 216 PM rf mapping
 26 looking good at –1.2,0",Beto-27072020-001,200727_Beto_rfMapper_basic,NaN,NaN,NaN,
-NaN,BigGAN_Hessian,1,,"002 biggan and fc6 evolution using ch 26 at 229 PM
+NaN,BigGAN_FC6,1,,"002 biggan and fc6 evolution using ch 26 at 229 PM
 26 (-1.1,0) 3 1 CMAES with fc6 (first) and BG (second),5/5 hash
 good psth
 working at 75%, which is damn good
@@ -1732,7 +1732,7 @@ NaN,BigGAN,NaN,,"Hp at ~230 PM
 245 No participation, ~12 rewards in 5 minutes
 now he's going
 15 looking good (-0.5,1)",Beto-28072020-002,200728_Beto_rfMapper_basic,NaN,NaN,NaN,
-NaN,BigGAN,5,,"003 at 254 PM
+NaN,BigGAN_FC6,5,,"003 at 254 PM
 generate 15 (-0.5,1) 3 1  using
 CMAES for fc6 (first thread) and
 CMAES-ZOHA for BigGan, with the latter being the class and noise vector space together
@@ -1757,23 +1757,23 @@ Seems like the 1st and the 2nd thread found some gradient around gen 21
 The images go up and down for a whiile.
 180 mL now!",Beto-28072020-006,200728_Beto_generate_BigGAN(1),15,3,NaN,N:\Stimuli\2020-BigGAN\2020-07-28-Beto-02\2020-07-28-15-38-41
 NaN,BigGAN,NaN,,"Rf map start at 1017. Stop 4 blocks, at 1022",Beto-29072020-001,200729_Beto_rfMapper_basic,NaN,NaN,NaN,
-NaN,BigGAN,NaN,,"Big gan generate start at 1028.
+NaN,BigGAN_FC6,NaN,,"Big gan generate start at 1028.
 CH 28 (0, 0.5) 3 1 CMAES fc6 and bigGan class. No climbing from either at 12 blocks... 🙁
 Ugh nothing.....at 19 maybe climbing, let it go a little more. The fc6 evolution looks interesting, just not climbing. Biggan making white dog. Nope... so sad stop at 26 blocks. Neither climbed but images did look kinda similar. 1058",Beto-29072020-002,200729_Beto_generate_BigGAN,28,3,NaN,N:\Stimuli\2020-BigGAN\2020-07-29-Beto-01\2020-07-29-10-28-46
-NaN,BigGAN,NaN,,"Generate big gan start at 11:00.
+NaN,BigGAN_FC6,NaN,,"Generate big gan start at 11:00.
 18 (-0.5, 1) 4 1  CMAES fc6 vs biggan class. Hash. Sounds RV, psth looks good. Lets hope this one climbes.
 Lots of shakes to start. Started recording shakes for this exp. Thought it was climbing at 9, maybe not at 12.
 Taking naps
 Bigan on a slow climb, both dropped at 18. Now back up. YAY! Jumped up at 22. But weird, natural images jumped tooooo......biggan making some sort of circle/round object, fc6 has dark round center. Stop at 1134. 24 blocks.",Beto-29072020-003,200729_Beto_generate_BigGAN(1),18,4,NaN,N:\Stimuli\2020-BigGAN\2020-07-29-Beto-02\2020-07-29-11-00-02
 NaN,BigGAN,NaN,,"CH 15 (0, 1) 3 1 CMAES just bigGan class. Hash.
 Start at 1137. This one was done yesterday as fc6 vs biggan and biggan did not climb. Trying again with just biggan. Nothing at 13. Hes almost done for the day, blasting him.",Beto-29072020-004,200729_Beto_generate_BigGAN(2),15,3,NaN,N:\Stimuli\2020-BigGAN\2020-07-29-Beto-03\2020-07-29-11-37-30
-NaN,BigGan,NaN,,"RF started 10:38
+NaN,BigGAN,NaN,,"RF started 10:38
 The first RF forget to click recording....
 Focus on channel 25
 Eye signal drifting around a lot....
 Have to help him fixate.....He shakes and sleep  a lot.... Mary goes to check headpost after this...
 Choose 29 [0 1.5] 3 2 second unit in 29 completed",Beto-31072020-001,200731_Beto_rfMapper_basic(1),NaN,NaN,NaN,
-NaN,BigGan,NaN,,"3
+NaN,BigGAN_FC6,NaN,,"3
 GI (1) BigGAN starts 11:07
 29 [0 1.5]  3  2  CMAES
 FC6,  BigGAN class.
@@ -1788,7 +1788,7 @@ The FC6 space evokes a lot of initial activity and BigGAN does the sustained act
 BigGAN is still better but a small gap!
 2 threads are quite comparable! And the thing is great!
 33 blocks  completed",Beto-31072020-003,200731_Beto_generate_BigGAN(1),29,3,NaN,N:\Stimuli\2020-BigGAN\2020-07-31-Beto-01\2020-07-31-11-07-26
-NaN,BigGan,NaN,,"004  Experimenting new BigGAN Optimizers
+NaN,BigGAN,NaN,,"004  Experimenting new BigGAN Optimizers
 GI (2) BigGAN strts 11:47
 BigGAN all  CMAES-CMAES
 BigGAN  class   CMAES-Hessian
@@ -1799,10 +1799,10 @@ Grow again around 18gens
 Around 27 gens he fins som enew gradient Evoke transient activity now
 33 blocks completed",Beto-31072020-004,200731_Beto_generate_BigGAN(2),29,3,NaN,N:\Stimuli\2020-BigGAN\2020-07-31-Beto-02\2020-07-31-11-47-58
 NaN,BigGAN,NaN,,"Rf map start at 930. Array weird today. Lots of electrical noise, yet some channels look fine.  ",Beto-03082020-001,200803_Beto_rfMapper_basic,NaN,NaN,NaN,
-NaN,BigGAN,NaN,,"Generate bigGan start at 942. CH 19 hash.  
+NaN,BigGAN_FC6,NaN,,"Generate bigGan start at 942. CH 19 hash.  
 19 (0, 3) 4 1 CMAES fc6 so 
 19  （0， 3） CMAES hessian Biggan class。Hes workin well so far。 quiet channel， but VR and climbing at 12 blocks。 biggan really climbing fc6 is barely。fc6 was yellow background with gray/daark round object in center. Biggan looked similar, person with curve in similar spot. 31 blocks 1010 ",Beto-03082020-002,200803_Beto_generate_BigGAN,19,4,NaN,N:\Stimuli\2020-BigGAN\2020-08-03-Beto-01\2020-08-03-09-42-05
-NaN,BigGAN,NaN,,"Generate bigGan start at 1011. CH 19 hash.  
+NaN,BigGAN_FC6,NaN,,"Generate bigGan start at 1011. CH 19 hash.  
 19 (0, 3) 4 1 CMAES fc6  
 19  （0， 3）4 1 CMAES  Biggan class。 so weird。 all I changed was the Hesiann to CMAES OPtimizer and now the natural images are climbing like crazy。 the unit looks the same too。 Images do not look like the last evolution either, fc6 is colorful and biggan in busy. Something is up. 31 blocks 1047 ",Beto-03082020-003,200803_Beto_generate_BigGAN(1),19,4,NaN,N:\Stimuli\2020-BigGAN\2020-08-03-Beto-02\2020-08-03-10-11-01
 NaN,BigGAN,NaN,,"hp around 135 
@@ -1825,7 +1825,7 @@ by gen 28, something crashed terribly, but I think that's baseline. He's been mo
 NaN,BigGAN_Hessian,2,,"003 starts 14:39  Hessian Axis Selectivity Experiments 
 Pretty efficient. Monkey took a nap at 14:57 
 fINISH  at 15:02 24 mins 7 reps very efficient.  ",Beto-05082020-003,200805_Beto_selectivity_basic,28,3,NaN,N:\Stimuli\2020-Hessian\beto-200805-selectivity
-NaN,BigGAN,NaN,,"004 generate BigGAN 15:09 
+NaN,BigGAN_FC6,NaN,,"004 generate BigGAN 15:09 
 28 (-0.5,0) 3 1 , 5/5 Hash   FC6 space CMAES-Hessian 
 28 (-0.5,0) 3 1 , 5/5 Hash    BigGAN class CMAES-Hessian   
 Specs:  
@@ -1888,7 +1888,7 @@ NaN,,NaN,,"Hp at around 345 PM 
 001 at 355 PM, rfmapping 
 starting at 72% participation, not bad.  
 25 at (-0.2,0). Weak psth with 1-deg image ",Beto-18082020-001,200818_Beto_rfMapper_basic,NaN,NaN,NaN,
-NaN,BigGAN_FC6,NaN,,"002 at 402 PM 
+NaN,BigGAN_FC6,7,,"002 at 402 PM 
 big gan 
 25 (-0.1,0) 3 1 CMAES, fc6 and biggan class 
 modest psths at first, comparable 
@@ -1911,13 +1911,13 @@ CH 15 or try a v4.  ",Beto-20082020-001,200820_Beto_rfMapper_basic,NaN,NaN,Na
 NaN,BigGAN_FC6,NaN,,"Generate bigGAN start at 938.  
 CH 15 (0, 1.5) hash. 4 1 CMAES  fc6 vs bigGAN. Hes working pretty well. Looking good, psth, both look to be climbing at block 7. fc6 is winning so far. Fc6 is climbing like crazy, biggan still struggling. Biggan is trying to make two objects in lower half of image, but is is so busy it doesn’t look like much. 28 blocks stop at 1008 
 entered into proj biggan ",Beto-20082020-002,200820_Beto_generate_BigGAN(1),15,4,NaN,N:\Stimuli\2020-BigGAN\2020-08-20-Beto-01\2020-08-20-09-38-38
-NaN,BigGAN_FC6,NaN,,"Generate biggan start at 1011 
+NaN,BigGAN_Hessian,8,,"Generate biggan start at 1011 
 CH 49 (0, 0) 3 1 CMAES. Hash. Fc6 vs bigGAN. Sounds very VR. Both are climbing at block 12. Biggan is a wheel. Both are climbing, fc6 more so.  it doesn’t help biggan started out higher to begin with though. 29 blocks stop at 1041. 
 entered into proj biggan ",Beto-20082020-003,200820_Beto_generate_BigGAN(2),49,3,NaN,N:\Stimuli\2020-BigGAN\2020-08-20-Beto-02\2020-08-20-10-11-12
 NaN,BigGAN_Hessian,8,,"Trying selectivity with Heesian images. Start at 1047. 
 CH 49 (0,0) 3 degrees. Would like to get through 5 blocks. Blasting him, hes doing okay. 3 blocks in 10 minutes ",Beto-20082020-004,200820_Beto_selectivity_basic,49,3,NaN,N:\Stimuli\2020-Hessian\beto-200820-selectivity
 NaN,,NaN,,"Rf mapper start at 935. 4 blocks. complete ",Beto-24082020-001,200824_Beto_rfMapper_basic,NaN,NaN,NaN,
-NaN,BigGAN_FC6,NaN,,"CH 52 (0, 0) 3 1 CMAES fc6 vs BigGAN. Hash. Sounds VR.  
+NaN,BigGAN_Hessian,9,,"CH 52 (0, 0) 3 1 CMAES fc6 vs BigGAN. Hash. Sounds VR.  
 Beto is working well so far. Both are climbing at block 7. they started out similar as well. Climbing together but fc6 is staying slightly above. Block 15, fc6 is taking off. Stop at 1006. 27 blocks. Complete 
 entered into proj biggan ",Beto-24082020-002,200824_Beto_generate_BigGAN(1),52,3,NaN,N:\Stimuli\2020-BigGAN\2020-08-24-Beto-01\2020-08-24-09-44-23
 NaN,BigGAN_Hessian,9,,"Selectivity with Hess images. CH 52 (0, 0) 3 degrees. Start at 10:17. 

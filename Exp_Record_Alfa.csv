@@ -1481,101 +1481,101 @@ NaN,,NaN,,"Rf mapper start at 908.
 No necessary experiments today, just maintenance
 5 blocks complete stop at 918
 complete",Alfa-10072020-001,200710_Alfa_rfMapper_basic(1),NaN,NaN,NaN,
-NaN,,NaN,,"Generate integrated start at 926
+NaN,Evol_FC6,NaN,,"Generate integrated start at 926
 Ch 6 (0, -3) 4 1 CMAES, MU, I has one really good unit, one surpressed unit and hash
 Just a cool channel, I had to do it.
 Weird, its not climbing yet at block 20.
-50 blocks complete stop at 946. Didn’t climb much but interesting evolv",Alfa-10072020-002,200710_Alfa_generate_integrated,NaN,NaN,NaN,N:\Stimuli\2020-Evolutions\2020-07-10-Alfa-01\2020-07-10-09-25-37
+50 blocks complete stop at 946. Didn’t climb much but interesting evolv",Alfa-10072020-002,200710_Alfa_generate_integrated,6,NaN,4,N:\Stimuli\2020-Evolutions\2020-07-10-Alfa-01\2020-07-10-09-25-37
 NaN,,NaN,,"Selectivity just to get him some water.
 Ch 6 (0, -3) 4 1. images are from previous evolve and predict set
 Start at 947.
-Stop at 957",Alfa-10072020-003,200710_Alfa_selectivity_basic,NaN,NaN,NaN,N:\Stimuli\2019-Selectivity\2020-07-10-Alfa-01
+Stop at 957",Alfa-10072020-003,200710_Alfa_selectivity_basic,6,NaN,4,N:\Stimuli\2019-Selectivity\2020-07-10-Alfa-01
 NaN,BigGAN,NaN,,"7/21/20. James chaired and headposted. Chlorhexidine.
 Rf mapper start at 932. He didn’t want to work. Had to give him aq reward and 40 ms. Hes cooing a lot. Eye signal looks fine. 5 blocks stop at 940.
 Complete",Alfa-21072020-001,200721_Alfa_rfMapper_basic,NaN,NaN,NaN,
-NaN,BigGAN,0,,"Generate integrated start at 951.
+NaN,BigGAN_FC6_sep,0,,"Generate integrated start at 951.
 CH 12 (0, -0.5) 3 1 CMAES. Hash. It had great rf.
 Sounds visually responsive, lets hope it climbs.
 Block 10, climbing, image is black curve/ball.
 Possibly peak at 25 blocks. Still going up
 White background black ball on leftside, face/monkey furry on right.
 35 blocks complete stop at 1104. Complete
-Entered into Project_BigGan",Alfa-21072020-002,200721_Alfa_generate_integrated(1),12,NaN,3,N:\Stimuli\2020-Evolutions\2020-07-21-Alfa-01\2020-07-21-09-51-23
-NaN,BigGAN,0,,"Same thing, but with Big gan
+Entered into Project_BigGan",Alfa-21072020-002,200721_Alfa_generate_integrated(1),12,1,3,N:\Stimuli\2020-Evolutions\2020-07-21-Alfa-01\2020-07-21-09-51-23
+NaN,BigGAN_FC6_sep,0,,"Same thing, but with Big gan
 Generate big gan start at 1006.
 CH 12 (0, -0.5) 3 1 CMAES. Hash.
 Starting off with some cute/weird dogs.
 Climbing at block 13, image is still a weird furry creature. 36 blocks complete. Stop at 1018.
 Image was always a fuzzy animal. Checked in betos rig, changed settings to match his, we are trying again with new gan settings in code. Complete
-Entered into Project_BigGan",Alfa-21072020-003,200721_Alfa_generate_BigGAN(2),12,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-21-Alfa-01\2020-07-21-10-06-15
+Entered into Project_BigGan",Alfa-21072020-003,200721_Alfa_generate_BigGAN(2),12,1,3,N:\Stimuli\2020-BigGAN\2020-07-21-Alfa-01\2020-07-21-10-06-15
 NaN,BigGAN,NaN,,"Generate big gan start at 1019.
 CH 12 (0, -0.5) 3 1 CMAES. Hash.
 Now its just monkeys. Well now we know that works. 15 blocks complete stop at 1023. Complete
-Entered into Project_BigGan",Alfa-21072020-004,200721_Alfa_generate_BigGAN(3),12,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-21-Alfa-02\2020-07-21-10-19-14
+Entered into Project_BigGan",Alfa-21072020-004,200721_Alfa_generate_BigGAN(3),12,1,3,N:\Stimuli\2020-BigGAN\2020-07-21-Alfa-02\2020-07-21-10-19-14
 NaN,BigGAN,NaN,,"Same thing, but with Big gan
 Generate big gan start at 1029.
 CH 12 (0, -0.5) 3 1 CMAES. Hash.
 Okay it did not start as dogs this time? Maybe I had a dog class picked without knowing it? I hope the generate is reliable. Block 10, it is climbing, black object. 43 block com at 1040. Complete
 Entered into Project_BigGan
 Generate int. Start at 1043.
-Ch 29 (0, 0) 3 SU 2/5. Had great rf. Nothing didn’t go anywhere stop at 1048.  didn’t save.",Alfa-21072020-005,200721_Alfa_generate_BigGAN(4),12,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-21-Alfa-03\2020-07-21-10-28-52
-NaN,BigGAN,NaN,,"Gi start at 1051.
+Ch 29 (0, 0) 3 SU 2/5. Had great rf. Nothing didn’t go anywhere stop at 1048.  didn’t save.",Alfa-21072020-005,200721_Alfa_generate_BigGAN(4),12,1,3,N:\Stimuli\2020-BigGAN\2020-07-21-Alfa-03\2020-07-21-10-28-52
+1,BigGAN_FC6_sep,NaN,,"Gi start at 1051.
 Ch 1 (-4, -2.5) 4 1  SU 1/5. Very pretty unit. CMAES
 It has got to climb. Sounds VR. Added 100 ml juice.
 Climbing at block 16!! Making a red/brown ball. Starting to be testy, well get it. 26 com at 1106. Complete
-Entered into Project_BigGan",Alfa-21072020-007,200721_Alfa_generate_integrated(3),1,NaN,4,N:\Stimuli\2020-Evolutions\2020-07-21-Alfa-02\2020-07-21-10-51-34
-NaN,BigGAN,NaN,,"Big gan start at 1108.
+Entered into Project_BigGan",Alfa-21072020-007,200721_Alfa_generate_integrated(3),1,1,4,N:\Stimuli\2020-Evolutions\2020-07-21-Alfa-02\2020-07-21-10-51-34
+1,BigGAN_FC6_sep,NaN,,"Big gan start at 1108.
 Ch 1 (-4, -2.5) 4 1  SU 1/5. BigGan
 Blasting him. Block 14 possibly climbing. Making dog/bird/ferret things. 26 com stop at 1124. Complete
 Entered into Project_BigGan
 7/22/20. Updated big gan code to allow for multiple threads at once.
-Do fc6 and biggan class 1128 0.7",Alfa-21072020-008,200721_Alfa_generate_BigGAN(5),1,NaN,4,N:\Stimuli\2020-BigGAN\2020-07-21-Alfa-04\2020-07-21-11-08-33
+Do fc6 and biggan class 1128 0.7",Alfa-21072020-008,200721_Alfa_generate_BigGAN(5),1,1,4,N:\Stimuli\2020-BigGAN\2020-07-21-Alfa-04\2020-07-21-11-08-33
 NaN,BigGAN,NaN,,"Rf map start at 1014. Hes being dif, not wanting to fixated.....wow hes not doing great. 2 blocks com. 1020. Going to check whats wrong. Complete",Alfa-22072020-001,200722_Alfa_rfMapper_basic,NaN,NaN,NaN,
-NaN,BigGAN,NaN,,"Generate big Gan. Ch 6 (0, -3.5) 3 1 CMAES for fc6 and biggan class. Ugh hes not wanting to fixate. Added juice.. CH 6 SU 1/5. Hes only had 75 ml so far. Upped him to 200 plus aq rew. 5 blocks in 22 min.... geez, he got to the juice and now he is doing okay. 10 blocks stop at 1103. Complete, may not keep",Alfa-22072020-002,200722_Alfa_generate_BigGAN(3),6,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-22-Alfa-01\2020-07-22-10-30-01
-NaN,BigGAN,NaN,,"Ch 16 (0,0) 3 1, CMAES and bigGan class . Start at 1105. I am trying one with rf in center and see if that helps his work ethic. Stop at 1121. Complete, may not keep
+NaN,BigGAN_FC6,NaN,,"Generate big Gan. Ch 6 (0, -3.5) 3 1 CMAES for fc6 and biggan class. Ugh hes not wanting to fixate. Added juice.. CH 6 SU 1/5. Hes only had 75 ml so far. Upped him to 200 plus aq rew. 5 blocks in 22 min.... geez, he got to the juice and now he is doing okay. 10 blocks stop at 1103. Complete, may not keep",Alfa-22072020-002,200722_Alfa_generate_BigGAN(3),6,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-22-Alfa-01\2020-07-22-10-30-01
+NaN,BigGAN_FC6,NaN,,"Ch 16 (0,0) 3 1, CMAES and bigGan class . Start at 1105. I am trying one with rf in center and see if that helps his work ethic. Stop at 1121. Complete, may not keep
 7/22/20. Alfa did not work great today. Not fixating, did not want to work. He got 200 mL total over 1 hour. After return to cage, we discovered he pooped in his chair.... could be the culprit
 7/23/20, chlorhexidine. In rig at 1015. 3, 5, 6, 7,",Alfa-22072020-003,200722_Alfa_generate_BigGAN(4),16,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-22-Alfa-02\2020-07-22-11-05-32
 NaN,BigGAN,NaN,,"Rf mapper start at 1022. 5 blocks stop at 1025. Ch 5 SU (0, -2.9) CH 6 (–0.3, -3.3) 7 (-2, -2) 4 degrees. 3 0, -3.8. CH 3 (0, -3)
 complete",Alfa-23072020-001,200723_Alfa_rfMapper_basic,NaN,NaN,NaN,
-NaN,BigGAN,NaN,,"Generate big Gan start at 1033.
+NaN,BigGAN_FC6,NaN,,"Generate big Gan start at 1033.
 CH 3 (0, -3) 3 1 CMAES. Fc6 and BigGan class. CH 3 MU 1/5
 Block 5, biggan is climbing quick!!
 Psth from black lines are looking good, its got to climb!
 Looks like both are climbing at 25. Looks like they peaked around 25 blocks. 36 blocks stop at 1102.  complete",Alfa-23072020-002,200723_Alfa_generate_BigGAN(2),3,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-23-Alfa-01\2020-07-23-10-33-01
-NaN,BigGAN,NaN,,"CH 6 (-0.3, -3.3) 3 1 CMAES fc6 and bigGan. 
+NaN,BigGAN_FC6,NaN,,"CH 6 (-0.3, -3.3) 3 1 CMAES fc6 and bigGan. 
 CH 6 hash, rf looked good. Omg, possible SU in 6. I will try after this.
 At block 12, gan has really climbed, fc6 not so much...both going up at 16.
 27 blocks stop at 1130
 complete",Alfa-23072020-003,200723_Alfa_generate_BigGAN(3),6,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-23-Alfa-02\2020-07-23-11-06-08
 NaN,BigGAN,NaN,,"Picked up unit in 6. rf start at 1131. 2 blocks stop at 1133
 complete",Alfa-23072020-004,200723_Alfa_rfMapper_basic(1),NaN,NaN,NaN,
-2,BigGAN,NaN,,"Gen bigGan start at 1136.
+2,BigGAN_FC6,NaN,,"Gen bigGan start at 1136.
 CH 6 (0, -3) 3 1 CMAES fc6 and bigGan class. SU 2/5 this time.
  Added 50 mL juice. 20 blocks com stop at 1205.
 complete",Alfa-23072020-005,200723_Alfa_generate_BigGAN(4),6,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-23-Alfa-02b\2020-07-23-11-36-31
 NaN,BigGAN,NaN,,"Rf map start at 935. 5 blocks at 938. Complete",Alfa-27072020-001,200727_Alfa_rfMapper_basic,NaN,NaN,NaN,
-NaN,BigGAN,NaN,,"CH 28 (-2, -2.5) 4 1 cmaes fc6 and bigGan class.
+NaN,BigGAN_FC6,NaN,,"CH 28 (-2, -2.5) 4 1 cmaes fc6 and bigGan class.
 Start at 947. Hes working well today. Good job alfaman. Looks like biggan is climbing. Big gan still climbing 15. Biggan shot up at 28. Fc6 still nothing. 37 blocks com. Stop at 1012. Biggan climbed, fc6 did not. Image was very simple white background with one object. Complete",Alfa-27072020-002,200727_Alfa_generate_BigGAN(1),28,NaN,4,N:\Stimuli\2020-BigGAN\2020-07-27-Alfa-01\2020-07-27-09-47-40
-NaN,BigGAN,NaN,,"CH 2 (-2, -3.5) 3 1 cmaes. Fc6 and bigGan. Start at 10:18.
+NaN,BigGAN_FC6,NaN,,"CH 2 (-2, -3.5) 3 1 cmaes. Fc6 and bigGan. Start at 10:18.
 BigGan maybe climbing at 19. Biggn is making a black furry ball. 32 blocks complete. Biggan climbed a tiny bit, fc6 was close, but did not climb. Complete
 Moved to project validate>>>>",Alfa-27072020-003,200727_Alfa_generate_BigGAN(2),2,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-27-Alfa-02\2020-07-27-10-18-57
-NaN,BigGAN,NaN,,"CH 45 (0, 0) 3 1 . CMAES regular generate integrated start at 1053.
+2,Evol_FC6,NaN,,"CH 45 (0, 0) 3 1 . CMAES regular generate integrated start at 1053.
 CH 45 MU 2/5. Very visually responsive. Climbing off the bat. 25 blocks complete. At 1107. Complete",Alfa-27072020-004,200727_Alfa_generate_integrated,45,NaN,3,N:\Stimuli\2020-Evolutions\2020-07-27-Alfa-03\2020-07-27-10-53-44
 NaN,,NaN,,"Selectivity with 12 gabors. Start at 11:10. 17 complete stop at 1114.
 Complete",Alfa-27072020-005,200727_Alfa_selectivity_basic,NaN,NaN,NaN,N:\Stimuli\2020-Evolutions\2020-07-27-Alfa-03\selectivity
 NaN,BigGAN,NaN,,"Rf start at 1034. 4 blocks stop at 1039. Complete",Alfa-28072020-001,200728_Alfa_rfMapper_basic,NaN,NaN,NaN,
-2,BigGAN,NaN,,"Biggan start at. 1056
+2,BigGAN_FC6,NaN,,"Biggan start at. 1056
 CH 27 (-0.2, -0.2) 3 1 CMAES fc6 vs BigGan. SU 2/5. Very active unit, sounds vr.
 15 blocks, both are climbing slightly. Hes working well. 20 blocks, both still climbing slightly. It also likes natural images too. Looks done at block 33. 1126. Both climbed, just not much. Biggan made dog on left side, f6c was kinda busy.  Complete",Alfa-28072020-002,200728_Alfa_generate_BigGAN(1),27,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-28-Alfa-01\2020-07-28-10-56-05
 NaN,,NaN,,"Selectivity start at 1130. Olivia LFP experiments. Pictures of A. (0, 0) size 3 and 5.  took alfa 20 min for 5 blocks. . 5 blocks at 1151.  Complete",Alfa-28072020-003,200728_Alfa_selectivity_basic,NaN,NaN,NaN,N:\Stimuli\2020-Selectivity\pilotLFP_ORB\2020-07-28-Alfa-01
-NaN,BigGAN,NaN,,"Generate bigGan start at 1157. Fc6 and BigGan.
+NaN,BigGAN_FC6,NaN,,"Generate bigGan start at 1157. Fc6 and BigGan.
 Ch 9  (–2.2, -2.2) 4 1 CMAES. Hash, rf looked good.
 Replaced 150 ml water for juice. Block 10, bigGan is climbing, fc6 not yet. But the 2 evolutions do look similar, both gray blobby so far. 18 blocks, bigGan doing well, fc6 still nothing....... hes almost done, blasting him. 21 at 1233. Fc6 stayed flat(may have climbed a tiny bit) GinGan climbed.  Complete",Alfa-28072020-004,200728_Alfa_generate_BigGAN(2),9,NaN,4,N:\Stimuli\2020-BigGAN\2020-07-28-Alfa-02\2020-07-28-11-57-40
 NaN,BigGAN,NaN,,"001 Starts 14:51 RFMapp
 1 3 6 3 different degrees.
 32 has a beautiful SU 1/5 let's do it maybe
 14:59 finished",Alfa-29072020-001,200729_Alfa_rfMapper_basic,NaN,NaN,NaN,
-NaN,BigGAN,NaN,,"003 starts 15:18
+NaN,BigGAN_FC6,NaN,,"003 starts 15:18
 Same setting as 002
 32  [-4 -4]  4  1  'CMAES'  'fc6'
 32  [-4 -4]  4  1  'CMAES'  'BigGAN_class'   0.7 * truncnorm
@@ -1602,7 +1602,7 @@ NaN,,NaN,,"LFP Selectivity pilot
 [0 0] 3 & 5 degs, set B
 Start: 4:15 pm
 5 blocks, complete",Alfa-29072020-005,200729_Alfa_selectivity_basic,NaN,NaN,NaN,N:\Stimuli\2020-Selectivity\pilotLFP_ORB\2020-07-29-Alfa-01
-NaN,BigGan,NaN,,"Rf mapper start at 1006. Stop at 1013.",Alfa-30072020-001,200730_Alfa_rfMapper_basic,NaN,NaN,NaN,
+NaN,BigGAN,NaN,,"Rf mapper start at 1006. Stop at 1013.",Alfa-30072020-001,200730_Alfa_rfMapper_basic,NaN,NaN,NaN,
 NaN,,NaN,,"Start: 10:25 pm
 [0 0] 3 degrees, set C
 8 blocks, complete",Alfa-30072020-002,200730_Alfa_selectivity_basic,NaN,NaN,3,N:\Stimuli\2020-Selectivity\pilotLFP_ORB\2020-07-30-Alfa-01
@@ -1612,7 +1612,7 @@ NaN,,NaN,,"Start: 10:33 pm
 NaN,,NaN,,"Start: 10:39 pm
 [0 0] 3 degrees, set E
 5 blocks, complete",Alfa-30072020-004,200730_Alfa_selectivity_basic(2),NaN,NaN,3,N:\Stimuli\2020-Selectivity\pilotLFP_ORB\2020-07-30-Alfa-03
-NaN,BigGan,NaN,,"Gen biggan start at 1051.
+NaN,BigGAN_FC6,NaN,,"Gen biggan start at 1051.
 Ch 7  hash. (-0.5, -0.5) 3 1 CMAES fc6 and BigGan class.
  Block 8, biggan climbing, fc6 not yet....both climbing at 12 blocks!!!
 Wahooo both climbing still at 21. Monkey not working. Ugh, might be last exp. Fc6 totally making grape in lower left corner. Biggan making dog? 224 blocks complete stop at 1139. Both climbed but fc6 was more successful",Alfa-30072020-005,200730_Alfa_generate_BigGAN,7,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-30-Alfa-01\2020-07-30-10-51-34
@@ -1620,7 +1620,7 @@ NaN,BigGAN,NaN,,"Rf start at 942 . 5 blocks at 948.  ",Alfa-04082020-001,20080
 NaN,BigGAN_Hessian,1,,"Gen bigGan fc6 vs BigGan class. start at 954. 
 CH 22 SU 2/5. (0, -2.5) 3 1 CMAES for both. They are both climbing slightly. 30 blocks complete stop at 1021. SUcsessful!!!  ",Alfa-04082020-002,200804_Alfa_generate_BigGAN,22,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-04-Alfa-01\2020-08-04-09-54-25
 NaN,BigGAN_Hessian,1,,"Selectivity of Hess images from CH 22 evolution. 4 blocks at 1049 ",Alfa-04082020-003,200804_Alfa_selectivity_basic(1),22,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-04-Alfa-01\selectivity
-NaN,BigGAN,NaN,,"Gen bigGan fc6 vs BigGan class. start at 1054. 
+NaN,BigGAN_FC6,NaN,,"Gen bigGan fc6 vs BigGan class. start at 1054. 
 CH 14 SU hash. (0, -2.5) 3 1 CMAES for both. Stop at 1121. 18 blocks.",Alfa-04082020-004,200804_Alfa_generate_BigGAN(1),14,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-04-Alfa-02\2020-08-04-10-54-57
 NaN,BigGAN,NaN,,"Rf start at 1006. 4 blocks at 1012.  ",Alfa-06082020-001,200806_Alfa_rfMapper_basic,NaN,NaN,NaN,
 NaN,BigGAN_Hessian,2,,"Generate biggan start at 1018. Fc6 vs BigGan class, both with cmaes optimizer 
@@ -1632,20 +1632,20 @@ Generate biggan start at 1103. Fc6 vs BigGan class, both with cmaes optimi
 CH 29 (0.5, -2.5) 3 1  cmaes. SU 2/5, stop at 14 blocks, nothing. Did not save ",Alfa-06082020-002,200806_Alfa_generate_BigGAN,6,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-06-Alfa-01\2020-08-06-10-18-55
 NaN,BigGAN_Hessian,2,,"Selectivity of Hessian images from previous evolution. start at 1124. 
 CH 6 (-0.3, -3) 3 1. Big Gan evolution was making a grape/apple looking object, which is similar to what this channel has evolved before with fc6. 4 blocks at 1138 ",Alfa-06082020-004,200806_Alfa_selectivity_basic(1),6,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-06-Alfa-01\selectivity
-NaN,BigGAN,NaN,,"Generate biggan start at 1142. Fc6 vs BigGan class, both with cmaes optimizer 
+NaN,BigGAN_FC6,NaN,,"Generate biggan start at 1142. Fc6 vs BigGan class, both with cmaes optimizer 
 CH 15 (0, 0) 3 1  cmaes. Hash.  
 Both climbing. 22 block stop at 1205 ",Alfa-06082020-005,200806_Alfa_generate_BigGAN(2),15,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-06-Alfa-02\2020-08-06-11-41-51
-NaN,BigGAN,NaN,,"Rf mapper start at 919. Ugh, of course there is a SU in 6 now. 4 blocks stop at 926. ",Alfa-10082020-001,200810_Alfa_rfMapper_basic,NaN,NaN,NaN,
-NaN,BigGAN,NaN,,"Gen big gan start at 932. 
+NaN,,NaN,,"Rf mapper start at 919. Ugh, of course there is a SU in 6 now. 4 blocks stop at 926. ",Alfa-10082020-001,200810_Alfa_rfMapper_basic,NaN,NaN,NaN,
+NaN,BigGAN_FC6,NaN,,"Gen big gan start at 932. 
 CH 6 (0, -2.6) 3 1 CMEAS SU 1/5, sounds great. Very VR 
 Binxu wanted to redo Hes selectivity for this channel but now it is a SU, I am going to evolve and do Hes first. Block 11, looks like gan is climbing, fc6 not yet. Block 18, neither climbing.... looks like fc6 is making something red tho. 26 blocks stop at 954. Neither climbed. :( ",Alfa-10082020-002,200810_Alfa_generate_BigGAN(1),6,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-10-Alfa-01\2020-08-10-09-32-31
-NaN,BigGAN,NaN,,"Gen big gan start at 1000 
+NaN,BigGAN_FC6,NaN,,"Gen big gan start at 1000 
 CH 19 (1, -3) 4 1 CMEAS hash. It’s a quiet channel but sounds visually responsive.  
 Block 12, looks like biggan is climbing. 24 blocks at 1029, both climbed, biggan for sure, fc6 was very slight ",Alfa-10082020-003,200810_Alfa_generate_BigGAN(2),19,NaN,4,N:\Stimuli\2020-BigGAN\2020-08-10-Alfa-02\2020-08-10-09-59-48
 NaN,BigGAN_Hessian,2,,"Post hoc sel of hes images for CH 6 start at 1033.  
 CH 6 (-0.3, -3) 3 degrees. 4 blocks stop at 1048. 6 was SU, 1 is SU, 2 is hash 
 Binxu: use hash for this instead of SU since we are doing the  ",Alfa-10082020-004,200810_Alfa_selectivity_basic(1),6,NaN,3,N:\Stimuli\2020-Hessian\alfa-200810-selectivity
-NaN,BigGAN,NaN,,"Ch 6 evolving to hash (using whole ch, not separated). (-0.3, -3) 3 1 CMAES. Fc6 vs biggan. Start at 1117. Biggan climbing at ch 8. now fc6 is going up too. Ehhh, kinda up and down, not quite a climb at 12. Nothing... neither climbed at 21. Okay, they may have climbed a tiny bit.  
+NaN,BigGAN_FC6,NaN,,"Ch 6 evolving to hash (using whole ch, not separated). (-0.3, -3) 3 1 CMAES. Fc6 vs biggan. Start at 1117. Biggan climbing at ch 8. now fc6 is going up too. Ehhh, kinda up and down, not quite a climb at 12. Nothing... neither climbed at 21. Okay, they may have climbed a tiny bit.  
 Selectivity of CH 19s biggan evolution hess images. 
 Ugh python not work, giving us T error?  ",Alfa-10082020-005,200810_Alfa_generate_BigGAN(3),NaN,NaN,NaN,N:\Stimuli\2020-BigGAN\2020-08-10-Alfa-03\2020-08-10-11-16-31
 NaN,BigGAN,NaN,,"Rf map start at 932. Not working great to start off. 4 blocks at 943 
@@ -1659,12 +1659,12 @@ NaN,,NaN,,"Hp retrying 29 
 48% performanc 
 ch 29 looks like covers from 0 to –4 along vertical meridian 
 completed ",Alfa-13082020-001,200813_Alfa_rfMapper_basic,NaN,NaN,NaN,
-NaN,BigGAN,NaN,,"002 at 1231 PM 
+NaN,BigGAN_FC6,NaN,,"002 at 1231 PM 
 29 (0,-2) 4 1 CMAES, for fc6 and big gan 
 starting with low-norm images 
 big gan climbed, not fc6. Interesting. Let's do a single fc6 
 completed ",Alfa-13082020-002,200813_Alfa_generate_BigGAN,29,NaN,4,N:\Stimuli\2020-BigGAN\2020-08-13-Alfa-01\2020-08-13-12-31-20
-NaN,BigGAN,NaN,,"003 at 1250 PM 
+NaN,,NaN,,"003 at 1250 PM 
 29 (0,-2) 3 1 CMAES only fc6 
 nothing interesting 
 completed ",Alfa-13082020-003,200813_Alfa_generate_BigGAN(1),29,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-13-Alfa-02\2020-08-13-12-50-13
@@ -1730,37 +1730,37 @@ NaN,BigGAN_FC6,NaN,,"Previous experiments from today are in Searh task.  
 Gen BigGAn start at 1020 
 CH 60 (0, -0.5) 3 1 CMAES hash. Fc6 v bigGAN. 5 blocks in, nothing yet from BG but fc6 is climbing. 24 blocks, stop at 1041. Fc6 climbesdbut BG never did.  
 Entered into project biggan ",Alfa-25082020-005,200825_Alfa_generate_BigGAN,NaN,NaN,NaN,N:\Stimuli\2020-BigGAN\2020-08-25-Alfa-01\2020-08-25-10-20-44
-NaN,BigGAN_FC6,NaN,,"Switched to juice. BigGAN start at 1046. CH 59 SU 1/5. (-2.5, -2.5) 3 1 CMAES fc6 vs bigGAN. Fc6 is climbing, biggan is trying to at block 15. Both climbing!! 24 blocks at 1110. Both climbed! Biggan made a person, but it hink it just liked the black line , fc6 made similar 
+NaN,BigGAN_Hessian,NaN,,"Switched to juice. BigGAN start at 1046. CH 59 SU 1/5. (-2.5, -2.5) 3 1 CMAES fc6 vs bigGAN. Fc6 is climbing, biggan is trying to at block 15. Both climbing!! 24 blocks at 1110. Both climbed! Biggan made a person, but it hink it just liked the black line , fc6 made similar 
 Entered into project biggan ",Alfa-25082020-006,200825_Alfa_generate_BigGAN(1),59,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-25-Alfa-02\2020-08-25-10-46-06
 NaN,BigGAN_Hessian,5,,"Selectivity with Hess images from CH 59. Start at 1117. Stop at 1129. He is done :(. Only got through 3 blocks..... 
 More v4, more retry v1 hessian. 3, 5, 7, 15, 32.  ",Alfa-25082020-007,200825_Alfa_selectivity_basic,59,NaN,3,N:\Stimuli\2020-Hessian\alfa-200825-selectivity
 NaN,,NaN,,"Rf mapper start at 927. SU in 5 looks good. Going to try to get hess exp out of it. 5 blocks at 935. 7 rf looks better. Completed ",Alfa-27082020-001,200827_Alfa_rfMapper_basic,NaN,NaN,NaN,
-NaN,BigGAN_FC6,NaN,,"CH 7 (-1.5, -1.5) 3 1 CMAES hash 1/5. Fc6 vs bigGAN.  
+NaN,BigGAN_Hessian,NaN,,"CH 7 (-1.5, -1.5) 3 1 CMAES hash 1/5. Fc6 vs bigGAN.  
 Start at 941. Sounds good so far. Psth look nice. Biggan started off high. Fc6 psth is spiking highest, its going to climb. Both jumped up at block 13. Fc6 is white background with red/pink grape/eye looking ball in center. 30 blocks at 1009. Completed 
 Entered into project biggan ",Alfa-27082020-002,200827_Alfa_generate_BigGAN(1),7,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-27-Alfa-01\2020-08-27-09-41-28
 NaN,BigGAN_Hessian,6,,"Selectivity start at 1018. Hess iamges from CH 7 (-1.5, -1.5) 3 degrees. Biggan made a furry gray ball right in the center. Replaced water with juice. Hes a happy monkey. 7 blocks at 1046. Completed ",Alfa-27082020-003,200827_Alfa_selectivity_basic,7,NaN,3,N:\Stimuli\2020-Hessian\alfa-200827-selectivity
 NaN,BigGAN_FC6,NaN,,"52 (0,0) 3 1 CMAES. Hash. Fc6 vs bigGAN start at 1050Might be the last exp. he is slowing down. Been working for 1.5 hours. Blasting him. Stop at 1109. Only 13 blocks. May not keep.  ",Alfa-27082020-004,200827_Alfa_generate_BigGAN(2),52,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-27-Alfa-02\2020-08-27-10-50-27
 NaN,,NaN,,"Rf mapper start at 10:00. Hes having a slow start. Got through a block. Hes working fine now. 4 blocks at 1008. 3, 5, 15, 32. Completed ",Alfa-01092020-001,200901_Alfa_rfMapper_basic,NaN,NaN,NaN,
 NaN,BigGAN_FC6,NaN,,"Biggan start at 10:15. CH 3 hash (-1.5, -1.5) 3 1 CMAES fc6 vs BigGAN. We have done this one in the past but did not do Hess sel so I am retrying. Biggan started off high, Block 14: staying high but not climbing much yet. Fc6 is trying but nothing yet. Its starting to sound more VR as we go, I hope it climbs. 25 blocks stop 1040. Neither climbed 🙁 Completed ",Alfa-01092020-002,200901_Alfa_generate_BigGAN(1),3,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-01-Alfa-01\2020-09-01-10-15-53
-NaN,BigGAN_FC6,NaN,,"BigGAN start at 1042. CH 52 (0, 0) 3 1 CMAES . Hash. This one sounds great. Very VR. Psth looks nice as well. Fc6 started higher and higher peak psth than biggan. Both are climbing at block 6. block 11: fc6 is really climbing. Big gan is too, just not as much, making a colorful bird. Hard to say but fc6 image is colorful with white border. 25 blocks complete. Both climbed. Stop at 1104.  
+NaN,BigGAN_Hessian,NaN,,"BigGAN start at 1042. CH 52 (0, 0) 3 1 CMAES . Hash. This one sounds great. Very VR. Psth looks nice as well. Fc6 started higher and higher peak psth than biggan. Both are climbing at block 6. block 11: fc6 is really climbing. Big gan is too, just not as much, making a colorful bird. Hard to say but fc6 image is colorful with white border. 25 blocks complete. Both climbed. Stop at 1104.  
 Completed 
 entered into project_biggan ",Alfa-01092020-003,200901_Alfa_generate_BigGAN(2),52,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-01-Alfa-02\2020-09-01-10-42-42
 NaN,BigGAN_Hessian,7,,"Selectivity with CH 52 Hess images. Start at 11:11. 6 blocks at 1133. Completed ",Alfa-01092020-004,200901_Alfa_selectivity_basic,52,NaN,3,N:\Stimuli\2020-Hessian\alfa-200901-selectivity
 NaN,,NaN,,"Rf map start at 938. 5 blocks at 947. 49(0,0) 64(0,-1) 50(0, -5) Completed ",Alfa-02092020-001,200902_Alfa_rfMapper_basic,NaN,NaN,NaN,
 NaN,BigGAN_FC6,NaN,,"Biggan. CH 50  SU 1/5. (0, -5) 3 1 CMAES fc6 vs BigGAN. Start at 953. Great SU, he is tolerating the low rf so far. The unit really likes it, sounds VR. Block 11, fc6 is climbing steady from the start. Nothing from biggan yet. Fc6 is still climbing at 22. Biggan is flat, trying to make very simple image. 26 blocks stop at 1013. Fc6 climbed bigGAN did not . Completed 
 Entered into Biggan ",Alfa-02092020-002,200902_Alfa_generate_BigGAN(1),50,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-02-Alfa-01\2020-09-02-09-54-51
-NaN,BigGAN_FC6,NaN,,"BigGAN CH 64 (0, -1) 3 1 CMAES fc6 vs biggan. Start at 1017. Hash 2/5. Great, very VR. Both biggan and fc6 started out high, they have higher psth than natural images as well. Block 9, both still climbing. Biggan image is bark brown background with white line in center. Fc6 also has white line in center, with pinkish in lower left corner. Biggan really isnt climbing much, it just started out so high and staying high. Almost done, we can do hess sel with this one. 26 blocks at 1034. Completed 
+NaN,BigGAN_Hessian,NaN,,"BigGAN CH 64 (0, -1) 3 1 CMAES fc6 vs biggan. Start at 1017. Hash 2/5. Great, very VR. Both biggan and fc6 started out high, they have higher psth than natural images as well. Block 9, both still climbing. Biggan image is bark brown background with white line in center. Fc6 also has white line in center, with pinkish in lower left corner. Biggan really isnt climbing much, it just started out so high and staying high. Almost done, we can do hess sel with this one. 26 blocks at 1034. Completed 
 Entered into biggan ",Alfa-02092020-003,200902_Alfa_generate_BigGAN(2),64,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-02-Alfa-02\2020-09-02-10-17-21
 NaN,BigGAN_Hessian,8,,"Hess selectivity with CH 64 images. Start at 1042. 5 blocks at 1055. Completed ",Alfa-02092020-004,200902_Alfa_selectivity_basic,64,NaN,3,N:\Stimuli\2020-Hessian\alfa-200902-selectivity-01
-NaN,BigGAN_FC6,NaN,,"Gen bigGAN CH 49 (0, 0) 3 1 CMAES fc6 vs biggan stat at 11:00. Hash. 
+NaN,BigGAN_Hessian,NaN,,"Gen bigGAN CH 49 (0, 0) 3 1 CMAES fc6 vs biggan stat at 11:00. Hash. 
 Block 5, both fc6 and BG started out high and psth are higher than natural images. Fc6 is climbing, BG not yet. Block 15, fc6 climbing, BG is slight climb. Added 100 ml juice. 25 blocks at 1121. Completed 
-Entered into biggan ",Alfa-02092020-005,200902_Alfa_generate_BigGAN(3),49,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-02-Alfa-03\2020-09-02-10-59-57
-NaN,BigGAN_Hessian,9,,"Sel with CH 49 Hess images. CH 49 (0,0) 3. Start at 1127. Hes working so well, lets see if we can get through this. Still doing great. Got through 1 block in 2 minutes. Blasting him. 5 at 1147. Completed ",Alfa-02092020-006,200902_Alfa_selectivity_basic(1),49,NaN,3,N:\Stimuli\2020-Hessian\alfa-200902-selectivity-02
+Entered into biggan ",Alfa-02092020-005,200902_Alfa_generate_BigGAN(3),49,1,3,N:\Stimuli\2020-BigGAN\2020-09-02-Alfa-03\2020-09-02-10-59-57
+NaN,BigGAN_Hessian,9,,"Sel with CH 49 Hess images. CH 49 (0,0) 3. Start at 1127. Hes working so well, lets see if we can get through this. Still doing great. Got through 1 block in 2 minutes. Blasting him. 5 at 1147. Completed ",Alfa-02092020-006,200902_Alfa_selectivity_basic(1),49,1,3,N:\Stimuli\2020-Hessian\alfa-200902-selectivity-02
 NaN,,NaN,,"Rf start at 1151. Su in 25 we have not done before, may try. 4 blocks at 1157. complete 
 CH 25 (4.5, -2.5) 4 1. stopped abort. He could not fixate, and I started doubting the rf. Try again closer to fovea ",Alfa-04092020-001,200904_Alfa_rfMapper_basic,NaN,NaN,NaN,
 NaN,BigGAN_FC6,NaN,,"CH 25 (2.5, -2.5) 4 1 . SU 1/5. CMAES fc6 vs bigGAN start at 1206. Block 12. Nothing yet. 25 blocks complete stop at 1234. Neither climbed. Fc6 image is interesting now that I look at it after the fact, may be worth looking at.  complete.  ",Alfa-04092020-003,200904_Alfa_generate_BigGAN(2),25,NaN,4,N:\Stimuli\2020-BigGAN\2020-09-04-Alfa-01\2020-09-04-12-06-08
 NaN,,NaN,,"Rf mapper start at 959. Chlorhexidine today. 4 blocks at 1005. complete.  ",Alfa-08092020-001,200908_Alfa_rfMapper_basic,NaN,NaN,NaN,
-NaN,BigGAN_FC6,NaN,,"CH 57 (0,0) 3 1 hash(1/5). Generate bigGAN fc6 vs BG. Start at 10:11. Sounds VR. So far so good, both evolved image psth are spiking high. Hes working well too. Block 6, both look to be climbing! Fc6 is steady climb, BG up and down. Bloc 14, BGmaking black square object. 25 blocks complete at 1028. Both climbed, fc6 a lot, BG very slight but it did start off high. complete.  ",Alfa-08092020-002,200908_Alfa_generate_BigGAN(1),57,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-08-Alfa-01\2020-09-08-10-11-27
+NaN,BigGAN_Hessian,NaN,,"CH 57 (0,0) 3 1 hash(1/5). Generate bigGAN fc6 vs BG. Start at 10:11. Sounds VR. So far so good, both evolved image psth are spiking high. Hes working well too. Block 6, both look to be climbing! Fc6 is steady climb, BG up and down. Bloc 14, BGmaking black square object. 25 blocks complete at 1028. Both climbed, fc6 a lot, BG very slight but it did start off high. complete.  ",Alfa-08092020-002,200908_Alfa_generate_BigGAN(1),57,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-08-Alfa-01\2020-09-08-10-11-27
 NaN,BigGAN_Hessian,10,,"Hess selectivity with CH 57 BG evolution. CH 57 (0, 0) 3 degrees. Start at 1052. 6 blocks complete, stop at 1106. complete.  ",Alfa-08092020-004,200908_Alfa_selectivity_basic,57,NaN,3,N:\Stimuli\2020-Hessian\alfa-200908-selectivity
 NaN,BigGAN_FC6,NaN,,"CH 21 (0, -2.3) 3 1 hash 1/5. Start at 1031. Fc6 vs BG.  
 Giving this one a try, if it fails i will do sel with 57. Sounds fairly VR. Psth doesn’t look that great. Block 9, still not climbing. Bg popped up at 13, maybe it will climb, nope, back down 🙁. Nothing,neither climbed. 19 blocks stop at 1045. complete.  ",Alfa-08092020-003,200908_Alfa_generate_BigGAN(2),21,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-08-Alfa-02\2020-09-08-10-31-42
@@ -1768,19 +1768,19 @@ NaN,BigGAN_FC6,NaN,,"CH 62 (0, 0) 3 1 CMAES. Hash (1/5) start at 1110. 
 GBGvs fc6. Last one for the day, have meeting at 1230. Starting off looking great. Both climbing at 10. 20 blocks complete stop at 1130. complete.  
 entered into project biggan ",Alfa-08092020-005,200908_Alfa_generate_BigGAN(3),62,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-08-Alfa-03\2020-09-08-11-10-09
 NaN,,NaN,,"9/11/20. Betadine. In rig at 920.   Rf mapper start at 932. 5 blocks complete. complete.  ",Alfa-11092020-001,200911_Alfa_rfMapper_basic,NaN,NaN,NaN,
-NaN,BigGAN_FC6,NaN,,"CH 32 (-3.5, -3.5) 4 1 CMAES. MU 2/5. It is separated out into 2 SU and 1 hash. Looks fairly clean. Start at 946. Fc6 vs BG. Both look like they are on the climb at blcok 10. BG is making dog face. Both still going up at 20. BG still dog/ferret face. Fc6 is up,up,up. BG is up and down, but trending up. Stop at 27 blocks, 1007. Wow, BG is a cat-ish face. complete.  
-entered into project biggan ",Alfa-11092020-002,200911_Alfa_generate_BigGAN,32,NaN,4,N:\Stimuli\2020-BigGAN\2020-09-11-Alfa-01\2020-09-11-09-46-38
-NaN,BigGAN_Hessian,11,,"CH 32 (-3.5, -3.5) 4 degrees, MU. Hessian images from previous evolution. Start at 1015. 6 blocks complete stop at 1030. complete.  ",Alfa-11092020-003,200911_Alfa_selectivity_basic,32,NaN,4,N:\Stimuli\2020-Hessian\alfa-200911-selectivity-01
+NaN,BigGAN_Hessian,NaN,,"CH 32 (-3.5, -3.5) 4 1 CMAES. MU 2/5. It is separated out into 2 SU and 1 hash. Looks fairly clean. Start at 946. Fc6 vs BG. Both look like they are on the climb at blcok 10. BG is making dog face. Both still going up at 20. BG still dog/ferret face. Fc6 is up,up,up. BG is up and down, but trending up. Stop at 27 blocks, 1007. Wow, BG is a cat-ish face. complete.  
+entered into project biggan ",Alfa-11092020-002,200911_Alfa_generate_BigGAN,32,1,4,N:\Stimuli\2020-BigGAN\2020-09-11-Alfa-01\2020-09-11-09-46-38
+NaN,BigGAN_Hessian,11,,"CH 32 (-3.5, -3.5) 4 degrees, MU. Hessian images from previous evolution. Start at 1015. 6 blocks complete stop at 1030. complete.  ",Alfa-11092020-003,200911_Alfa_selectivity_basic,32,1,4,N:\Stimuli\2020-Hessian\alfa-200911-selectivity-01
 NaN,,NaN,,"CH 26 (0, -2.5) hash. 3 1 CMAES. Fc6 vs BG. Start at 1134. Quiet hash, but rf looked good and we have not tried this yet. Wow. Whole lotta nothing happening. Abort at 11 blocks, 1044. Will not keep.  ",Alfa-11092020-004,200911_Alfa_generate_BigGAN(1),NaN,NaN,NaN,
-NaN,BigGAN_FC6,NaN,,"CH 30. (-2, -2, ) 3 1 Start at 1045. CMAES hash 1/5, quiet but VR, has not been done yet. Fc6 vs BG. BG's psth started off higher than all others. And is peaking high as well. Lets hope it climbs. BG is doing great. Still climbing. Block 13, fc6 maybe climbing too. Stop at 1106, 23 blocks. complete.  
-entered into biggan ",Alfa-11092020-005,200911_Alfa_generate_BigGAN(2),30,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-11-Alfa-02\2020-09-11-10-45-27
+NaN,BigGAN_Hessian,NaN,,"CH 30. (-2, -2, ) 3 1 Start at 1045. CMAES hash 1/5, quiet but VR, has not been done yet. Fc6 vs BG. BG's psth started off higher than all others. And is peaking high as well. Lets hope it climbs. BG is doing great. Still climbing. Block 13, fc6 maybe climbing too. Stop at 1106, 23 blocks. complete.  
+entered into biggan ",Alfa-11092020-005,200911_Alfa_generate_BigGAN(2),30,1,3,N:\Stimuli\2020-BigGAN\2020-09-11-Alfa-02\2020-09-11-10-45-27
 NaN,BigGAN_Hessian,12,,"CH 30 hess images. Start at 1115. Selectivity CH 30 (-2,-2) 3 degrees. Just get through 5 blocks, 255 trials. 250 trials, almost 5 blocks, he would not budge..... stop 1140. complete.  
-9/16/20. In rig at 945. chlorhexidine ",Alfa-11092020-006,200911_Alfa_selectivity_basic(1),30,NaN,3,N:\Stimuli\2020-Hessian\alfa-200911-selectivity-02
+9/16/20. In rig at 945. chlorhexidine ",Alfa-11092020-006,200911_Alfa_selectivity_basic(1),30,1,3,N:\Stimuli\2020-Hessian\alfa-200911-selectivity-02
 NaN,,NaN,,"Rf mapper start at 951. SU in 54, we have not done. 5 blocks complete at 958.  ",Alfa-16092020-001,200916_Alfa_rfMapper_basic,NaN,NaN,NaN,
-NaN,BigGAN_FC6,NaN,,"Generate BG start at 1005. CH 10 (-0.2, -2.2) 3 1 CMAES. Hash 5/5. Fc6 vd=s BG. Unfortunately this channel has noise from reward....we have not done this ch yet and rf looked good. BG started off high. Block 9, BG psth is peaking high, it looks to be climbing. Nothing from fc6 yet. BG making dog face. Fc6 climbing too. BG climbed early and then was up and down. 25 blocks stop at 1026.  ",Alfa-16092020-002,200916_Alfa_generate_BigGAN(1),10,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-16-Alfa-01\2020-09-16-10-04-30
-NaN,BigGAN_Hessian,13,,"Selectivity with Hess images of BG evolution. CH 10 (-0.2, -2.2) 3 1 CMAES. Start at 1033. 6blocks, 1049 ",Alfa-16092020-003,200916_Alfa_selectivity_basic,10,NaN,3,N:\Stimuli\2020-Hessian\alfa-200916-selectivity-01
-NaN,BigGAN_FC6,NaN,,"CH 15 (0,0) 3 1 CMAES. SU 2/5. Generate BG start at 1053. Sounds vr. 23 blocks complete stop at 1118.  ",Alfa-16092020-004,200916_Alfa_generate_BigGAN(2),15,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-16-Alfa-02\2020-09-16-10-53-04
-NaN,BigGAN_Hessian,14,,"Replaced water with juice. 350 total starting now. Selectivity with CH 15 evolution. Start at 1124. CH 15 SU(0, 0) 3 degrees. BG made white dog face. 5 blocks complete at 1135.  ",Alfa-16092020-005,200916_Alfa_selectivity_basic(1),15,NaN,3,N:\Stimuli\2020-Hessian\alfa-200916-selectivity-02
+5,BigGAN_Hessian,NaN,,"Generate BG start at 1005. CH 10 (-0.2, -2.2) 3 1 CMAES. Hash 5/5. Fc6 vd=s BG. Unfortunately this channel has noise from reward....we have not done this ch yet and rf looked good. BG started off high. Block 9, BG psth is peaking high, it looks to be climbing. Nothing from fc6 yet. BG making dog face. Fc6 climbing too. BG climbed early and then was up and down. 25 blocks stop at 1026.  ",Alfa-16092020-002,200916_Alfa_generate_BigGAN(1),10,1,3,N:\Stimuli\2020-BigGAN\2020-09-16-Alfa-01\2020-09-16-10-04-30
+5,BigGAN_Hessian,13,,"Selectivity with Hess images of BG evolution. CH 10 (-0.2, -2.2) 3 1 CMAES. Start at 1033. 6blocks, 1049 ",Alfa-16092020-003,200916_Alfa_selectivity_basic,10,1,3,N:\Stimuli\2020-Hessian\alfa-200916-selectivity-01
+2,BigGAN_Hessian,NaN,,"CH 15 (0,0) 3 1 CMAES. SU 2/5. Generate BG start at 1053. Sounds vr. 23 blocks complete stop at 1118.  ",Alfa-16092020-004,200916_Alfa_generate_BigGAN(2),15,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-16-Alfa-02\2020-09-16-10-53-04
+2,BigGAN_Hessian,14,,"Replaced water with juice. 350 total starting now. Selectivity with CH 15 evolution. Start at 1124. CH 15 SU(0, 0) 3 degrees. BG made white dog face. 5 blocks complete at 1135.  ",Alfa-16092020-005,200916_Alfa_selectivity_basic(1),15,NaN,3,N:\Stimuli\2020-Hessian\alfa-200916-selectivity-02
 NaN,,NaN,,"9/18/20. Betadine. New exp totday. GB vs fc6 cmaes like nomal, then repeat with fc6, fc6 Cmaes vs cmaes hess. CH 7 (-1.2, -2.2) In rig at 916. Rf start 921. CH 6 SU. 5 blocks at 927.  ",Alfa-18092020-001,200918_Alfa_rfMapper_basic,NaN,NaN,NaN,
 NaN,BigGAN_FC6,NaN,,"CH 6 (0, -2.7) 3 1 CMAES. SU 1/5. Fc6 vs BG like normal. Start at 934. Sounds very visually responsive. It had a great receptive field. Still nothing at 13.....still nothing at 20. Stopped! 
 For this unit, random BGs are better than refs and than fc6s, but they don't climb necessarily ",Alfa-18092020-002,200918_Alfa_generate_BigGAN(3),6,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-18-Alfa-01\2020-09-18-09-34-18
@@ -1791,14 +1791,14 @@ now it is. About an increase of 10 sp/s for both. 
 Making eyes on dogs (BG) or just eyes surrounded by tan swirls (fc6). Next will repeat using class 
 Baseline has become unstable. Not sure what to believe here... 
 This experimented lasted 18 minutes to do ~33 generations at 66% performance ",Alfa-18092020-003,200918_Alfa_generate_BigGAN(4),6,NaN,5,N:\Stimuli\2020-BigGAN\2020-09-18-Alfa-02\2020-09-18-09-51-51
-NaN,BigGAN_FC6_CMAHess,NaN,,"004 at 1021 AM 
+1,BigGAN_FC6_CMAHess,NaN,,"004 at 1021 AM 
 repeating above but this time with CMAES_hess 
 for what it's worth, cell is kinda funky so who knows, but it'll be interesting if either generator does better than 10 spikes /s from gen 0, or if BG does better than 30 spikes /s relative to refs. 
 CH 6 (0, -2.7) 5 1 CMAES-Hessian. SU 1/5. Fc6 vs BG. Start a1021.  
 Baseline already starting at 50 sp/s for everything, so comparison to previous experiment will have to be adjusted...block 15; fc6 staying with green lines, but slight climb overall. BG looks like its starting to climb, 10-15 sp/s above green.  
 fc6 not doing so great. Images look a bit more texture-like; fewer bounded contours... 
 Stopped him for a second to swap water for juice. Hes working better now. 33 blocks.  
-33 block. 55% stop at 1058. 36 minutes.  ",Alfa-18092020-004,200918_Alfa_generate_BigGAN(5),6,NaN,5,N:\Stimuli\2020-BigGAN\2020-09-18-Alfa-03\2020-09-18-10-21-58
+33 block. 55% stop at 1058. 36 minutes.  ",Alfa-18092020-004,200918_Alfa_generate_BigGAN(5),6,1,5,N:\Stimuli\2020-BigGAN\2020-09-18-Alfa-03\2020-09-18-10-21-58
 NaN,FC6_CMAHess,NaN,,"005 at 1101 
 CH 6 (0, -2.7) 5 2 CMAES vs CMAES-Hessian. MU 5/5. Fc6 for both. 
 PSTHs look like this: 
@@ -4823,3 +4823,36 @@ F**KIng Stupid monkey.
 facttsr_corrresnet50_linf8-layer3_01,
 fac0_map_corrresnet50_linf8-layer3_02,
 fac1_cntpnt_corrresnet50_linf8-layer3_03",Alfa-09072021-005,210709_Alfa_selectivity_basic,35,1,2.5,N:\Stimuli\2021-EvolDecomp\2021-07-09-Alfa-01-decomp
+NaN,,NaN,,"001 Monkey is working quite well this day!
+6 mins 10 blocks
+56  [0, 0]  3  1
+57  [0, 0]  3  1
+48  [0, 0]  2.5  1
+36  [0, 0]  2.5  1",Alfa-16072021-001,210716_Alfa_rfMapper_basic,NaN,NaN,NaN,
+5,FC6Evol_Decomp,NaN,,"002 Generate BigGAN
+56 Hash 5/5
+56  [0, 0]  3  1  CMAES Hessian
+FC6 GAN
+Not quite good signal, upand down.
+Not going anywhere...
+Too noisy I think.
+Wow this is really working in the opposite direction.
+Not successful
+Completed",Alfa-16072021-002,210716_Alfa_generate_BigGAN,56,1,2.5,N:\Stimuli\2021-EvolDecomp\2021-07-16-Alfa-01\2021-07-16-11-58-05
+4.5,FC6Evol_Decomp,NaN,,"004 Generate BigGAN (RF potentially shifed, dangerous)
+38 [0, 0]  2.5  1
+Hash 4.5/5
+Inserting image...
+Inserting image...
+Quite successful  60->110",Alfa-16072021-004,210716_Alfa_generate_BigGAN(2),38,1,2.5,N:\Stimuli\2021-EvolDecomp\2021-07-16-Alfa-02\2021-07-16-12-14-40
+5,FC6Evol_Decomp,NaN,,"006 Generate BigGAN 12:43 (RF potentially shifed, dangerous)
+47  [0, 0]  2.5  1
+Used the same ref as the last one.
+This V1 cell is quite sparse, and bad signal.
+Inserting image...
+Signal is pretty bad.",Alfa-16072021-006,210716_Alfa_generate_BigGAN(4),47,1,2.5,N:\Stimuli\2021-EvolDecomp\2021-07-16-Alfa-03\2021-07-16-12-43-36
+4.5,FC6Evol_Decomp,NaN,,"007 Evol Decompose(RF potentially shifed, dangerous)
+38 [0, 0]  2.5  1 Resnet50 layer3",Alfa-16072021-007,210716_Alfa_selectivity_basic,38,1,2.5,N:\Stimuli\2021-EvolDecomp\2021-07-16-Alfa-02-decomp
+5,FC6Evol_Decomp,NaN,,"008 Evol Decompose (RF potentially shifed, dangerous)
+47  [0, 0]  2.5  1 Resnet50 layer3
+Really sparse and noisy. This is bad, not to use as data, use as control for exps.",Alfa-16072021-008,210716_Alfa_selectivity_basic(1),47,1,2.5,N:\Stimuli\2021-EvolDecomp\2021-07-16-Alfa-03-decomp
