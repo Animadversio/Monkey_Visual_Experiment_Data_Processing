@@ -1,4 +1,6 @@
 function S_col = RF_Calc_Stats_fun(meta_new, rasters_new, Trials_new)
+% New combined function for calculating stats for RF. 
+% 
 pixperdeg = 40;
 P = struct();
 P.plotEachChan = false;
@@ -161,7 +163,6 @@ pixperdeg = 40;
 X = [xy_all,size_all/pixperdeg];
 y = squeeze(mean(rasters(iCh,wdwevk,:),[2]))-bsl_mean(iCh);
 gprMdl = fitrgp(X,y);
-%%
 Xq = -8:0.2:8; Yq = -8:0.2:8;
 [XX,YY] = meshgrid(Xq,Yq);
 figure(2);clf;T=tiledlayout(3,3,'tilespac','compact');
