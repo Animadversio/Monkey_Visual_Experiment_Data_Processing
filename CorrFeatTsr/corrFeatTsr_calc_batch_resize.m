@@ -6,20 +6,19 @@ savedir = "E:\OneDrive - Washington University in St. Louis\CNNFeatCorr";
 hier_savedir = "E:\OneDrive - Washington University in St. Louis\corrFeatTsr_Hierarchy";
 %%
 Animal="Beto"; 
-mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 load(fullfile(mat_dir, compose("%s_Evol_stats.mat", Animal)), 'EStats')
 load(fullfile(mat_dir, compose("%s_Manif_stats.mat", Animal)), 'Stats')
 %%
 % Animal="Alfa"; ExpType="Manif"; 
-
-for Animal=["Alfa","Beto"]
+mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
+for Animal=["Beto"] %"Alfa",
 load(fullfile(mat_dir, compose("%s_Evol_stats.mat", Animal)), 'EStats')
 load(fullfile(mat_dir, compose("%s_Manif_stats.mat", Animal)), 'Stats')
-% flags = struct("batch",50,"online_compute",0,"load_all_img",1,"shuffleN",100,"resize",true);
-ExpType="Evol"; 
-flags = struct("batch",60,"online_compute",1,"load_all_img",1,"shuffleN",100,"resize",true);
+ExpType="Manif"; 
+% flags = struct("batch",60,"online_compute",1,"load_all_img",1,"shuffleN",100,"resize",true);
+flags = struct("batch",45,"online_compute",1,"load_all_img",1,"shuffleN",50,"resize",true);
 wdw_vect = [[1, 20] + 10 * [0:18]'; [1,50]+[0:50:150]'; [51,200]];
-for Expi = 1:numel(EStats)
+for Expi = 2:numel(EStats)
 imgsize = EStats(Expi).evol.imgsize;
 imgpix = imgsize * 40;
 flags.imgpix = imgpix;
@@ -36,12 +35,13 @@ save(outfn,'cc_tsr','MFeat','StdFeat','wdw_vect','cc_refM','cc_refS');
 end
 end
 end
-
-
 %%
 Animal = "Beto"; 
 load(fullfile(mat_dir, compose("%s_Evol_stats.mat", Animal)), 'EStats')
 load(fullfile(mat_dir, compose("%s_ImageRepr.mat", Animal)), 'ReprStats')
+%% Load both Evol and Manif
+
+
 
 function dlimg = loadimges(images)
 imgcol = cellfun(@(imgnm) imresize(imread(fullfile(imgnm)),[224,224]), images, 'UniformOutput', false);
@@ -61,6 +61,9 @@ elseif ExpType == "Evol"
 index_vect = cell2mat(EStats(Expi).evol.idx_seq');
 imgnm_vect = EStats(Expi).imageName(index_vect); % reshape(imgnm_grid, [], 1);
 stimpath = EStats(Expi).meta.stimuli;
+end
+if contains(stimpath,"\\storage1.ris.wustl.edu\crponce\Active\Stimuli")
+   stimpath = strrep(stimpath,"\\storage1.ris.wustl.edu\crponce\Active\Stimuli","N:\Stimuli"); 
 end
 imgN = length(imgnm_vect);
 tmpfn = ls(fullfile(stimpath, imgnm_vect(1)+"*"));

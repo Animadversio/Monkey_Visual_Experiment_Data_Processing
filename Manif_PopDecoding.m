@@ -2,11 +2,12 @@
 Set_Path;
 %%
 mat_dir = "O:\Mat_Statistics";
-Animal = "Alfa";
+Animal = "Beto";
 load(fullfile(mat_dir, Animal+'_Evol_stats.mat'), 'EStats') 
 load(fullfile(mat_dir, Animal+'_Manif_stats.mat'), 'Stats') 
-load(fullfile(mat_dir, Animal+"_ManifMapVarStats.mat"), 'MapVarStats')
-%% 
+% load(fullfile(mat_dir, Animal+"_ManifMapVarStats.mat"), 'MapVarStats')
+%%
+save(fullfile(mat_dir, Animal+'_Manif_stats.mat'), 'Stats') 
 %%
 [PHI, THETA] = meshgrid(-90:18:90.1,-90:18:90.1);
 XX = cosd(PHI).*cosd(THETA);
