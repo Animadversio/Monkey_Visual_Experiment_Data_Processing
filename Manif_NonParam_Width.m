@@ -1,6 +1,8 @@
+
 %% Manif_NonParametric_Tests
 mat_dir = "O:\Mat_Statistics";
 nonpardir = "O:\Manif_NonParam\summary";
+% measure the non paramtric tuning width or center of mass!
 % parameter grid
 [phi_grid, theta_grid] = meshgrid(-90:18:90, -90:18:90); 
 XX = cosd(theta_grid).* cosd(phi_grid);
@@ -28,7 +30,7 @@ for i = 1:numel(drivermsk)
     drivermsk(i) = (poptab.unitnum(i) == driver_unit) & (poptab.chan(i) == poptab.prefchan(i));
 end
 
-%% 
+%% Big Loop Across 2 monkeys
 tic
 for Animal = ["Alfa","Beto"]
 load(fullfile(mat_dir,Animal+"_ManifMapVarStats.mat"),'MapVarStats')
@@ -42,13 +44,14 @@ Expi = Tab.Expi; spi = Tab.space; ui = Tab.unitnum; ci = Tab.chan;
 for nm = ["Animal", "Expi", "unitstr", "unitnum", "chan", "prefchan", "space","F","F_P"] % copy stats.
 S.(nm) = Tab.(nm);
 end
-if Tab.chan < 33
-S.area = "IT";
-elseif Tab.chan < 49
-S.area = "V1";  
-else
-S.area = "V4"; 
-end
+S.area = area_map(Tab.chan);
+% if Tab.chan < 33
+% S.area = "IT";
+% elseif Tab.chan < 49
+% S.area = "V1";  
+% else
+% S.area = "V4"; 
+% end
 
 iCh = find((MapVarStats(Expi).units.spikeID==ci & MapVarStats(Expi).units.unit_num_arr==ui));
 S.iCh = iCh;
@@ -67,7 +70,7 @@ S.CoMrho_90 = CoMrho;
 S.Mtheta_90 = Mtheta;
 S.Mphi_90 = Mphi;
 S.Mrho_90 = Mrho;
-
+% Core of the loop, use the Spherical Integration to get the activation maps. 
 integ = SphIntegration(actmap_mean,0,theta_grid,phi_grid,Wgrid);
 S.AUS = integ; % Area under tuning map
 S.normAUS = integ / maxAct; % Normalized area under tuning map.
@@ -81,7 +84,7 @@ toc
 NPStatTab = struct2table(NPStats);
 writetable(NPStatTab,fullfile(nonpardir,Animal+"_Driver_NonParamWidth.csv"))
 end
-%
+% Re-Read the tables and collect them in a huge table. 
 NPtab = [];
 for Animal = ["Alfa","Beto"] % merge the tabs for 2 monks
 NPStatTab = readtable(fullfile(nonpardir,Animal+"_Driver_NonParamWidth.csv"));
@@ -91,11 +94,14 @@ end
 % NPtab.phi_max = NPtab.phi_max / 180 * pi;
 writetable(NPtab,fullfile(nonpardir,"Both"+"_Driver_NonParamWidth.csv"))
 
-%%
+
+%% Reload the tabs to plot the final statistics! 
+nonpardir = "O:\Manif_NonParam\summary";
+NPtab = readtable(fullfile(nonpardir,"Both"+"_Driver_NonParamWidth.csv"));
 global figdir
 figdir = "O:\Manif_NonParam\summary";
 msk = NPtab.F_P < 1E-3;
-%%
+%% Creat masks for stats
 validmsk = ~ (NPtab.Animal=="Alfa" & NPtab.Expi==10);
 Fmsk = NPtab.F_P < 1E-3;
 Alfamsk = (NPtab.Animal=="Alfa");
@@ -115,6 +121,11 @@ h = stripe_minor_plot(NPtab, "normAUS", {V1msk & msk, V4msk & msk, ITmsk & msk},
 h = stripe_minor_plot(NPtab, "normAUS_bsl", {V1msk & msk, V4msk & msk, ITmsk & msk}, ["V1", "V4", "IT"], ...
     {Alfamsk & msk, Betomsk & msk}, ["Alfa", "Beto"], ...
 	"All Exp (driver, ANOVA P<1E-3)", "area_anim_sep", {[3,1],[2,1],[3,2]});
+%%
+diary(fullfile(figdir,'WidthProg_Stats.log'))
+fprintf("Test areal progression of statistics normAUS_bsl :\n")
+test_progression(NPtab, "normAUS_bsl", {V1msk & msk, V4msk & msk, ITmsk & msk});
+diary off
 %% Functions for mass production figures 
 msk = poptab.F_P < 1E-3&drivermsk;
 Alfamsk = (poptab.Animal=="Alfa");
@@ -126,6 +137,22 @@ ITmsk = (poptab.chan<33);
 % plotTuneCenterMultMsk(poptab,{msk&V1msk, msk&V4msk, msk&ITmsk},["V1","V4","IT"],"","","Kent fit",'Kent_Fsig_area_sep')
 plotTuneCenterMultMsk(poptab,{msk},["driver"],"","","Kent fit",'Kent_Fsig')
 
+function lm = test_progression(tab,varnm,msks,labels)
+var_vec = []; idx_vec = [];
+for i = 1:numel(msks)
+msk = msks{i};
+var_arr = tab.(varnm)(msk);
+idx_arr = i*ones(numel(var_arr),1);
+var_vec = [var_vec; var_arr];
+idx_vec = [idx_vec; idx_arr];
+end
+[cval,pval] = corr(idx_vec, var_vec, 'Type', 'Spearman');
+fprintf("Spearman Correlation %.3f(%.1e) df=%d\n",cval,pval,numel(var_vec)-1)
+lm = fitlm(idx_vec, var_vec);
+fprintf("Linear Regression t=%.3f(p=%.1e) R2=%.3f\n",...
+    lm.Coefficients.tStat(2),lm.Coefficients.pValue(2),lm.Rsquared.Adjusted)
+disp(lm)
+end
 
 function plotTuneCenterMultMsk(NPtab,msks,labels,prefix,suffix,titlenote,savestr)
 global figdir

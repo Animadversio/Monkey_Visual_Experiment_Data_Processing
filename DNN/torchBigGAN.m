@@ -5,7 +5,7 @@
 %    name to that 
         % resolved_config_file = "https://s3.amazonaws.com/models.huggingface.co/biggan/biggan-deep-256-config.json";
         % resolved_model_file = "https://s3.amazonaws.com/models.huggingface.co/biggan/biggan-deep-256-pytorch_model.bin";
-%
+%monk
 % Setup Python Env For Matlab and PyTorch to Get Along: 
 %   setup the python env that have pytorch with version < 1.4.0 in it (1.3.1 and 1.1.0 have been proved)  
 %   check which conda env is good by 
@@ -21,8 +21,9 @@
 %   on Binxu home `pyenv('Version','C:\ProgramData\Anaconda3\envs\tf-torch\python.exe')` 
 %   on Office 3 `pyenv("Version","C:\Users\ponce\.conda\envs\caffe36\python.exe")`
 %   on ML2a `pyenv("Version", "C:\Anaconda3\envs\torch\python.exe");`
-%   on ML2b `pyenv("Version", "C:\Users\Ponce lab\.conda\envs\torch\python.exe")`  
-% 
+%   on ML2b `pyenv("Version", "C:\Users\Ponce lab\.conda\envs\torch\python.exe")`
+%     ML2c  `pyenv("Version", "C:\Users\ponce\.conda\envs\torch\python.exe")
+%    
 % Note, sometimes import numpy and torch can fail, then we need to add the
 % path of binary of the Library to the PATH env variable. E.g.
 % This is in `[envpath]\Library\bin` 
@@ -31,6 +32,9 @@
 %   % WHEN IMPORT FAILS, RUN THIS LINE ABOVE
 % 
 % This add to path should be run each time. So I add it to init code
+% **Note**: as the path is appended each time, the path list will keep getting
+% longer if matlab is not restarted. THat can cause import error if the
+% path get long enough and get rid of some important ones. 
 %   
 %   Binxu July.20th, 2020. Updated Oct. 9th
 classdef torchBigGAN

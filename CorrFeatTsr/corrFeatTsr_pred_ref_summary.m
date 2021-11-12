@@ -1,3 +1,5 @@
+%% Process the output from predStats2 and output strings or figures from it. 
+
 Animal = "Alfa";
 MatStats_path = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 load(fullfile(MatStats_path,Animal+"_FeatTsrPredStats2.mat"),'predStats2')
@@ -10,7 +12,7 @@ V1msk = (prefchan_arr < 49) & (prefchan_arr>32);
 V4msk = (prefchan_arr > 48);
 Allmsk = ~isnan(prefchan_arr);
 area_labs = ["V1","V4","IT","all"];area_msks = {V1msk, V4msk, ITmsk, Allmsk};
-%%
+%% Text summary of prediction on different image spaces (Evol->Manif)
 diary(fullfile("O:\corrFeatTsr_Predict\summary\",compose("%s_E2M_PredStats.log",Animal)))
 fprintf("Fitting on Evolution Deploy on Others:\n")
 fprintf("Nonlinear fitting correlaiton:\n")
@@ -21,7 +23,7 @@ corr_summary_by_msk(predStats2,area_msks,area_labs,"evoref","nlpredcorr","E2M")
 corr_summary_by_msk(predStats2,area_msks,area_labs,"gabor","nlpredcorr","E2M")
 corr_summary_by_msk(predStats2,area_msks,area_labs,"pasu","nlpredcorr","E2M")
 diary off
-%%
+%% Text summary of prediction on different image spaces (Manif->Evol)
 diary(fullfile("O:\corrFeatTsr_Predict\summary\",compose("%s_M2E_PredStats.log",Animal)))
 fprintf("Fitting on Manifold Deploy on Others:\n")
 fprintf("Nonlinear fitting correlaiton:\n")
@@ -35,7 +37,10 @@ diary off
 %%
 nlpred_vec = ([predStats2(Expi).M2E.(layername).pasu.nlpredscore(:,end);predStats2(Expi).M2E.(layername).gabor.nlpredscore(:,end);predStats2(Expi).M2E.(layername).evoref.nlpredscore(:,end);]);
 orig_vec = ([predStats2(Expi).M2E.(layername).pasu.origscore(:,end);predStats2(Expi).M2E.(layername).gabor.origscore(:,end);predStats2(Expi).M2E.(layername).evoref.origscore(:,end);]);
-[cval,pval] = corr(orig_vec,nlpred_vec)
+[cval,pval] = corr(orig_vec,nlpred_vec);
+%% Pool Alfa and Beto 
+
+
 %% corr_summary_by_msk: function description
 function [] = corr_summary_by_msk(predStats2,area_msks,area_labs,imagespace,corrvarnm,direction,areafirst)
 if nargin <= 4, corrvarnm = "nlpredcorr"; end

@@ -1,4 +1,5 @@
-% Make final population summary figures out of the Kent fittings
+%% Make final population summary figures out of the Kent fittings
+% both for prefer driver channels and for non-driver channels
 % The plot functions are really WELL written! 
 Animal="Both";Set_Path;
 tabdir = "O:\Manif_Fitting\Kent_summary";
@@ -10,6 +11,7 @@ load(fullfile(mat_dir,"Alfa"+"_Evol_stats.mat"),'EStats')
 EStats_all.Alfa = EStats;
 load(fullfile(mat_dir,"Beto"+"_Evol_stats.mat"),'EStats')
 EStats_all.Beto = EStats;
+%%
 alfatab = readtable(fullfile(tabdir,"Alfa_Kstats.csv"));
 betotab = readtable(fullfile(tabdir,"Beto_Kstats.csv"));
 preftab = [];
@@ -47,7 +49,261 @@ hist_plot(alltab, "R2", {validmsk& drivermsk& V1msk, validmsk& drivermsk& V4msk,
 hist_plot(alltab, "R2", {validmsk& drivermsk},["All Driver"],...
     "pure driver valid","drv_all","count")
 
-%% All the channels (Popu)
+
+
+%% Full population analysis
+%% Current version, Get the fitting statistics for all channels with baseline.
+poptabdir = "O:\Manif_Fitting\popstats";
+alfatab_pop = readtable(fullfile(poptabdir,"Alfa_Exp_all_KentStat_bsl_pole.csv"));
+betotab_pop = readtable(fullfile(poptabdir,"Beto_Exp_all_KentStat_bsl_pole.csv"));
+poptab = [alfatab_pop;betotab_pop];
+for i = 1:size(poptab,1)
+    poptab.imgsize(i) = EStats_all.(poptab.Animal{i})(poptab.Expi(i)).evol.imgsize;
+    poptab.imgposX(i) = EStats_all.(poptab.Animal{i})(poptab.Expi(i)).evol.imgpos(1);
+    poptab.imgposY(i) = EStats_all.(poptab.Animal{i})(poptab.Expi(i)).evol.imgpos(2);
+end
+%% Creat masks for analysis
+validmsk = (poptab.unitnum>0) & ~((poptab.Animal=="Alfa") & (poptab.Expi==10));
+Alfamsk = (poptab.Animal=="Alfa");
+Betomsk = (poptab.Animal=="Beto");
+V1msk = (poptab.chan<=48 & poptab.chan>=33);
+V4msk = (poptab.chan>48);
+ITmsk = (poptab.chan<33);
+drivermsk = zeros(size(poptab,1),1); % Masks of real driver units instead of using the first. 
+for i = 1:numel(drivermsk)
+    driver_unit = EStats_all.(poptab.Animal{i})(poptab.Expi(i)).evol.unit_in_pref_chan;
+    drivermsk(i) = (poptab.unitnum(i) == driver_unit) & (poptab.chan(i) == poptab.prefchan(i));
+end
+prefchmsk = poptab.chan==poptab.prefchan;
+Fsigmsk = poptab.F_P<0.001;
+%%
+% msk = validmsk & drivermsk & poptab.R2 > 0.4;
+h = hist_plot(poptab, "R2", {validmsk & drivermsk}, ["driver"], ...
+            "All Exp (driver)", "bslfit_all", "count");
+        %%
+h = hist_plot(poptab, "R2", {validmsk & drivermsk, validmsk & drivermsk & poptab.F_P>0.001}, ["driver","driver F>0.001"], ...
+            "All Exp (driver)", "bslfit_all_F_P", "count");
+h = hist_plot(poptab, "R2", {validmsk & drivermsk & poptab.F_P<0.001}, ["driver F<0.001"], ...
+    "All Exp (driver)", "bslfit_all_Fsig", "count");
+h = hist_plot(poptab, "R2", {validmsk & drivermsk, validmsk & drivermsk & poptab.F_P>0.001}, ["driver","driver F>0.001"], ...
+            "All Exp (driver)", "bslfit_all_F_P", "count");
+%%
+msk = validmsk & drivermsk & poptab.F_P<0.001;
+h = hist_plot(poptab, "R2", {msk&Alfamsk,msk&Betomsk}, ["Alfa","Beto"], ...
+    "All Exp (driver F<0.001)", "bslfit_anim_sep_Fsig", "count");
+%%
+%% Hist comparison of Kappa value
+msk = validmsk & drivermsk & poptab.R2 > 0.4;
+h = hist_plot(poptab, "kappa", {msk}, ["all driver"], ...
+            "All Exp (driver, R2>0.4)", "bslfit_all", "count");
+h = hist_plot(poptab, "kappa", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"], ...
+            "All Exp (driver, R2>0.4)", "bslfit_area_sep", "count");
+h = hist_plot(poptab, "kappa", {msk&Alfamsk, msk&Betomsk}, ["Alfa","Beto"], ...
+            "All Exp (driver, R2>0.4)", "bslfit_anim_sep", "count");
+%%
+msk = validmsk & drivermsk & poptab.R2 > 0.4;
+h = stripe_plot(poptab, "kappa", {msk}, ["all driver"], ...
+            "All Exp (driver, R2>0.4)", "bslfit_all");
+h = stripe_plot(poptab, "kappa", {msk&Alfamsk, msk&Betomsk}, ["Alfa","Beto"], ...
+            "All Exp (driver, R2>0.4)", "bslfit_anim_sep");
+h = stripe_plot(poptab, "kappa", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"], ...
+            "All Exp (driver, R2>0.4)", "bslfit_area_sep",{[3,1],[2,1],[3,2]});
+%%
+h = hist_plot(poptab, "R2", {nondrvmsk}, ["non driver"], ...
+            "All Exp (non pref chan, ANOVA P<1E-5)", "nonpref", "count");
+h = hist_plot(poptab, "R2", {nondrvmsk&Alfamsk, nondrvmsk&Betomsk}, ["Alfa","Beto"], ...
+            "All Exp (non pref chan, ANOVA P<1E-5)", "nonpref_anim_sep", "count");
+h = hist_plot(poptab, "R2", {nondrvmsk&V1msk, nondrvmsk&V4msk, nondrvmsk&ITmsk}, ["V1","V4","IT"], ...
+            "All Exp (non pref chan, ANOVA P<1E-5)", "nonpref_area_sep", "count",{[3,1],[2,1],[3,2]});
+%% Plot the center of tunings
+msk = validmsk & drivermsk & poptab.R2 > 0.4 & poptab.space==1;
+xscatter_plot(poptab,"phi","theta",{msk},["All"],"All Exp (Driver, R2>0.4, PC23)", "bslfit_PC23all")
+xscatter_plot(poptab,"phi","theta",{msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],...
+    "All Exp (driver, R2>0.4, PC23)", "bslfit_PC23area_sep")
+xscatter_plot(poptab,"phi","theta",{msk&Alfamsk, msk&Betomsk}, ["Alfa","Beto"],...
+    "All Exp (driver, R2>0.4, PC23)", "bslfit_PC23anim_sep")
+%% Plot the kappa and beta (shape parameters)
+msk = validmsk & drivermsk & poptab.F_P < 0.001;
+% goodfitmsk = poptab.R2 > 0.5;
+xscatter_plot(poptab,"kappa","beta",{msk},["All"],"All Exp (Driver P<0.001)", "bslfit_all_Fsig")
+xscatter_plot(poptab,"kappa","beta",{msk,msk&poptab.R2>0.5},["All","R>0.5"],"All Exp (Driver P<0.001)", "bslfit_all_F_Fsig")
+xscatter_plot(poptab,"kappa","beta",{msk&poptab.R2<0.5,msk&poptab.R2>0.5},["R<0.5","R>0.5"],"All Exp (Driver P<0.001)", "bslfit_all_Fsep")
+xscatter_plot(poptab,"kappa","beta",{msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],...
+    "All Exp (Driver P<0.001)", "bslfit_area_sep_Fsig")
+xscatter_plot(poptab,"kappa","beta",{msk&Alfamsk, msk&Betomsk}, ["Alfa","Beto"],...
+    "All Exp (Driver P<0.001)", "bslfit_anim_sep_Fsig")
+%% Test the ratio between the two statis 
+testRatio(poptab,"kappa","beta",{msk},["All"]);
+testRatio(poptab,"kappa","beta",{msk,msk&poptab.R2>0.5},["All","R>0.5"]);
+testRatio(poptab,"kappa","beta",{msk&poptab.R2<0.5,msk&poptab.R2>0.5},["R<0.5","R>0.5"]);
+%% Plot  Kappa distribution
+msk = validmsk & drivermsk & poptab.R2 > 0.5;
+h = stripe_minor_plot(poptab, "kappa", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],...
+    {msk&Alfamsk, msk&Betomsk}, ["Alfa","Beto"], "All Exp (driver, R2>0.5)", "bslfit_area_anim", {[3,1],[2,1],[3,2]});
+
+h = stripe_plot(poptab, "kappa", {msk&V1msk&Alfamsk, msk&V4msk&Alfamsk, msk&ITmsk&Alfamsk}, ["V1","V4","IT"],...
+    "All Alfa Exp (driver, R2>0.5)", "bslfit_area_Alfa", {[3,1],[2,1],[3,2]});
+h = stripe_plot(poptab, "kappa", {msk&V1msk&Betomsk, msk&V4msk&Betomsk, msk&ITmsk&Betomsk}, ["V1","V4","IT"],...
+    "All Beto Exp (driver, R2>0.5)", "bslfit_area_Beto", {[3,1],[2,1],[3,2]});
+%% Fitting Validity across region. 
+msk = drivermsk;
+h = stripe_minor_plot(poptab, "R2", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],{Alfamsk,Betomsk},["Alfa","Beto"],...
+    "All Exp (driver)", "bslfit_anim_area", {[3,1],[2,1],[3,2]});
+%
+msk = drivermsk & Fsigmsk;
+h = stripe_minor_plot(poptab, "R2", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],{Alfamsk,Betomsk},["Alfa","Beto"],...
+    "All Exp (driver, ANOVA p<0.001)", "bslfit_anim_area_Fsig", {[3,1],[2,1],[3,2]});
+%% Fitting Validity in 2 monkeys separately.
+msk = drivermsk & Fsigmsk & Alfamsk;
+h = stripe_minor_plot(poptab, "R2", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],{msk},["Alfa"],...
+    "All Exp (Alfa, driver, ANOVA p<0.001)", "bslfit_Alfa_area_Fsig", {[3,1],[2,1],[3,2]});
+msk = drivermsk & Fsigmsk & Betomsk;
+h = stripe_minor_plot(poptab, "R2", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],{msk},["Beto"],...
+    "All Exp (Beto, driver, ANOVA p<0.001)", "bslfit_Beto_area_Fsig", {[3,1],[2,1],[3,2]});
+%%
+msk = drivermsk & Fsigmsk ;
+h = stripe_minor_plot(poptab, "R2", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],{msk},["Both"],...
+    "All Exp (Both, driver, ANOVA p<0.001)", "bslfit_Both_area_Fsig", {[3,1],[2,1],[3,2]});
+%%
+msk = drivermsk & Fsigmsk & (poptab.imgsize>1.1);
+h = stripe_minor_plot(poptab, "R2", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"], {msk},["Both"],...
+    "All Exp (driver, ANOVA p<0.001, imsize>1.0)", "bslfit_Both_nosmall_area_Fsig", {[3,1],[2,1],[3,2]});
+%%
+msk = drivermsk & Fsigmsk;
+h = xscatter_plot(poptab, "imgsize", "R2", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"], ...
+    "All Exp (driver, ANOVA p<0.001)", "bslfit_area_Fsig")
+
+%% Test if image size or position have an correlation on the kappa or R2.
+msk = drivermsk & Fsigmsk;
+[ctmp,ptmp] = corr(poptab.imgsize(msk),poptab.kappa(msk))
+[ctmp,ptmp] = corr(poptab.imgsize(msk),poptab.R2(msk))
+%%
+msk = drivermsk & Fsigmsk & Alfamsk;
+[ctmp,ptmp] = corr(poptab.imgsize(msk),poptab.R2(msk))
+%%
+msk = validmsk & drivermsk & poptab.R2 > 0.5 & (poptab.imgsize>1.05) ;
+h = stripe_minor_plot(poptab, "kappa", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],...
+    {msk&Alfamsk, msk&Betomsk}, ["Alfa","Beto"], "All Exp (driver, R2>0.5, imgsize>1.0)", "bslfit_area_anim_nosmall", {[3,1],[2,1],[3,2]});
+%%
+msk = validmsk & drivermsk & poptab.R2 > 0.5 & (poptab.imgsize>1.05) ;
+h = stripe_minor_plot(poptab, "kappa", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],...
+    {msk&Alfamsk, msk&Betomsk}, ["Alfa","Beto"], "All Exp (driver, R2>0.5, imgsize>1.0)", "bslfit_area_anim_nosmall", {[3,1],[2,1],[3,2]});
+%%
+msk = validmsk & drivermsk & poptab.R2 > 0.5 & (poptab.imgsize>1.05) & Alfamsk;
+h = stripe_minor_plot(poptab, "kappa", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],...
+    {msk&Alfamsk}, ["Alfa"], "All Exp (driver, R2>0.5, imgsize>1.0)", "bslfit_area_Alfa_nosmall", {[3,1],[2,1],[3,2]});
+%%
+RTtab = readtable(fullfile(summarydir,"Both"+"_RadialTuningStatsTab_squ.csv"));
+%% Test for progression for non-driving channels.
+popmsk = poptab.F_P < 1E-5 & poptab.R2 > 0.5 & poptab.kappa > 0;
+h = stripe_minor_plot(poptab, "kappa", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"],...
+    {popmsk&Alfamsk,popmsk&Betomsk}, ["Alfa","Beto"], "All Exp (R2>0.5, ANOVA P<0.00001)", "bslfit_area_Both_allchan", {[3,1],[2,1],[3,2]});
+h = stripe_minor_plot(poptab, "kappa", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"],...
+    {popmsk&Alfamsk}, ["Alfa"], "All Exp (R2>0.5, ANOVA P<0.00001)", "bslfit_area_Alfa_allchan", {[3,1],[2,1],[3,2]});
+h = stripe_minor_plot(poptab, "kappa", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"],...
+    {popmsk&Betomsk}, ["Beto"], "All Exp (R2>0.5, ANOVA P<0.00001)", "bslfit_area_Beto_allchan", {[3,1],[2,1],[3,2]});
+%%
+popmsk = poptab.F_P < 1E-5 & poptab.R2 > 0.5 & poptab.kappa > 0 & ~drivermsk;
+h = stripe_minor_plot(poptab, "kappa", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"],...
+    {popmsk&Alfamsk,popmsk&Betomsk}, ["Alfa","Beto"], "All Exp (R2>0.5, ANOVA P<0.00001)", "bslfit_area_Both_nondriver", {[3,1],[2,1],[3,2]});
+popmsk = poptab.F_P < 1E-5 & poptab.R2 > 0.5 & poptab.kappa > 0 & ~drivermsk & Alfamsk;
+h = stripe_minor_plot(poptab, "kappa", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"],...
+    {popmsk&Alfamsk}, ["Alfa"], "All Exp (R2>0.5, ANOVA P<0.00001)", "bslfit_area_Alfa_nondriver", {[3,1],[2,1],[3,2]});
+popmsk = poptab.F_P < 1E-5 & poptab.R2 > 0.5 & poptab.kappa > 0 & ~drivermsk & Betomsk;
+h = stripe_minor_plot(poptab, "kappa", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"],...
+    {popmsk&Betomsk}, ["Beto"], "All Exp (R2>0.5, ANOVA P<0.00001)", "bslfit_area_Beto_nondriver", {[3,1],[2,1],[3,2]});
+%% Print string for test parameter progression: kappa, beta, R2. across 3 areas in Alfa, Beto, or Both.
+diary(fullfile(sumdir,"popul_area_prog.log"))
+popmsk = poptab.F_P < 1E-5 & poptab.R2 > 0.5 & poptab.kappa > 0 & ~drivermsk;
+testProgression(poptab, "kappa", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"], "area", ...
+    "Both Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
+testProgression(poptab, "R2", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"], "area", ...
+    "Both Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
+testProgression(poptab, "beta", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"], "area", ...
+    "Both Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
+popmsk = poptab.F_P < 1E-5 & poptab.R2 > 0.5 & poptab.kappa > 0 & ~drivermsk & Alfamsk;
+testProgression(poptab, "kappa", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"], "area", ...
+    "Alfa Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
+testProgression(poptab, "R2", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"], "area", ...
+    "Alfa Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
+testProgression(poptab, "beta", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"], "area", ...
+    "Alfa Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
+popmsk = poptab.F_P < 1E-5 & poptab.R2 > 0.5 & poptab.kappa > 0 & ~drivermsk & Betomsk;
+testProgression(poptab, "kappa", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"], "area", ...
+    "Beto Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
+testProgression(poptab, "R2", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"], "area", ...
+    "Beto Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
+testProgression(poptab, "beta", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"], "area", ...
+    "Beto Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
+diary off
+%% Paired kappa comparison for SU and MU
+msk1 = []; msk2 = [];
+for idx = find(poptab.unitnum==2)' % collect the pairs
+    if poptab.F_P(idx)<1E-5 && poptab.F_P(idx-1)<1E-5 &&...
+       poptab.R2(idx)>0.5 && poptab.R2(idx - 1)>0.5 &&...
+       poptab.kappa(idx)>0 && poptab.kappa(idx - 1)>0 &&...
+       poptab.chan(idx) == poptab.chan(idx - 1) &&...
+       poptab.Expi(idx) == poptab.Expi(idx - 1) &&...
+       strcmp(poptab.Animal(idx), poptab.Animal(idx - 1))    
+    msk1 = [msk1, idx-1];
+    msk2 = [msk2, idx];
+    end
+end
+[~,P,CI,TST] = ttest(abs(poptab.kappa(msk1)),abs(poptab.kappa(msk2)))
+h = stripe_paired_plot(poptab, "kappa", {msk1, msk2}, ["SU","MU"], "All Chan, both ANOVA P<1E-5, R2>0.5, kappa>0", "SU-MU");
+%%
+msk1_dr = []; msk2_dr = []; % unit 1 unit 2 pairs that either is driver. 
+for idx = find(poptab.unitnum==2)'
+    if poptab.F_P(idx)<1E-5 && poptab.F_P(idx-1)<1E-5 &&...
+       poptab.R2(idx)>0.5 && poptab.R2(idx - 1)>0.5 &&...
+       (drivermsk(idx-1) || drivermsk(idx)) && ...
+       poptab.chan(idx) == poptab.chan(idx - 1) &&...
+       poptab.Expi(idx) == poptab.Expi(idx - 1) &&...
+       strcmp(poptab.Animal(idx), poptab.Animal(idx - 1))    
+    msk1_dr = [msk1_dr, idx-1];
+    msk2_dr = [msk2_dr, idx];
+    end
+end
+[~,P,CI,TST] = ttest(abs(poptab.kappa(msk1_dr)),abs(poptab.kappa(msk2_dr)))
+%
+h = stripe_paired_plot(poptab, "kappa", {msk1_dr, msk2_dr}, ["SU","MU"], "Drivers, both, ANOVA P<1E-5, R2>0.5", "SU-MU_driver");
+%% Statistical comparison of driver vs Non driver
+msk = validmsk & poptab.R2 >0.5;
+h = stripe_minor_plot(poptab, "kappa", {msk&drivermsk, msk&~drivermsk}, ["Driver","NonDriver"],...
+    {msk&Alfamsk, msk&Betomsk}, ["Alfa","Beto"], "All Exp (R2>0.5)", "bslfit_drv-non_cmp", {[2,1]});
+h = stripe_minor_plot(poptab, "kappa", {msk&drivermsk, msk&~drivermsk}, ["Driver","NonDriver"],...
+    {msk&Alfamsk, msk&Betomsk}, ["Alfa","Beto"], "All Exp (R2>0.5)", "bslfit_drv-non_cmp", {[2,1]});
+%%
+msk = validmsk & poptab.R2 >0.5;
+h = stripe_minor_plot(poptab, "R2", {msk&drivermsk, msk&~drivermsk}, ["Driver","NonDriver"],...
+    {msk&Alfamsk, msk&Betomsk}, ["Alfa","Beto"], "All Exp (R2>0.5)", "bslfit_drv-non_cmp", {[2,1]});
+h = stripe_minor_plot(poptab, "R2", {msk&drivermsk, msk&~drivermsk}, ["Driver","NonDriver"],...
+    {msk&Alfamsk, msk&Betomsk}, ["Alfa","Beto"], "All Exp (R2>0.5)", "bslfit_drv-non_cmp", {[2,1]});
+%%
+msk = validmsk & poptab.F_P < 1E-3;
+h = stripe_plot(poptab, "R2", {msk&drivermsk, msk&~drivermsk}, ["Driver","NonDriver"],...
+    "All Exp (ANOVA P<1E-3)", "bslfit_drv-non_Fsign_cmp", {[2,1]});
+%%
+h = stripe_minor_plot(poptab, "R2", {msk&drivermsk, msk&~drivermsk}, ["Driver","NonDriver"],...
+    {msk&Alfamsk, msk&Betomsk}, ["Alfa","Beto"], "All Exp (ANOVA P<1E-3)", "bslfit_drv-non_Fsign_cmp_anim_sep", {[2,1]});
+h = stripe_minor_plot(poptab, "R2", {msk&drivermsk, msk&~drivermsk}, ["Driver","NonDriver"],...
+    {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"], "All Exp (ANOVA P<1E-3)", "bslfit_drv-non_Fsign_cmp_area_sep", {[2,1]});
+%% 
+msk = validmsk & poptab.F_P < 1E-3 & poptab.kappa>0;
+testRatio(poptab,"kappa","beta",{msk&poptab.R2<0.5,msk&poptab.R2>0.5},["R<0.5","R>0.5"]);
+testRatio(poptab,"kappa","beta",{msk&drivermsk,msk&~drivermsk},["Driver","NonDriver"]);
+testRatio(poptab,"kappa","beta",{msk&drivermsk&poptab.R2>0.5,msk&~drivermsk&poptab.R2>0.5},["Driver R>0.5","NonDriver R>0.5"]);
+%%
+msk = validmsk & poptab.F_P < 1E-3&poptab.R2>0.5& poptab.kappa>0;
+xscatter_plot(poptab,"kappa","beta",{msk&drivermsk,msk&~drivermsk},["Driver R>0.5","NonDriver R>0.5"],...
+    "All Exp (Driver P<0.001 R2>0.5 kappa pos)", "bslfit_all_FsigRsigKpos_drv-non_cmp")
+%%
+msk = validmsk & poptab.F_P < 1E-3&poptab.R2>0.5;
+xscatter_plot(poptab,"kappa","beta",{msk&drivermsk,msk&~drivermsk},["Driver R>0.5","NonDriver R>0.5"],...
+    "All Exp (Driver P<0.001 R2>0.5)", "bslfit_all_FsigRsig_drv-non_cmp")
+
+%% OBSOLETE, 
+%% All the channels (Popu) OBSOLETE!!!! baseline not taken into account. See above for newer datafile
 alfatab_pop = readtable(fullfile(poptabdir,"Alfa_Exp_all_KentStat.csv"));
 betotab_pop = readtable(fullfile(poptabdir,"Beto_Exp_all_KentStat.csv"));
 poptab = [alfatab_pop;betotab_pop];
@@ -145,229 +401,24 @@ stripe_plot(poptab, "R2", {msk& Alfamsk, msk& Betomsk},["Alfa","Beto"],...
     "pure driver valid","drv_anim_sep")
 stripe_plot(poptab, "R2", {msk& V1msk, msk& V4msk, msk& ITmsk},["V1","V4","IT"],...
     "pure driver valid","drv_area_sep")
-%%
-alfatab_pop = readtable(fullfile(poptabdir,"Alfa_Exp_all_KentStat_bsl_pole.csv"));
-betotab_pop = readtable(fullfile(poptabdir,"Beto_Exp_all_KentStat_bsl_pole.csv"));
-poptab = [alfatab_pop;betotab_pop];
-%%
-validmsk = (poptab.unitnum>0) & ~((poptab.Animal=="Alfa") & (poptab.Expi==10));
-Alfamsk = (poptab.Animal=="Alfa");
-Betomsk = (poptab.Animal=="Beto");
-V1msk = (poptab.chan<=48 & poptab.chan>=33);
-V4msk = (poptab.chan>48);
-ITmsk = (poptab.chan<33);
-drivermsk = zeros(size(poptab,1),1); % Masks of real driver units instead of using the first. 
-for i = 1:numel(drivermsk)
-    driver_unit = EStats_all.(poptab.Animal{i})(poptab.Expi(i)).evol.unit_in_pref_chan;
-    drivermsk(i) = (poptab.unitnum(i) == driver_unit) & (poptab.chan(i) == poptab.prefchan(i));
-end
-prefchmsk = poptab.chan==poptab.prefchan;
-Fsigmsk = poptab.F_P<0.001;
-%%
-% msk = validmsk & drivermsk & poptab.R2 > 0.4;
-h = hist_plot(poptab, "R2", {validmsk & drivermsk}, ["driver"], ...
-            "All Exp (driver)", "bslfit_all", "count");
-        %%
-        
-h = hist_plot(poptab, "R2", {validmsk & drivermsk, validmsk & drivermsk & poptab.F_P>0.001}, ["driver","driver F>0.001"], ...
-            "All Exp (driver)", "bslfit_all_F_P", "count");
-h = hist_plot(poptab, "R2", {validmsk & drivermsk & poptab.F_P<0.001}, ["driver F<0.001"], ...
-    "All Exp (driver)", "bslfit_all_Fsig", "count");
-h = hist_plot(poptab, "R2", {validmsk & drivermsk, validmsk & drivermsk & poptab.F_P>0.001}, ["driver","driver F>0.001"], ...
-            "All Exp (driver)", "bslfit_all_F_P", "count");
-%%
-msk = validmsk & drivermsk & poptab.F_P<0.001;
-h = hist_plot(poptab, "R2", {msk&Alfamsk,msk&Betomsk}, ["Alfa","Beto"], ...
-    "All Exp (driver F<0.001)", "bslfit_anim_sep_Fsig", "count");
-%%
-%% Hist comparison of Kappa value
-msk = validmsk & drivermsk & poptab.R2 > 0.4;
-h = hist_plot(poptab, "kappa", {msk}, ["all driver"], ...
-            "All Exp (driver, R2>0.4)", "bslfit_all", "count");
-h = hist_plot(poptab, "kappa", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"], ...
-            "All Exp (driver, R2>0.4)", "bslfit_area_sep", "count");
-h = hist_plot(poptab, "kappa", {msk&Alfamsk, msk&Betomsk}, ["Alfa","Beto"], ...
-            "All Exp (driver, R2>0.4)", "bslfit_anim_sep", "count");
-%%
-msk = validmsk & drivermsk & poptab.R2 > 0.4;
-h = stripe_plot(poptab, "kappa", {msk}, ["all driver"], ...
-            "All Exp (driver, R2>0.4)", "bslfit_all");
-h = stripe_plot(poptab, "kappa", {msk&Alfamsk, msk&Betomsk}, ["Alfa","Beto"], ...
-            "All Exp (driver, R2>0.4)", "bslfit_anim_sep");
-h = stripe_plot(poptab, "kappa", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"], ...
-            "All Exp (driver, R2>0.4)", "bslfit_area_sep",{[3,1],[2,1],[3,2]});
-%%
-h = hist_plot(poptab, "R2", {nondrvmsk}, ["non driver"], ...
-            "All Exp (non pref chan, ANOVA P<1E-5)", "nonpref", "count");
-h = hist_plot(poptab, "R2", {nondrvmsk&Alfamsk, nondrvmsk&Betomsk}, ["Alfa","Beto"], ...
-            "All Exp (non pref chan, ANOVA P<1E-5)", "nonpref_anim_sep", "count");
-h = hist_plot(poptab, "R2", {nondrvmsk&V1msk, nondrvmsk&V4msk, nondrvmsk&ITmsk}, ["V1","V4","IT"], ...
-            "All Exp (non pref chan, ANOVA P<1E-5)", "nonpref_area_sep", "count",{[3,1],[2,1],[3,2]});
-%%
-msk = validmsk & drivermsk & poptab.R2 > 0.4 & poptab.space==1;
-xscatter_plot(poptab,"phi","theta",{msk},["All"],"All Exp (Driver, R2>0.4, PC23)", "bslfit_PC23all")
-xscatter_plot(poptab,"phi","theta",{msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],...
-    "All Exp (driver, R2>0.4, PC23)", "bslfit_PC23area_sep")
-xscatter_plot(poptab,"phi","theta",{msk&Alfamsk, msk&Betomsk}, ["Alfa","Beto"],...
-    "All Exp (driver, R2>0.4, PC23)", "bslfit_PC23anim_sep")
-%%
-msk = validmsk & drivermsk & poptab.F_P < 0.001;
-% goodfitmsk = poptab.R2 > 0.5;
-xscatter_plot(poptab,"kappa","beta",{msk},["All"],"All Exp (Driver P<0.001)", "bslfit_all_Fsig")
-xscatter_plot(poptab,"kappa","beta",{msk,msk&poptab.R2>0.5},["All","R>0.5"],"All Exp (Driver P<0.001)", "bslfit_all_F_Fsig")
-%%
-xscatter_plot(poptab,"kappa","beta",{msk&poptab.R2<0.5,msk&poptab.R2>0.5},["R<0.5","R>0.5"],"All Exp (Driver P<0.001)", "bslfit_all_Fsep")
-%%
-xscatter_plot(poptab,"kappa","beta",{msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],...
-    "All Exp (Driver P<0.001)", "bslfit_area_sep_Fsig")
-xscatter_plot(poptab,"kappa","beta",{msk&Alfamsk, msk&Betomsk}, ["Alfa","Beto"],...
-    "All Exp (Driver P<0.001)", "bslfit_anim_sep_Fsig")
-%% Test the ratio between the two statis 
-testRatio(poptab,"kappa","beta",{msk},["All"]);
-testRatio(poptab,"kappa","beta",{msk,msk&poptab.R2>0.5},["All","R>0.5"]);
-testRatio(poptab,"kappa","beta",{msk&poptab.R2<0.5,msk&poptab.R2>0.5},["R<0.5","R>0.5"]);
-%% Plot  Kappa
-msk = validmsk & drivermsk & poptab.R2 > 0.5;
-h = stripe_minor_plot(poptab, "kappa", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],...
-    {msk&Alfamsk, msk&Betomsk}, ["Alfa","Beto"], "All Exp (driver, R2>0.5)", "bslfit_area_anim", {[3,1],[2,1],[3,2]});
-%%
-h = stripe_plot(poptab, "kappa", {msk&V1msk&Alfamsk, msk&V4msk&Alfamsk, msk&ITmsk&Alfamsk}, ["V1","V4","IT"],...
-    "All Alfa Exp (driver, R2>0.5)", "bslfit_area_Alfa", {[3,1],[2,1],[3,2]});
-h = stripe_plot(poptab, "kappa", {msk&V1msk&Betomsk, msk&V4msk&Betomsk, msk&ITmsk&Betomsk}, ["V1","V4","IT"],...
-    "All Beto Exp (driver, R2>0.5)", "bslfit_area_Beto", {[3,1],[2,1],[3,2]});
-%% Fitting Validity across region. 
-msk = drivermsk;
-h = stripe_minor_plot(poptab, "R2", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],{Alfamsk,Betomsk},["Alfa","Beto"],...
-    "All Exp (driver)", "bslfit_anim_area", {[3,1],[2,1],[3,2]});
-%
-msk = drivermsk & Fsigmsk;
-h = stripe_minor_plot(poptab, "R2", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],{Alfamsk,Betomsk},["Alfa","Beto"],...
-    "All Exp (driver, ANOVA p<0.001)", "bslfit_anim_area_Fsig", {[3,1],[2,1],[3,2]});
-%% Fitting Validity in 2 monkeys separately.
-msk = drivermsk & Fsigmsk & Alfamsk;
-h = stripe_minor_plot(poptab, "R2", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],{msk},["Alfa"],...
-    "All Exp (Alfa, driver, ANOVA p<0.001)", "bslfit_Alfa_area_Fsig", {[3,1],[2,1],[3,2]});
-msk = drivermsk & Fsigmsk & Betomsk;
-h = stripe_minor_plot(poptab, "R2", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],{msk},["Beto"],...
-    "All Exp (Beto, driver, ANOVA p<0.001)", "bslfit_Beto_area_Fsig", {[3,1],[2,1],[3,2]});
-%%
-msk = drivermsk & Fsigmsk ;
-h = stripe_minor_plot(poptab, "R2", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],{msk},["Both"],...
-    "All Exp (Both, driver, ANOVA p<0.001)", "bslfit_Both_area_Fsig", {[3,1],[2,1],[3,2]});
-%%
-msk = drivermsk & Fsigmsk & (poptab.imgsize>1.1);
-h = stripe_minor_plot(poptab, "R2", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"], {msk},["Both"],...
-    "All Exp (driver, ANOVA p<0.001, imsize>1.0)", "bslfit_Both_nosmall_area_Fsig", {[3,1],[2,1],[3,2]});
-%%
-msk = drivermsk & Fsigmsk;
-h = xscatter_plot(poptab, "imgsize", "R2", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"], ...
-    "All Exp (driver, ANOVA p<0.001)", "bslfit_area_Fsig")
 
-%%
-msk = drivermsk & Fsigmsk;
-[ctmp,ptmp] = corr(poptab.imgsize(msk),poptab.kappa(msk))
-[ctmp,ptmp] = corr(poptab.imgsize(msk),poptab.R2(msk))
-%%
-msk = drivermsk & Fsigmsk & Alfamsk;
-[ctmp,ptmp] = corr(poptab.imgsize(msk),poptab.R2(msk))
-%%
-msk = validmsk & drivermsk & poptab.R2 > 0.5 & (poptab.imgsize>1.05) ;
-h = stripe_minor_plot(poptab, "kappa", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],...
-    {msk&Alfamsk, msk&Betomsk}, ["Alfa","Beto"], "All Exp (driver, R2>0.5, imgsize>1.0)", "bslfit_area_anim_nosmall", {[3,1],[2,1],[3,2]});
-%%
-msk = validmsk & drivermsk & poptab.R2 > 0.5 & (poptab.imgsize>1.05) ;
-h = stripe_minor_plot(poptab, "kappa", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],...
-    {msk&Alfamsk, msk&Betomsk}, ["Alfa","Beto"], "All Exp (driver, R2>0.5, imgsize>1.0)", "bslfit_area_anim_nosmall", {[3,1],[2,1],[3,2]});
-%%
-msk = validmsk & drivermsk & poptab.R2 > 0.5 & (poptab.imgsize>1.05) & Alfamsk;
-h = stripe_minor_plot(poptab, "kappa", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],...
-    {msk&Alfamsk}, ["Alfa"], "All Exp (driver, R2>0.5, imgsize>1.0)", "bslfit_area_Alfa_nosmall", {[3,1],[2,1],[3,2]});
-%%
-RTtab = readtable(fullfile(summarydir,"Both"+"_RadialTuningStatsTab_squ.csv"));
-%% Test for progression for non-driving channels.
-popmsk = poptab.F_P < 1E-5 & poptab.R2 > 0.5 & poptab.kappa > 0;
-h = stripe_minor_plot(poptab, "kappa", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"],...
-    {popmsk&Alfamsk,popmsk&Betomsk}, ["Alfa","Beto"], "All Exp (R2>0.5, ANOVA P<0.00001)", "bslfit_area_Both_allchan", {[3,1],[2,1],[3,2]});
-h = stripe_minor_plot(poptab, "kappa", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"],...
-    {popmsk&Alfamsk}, ["Alfa"], "All Exp (R2>0.5, ANOVA P<0.00001)", "bslfit_area_Alfa_allchan", {[3,1],[2,1],[3,2]});
-h = stripe_minor_plot(poptab, "kappa", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"],...
-    {popmsk&Betomsk}, ["Beto"], "All Exp (R2>0.5, ANOVA P<0.00001)", "bslfit_area_Beto_allchan", {[3,1],[2,1],[3,2]});
-%%
-popmsk = poptab.F_P < 1E-5 & poptab.R2 > 0.5 & poptab.kappa > 0 & ~drivermsk;
-h = stripe_minor_plot(poptab, "kappa", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"],...
-    {popmsk&Alfamsk,popmsk&Betomsk}, ["Alfa","Beto"], "All Exp (R2>0.5, ANOVA P<0.00001)", "bslfit_area_Both_nondriver", {[3,1],[2,1],[3,2]});
-popmsk = poptab.F_P < 1E-5 & poptab.R2 > 0.5 & poptab.kappa > 0 & ~drivermsk & Alfamsk;
-h = stripe_minor_plot(poptab, "kappa", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"],...
-    {popmsk&Alfamsk}, ["Alfa"], "All Exp (R2>0.5, ANOVA P<0.00001)", "bslfit_area_Alfa_nondriver", {[3,1],[2,1],[3,2]});
-popmsk = poptab.F_P < 1E-5 & poptab.R2 > 0.5 & poptab.kappa > 0 & ~drivermsk & Betomsk;
-h = stripe_minor_plot(poptab, "kappa", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"],...
-    {popmsk&Betomsk}, ["Beto"], "All Exp (R2>0.5, ANOVA P<0.00001)", "bslfit_area_Beto_nondriver", {[3,1],[2,1],[3,2]});
-%% Print string for test parameter progression: kappa, beta, R2. across 3 areas in Alfa, Beto, or Both.
-diary(fullfile(sumdir,"popul_area_prog.log"))
-popmsk = poptab.F_P < 1E-5 & poptab.R2 > 0.5 & poptab.kappa > 0 & ~drivermsk;
-testProgression(poptab, "kappa", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"], "area", ...
-    "Both Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
-testProgression(poptab, "R2", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"], "area", ...
-    "Both Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
-testProgression(poptab, "beta", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"], "area", ...
-    "Both Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
-popmsk = poptab.F_P < 1E-5 & poptab.R2 > 0.5 & poptab.kappa > 0 & ~drivermsk & Alfamsk;
-testProgression(poptab, "kappa", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"], "area", ...
-    "Alfa Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
-testProgression(poptab, "R2", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"], "area", ...
-    "Alfa Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
-testProgression(poptab, "beta", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"], "area", ...
-    "Alfa Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
-popmsk = poptab.F_P < 1E-5 & poptab.R2 > 0.5 & poptab.kappa > 0 & ~drivermsk & Betomsk;
-testProgression(poptab, "kappa", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"], "area", ...
-    "Beto Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
-testProgression(poptab, "R2", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"], "area", ...
-    "Beto Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
-testProgression(poptab, "beta", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"], "area", ...
-    "Beto Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
-diary off
-%% Paired kappa comparison for SU and MU
-msk1 = []; msk2 = [];
-for idx = find(poptab.unitnum==2)'
-    if poptab.F_P(idx)<1E-5 && poptab.F_P(idx-1)<1E-5 &&...
-       poptab.R2(idx)>0.5 && poptab.R2(idx - 1)>0.5 &&...
-       poptab.kappa(idx)>0 && poptab.kappa(idx - 1)>0 &&...
-       poptab.chan(idx) == poptab.chan(idx - 1) &&...
-       poptab.Expi(idx) == poptab.Expi(idx - 1) &&...
-       strcmp(poptab.Animal(idx), poptab.Animal(idx - 1))    
-    msk1 = [msk1, idx-1];
-    msk2 = [msk2, idx];
-    end
-end
-[~,P,CI,TST] = ttest(abs(poptab.kappa(msk1)),abs(poptab.kappa(msk2)))
-h = stripe_paired_plot(poptab, "kappa", {msk1, msk2}, ["SU","MU"], "All Chan, both ANOVA P<1E-5, R2>0.5, kappa>0", "SU-MU");
-%%
-msk1_dr = []; msk2_dr = [];
-for idx = find(poptab.unitnum==2)'
-    if poptab.F_P(idx)<1E-5 && poptab.F_P(idx-1)<1E-5 &&...
-       poptab.R2(idx)>0.5 && poptab.R2(idx - 1)>0.5 &&...
-       (drivermsk(idx-1) || drivermsk(idx)) && ...
-       poptab.chan(idx) == poptab.chan(idx - 1) &&...
-       poptab.Expi(idx) == poptab.Expi(idx - 1) &&...
-       strcmp(poptab.Animal(idx), poptab.Animal(idx - 1))    
-    msk1_dr = [msk1_dr, idx-1];
-    msk2_dr = [msk2_dr, idx];
-    end
-end
-[~,P,CI,TST] = ttest(abs(poptab.kappa(msk1_dr)),abs(poptab.kappa(msk2_dr)))
-%
-h = stripe_paired_plot(poptab, "kappa", {msk1_dr, msk2_dr}, ["SU","MU"], "Drivers, both, ANOVA P<1E-5, R2>0.5", "SU-MU_driver");
+
+% h = stripe_minor_plot(poptab, "kappa", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],...
+%     {msk&Alfamsk, msk&Betomsk}, ["Alfa","Beto"], "All Exp (driver, R2>0.5, imgsize>1.0)", "bslfit_drv-non_cmp", {[3,1],[2,1],[3,2]});
+
+% validmsk&drivermsk
 
 %% Plain testing function that will pretty print string for use in paper 
 function title_str=testRatio(StatsTab_sum, statname1, statname2, masks, labels)
 title_str = "";
 for i = 1:numel(masks)
-    title_str = title_str +compose("\n%s",labels(i));
+    title_str = title_str +compose("\n%s ",labels(i));
+    N_i = sum(masks{i});
 %     [~,P,CI,TST] = ttest(StatsTab_sum.(statname1)(masks{i}) ./ StatsTab_sum.(statname2)(masks{i}) - 2);
     [~,P,CI,TST] = ttest(log(StatsTab_sum.(statname1)(masks{i}) ./ StatsTab_sum.(statname2)(masks{i})) - log(2));
     title_str = title_str + compose("%s / %s Log: [%.2f,%.2f] (t=%.2f,%.1e)",statname1,statname2,2*exp(CI(1)),2*exp(CI(2)),TST.tstat,P);
     [~,P,CI,TST] = ttest(StatsTab_sum.(statname1)(masks{i}) - 2*StatsTab_sum.(statname2)(masks{i}));
-    title_str = title_str + compose("\t%s - 2* %s Lin: [%.2f,%.2f] (t=%.2f,%.1e)",statname1,statname2,CI(1),CI(2),TST.tstat,P);
+    title_str = title_str + compose("\t%s - 2* %s Lin: [%.2f,%.2f] (t=%.2f,%.1e,N=%d)",statname1,statname2,CI(1),CI(2),TST.tstat,P,N_i);
 end
 disp(title_str);
 end
@@ -510,8 +561,12 @@ global sumdir
 h = figure;clf;hold on; set(h,'pos',[1686         323         369         531])
 statscol = cellfun(@(M)StatsTab_sum.(statname)(M), masks,'uni',0);
 for i = 1:numel(masks)
+mean_i = mean(statscol{i});
+sem_i = sem(statscol{i});
+N_i = numel(statscol{i});
+legstr = compose("%s %.3f(%.3f) (%d)",labels(i),mean_i,sem_i,N_i);
 xjitter = 0.15*randn(numel(statscol{i}),1);
-scatter(i+xjitter, statscol{i})
+scatter(i+xjitter, statscol{i},'DisplayName',legstr);
 % medval = median(StatsTab_sum.(statname)(masks{i}));
 % vline(medval,"-.",labels(i)+" "+num2str(medval))
 end
@@ -527,7 +582,7 @@ end
 Ns = cellfun(@sum,masks);
 ylabel(statname)
 title(title_str)
-legend(compose("%s(%d)",labels',Ns')) % ["Driver", "Non-Drivers"]
+legend('Location','best') % ["Driver", "Non-Drivers"]
 saveas(h,fullfile(sumdir,compose("%s_%s_stripcmp.png", statname, savestr)))
 saveas(h,fullfile(sumdir,compose("%s_%s_stripcmp.pdf", statname, savestr)))
 savefig(h,fullfile(sumdir,compose("%s_%s_stripcmp.fig", statname, savestr)))

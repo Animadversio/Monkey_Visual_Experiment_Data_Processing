@@ -5,7 +5,7 @@ load(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
 load(fullfile(MatStats_path, compose("%s_Manif_stats.mat", Animal)), 'Stats')
 %% Evol to Manif
 Expi = 11; 
-ui=1;si=1;
+ui=1; si=1;
 imgN=121; %B=10;
 ExpType = "Manif";
 imgnm_grid = string(cellfun(@(idx) unique(Stats(Expi).imageName(idx)), Stats(Expi).manif.idx_grid{si}));

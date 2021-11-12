@@ -67,6 +67,24 @@ frames = cropTrimVideo(vid, fullfile(vidroot,"bird11.avi"), 2539, [1  120  600  
 frames = cropTrimVideo(vid, fullfile(vidroot,"bird12.avi"), 2250, [350  220  500  500],true);
 %%
 %%
+movpath = "C:\Users\Ponce lab\Documents\ml2a-monk\freeviewMovie\theyre babies godsends i - tiny vs the hierarchy.avi";
+newviddir = "C:\Users\Ponce lab\Documents\ml2a-monk\freeviewMovie";
+vid = VideoReader(movpath);
+%%
+frames = TrimVideo(vid, fullfile(newviddir,"monkeybaby_1.avi"), 30, 150, true);
+frames = TrimVideo(vid, fullfile(newviddir,"monkeybaby_2.avi"), 180, 300, true);
+frames = TrimVideo(vid, fullfile(newviddir,"monkeybaby_3.avi"), 330, 450, true);
+frames = TrimVideo(vid, fullfile(newviddir,"monkeybaby_4.avi"), 480, 600, true);
+frames = TrimVideo(vid, fullfile(newviddir,"monkeybaby_5.avi"), 630, 750, true);
+%%
+frames = TrimVideo(vid, fullfile(newviddir,"monkeybaby_6.avi"), 550, 565, true);
+frames = TrimVideo(vid, fullfile(newviddir,"monkeybaby_7.avi"), 680, 695, true);
+frames = TrimVideo(vid, fullfile(newviddir,"monkeybaby_8.avi"), 120, 135, true);
+%%
+frames = TrimVideo(vid, fullfile(newviddir,"monkeybaby_9.avi"), 150, 165, true);
+frames = TrimVideo(vid, fullfile(newviddir,"monkeybaby_10.avi"), 360, 375, true);
+frames = TrimVideo(vid, fullfile(newviddir,"monkeybaby_11.avi"), 500, 515, true);
+frames = TrimVideo(vid, fullfile(newviddir,"monkeybaby_12.avi"), 530, 545, true);
 %%
 function frames = cropTrimVideo(vid, newvidpath, startTime, cropWdw, doFrames)
 if nargin == 4, doFrames = true; end
@@ -79,6 +97,34 @@ end
 
 vidnew = VideoWriter(newvidpath);
 vidnew.FrameRate = 30;vidnew.open()
+for i = 1:numel(frames)
+    vidnew.writeVideo(frames{i});
+end
+close(vidnew);
+winopen(newvidpath)
+if doFrames
+pathparts = split(newvidpath,"\");
+nameparts = split(pathparts{end},".");
+mkdir(fullfile(pathparts{1:end-1},nameparts{1}))
+for i = 1:numel(frames)
+    impath = fullfile(pathparts{1:end-1},nameparts{1},compose("%s_%03d.jpg",nameparts{1},i));
+    imwrite(frames{i},impath)
+end
+end
+end
+
+function frames = TrimVideo(vid, newvidpath, startTime, endTime, doFrames)
+if nargin == 4, doFrames = true; end
+vid.CurrentTime = startTime;
+framesN = round((endTime - startTime) * vid.FrameRate);
+frames = {};
+for i = 1:framesN
+    img = vid.readFrame();
+    frames{end+1} = img;%imcrop(img, cropWdw);% (cropWdw(2)+1:cropWdw(2)+cropWdw(4),cropWdw(1)+1:cropWdw(1)+cropWdw(3),:)
+end
+
+vidnew = VideoWriter(newvidpath);
+vidnew.FrameRate = vid.FrameRate;vidnew.open()
 for i = 1:numel(frames)
     vidnew.writeVideo(frames{i});
 end

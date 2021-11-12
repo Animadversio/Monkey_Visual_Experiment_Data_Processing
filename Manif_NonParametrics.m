@@ -1,4 +1,5 @@
 %% Manif_NonParametric_Tests
+%  Majorly get the tuning center by some ways like center of mass!
 nonpardir = "O:\Manif_NonParam\summary";
 
 [phi_grid, theta_grid] = meshgrid(-90:18:90, -90:18:90); 

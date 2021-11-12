@@ -4,8 +4,8 @@ Animal="Alfa"; Set_Path;
 mat_dir = "O:\Mat_Statistics";
 tabdir = "O:\Manif_MapSmooth\popstats";
 % load(fullfile(Matdir, "Beto_ManifPopDynamics.mat"))
-load(fullfile(mat_dir,Animal+"_ManifMapVarStats.mat"),'MapVarStats')
 load(fullfile(mat_dir,Animal+"_Manif_stats.mat"),'Stats')
+load(fullfile(mat_dir,Animal+"_ManifMapVarStats.mat"),'MapVarStats')
 %%
 % StatsTab_sum = [];
 pool = parpool(5); % distribute the computation since it can take quite a while
@@ -49,7 +49,7 @@ end
 end
 writetable(StatsTab_sum,fullfile(tabdir,compose("%s_Exp_all_SmoothStat.csv",Animal)));
 
-%% Load and Summarize the stats
+%% Load and Summarize the stats (see the summary for more)
 StatsTab_sum = readtable(fullfile(tabdir,compose("%s_Exp_all_SmoothStat.csv",Animal)));
 %%
 drivermsk = (StatsTab_sum.chan==StatsTab_sum.prefchan);

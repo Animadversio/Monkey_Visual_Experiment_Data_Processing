@@ -1,41 +1,56 @@
 function BFEStats = Evol_BigGAN_FC6_Collect_Stats_fun(meta_new, rasters_new, Trials_new)
-    
+% Compress the information relevant to the preferred channel evolution into a small structure
+% Create a folder containing that structure.
 saveroot = "E:\OneDrive - Washington University in St. Louis\Evol_BigGAN_FC6_cmp"; 
-for Triali = 1:numel(meta_new)
-meta = meta_new{Triali};
+for iTr = 1:numel(meta_new)
+meta = meta_new{iTr};
 if contains(meta.ephysFN,["Alfa","ALfa"]), Animal = "Alfa";
 elseif contains(meta.ephysFN,["Beto"]), Animal = "Beto";end
-rasters = rasters_new{Triali};
+rasters = rasters_new{iTr};
 % lfps = lfps_new{Triali};
-Trials = Trials_new{Triali};
+Trials = Trials_new{iTr};
 fprintf("Processing experiment %s %s\n",meta.ephysFN, meta.expControlFN);
 %% Record Basic Infos
-Expi = Triali;% FIXME! Expi should be decoded from the ExpRecord.
-BFEStats(Expi).Animal = Animal;
-BFEStats(Expi).Expi = Expi; 
-BFEStats(Expi).imageName = Trials.imageName;
-BFEStats(Expi).meta = meta;
+Expi = iTr;% FIXME! Expi should be decoded from the ExpRecord.
+BFEStats(iTr).Animal = Animal;
+% BFEStats(Expi).Expi = Expi; 
+BFEStats(iTr).imageName = Trials.imageName;
+BFEStats(iTr).meta = meta;
 
 pref_chan = Trials.TrialRecord.User.prefChan;
 unit_in_pref_chan = cell2mat(Trials.TrialRecord.User.evoConfiguration(:,4))';
 imgpos = cell2mat(Trials.TrialRecord.User.evoConfiguration(:,2));
 imgsize = cell2mat(Trials.TrialRecord.User.evoConfiguration(:,3));
 thread_num = size(Trials.TrialRecord.User.evoConfiguration, 1);
+if isfield(meta,"unitID")
+unit_num_arr = meta.unitID;
+unit_name_arr = generate_unit_labels_new(meta.spikeID, meta.unitID);
+activ_msk = unit_num_arr~=0;
+else
 unit_name_arr = generate_unit_labels(meta.spikeID);
 [activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
+end
 % note if the evolved channel is marked as null 0 then this can fail! 
+try
 pref_chan_id = zeros(1, thread_num);
 for i = 1:thread_num % note here we use the unit_num_arr which exclude the null channels.
     pref_chan_id(i) = find(meta.spikeID==pref_chan(i) & ... % the id in the raster and lfps matrix 
                     unit_num_arr==unit_in_pref_chan(i)); % match for unit number
 end
-BFEStats(Expi).units.pref_chan = pref_chan;
-BFEStats(Expi).units.unit_name_arr = unit_name_arr;
-BFEStats(Expi).units.unit_num_arr = unit_num_arr;
-BFEStats(Expi).units.activ_msk = activ_msk;
-BFEStats(Expi).units.spikeID = meta.spikeID;
-BFEStats(Expi).units.pref_chan_id = pref_chan_id;
-BFEStats(Expi).units.unit_in_pref_chan = unit_in_pref_chan;
+assert(pref_chan_id(1)==pref_chan_id(2))
+catch err % err is an MException struct, save the err in a log file and continue. 
+    fprintf('Error message:\n%s\n',err.message);
+    fprintf('Error trace:\n%s\n',err.getReport);
+    disp(meta)
+    continue
+end
+BFEStats(iTr).units.pref_chan = pref_chan;
+BFEStats(iTr).units.unit_name_arr = unit_name_arr;
+BFEStats(iTr).units.unit_num_arr = unit_num_arr;
+BFEStats(iTr).units.activ_msk = activ_msk;
+BFEStats(iTr).units.spikeID = meta.spikeID;
+BFEStats(iTr).units.pref_chan_id = pref_chan_id;
+BFEStats(iTr).units.unit_in_pref_chan = unit_in_pref_chan;
 
 if size(Trials.TrialRecord.User.evoConfiguration,2) == 5
 Optim_names = [];
@@ -45,14 +60,25 @@ end
 elseif size(Trials.TrialRecord.User.evoConfiguration,2) == 4 % old fashioned config
     Optim_names = repmat("CMAES", 1,thread_num);
 end
-BFEStats(Expi).evol.space_names = Trials.TrialRecord.User.space; % space names and settings
-BFEStats(Expi).evol.space_cfg = Trials.TrialRecord.User.space_cfg; 
-BFEStats(Expi).evol.optim_names = Optim_names;
-BFEStats(Expi).evol.thread_num = thread_num;
-BFEStats(Expi).evol.imgpos = imgpos;
-BFEStats(Expi).evol.imgsize = imgsize;
-BFEStats(Expi).evol.unit_in_pref_chan = unit_in_pref_chan; 
-BFEStats(Expi).evol.pref_chan = cell2mat(Trials.TrialRecord.User.evoConfiguration(:,1));
+if isfield(Trials.TrialRecord.User, "space")
+    BFEStats(iTr).evol.space_names = Trials.TrialRecord.User.space; % space names and settings
+    BFEStats(iTr).evol.space_cfg = Trials.TrialRecord.User.space_cfg; 
+else % handle some early experiments which have a different structure. 
+    if strcmp(meta.ephysFN,'Alfa-06072020-002')
+    BFEStats(iTr).evol.space_names = {'fc6';'BigGAN'};% space names and settings
+    BFEStats(iTr).evol.space_cfg = {{'fc6',[]};{'BigGAN',[]}};
+    elseif strcmp(meta.ephysFN,'Alfa-06072020-003')
+    BFEStats(iTr).evol.space_names = {'fc6';'BigGAN_class'};% space names and settings
+    BFEStats(iTr).evol.space_cfg = {{'fc6',[]};{'BigGAN_class',[]}};
+    else,keyboard;
+    end
+end
+BFEStats(iTr).evol.optim_names = Optim_names;
+BFEStats(iTr).evol.thread_num = thread_num;
+BFEStats(iTr).evol.imgpos = imgpos;
+BFEStats(iTr).evol.imgsize = imgsize;
+BFEStats(iTr).evol.unit_in_pref_chan = unit_in_pref_chan; 
+BFEStats(iTr).evol.pref_chan = cell2mat(Trials.TrialRecord.User.evoConfiguration(:,1));
 % Sort the image names into threads, gens, nats and blocks
 % seperate the thread natural images and generated images 
 imgnm = Trials.imageName;
@@ -68,17 +94,17 @@ for threadi = 1:thread_num
     thread_msks{threadi} = msk; % store masks in a structure for the ease to iterate
 end
 assert(sum(cellfun(@sum, thread_msks)) == length(imgnm)) % images comes from all these threads
-BFEStats(Expi).stim.gen_msk = row_gen;
-BFEStats(Expi).stim.nat_msk = row_nat;
-BFEStats(Expi).stim.thread_msks = thread_msks;
+BFEStats(iTr).stim.gen_msk = row_gen;
+BFEStats(iTr).stim.nat_msk = row_nat;
+BFEStats(iTr).stim.thread_msks = thread_msks;
 %
 block_arr = cell2mat(Trials.block);
 block_list = min(block_arr):max(block_arr);
 block_num = length(block_list);
 color_seq = brewermap(block_num, 'spectral');
-BFEStats(Expi).color_seq = color_seq;
-BFEStats(Expi).evol.block_arr = block_arr;
-BFEStats(Expi).evol.block_n = block_num;
+BFEStats(iTr).color_seq = color_seq;
+BFEStats(iTr).evol.block_arr = block_arr;
+BFEStats(iTr).evol.block_n = block_num;
 gen_idx_seq = cell(thread_num, block_num); % generated image idx cell as a horizontal array. 
 nat_idx_seq = cell(thread_num, block_num);
 for threadi = 1:thread_num 
@@ -90,17 +116,17 @@ for threadi = 1:thread_num
     end
 end
 % Collect trial by trial PSTH for the preferred channesl, for ploting and visualization. 
-gen_psth_col = cellfun(@(idx) rasters(pref_chan_id, :, idx), gen_idx_seq, 'Uni', 0);
-nat_psth_col = cellfun(@(idx) rasters(pref_chan_id, :, idx), nat_idx_seq, 'Uni', 0);
+gen_psth_col = cellfun(@(idx) rasters(pref_chan_id(1), :, idx), gen_idx_seq, 'Uni', 0);
+nat_psth_col = cellfun(@(idx) rasters(pref_chan_id(1), :, idx), nat_idx_seq, 'Uni', 0);
 % Collect trial by trial response for the every channels, for ANOVA
 gen_rspmat_col = cellfun(@(idx) squeeze(mean(rasters(:, 51:200, idx),[2])), gen_idx_seq, 'Uni', 0);
 nat_rspmat_col = cellfun(@(idx) squeeze(mean(rasters(:, 51:200, idx),[2])), nat_idx_seq, 'Uni', 0);
-BFEStats(Expi).evol.idx_seq = gen_idx_seq;
-BFEStats(Expi).evol.psth = gen_psth_col;
-BFEStats(Expi).evol.rspmat = gen_rspmat_col;
-BFEStats(Expi).ref.idx_seq = nat_idx_seq;
-BFEStats(Expi).ref.psth = nat_psth_col;
-BFEStats(Expi).ref.rspmat = nat_rspmat_col;
+BFEStats(iTr).evol.idx_seq = gen_idx_seq;
+BFEStats(iTr).evol.psth = gen_psth_col;
+BFEStats(iTr).evol.rspmat = gen_rspmat_col;
+BFEStats(iTr).ref.idx_seq = nat_idx_seq;
+BFEStats(iTr).ref.psth = nat_psth_col;
+BFEStats(iTr).ref.rspmat = nat_rspmat_col;
 % %% BigGAN images loading
 % BGmsk = row_gen & thread_msks{2};
 % BGimgnms = imgnm(BGmsk);
@@ -114,8 +140,11 @@ expday = datetime(meta.expControlFN(1:6),'InputFormat','yyMMdd');
 % fdrnm = compose("%s-%s-Chan%02d-1",datestr(expday,'yyyy-mm-dd'), Animal, pref_chan(1));
 fdrnm = compose("%s-Chan%02d", stimparts{end-1}, pref_chan(1));
 figdir = fullfile(saveroot, fdrnm);
+BFEStats(iTr).meta.fdrnm = fdrnm; 
+BFEStats(iTr).meta.figdir = figdir;
+if exist(figdir),warning("%s figure directory exist! Beware",figdir);end
 mkdir(figdir)
-EvolStat = BFEStats(Expi);
+EvolStat = BFEStats(iTr);
 save(fullfile(figdir,"EvolStat.mat"),'EvolStat')
 fprintf("ExpStats saved to %s EvolStat.mat!\n",figdir)
 end

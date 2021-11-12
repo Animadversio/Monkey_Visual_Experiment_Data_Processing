@@ -93,6 +93,8 @@ classdef torchImDist
        end
    end
    function G = load_net(G)
+       % this function is added to make a uniform interface for AlexNet
+       % based distance metric. If not loaded D is more light weighted.
    G.net = alexnet;
    end
    function dists = distance(G, im1, im2)

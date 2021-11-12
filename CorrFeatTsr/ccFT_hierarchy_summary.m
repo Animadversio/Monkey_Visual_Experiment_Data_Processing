@@ -1,41 +1,77 @@
 %% cc_hierarchy_summary
-%  Produce the summary plot for correlation across hierarchy (WiP)
-hier_savedir = "E:\OneDrive - Washington University in St. Louis\corrFeatTsr_Hierarchy";
+%  Produce the Higher order summary plot for correlation across hierarchy (WiP)
 moviedir = "E:\OneDrive - Washington University in St. Louis\Evol_Manif_Movies"; 
+hier_savedir = "E:\OneDrive - Washington University in St. Louis\corrFeatTsr_Hierarchy";
+sumdir = "E:\OneDrive - Washington University in St. Louis\corrFeatTsr_Hierarchy\summary";
+%% Collect the stats data into struct
 Animal = "Alfa";
 ccHierStats = repmat(struct("Evol",[],"Manif",[]),1,46);
 tic
 for Expi = 1:46
 ExpType = "Manif";
 hierdata = load(fullfile(hier_savedir, compose("%s_%s_Exp%d_VGG16.mat",Animal,ExpType,Expi)),...
-    "layernames","wdw_vect","totl_vox_num","corr_vox_num","corr_vox_prct","med_pos_cc","med_neg_cc","mean_pos_t","mean_neg_t");
-hierdata.corr_vox_prct = hierdata.corr_vox_num./hierdata.totl_vox_num;
+    "layernames","wdw_vect","totl_vox_num","corr_vox_num","corr_vox_prct","med_pos_cc","med_neg_cc","mean_pos_t","mean_neg_t",...
+    "poscorr_vox_num", "poscorr_vox_prct", "negcorr_vox_num", "negcorr_vox_prct");
+% hierdata.corr_vox_prct = hierdata.corr_vox_num./hierdata.totl_vox_num;
 ccHierStats(Expi).Manif = hierdata;
 ExpType = "Evol";
 hierdata = load(fullfile(hier_savedir, compose("%s_%s_Exp%d_VGG16.mat",Animal,ExpType,Expi)),...
-    "layernames","wdw_vect","totl_vox_num","corr_vox_num","corr_vox_prct","med_pos_cc","med_neg_cc","mean_pos_t","mean_neg_t");
-hierdata.corr_vox_prct = hierdata.corr_vox_num./hierdata.totl_vox_num;
+    "layernames","wdw_vect","totl_vox_num","corr_vox_num","corr_vox_prct","med_pos_cc","med_neg_cc","mean_pos_t","mean_neg_t",...
+    "poscorr_vox_num", "poscorr_vox_prct", "negcorr_vox_num", "negcorr_vox_prct");
+% hierdata.corr_vox_prct = hierdata.corr_vox_num./hierdata.totl_vox_num;
 ccHierStats(Expi).Evol = hierdata;
 end
 toc
 %%
 save(fullfile(hier_savedir,Animal+"_ccHierStats.mat"),"ccHierStats")
-%%
-
 %% Load the hierarchy Stats
+Animal = "Alfa";
 MatStats_path = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 hier_savedir = "E:\OneDrive - Washington University in St. Louis\corrFeatTsr_Hierarchy";
-Animal = "Beto";
+sumdir = "E:\OneDrive - Washington University in St. Louis\corrFeatTsr_Hierarchy\summary";
+
 load(fullfile(hier_savedir,Animal+"_ccHierStats.mat"),"ccHierStats")
 load(fullfile(MatStats_path, compose("%s_Evol_stats.mat", Animal)), 'EStats')
 load(fullfile(MatStats_path, compose("%s_Manif_stats.mat", Animal)), 'Stats')
-% Create prefchan array and the time window vector
+% Create prefchan array and the time window vector and masks
 prefchan_arr = arrayfun(@(S)S.units.pref_chan,EStats);
 V1msk = prefchan_arr <=48 & prefchan_arr>=33;
 V4msk = prefchan_arr <=64 & prefchan_arr>=49;
-ITmsk = prefchan_arr <=32 & prefchan_arr>=1;
+ITmsk = prefchan_arr <=32 & prefchan_arr>= 1;
 wdw_vect = [1, 20] + 10 * [0:18]';
 wdw_vect = [wdw_vect; [1,50]+[0:50:150]'; [51,200]]; 
+%% Plot Correlated number of voxels across layers with the final time window.
+fi=24; 
+layernames = ccHierStats(1).Evol.layernames;
+EvolCorrVoxPrct = arrayfun(@(H)H.Evol.poscorr_vox_prct(fi,:),ccHierStats,'Uni',0);
+EvolCorrVoxPrct = cell2mat(EvolCorrVoxPrct');
+ManifCorrVoxPrct = arrayfun(@(H)H.Manif.poscorr_vox_prct(fi,:),ccHierStats,'Uni',0);
+ManifCorrVoxPrct = cell2mat(ManifCorrVoxPrct');
+xjit = randn(numel(ccHierStats),1)*0.2;
+figure;hold on
+for i=1:6
+    scatter(i+xjit, ManifCorrVoxPrct(:,i))
+end
+plot([1:6]'+xjit',ManifCorrVoxPrct','color',[0,0,0,0.1])
+xticks(1:6); xticklabels(layernames)
+% ManifCorrVoxPrct = arrayfun(@(H)H.Manif.corr_vox_prct(fi,:),ccHierStats,'Uni',0);
+% ManifCorrVoxPrct = cell2mat(ManifCorrVoxPrct');
+%% Compact functional version of plot
+ExpType = "Evol";varnm = "poscorr_vox_prct";
+StatPrct = arrayfun(@(H)H.(ExpType).(varnm)(:,:),ccHierStats,'Uni',0);
+StatPrct = cell2mat(reshape(StatPrct,1,1,[]));
+[h,T]=ccDynam_plot(StatPrct,{V1msk,V4msk,ITmsk},["V1","V4","IT"],layernames);
+title(T,compose("%s %s Pos Correlated Voxel Percent Across Layers",Animal,ExpType))
+%%
+ExpType = "Manif";varnm = "poscorr_vox_prct";
+StatPrct = arrayfun(@(H)H.(ExpType).(varnm)(:,:),ccHierStats,'Uni',0);
+StatPrct = cell2mat(reshape(StatPrct,1,1,[]));
+[h,T]=ccDynam_plot(StatPrct,{V1msk,V4msk,ITmsk},["V1","V4","IT"],layernames);
+title(T,compose("%s %s Pos Correlated Voxel Percent Across Layers",Animal,ExpType))
+%%
+[h,T]=ccDynam_plot(StatPrct,{V1msk,V4msk,ITmsk},["V1","V4","IT"],layernames,true);
+title(T,compose("%s %s Pos Correlated Voxel Percent Across Layers",Animal,ExpType))
+
 %%
 for fi = 1:24
 EvolCorrVoxPrct = arrayfun(@(H)H.Evol.corr_vox_prct(fi,:),ccHierStats,'UniformOutput',false);
@@ -180,3 +216,33 @@ winopen(fullfile(moviedir, compose("%s_Manif_Exp%02d_Avg_PSTH.mov.avi",Animal,Ex
 pause;
 end
 
+function [h,T]=ccDynam_plot(StatPrct,msks,labels,layernames,doerror)
+if nargin < 5, doerror = false; end
+
+nLayer = size(StatPrct,2);
+% layernames = ccHierStats(1).Evol.layernames;
+h=figure; T = tiledlayout(1,numel(msks),'Padd','none','TileSp','compact');
+for i = 1:numel(msks)
+nexttile(T,i);
+msk = msks{i};
+VarTrace_mean = mean(StatPrct(:,:,msk),3);
+VarTrace_sem = sem(StatPrct(:,:,msk),3);
+if ~ doerror
+plot([1:19,NaN,20:23,NaN,24],[VarTrace_mean(1:19,:);nan(1,nLayer);VarTrace_mean(20:23,:);nan(1,nLayer);VarTrace_mean(24,:)]...
+    , "-o","LineWidth",1.5)
+else
+hold on
+meantrmat = [VarTrace_mean(1:19,:);nan(1,nLayer);VarTrace_mean(20:23,:);nan(1,nLayer);VarTrace_mean(24,:)];
+semtrmat = [VarTrace_sem(1:19,:);nan(1,nLayer);VarTrace_sem(20:23,:);nan(1,nLayer);VarTrace_sem(24,:)];
+% errorbar(repmat([1:19,NaN,20:23,NaN,24]',1,nLayer),meantrmat,semtrmat...
+%     , "-o","LineWidth",1.5)
+Cord = colororder();
+for li = 1:nLayer
+shadedErrorBar([1:19,NaN,20:23,NaN,24],meantrmat(:,li),semtrmat(:,li), ...
+    'LineProp', {"-o","LineWidth",1.5,'Color',Cord(li,:)})
+end
+end
+legend(layernames,'Location','Best')
+title(labels(i))
+end
+end

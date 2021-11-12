@@ -61,6 +61,7 @@ elseif ExpType == "Evol"
 index_vect = cell2mat(EStats(Expi).evol.idx_seq');
 imgnm_vect = EStats(Expi).imageName(index_vect); % reshape(imgnm_grid, [], 1);
 stimpath = EStats(Expi).meta.stimuli;
+stimpath = strrep(stimpath,"N:\Stimuli\2019-Manifold", "E:\Network_Data_Sync\Stimuli\2019-Manifold");
 end
 if contains(stimpath,"\\storage1.ris.wustl.edu\crponce\Active\Stimuli")
    stimpath = strrep(stimpath,"\\storage1.ris.wustl.edu\crponce\Active\Stimuli","N:\Stimuli"); 

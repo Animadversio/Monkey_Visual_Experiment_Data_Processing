@@ -23,7 +23,7 @@ for l = 1:numel(empty_unit_tmp) % if there is only one channel then it is not un
 end
 activ_msk = ~ empty_msk;
 empty_labels = unit_name_arr(empty_msk);
-if ~ all(contains(empty_labels,"A")) 
+if ~ all(contains(empty_labels,['U',"A"])) 
     % Heurist rule: empty unit should be the first in its channel, and there is usually an active unit present there. 
     % May be better ways of handling this is process them by hand
     fprintf("Empty Channel original labels :")

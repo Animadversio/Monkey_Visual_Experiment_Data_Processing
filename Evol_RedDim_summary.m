@@ -1,8 +1,7 @@
-%% Create the summary plots for Compare evolution scores for Beto.
+%% Create the summary plots for Compare evolution scores for Alfa/Beto.
 %  See if the Evolution works
-Animal = "Alfa"; Set_Path
 %%
-Animal = "Alfa";
+Animal = "Alfa"; Set_Path;
 MatStats_path = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
 load(fullfile(MatStats_path, Animal+"_RDEvol_stats.mat"), 'RDStats')
 %% summary stats
@@ -15,7 +14,7 @@ prefchan_id = find((RDStats(Expi).units.spikeID == RDStats(Expi).evol.pref_chan(
 chid = find((RDStats(Expi).units.unit_num_arr == 1) & (RDStats(Expi).units.spikeID == RDStats(Expi).evol.pref_chan(1)));
 ui = find(prefchan_id==chid);
 Window = 50:200;
-% 
+% PSTH for evolution
 evol_stim_fr = cellfun(@(psth)mean(psth,3),RDStats(Expi).evol.psth,'Uni',false);
 evol_stim_fr = cell2mat(reshape(evol_stim_fr',1,1,[],thread_n));
 evol_stim_sem = cellfun(@(psth)std(psth,0,3)/sqrt(size(psth,3)),RDStats(Expi).evol.psth,'Uni',false);
@@ -25,8 +24,7 @@ score_avg = cellfun(@(psth)mean(psth(:,51:200,:),'all') - mean(psth(:,1:50,:),'a
 score_sem = cellfun(@(psth)std(squeeze(mean(psth(:,51:200,:),[1,2])))...
     /sqrt(size(psth,3)),RDStats(Expi).evol.psth); 
 % Generation number of 50% progress
-perct = .5;
-gen50 = sum(score_avg < ( perct * max(score_avg,[],2) + (1-perct) * score_avg(:,1)),2);
+perct = .5; gen50 = sum(score_avg < ( perct * max(score_avg,[],2) + (1-perct) * score_avg(:,1)),2);
 end
 %% Get the prefer channel and unit numbering array
 prefchan_arr = arrayfun(@(R)R.evol.pref_chan(1),RDStats);
@@ -37,7 +35,8 @@ prefchan_id = find((RDStats(Expi).units.spikeID == RDStats(Expi).evol.pref_chan(
 chid = find((RDStats(Expi).units.unit_num_arr == 1) & (RDStats(Expi).units.spikeID == RDStats(Expi).evol.pref_chan(1)));
 unitnum_arr(Expi) = find(prefchan_id==chid);
 end
-%% Collect the Paired Exp Statistics into a structure / table to plot
+
+%% MAIN LOOP: Collect the Paired Exp Statistics into a structure / table to plot
 savedir = "E:\OneDrive - Washington University in St. Louis\Evol_ReducDim\summary";
 RDThreadStats = repmat(struct(),1); % compress the RDStats even more, Statistics for indiv thread
 RDEvolCmpStats = repmat(struct(),1); % compare 2 threads if they are both evolving the same unit using Full with different optimizer.
@@ -50,8 +49,8 @@ blockn = RDStats(Expi).evol.block_n;
 threadn = RDStats(Expi).evol.thread_num;
 
 unit_psth = cellfun(@(psth)psth(ui,:,:), RDStats(Expi).evol.psth, 'Uni', false);
-window = [51:200];
-score_avg = cellfun(@(psth)mean(psth(:,window,:),'all') - mean(psth(:,1:50,:),'all'), unit_psth);
+window = [51:200];bslwdw = [1:50];
+score_avg = cellfun(@(psth)mean(psth(:,window,:),'all') - mean(psth(:,bslwdw,:),'all'), unit_psth);
 % Generation number of 50%, 65%, 80% progress
 perct = .50; RDThreadStats(Expi).gen50 = sum(score_avg < ( perct * max(score_avg,[],2) + (1-perct) * score_avg(:,1)),2)';
 perct = .65; RDThreadStats(Expi).gen65 = sum(score_avg < ( perct * max(score_avg,[],2) + (1-perct) * score_avg(:,1)),2)';
@@ -144,24 +143,7 @@ end
 RDEvolCmpTable = struct2table(RDEvolCmpStats);
 %%
 writetable(RDEvolCmpTable, fullfile(savedir,compose("%s_RDEvolcompare.csv",Animal)))
-%% (Beto obsolete version)
-% initacts_sem = arrayfun(@(R)cellfun(@sem,R.initacts), RDThreadStats, 'Uni', false); %initacts_sem{6}(1,2)=nan;
-% initacts_sem = cell2mat(initacts_sem');
-% peakacts_sem = arrayfun(@(R)cellfun(@sem,R.peakacts), RDThreadStats, 'Uni', false); %peakacts_sem{6}(1,2)=nan;
-% peakacts_sem = cell2mat(peakacts_sem');
-% textacts_sem = arrayfun(@(R)cellfun(@sem,R.textacts), RDThreadStats, 'Uni', false); %textacts_sem{6}(1,2)=nan;
-% textacts_sem = cell2mat(textacts_sem');
-% initacts_m = arrayfun(@(R)cellfun(@mean,R.initacts), RDThreadStats, 'Uni', false); %initacts_m{6}(1,2)=nan;
-% initacts_m = cell2mat(initacts_m');
-% peakacts_m = arrayfun(@(R)cellfun(@mean,R.peakacts), RDThreadStats, 'Uni', false); %peakacts_m{6}(1,2)=nan;
-% peakacts_m = cell2mat(peakacts_m');
-% textacts_m = arrayfun(@(R)cellfun(@mean,R.textacts), RDThreadStats, 'Uni', false); %textacts_m{6}(1,2)=nan;
-% textacts_m = cell2mat(textacts_m');
-%% Beto obsolete version
-% V1msk = prefchan_arr <=48 & prefchan_arr>=33 & (1:36 ~= 4);
-% V4msk = prefchan_arr <=64 & prefchan_arr>=49 & (1:36 ~= 4);
-% ITmsk = prefchan_arr <=32 & prefchan_arr>=1 & (1:36 ~= 4);
-% msk.V1 = V1msk;msk.V4 = V4msk; msk.IT = ITmsk; msk.all = ones(1,length(RDStats),'logical');
+
 %% Statistics for activations each group, recorded in RDEvolCmpStats 
 initacts_m = RDEvolCmpTable.init_mean;
 initacts_sem = RDEvolCmpTable.init_sem;
@@ -349,3 +331,21 @@ legend(["V1","V4","IT"])
 title("peak activation for reduced dimension evolution")
 xlabel("Full space evolution");ylabel("Reduced space evolution")
 %%
+%% (Beto obsolete version)
+% initacts_sem = arrayfun(@(R)cellfun(@sem,R.initacts), RDThreadStats, 'Uni', false); %initacts_sem{6}(1,2)=nan;
+% initacts_sem = cell2mat(initacts_sem');
+% peakacts_sem = arrayfun(@(R)cellfun(@sem,R.peakacts), RDThreadStats, 'Uni', false); %peakacts_sem{6}(1,2)=nan;
+% peakacts_sem = cell2mat(peakacts_sem');
+% textacts_sem = arrayfun(@(R)cellfun(@sem,R.textacts), RDThreadStats, 'Uni', false); %textacts_sem{6}(1,2)=nan;
+% textacts_sem = cell2mat(textacts_sem');
+% initacts_m = arrayfun(@(R)cellfun(@mean,R.initacts), RDThreadStats, 'Uni', false); %initacts_m{6}(1,2)=nan;
+% initacts_m = cell2mat(initacts_m');
+% peakacts_m = arrayfun(@(R)cellfun(@mean,R.peakacts), RDThreadStats, 'Uni', false); %peakacts_m{6}(1,2)=nan;
+% peakacts_m = cell2mat(peakacts_m');
+% textacts_m = arrayfun(@(R)cellfun(@mean,R.textacts), RDThreadStats, 'Uni', false); %textacts_m{6}(1,2)=nan;
+% textacts_m = cell2mat(textacts_m');
+%% Beto obsolete version
+% V1msk = prefchan_arr <=48 & prefchan_arr>=33 & (1:36 ~= 4);
+% V4msk = prefchan_arr <=64 & prefchan_arr>=49 & (1:36 ~= 4);
+% ITmsk = prefchan_arr <=32 & prefchan_arr>=1 & (1:36 ~= 4);
+% msk.V1 = V1msk;msk.V4 = V4msk; msk.IT = ITmsk; msk.all = ones(1,length(RDStats),'logical');

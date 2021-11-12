@@ -94,10 +94,11 @@ StatTab = struct2table(StatTab);
 %%
 writetable(StatTab, fullfile(mat_dir, Animal+"_EvolTrajStats.csv"))
 end
-%%
+%% Reload and merge the stats for evolution trajectories. 
 tabA = readtable(fullfile(mat_dir, "Alfa"+"_EvolTrajStats.csv"));
 tabB = readtable(fullfile(mat_dir, "Beto"+"_EvolTrajStats.csv"));
 StatTab = cat(1, tabA, tabB);
+writetable(StatTab, fullfile(mat_dir, "Both"+"_EvolTrajStats.csv"));
 %%
 msk = (StatTab.t_p_initmax<1E-2);
 V1msk = StatTab.pref_chan <=48 & StatTab.pref_chan >= 33;
@@ -132,7 +133,116 @@ msk = (StatTab.t_p_initmax<1E-2);
 area_prog_cmp(StatTab, "step63", {V1msk&msk, V4msk&msk, ITmsk&msk}, ["V1", "V4", "IT"], {[3,1],[2,1],[3,2]})
 area_prog_cmp(StatTab, "step85", {V1msk&msk, V4msk&msk, ITmsk&msk}, ["V1", "V4", "IT"], {[3,1],[2,1],[3,2]})
 area_prog_cmp(StatTab, "step50", {V1msk&msk, V4msk&msk, ITmsk&msk}, ["V1", "V4", "IT"], {[3,1],[2,1],[3,2]})
-
+%% Plot example trajectories 
+Animal = "Alfa";
+A = load(fullfile(mat_dir,Animal+"_EvolTrajStats.mat"),'EvolTrajStat')
+Animal = "Beto";
+B = load(fullfile(mat_dir,Animal+"_EvolTrajStats.mat"),'EvolTrajStat')
+%% Creat masks
+sucsmsk = (StatTab.t_p_initmax<1E-2);
+V1msk = StatTab.pref_chan <=48 & StatTab.pref_chan >= 33;
+V4msk = StatTab.pref_chan <=64 & StatTab.pref_chan >= 49;
+ITmsk = StatTab.pref_chan <=32 & StatTab.pref_chan >= 1;
+Alfamsk = StatTab.Animal == "Alfa";
+Betomsk = StatTab.Animal == "Beto";
+%%
+figdir = "O:\EvolTraj_Cmp\summary";
+EvolTrajStat = [A.EvolTrajStat,B.EvolTrajStat];
+traj_col = arrayfun(@(E)E.act_traj_mean, EvolTrajStat,'uni',0);
+summarize_trajs_tile(traj_col,"max",1,{V1msk,V4msk,ITmsk},["V1","V4","IT"],...
+    {Alfamsk,Betomsk},["Alfa","Beto"],figdir,"Both_MaxNorm_scoreTraj_avg_Area_Anim");
+summarize_trajs_tile(traj_col,"max",3,{V1msk,V4msk,ITmsk},["V1","V4","IT"],...
+    {Alfamsk,Betomsk},["Alfa","Beto"],figdir,"Both_MaxNorm_scoreTraj_avg_Area_Anim_movmean");
+%%
+summarize_trajs_tile(traj_col,"max",3,{V1msk,V4msk,ITmsk},["V1","V4","IT"],...
+    {},["Both"],figdir,"Both_MaxNorm_scoreTraj_avg_Area_movmean");
+%%
+summarize_trajs_tile(traj_col,"max",1,{V1msk&sucsmsk,V4msk&sucsmsk,ITmsk&sucsmsk},["V1","V4","IT"],...
+    {Alfamsk,Betomsk},["Alfa","Beto"],figdir,"Both_MaxNorm_scoreTraj_avg_Area_Anim_sucs");
+summarize_trajs_tile(traj_col,"max",3,{V1msk&sucsmsk,V4msk&sucsmsk,ITmsk&sucsmsk},["V1","V4","IT"],...
+    {Alfamsk,Betomsk},["Alfa","Beto"],figdir,"Both_MaxNorm_scoreTraj_avg_Area_Anim_sucs_movmean");
+%% Merge trajs in the same tile for an monk 
+summarize_trajs_merge(traj_col,"max",3,{V1msk&sucsmsk,V4msk&sucsmsk,ITmsk&sucsmsk},["V1","V4","IT"],...
+    {Alfamsk,Betomsk},["Alfa","Beto"],figdir,"Both_MaxNorm_scoreTraj_avg_Area_Anim_sucs_movmean_merge");
+summarize_trajs_merge(traj_col,"max",3,{V1msk&sucsmsk,V4msk&sucsmsk,ITmsk&sucsmsk},["V1","V4","IT"],...
+    {},["Both"],figdir,"Both_MaxNorm_scoreTraj_avg_Area_sucs_movmean_merge");
+%%
+figure(14);AlignAxisLimits(get(14,'Child'))
+%%
+summarize_trajs_merge(traj_col,"movmean_rng",3,{V1msk&sucsmsk,V4msk&sucsmsk,ITmsk&sucsmsk},["V1","V4","IT"],...
+    {Alfamsk,Betomsk},["Alfa","Beto"],figdir,"Both_SmthRngNorm_scoreTraj_avg_Area_Anim_sucs_movmean_merge");
+summarize_trajs_merge(traj_col,"movmean_rng",3,{V1msk&sucsmsk,V4msk&sucsmsk,ITmsk&sucsmsk},["V1","V4","IT"],...
+    {},["Both"],figdir,"Both_SmthRngNorm_scoreTraj_avg_Area_sucs_movmean_merge");
+%%
+summarize_trajs_merge(traj_col,"rng",3,{V1msk&sucsmsk,V4msk&sucsmsk,ITmsk&sucsmsk},["V1","V4","IT"],...
+    {Alfamsk,Betomsk},["Alfa","Beto"],figdir,"Both_RngNorm_scoreTraj_avg_Area_Anim_sucs_movmean_merge");
+summarize_trajs_merge(traj_col,"rng",3,{V1msk&sucsmsk,V4msk&sucsmsk,ITmsk&sucsmsk},["V1","V4","IT"],...
+    {},["Both"],figdir,"Both_RngNorm_scoreTraj_avg_Area_sucs_movmean_merge");
+function [h,score_m,score_s,blockvec] = summarize_trajs_tile(traj_col,norm_mode,movmean_N,major_msk,major_lab,minor_msk,minor_lab,figdir,fignm)
+% msk_col = {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk};
+% anim_msks = {Alfamsk&validmsk, Betomsk&validmsk};
+% label_col = ["V1", "V4", "IT"];
+% anim_col = ["Alfa","Beto"];
+% msk on the experimental session level. 
+if nargin<2, norm_mode="max";end
+if nargin<3, movmean_N=3;end
+if nargin<4, major_msk={ones(size(traj_col,1),1,'logical')}; major_lab=["all"]; end
+if nargin<6 || isempty(minor_msk), 
+    minor_msk={ones(size(traj_col,1),1,'logical')}; 
+end
+if nargin<7 || isempty(minor_lab), minor_lab = ["all"]; end 
+if nargin<8, figdir=""; end
+if nargin<9, fignm=compose("%sNorm_scoreTraj_avg_Area_Anim_movmean",norm_mode); end
+Corder = colororder();
+% Normalize the trajs 
+if strcmp(norm_mode,"max") % normalize each traj to the max in that exp. 
+normed_traj_col = cellfun(@(traj) traj/max(traj),traj_col,'uni',0);
+elseif strcmp(norm_mode,"rng") % normalize each traj, min to 0, max to 1
+normed_traj_col = cellfun(@(traj) (traj-min(traj))/(max(traj)-min(traj)),traj_col,'uni',0);
+elseif strcmp(norm_mode,"movmean_rng") % normalize each traj to min max of smooth traj
+normed_traj_col = [];
+for i = 1:numel(traj_col)
+smooth_traj = movmean(traj_col{i},3);
+MIN = min(smooth_traj); 
+MAX = max(smooth_traj);
+normed_traj_col{i} = (traj_col{i}-MIN)/(MAX-MIN);
+end
+normed_traj_col = reshape(normed_traj_col, size(traj_col));
+else
+normed_traj_col = cellfun(@(traj) traj/max(traj),traj_col,'uni',0);
+end
+% block cell array
+block_col = cellfun(@(traj)1:numel(traj),traj_col,'uni',0);
+% [score_m,score_s,blockvec] = sort_scoreblock(block_col, normed_traj_col)
+nrow = numel(minor_msk); ncol = numel(major_msk);
+h=figure; %fignm=compose("%s_MaxNorm_scoreTraj_avg_Area_Anim_movmean", Animal);
+set(h,'pos',[125,   258,   310*ncol, 100+310*nrow])
+T = tiledlayout(nrow,ncol,"pad",'compact',"tilespac",'compact');
+for animi=1:nrow
+for mski=1:ncol
+nexttile(T,mski+ncol*(animi-1))
+msk = major_msk{mski} & minor_msk{animi};
+[score_C_col_m,score_C_col_s,block_colvec] = sort_scoreblock(block_col(msk),normed_traj_col(msk));
+score_C_col_mov_m = movmean(score_C_col_m,movmean_N);
+score_C_col_mov_s = movmean(score_C_col_s,movmean_N);
+shadedErrorBar(block_colvec,score_C_col_mov_m,score_C_col_mov_s,'lineProps',{'Color',Corder(1,:)})
+xlabel("Generation")
+ylabel("Activation / Max each session")
+title(compose("Averaged Optimization Trajectory\n%s %s (n=%d)",minor_lab(animi),major_lab(mski),sum(msk)))
+% legend(["Full","50D"])
+end
+end
+title(T, compose("Summary of mean evol trajectory (%d block movmean) for each area",movmean_N), 'FontSize',16)
+saveallform(figdir,fignm);
+for animi=1:nrow
+for mski=1:ncol
+    nexttile(T,mski+ncol*(animi-1))
+    msk = major_msk{mski} & minor_msk{animi};
+    xlim([1,prctile(cellfun(@numel,block_col(msk)),80)]);
+end
+end
+saveallform(figdir,fignm+"_Xlim");
+end
 
 function area_prog_cmp(StatTab, varnm, msks, labels, pairs)
 fprintf("Comparison of %s among areas\n",varnm)
