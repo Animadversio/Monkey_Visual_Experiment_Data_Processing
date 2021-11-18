@@ -1,4 +1,5 @@
 %% Manif_Map_Stat_Pop_Synopsis
+%  Very important! 
 %  Final script to generate the statistics for the figures in paper. 
 %  Useful to replicate stats, check criterion and so. 
 global figdir
@@ -6,6 +7,7 @@ Animal="Both"; Set_Path;
 %% Population Kent fitting data 
 poptabdir = "O:\Manif_Fitting\popstats";
 figdir = "O:\Manif_Fitting\summary";
+fitdir = "O:\Manif_Fitting\summary";
 alfafittab = readtable(fullfile(poptabdir,"Alfa_Exp_all_KentStat_bsl_pole.csv"),'Format','auto');
 betofittab = readtable(fullfile(poptabdir,"Beto_Exp_all_KentStat_bsl_pole.csv"),'Format','auto');
 FitTab = [alfafittab;betofittab];
@@ -30,6 +32,10 @@ for i = 1:numel(drivermsk)
     driver_unit = EStats_all.(FitTab.Animal{i})(FitTab.Expi(i)).evol.unit_in_pref_chan;
     drivermsk(i) = (FitTab.unitnum(i) == driver_unit) & (FitTab.chan(i) == FitTab.prefchan(i));
 end
+%%
+msk = drivermsk & FitTab.R2>0.5; %& PC12msk;
+testProgression(FitTab, "kappa", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"], "area", ...
+       "Both Monk All Exp (R2>0.5, driver)");
 %% 
 violin_plot_masks(FitTab, "R2", {V1msk&Fmsk&valmsk,V4msk&Fmsk&valmsk,ITmsk&Fmsk&valmsk}, ["V1","V4","IT"],...
      {drivermsk&Fmsk, ~drivermsk&Fmsk}, ["Driver","Non-Driver"],'showData',true)
@@ -44,10 +50,24 @@ xscatter_minor_plot(FitTab, "kappa", "beta", {V1msk&Fmsk,V4msk&Fmsk,ITmsk&Fmsk},
      {drivermsk&Fmsk, ~drivermsk&Fmsk}, ["Driver","Non-Driver"], "Kent Fitting Shape Param Distr", false, figdir, "MarkerEdgeAlpha", 0.2)
 xlim([0,25]);ylim([0,20]);axis equal
 saveallform(figdir, "kappa-beta_area_drv_sep_cmp")
-%%
-
+%% Tuning width comparison across space. 
 h = stripe_plot(FitTab, "kappa", {PC12msk&drivermsk,PC49msk&drivermsk,PCRNmsk&drivermsk}, ["PC12","PC4950","RND12"],...
      "Param Width comparison", "PCspace_sep", {[1,2],[2,3],[1,3]},'MarkerEdgeAlpha',0.65);
+%% 
+msk = (PC12msk&valmsk&Fmsk&FitTab.R2>0.5&FitTab.kappa>0);
+violin_plot_masks(FitTab, "kappa", {V1msk&msk,V4msk&msk,ITmsk&msk}, ["V1","V4","IT"],...
+     {drivermsk,~drivermsk}, ["Driver","Non-Driver"],'showData',true)
+title(["Parametric Tuning Width Across Area","(ANOVA P<0.001,R2>0.5,kappa>0,PC12,valid)"]);ylim([0, 8]);
+saveallform(fitdir,"kappa_bsl_cmp_area_drv_sep_violin")
+%%
+msk = (PC12msk&valmsk&Fmsk&FitTab.R2>0.5&FitTab.kappa>0);
+ttest2_print(FitTab.kappa(V1msk&msk&~drivermsk),FitTab.kappa(V4msk&msk&~drivermsk),"V1","V4");
+ttest2_print(FitTab.kappa(V1msk&msk&~drivermsk),FitTab.kappa(ITmsk&msk&~drivermsk),"V1","IT");
+ttest2_print(FitTab.kappa(V4msk&msk&~drivermsk),FitTab.kappa(ITmsk&msk&~drivermsk),"V4","IT");
+testProgression(FitTab, "kappa", {V1msk&msk&~drivermsk, V4msk&msk&~drivermsk, ITmsk&msk&~drivermsk}, ["V1","V4","IT"], "area", ...
+       "Both Monk All Exp non driver ANOVA p<0.001");
+testProgression(FitTab, "kappa", {V1msk&msk&drivermsk, V4msk&msk&drivermsk, ITmsk&msk&drivermsk}, ["V1","V4","IT"], "area", ...
+       "Both Monk All Exp driver ANOVA p<0.001");
 %% 
 varnm = "beta";
 PC12pairmsk = PC12msk&drivermsk& (FitTab.Expi<=10 & FitTab.Animal=="Beto");
@@ -77,10 +97,25 @@ for i = 1:numel(drivermsk)
     driver_unit = EStats_all.(NonParTab.Animal{i})(NonParTab.Expi(i)).evol.unit_in_pref_chan;
     drivermsk(i) = (NonParTab.unitnum(i) == driver_unit) & (NonParTab.chan(i) == NonParTab.prefchan(i));
 end
+%% NonParametric tuning width comparison for well modulated neuronal sites across all exps
+msk = valmsk & Fmsk & ~drivermsk; %& PC12msk;
+testProgression(NonParTab, "normAUS_bsl", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"], "area", ...
+       "Both Monk All Exp (ANOVA P<0.001,non driver)");
+%% NonParametric tuning width comparison for driver and non-driver.
+ttest2_tabprint(NonParTab,"normAUS_bsl",{valmsk & Fmsk & ~drivermsk, valmsk & Fmsk & drivermsk},["non-driver","driver"]);
 %% Stripe Comparison plot Non-param tuning width
 % here, the output if to figdir
 h = stripe_plot(NonParTab, "normAUS_bsl", {V1msk&Fmsk,V4msk&Fmsk,ITmsk&Fmsk}, ["V1","V4","IT"],...
      "NonParam Width comparison", "area_sep", {[1,2],[2,3],[1,3]},'MarkerEdgeAlpha',0.65);
+%% Stripe Comparison plot Non-param tuning width
+% here, the output if to figdir
+msk = Fmsk&~drivermsk&valmsk&PC12msk;
+h = stripe_plot(NonParTab, "normAUS_bsl", {V1msk&msk,V4msk&msk,ITmsk&msk}, ["V1","V4","IT"],...
+     "NonParam Width comparison (Non-Driver)", "area_sep_nondrv", {[1,2],[2,3],[1,3]},'MarkerEdgeAlpha',0.65);
+ %%
+msk = Fmsk&drivermsk&valmsk&PC12msk;
+h = stripe_plot(NonParTab, "normAUS_bsl", {V1msk&msk,V4msk&msk,ITmsk&msk}, ["V1","V4","IT"],...
+     "NonParam Width comparison (Non-Driver)", "area_sep_drv", {[1,2],[2,3],[1,3]},'MarkerEdgeAlpha',0.65);
 %%
 % figure;
 % violinplot(NonParTab.normAUS_bsl(Fmsk),NonParTab.area(Fmsk),'showData',true,'GroupOrder',{'V1','V4','IT'})
