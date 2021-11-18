@@ -1,9 +1,18 @@
 function [meta,rasters,lfps,Trials] = loadExperiments(rowlist, animal, no_return, no_lfp, no_conv)
 % Data loading Interface to the ExpRecord Table.
+% Signature
+%  [meta_new,rasters_new,lfps_new,Trials_new] = loadExperiments(rowlist, Animal, no_return, no_lfp, no_conv)
+% Usage
+%  loadExperiments(rowlist, Animal, true)
+%  [meta_new,rasters_new,~,Trials_new] = loadExperiments(rowlist, Animal, false)
+%  [meta_new,rasters_new,lfps_new,Trials_new] = loadExperiments(rowlist, Animal, false, false)
+% 
+% If you want to load non-convolved spike train, use this signature. 
+%  [meta_new,rasters_new,~,Trials_new] = loadExperiments(rowlist, Animal, false, true, true)
 if nargin == 1
 animal = "Beto";
 no_return = false;
-no_lfp = false;
+no_lfp = true;
 no_conv = false;
 elseif nargin == 2
 no_return = false;
@@ -55,7 +64,7 @@ for iExp = 1:length(preMeta)
         fprintf('Error message:\n%s\n',err.message);
         fprintf('Error trace:\n%s\n',err.getReport);
         disp(tMeta)
-        %keyboard
+        keyboard
         fileID = fopen('S:\Exp_error_log.log','w+');
         fprintf(fileID,'Error message:\n%s\n',err.message);
         fprintf(fileID,'Error trace:\n%s\n',err.getReport);
