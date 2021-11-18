@@ -40,6 +40,14 @@ testProgression(FitTab, "kappa", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","
 violin_plot_masks(FitTab, "R2", {V1msk&Fmsk&valmsk,V4msk&Fmsk&valmsk,ITmsk&Fmsk&valmsk}, ["V1","V4","IT"],...
      {drivermsk&Fmsk, ~drivermsk&Fmsk}, ["Driver","Non-Driver"],'showData',true)
 ylim([0, 1]);title("Fitting R2 Across Area (ANOVA P<0.001)")
+%% 
+fprintf("Compare Fitting R2 for Well Modulated Maps in 3 areas for driver vs non-driver\n")
+summarize_masks_print(FitTab, "R2", {V1msk&Fmsk&valmsk,V4msk&Fmsk&valmsk,ITmsk&Fmsk&valmsk}, ["V1","V4","IT"],...
+     {drivermsk&Fmsk, ~drivermsk&Fmsk}, ["Driver","Non-Driver"])
+%% 
+fprintf("Compare Fitting R2 for Well Modulated PC12 Maps in 3 areas for driver vs non-driver\n")
+summarize_masks_print(FitTab, "R2", {V1msk&Fmsk&valmsk&PC12msk,V4msk&Fmsk&valmsk&PC12msk,ITmsk&Fmsk&valmsk&PC12msk}, ["V1","V4","IT"],...
+     {drivermsk&Fmsk, ~drivermsk&Fmsk}, ["Driver","Non-Driver"])
 %%
 violin_plot_masks(FitTab, "R2", {Fmsk&valmsk}, ["Fsig"],...
      {drivermsk,~drivermsk}, ["Driver","Non-Driver"],'showData',true)
