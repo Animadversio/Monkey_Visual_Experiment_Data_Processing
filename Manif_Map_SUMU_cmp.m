@@ -4,13 +4,14 @@ nonpardir = "O:\Manif_NonParam\summary";
 popfitdir = "O:\Manif_Fitting\popstats";
 Animal = "Both";Set_Path;
 % NPStatTab = readtable(fullfile(nonpardir,Animal+"_Driver_NonParamStat.csv"));
-NPStatTab = readtable(fullfile(nonpardir,Animal+"_Driver_NonParamWidth.csv"));
-NPStatTab = readtable(fullfile(nonpardir,Animal+"_Driver_NonParamWidth.csv"));
-%%
+% NPStatTab = readtable(fullfile(nonpardir,Animal+"_Driver_NonParamWidth.csv"));
+nonpardir = "O:\Manif_NonParam\summary";
+NonParTab = readtable(fullfile(nonpardir,"Both"+"_Popul_NonParamWidth.csv"),'Format','auto');
+%% Load the Kent fitting data for the Population
 alfatab_pop = readtable(fullfile(popfitdir,"Alfa_Exp_all_KentStat_bsl_pole.csv"));
 betotab_pop = readtable(fullfile(popfitdir,"Beto_Exp_all_KentStat_bsl_pole.csv"));
 popfittab = [alfatab_pop;betotab_pop];
-%%
+clear alfatab_pop betotab_pop
 %% Load the tuning map similarity matrix 
 Animal = "Both";Set_Path;
 mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
@@ -18,40 +19,46 @@ if strcmp(Animal, "Both") % load stats
 A = load(fullfile(mat_dir, "Alfa"+'_CortiDisCorr.mat'), 'CortiDisCorr');
 B = load(fullfile(mat_dir, "Beto"+'_CortiDisCorr.mat'), 'CortiDisCorr');
 CortiDisCorr = [A.CortiDisCorr, B.CortiDisCorr];
+clear A B
 else
 load(fullfile(mat_dir, Animal+'_CortiDisCorr.mat'), 'CortiDisCorr') 
 end
 %% Find examples of SU-MU Tune map pair and show examples montage of their maps
-Animal="Alfa"; Expi = 15;
-unit_num_arr = CortiDisCorr(Expi).units.unit_num_arr;
-spikeID = CortiDisCorr(Expi).units.spikeID;
-Fmsk = struct2table(CortiDisCorr(Expi).FStats).F_P<1E-2;
+Animal="Alfa"; iTr = 15;
+unit_num_arr = CortiDisCorr(iTr).units.unit_num_arr;
+spikeID = CortiDisCorr(iTr).units.spikeID;
+Fmsk = struct2table(CortiDisCorr(iTr).FStats).F_P<1E-2;
 valmsk = unit_num_arr>0;
 V1msk = (spikeID < 49) & (spikeID > 32);
 V4msk =  spikeID > 48;
 ITmsk =  spikeID < 33;
 pairs = get_SUMUpair_ids(unit_num_arr', spikeID, valmsk&Fmsk);%&ITmsk
 for rowi = 1:size(pairs,1)
-Manif_Map_show_fun(MapVarStats, "Alfa", Expi, pairs(rowi,:))
+Manif_Map_show_fun(MapVarStats, "Alfa", iTr, pairs(rowi,:))
 pause
 end
 %%
-saveallform(SUMUdir, compose("SUMUpair_cmp_%s_Exp%02d_%s",Animal,Expi,strrep(num2str(pairs(rowi,:)),"  ","_")))
-%% for Animal = ["Alfa", "Beto"]
+saveallform(SUMUdir, compose("SUMUpair_cmp_%s_Exp%02d_%s",Animal,iTr,strrep(num2str(pairs(rowi,:)),"  ","_")))
 
-%% Compare the kappa value for SU and MU
+%% Compare the max activation for SU and MU
 SU_statvec = [];
 MU_statvec = [];
-for Animal = ["Alfa", "Beto"]
-load(fullfile(mat_dir, Animal+'_CortiDisCorr.mat'), 'CortiDisCorr');
-for Expi = 1:max(popfittab.Expi(popfittab.Animal==Animal))
-unit_num_arr = CortiDisCorr(Expi).units.unit_num_arr;
-spikeID = CortiDisCorr(Expi).units.spikeID;
-Fmsk = struct2table(CortiDisCorr(Expi).FStats).F_P<1E-2;
+% for Animal = ["Alfa", "Beto"]
+% load(fullfile(mat_dir, Animal+'_CortiDisCorr.mat'), 'CortiDisCorr');
+% for Expi = 1:max(popfittab.Expi(popfittab.Animal==Animal))
+for iTr = 1:numel(CortiDisCorr)
+Animal = CortiDisCorr(iTr).Animal;
+Expi = CortiDisCorr(iTr).Expi;
+unit_num_arr = CortiDisCorr(iTr).units.unit_num_arr;
+spikeID = CortiDisCorr(iTr).units.spikeID;
+% Get the stats table for this experiment
 exptab = popfittab(popfittab.Animal==Animal & popfittab.Expi==Expi & popfittab.space==1,:);
-expstatvec = exptab.kappa;
-R2msk = exptab.R2>0.5;
-valmsk = spikeID>0;
+% expstatvec = exptab.kappa;
+NPexptab = NonParTab(NonParTab.Animal==Animal & NonParTab.Expi==Expi & NonParTab.space==1,:);
+expstatvec = NPexptab.maxAct;
+Fmsk = struct2table(CortiDisCorr(iTr).FStats).F_P<1E-2; % Well modulated
+R2msk = true;%exptab.R2>0.5; % Well fit 
+valmsk = unit_num_arr>0; % unit 1,2,3 not 0
 assert(numel(expstatvec)==numel(spikeID))
 pair_ids = get_SUMUpair_ids(unit_num_arr', spikeID, Fmsk&R2msk&valmsk);
 for j = 1:size(pair_ids,1)
@@ -59,26 +66,43 @@ SU_statvec(end+1,:) = expstatvec(pair_ids(j,1));
 MU_statvec(end+1,:) = expstatvec(pair_ids(j,2));
 end
 end
+ttest2_print(SU_statvec, MU_statvec, "SU maxAct", "MU maxAct", true)
+%% SU,MU kappa value (parametric tuning width) of all pairs
+SU_statvec = [];
+MU_statvec = [];
+for iTr = 1:numel(CortiDisCorr)
+Animal = CortiDisCorr(iTr).Animal;
+Expi = CortiDisCorr(iTr).Expi;
+unit_num_arr = CortiDisCorr(iTr).units.unit_num_arr;
+spikeID = CortiDisCorr(iTr).units.spikeID;
+% Get the stats table for this experiment
+exptab = popfittab(popfittab.Animal==Animal & popfittab.Expi==Expi & popfittab.space==1,:);
+expstatvec = exptab.kappa;
+Fmsk = struct2table(CortiDisCorr(iTr).FStats).F_P<1E-2; % Well modulated
+R2msk = exptab.R2>0.5; % Well fit 
+valmsk = unit_num_arr>0; % unit 1,2,3 not 0
+assert(numel(expstatvec)==numel(spikeID))
+pair_ids = get_SUMUpair_ids(unit_num_arr', spikeID, Fmsk&R2msk&valmsk);
+for j = 1:size(pair_ids,1)
+SU_statvec(end+1,:) = expstatvec(pair_ids(j,1));
+MU_statvec(end+1,:) = expstatvec(pair_ids(j,2));
 end
-%%
+end
 ttest2_print(SU_statvec, MU_statvec, "SU kappa", "MU kappa", true)
-
-
-
 %% Compare the similarity of SU-MU
 %% Collect pairs of SU MU correlation into 
 areacorrvec_col = {}; % nExp by 5 cell array, containing vectorized corr coef
 SUMUcorrvec_col = {}; % nExp by 5 cell array, containing vectorized corr coef for SU-MU
-for Expi=1:numel(CortiDisCorr)
+for iTr=1:numel(CortiDisCorr)
 % Fmsk = struct2table(CortiDisCorr(1).FStats).F_P<1E-2;
-unit_num_arr = CortiDisCorr(Expi).units.unit_num_arr;
-spikeID = CortiDisCorr(Expi).units.spikeID;
-Fmsk = struct2table(CortiDisCorr(Expi).FStats).F_P<1E-2;
+unit_num_arr = CortiDisCorr(iTr).units.unit_num_arr;
+spikeID = CortiDisCorr(iTr).units.spikeID;
+Fmsk = struct2table(CortiDisCorr(iTr).FStats).F_P<1E-2;
 valmsk = unit_num_arr>0;
 V1msk = (spikeID < 49) & (spikeID > 32);
 V4msk =  spikeID > 48;
 ITmsk =  spikeID < 33;
-corrmat = CortiDisCorr(Expi).avgsph_corrmat;
+corrmat = CortiDisCorr(iTr).avgsph_corrmat;
 % corrmat = CortiDisCorr(1).res_corrmat;
 msk_col = {V1msk, V4msk, ITmsk, true};
 label_col = ["V1","V4","IT","all"];
@@ -89,8 +113,8 @@ SUMUpair_linidx = sub2ind( size(corrmat), pair_ids(:,1), pair_ids(:,2));
 SUMUcorrvec = corrmat(SUMUpair_linidx);
 in_area_pair_corrvec = get_submat_value(corrmat, areamsk & valmsk & Fmsk, SUMUpair_linidx);
 ttest2corr_print(SUMUcorrvec, in_area_pair_corrvec, compose("%s SU-MU",label_col(mi)), compose("%s val pairs",label_col(mi)));
-SUMUcorrvec_col{Expi,mi} = SUMUcorrvec;
-areacorrvec_col{Expi,mi} = in_area_pair_corrvec;
+SUMUcorrvec_col{iTr,mi} = SUMUcorrvec;
+areacorrvec_col{iTr,mi} = in_area_pair_corrvec;
 end
 
 pair_ids = get_SUMUpair_ids(unit_num_arr',spikeID, Fmsk);
@@ -100,8 +124,8 @@ all_area_pair_corrvec = cat(1, get_submat_value(corrmat, V1msk & valmsk, SUMUpai
                              , get_submat_value(corrmat, V4msk & valmsk, SUMUpair_linidx)...
                              , get_submat_value(corrmat, ITmsk & valmsk, SUMUpair_linidx));
 ttest2corr_print(SUMUcorrvec, all_area_pair_corrvec, "All SU-MU", "All same area pairs");
-SUMUcorrvec_col{Expi,5} = SUMUcorrvec;
-areacorrvec_col{Expi,5} = all_area_pair_corrvec;
+SUMUcorrvec_col{iTr,5} = SUMUcorrvec;
+areacorrvec_col{iTr,5} = all_area_pair_corrvec;
 end
 %
 ttest2corr_print(cat(1,SUMUcorrvec_col{:,1}), cat(1,areacorrvec_col{:,1}), "All Exp SU-MU (in V1)", "All Exp same area pairs (in V1)");
@@ -112,6 +136,8 @@ ttest2corr_print(cat(1,SUMUcorrvec_col{:,5}), cat(1,areacorrvec_col{:,5}), "All 
 label_col = ["V1","V4","IT","all","all_same_array"];
 save(fullfile(sumdir,Animal+"SUMU_MapCorr_cmp.mat"), "SUMUcorrvec_col", "areacorrvec_col", "label_col");
 save(fullfile(matdir,Animal+"SUMU_MapCorr_cmp.mat"), "SUMUcorrvec_col", "areacorrvec_col", "label_col");
+
+
 %% Visualize and Summary
 %cat(1,SUMUcorrvec_col{:,1}), cat(1,areacorrvec_col{:,1})
 h=stripe_simple_plot({cat(1,SUMUcorrvec_col{:,5}), cat(1,areacorrvec_col{:,5})},...
@@ -164,20 +190,20 @@ assert(all(validunit(valid_row,:),'all'),"the spike id doesn't match ")
 end
 end
 
-function h = violinplot_cell(value_col, label_arr, varargin)
-Yvec = [];
-labvec = [];
-for i=1:numel(value_col)
-    Yvec = cat(1,Yvec, reshape(value_col{i},[],1));
-    labvec = cat(1, labvec, repmat(label_arr(i),numel(value_col{i}),1));
-end
-% Yvec = cat(1,SUMUcorrvec_col{1:46,5}, ...
-%              areacorrvec_col{1:46,5}, ...
-%              SUMUcorrvec_col{47:end,5}, ...
-%              areacorrvec_col{47:end,5});
-% labvec = cat(1,repmat("SU-MU A",numel(cat(1,SUMUcorrvec_col{1:46,5})),1),...
-%                repmat("All A",numel(cat(1,areacorrvec_col{1:46,5})),1),...
-%                repmat("SU-MU B",numel(cat(1,SUMUcorrvec_col{47:end,5})),1),...
-%                repmat("All B",numel(cat(1,areacorrvec_col{47:end,5})),1));
-violinplot(Yvec,labvec,varargin{:})
-end
+% function h = violinplot_cell(value_col, label_arr, varargin)
+% Yvec = [];
+% labvec = [];
+% for i=1:numel(value_col)
+%     Yvec = cat(1,Yvec, reshape(value_col{i},[],1));
+%     labvec = cat(1, labvec, repmat(label_arr(i),numel(value_col{i}),1));
+% end
+% % Yvec = cat(1,SUMUcorrvec_col{1:46,5}, ...
+% %              areacorrvec_col{1:46,5}, ...
+% %              SUMUcorrvec_col{47:end,5}, ...
+% %              areacorrvec_col{47:end,5});
+% % labvec = cat(1,repmat("SU-MU A",numel(cat(1,SUMUcorrvec_col{1:46,5})),1),...
+% %                repmat("All A",numel(cat(1,areacorrvec_col{1:46,5})),1),...
+% %                repmat("SU-MU B",numel(cat(1,SUMUcorrvec_col{47:end,5})),1),...
+% %                repmat("All B",numel(cat(1,areacorrvec_col{47:end,5})),1));
+% violinplot(Yvec,labvec,varargin{:})
+% end

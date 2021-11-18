@@ -76,6 +76,7 @@ for i = 1:numel(drivermsk)
 end
 prefchmsk = poptab.chan==poptab.prefchan;
 Fsigmsk = poptab.F_P<0.001;
+R2msk = poptab.R2>0.5;
 %%
 % msk = validmsk & drivermsk & poptab.R2 > 0.4;
 h = hist_plot(poptab, "R2", {validmsk & drivermsk}, ["driver"], ...

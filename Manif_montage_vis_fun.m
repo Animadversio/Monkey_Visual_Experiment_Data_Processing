@@ -12,21 +12,22 @@ load(fullfile(mat_dir, Animal+'_Manif_stats.mat'), 'Stats')
 load(fullfile(mat_dir, Animal+"_ManifMapVarStats.mat"),'MapVarStats')
 
 %%
-Animal = "Alfa"; Expi=11; channum=61;
-chan2plot = find(any(MapVarStats(Expi).units.spikeID==[channum],2));
+Animal = "Alfa"; Expi=4; 
+% channum=61;chan2plot = find(any(MapVarStats(Expi).units.spikeID==[channum],2));
+pref_chan = Stats(Expi).units.pref_chan;
+chan2plot = find(any(MapVarStats(Expi).units.spikeID==[pref_chan],2));
 %%
 si=1; 
 figroot = "E:\OneDrive - Washington University in St. Louis\PC_space_tuning";
-pref_chan = Stats(Expi).units.pref_chan;
 savedir = fullfile(figroot,compose("%s_Exp%d_chan%02d", Animal, Expi, pref_chan));
 tic
 manif_imgfn = cellfun(@(idx)Stats(Expi).imageName{idx(1)},Stats(Expi).manif.idx_grid{si},'uni',0);
 [manif_imgfps, mapper] = map2fullpath(manif_imgfn, Stats(Expi).meta.stimuli);
 manif_images = cellfun(@(fp)imread(fp),manif_imgfps,'uni',0);
 fprintf("Load images took %.2f sec\n",toc)
-manif_imgtile = imtile(manif_images');
+manif_imgtile = imtile(manif_images','BorderSize',2);
 imwrite(manif_imgtile,fullfile(savedir,"PC23_manif_imgtile.jpg"))
-% chan2plot = chan2plot;%find(any(MapVarStats(Expi).units.spikeID==[pref_chan],2));
+%% chan2plot = chan2plot;%find(any(MapVarStats(Expi).units.spikeID==[pref_chan],2));
 for iCh = reshape(chan2plot,1,[])
 tic
 unitstr = Stats(Expi).units.unit_name_arr{iCh};
@@ -54,11 +55,12 @@ title([chan_label_str, "Tuning map on PC2 3 subspace", stat_str])
 axis image;colorbar%shading flat;
 % Get the colormap from the heatmap in order to visualize the map below. 
 frame_img_list = score_frame_image_arr(manif_images, scoremap...
-    , caxis(ax1), colormap(ax1), 18);
+    , caxis(ax1), colormap(ax1), 16);
 ax2 = nexttile(T,2); %subplot(1,2,2);
 montage(frame_img_list', 'Size', [11, 11]);
 fprintf("Fully visualize images took %.2f sec\n",toc)
-saveas(3,fullfile(savedir,compose("PC23_tune_chan%s.pdf",unitstr)))
+saveallform(savedir,compose("PC23_tune_chan%s.pdf",unitstr),3,["pdf"])
+% saveas(3,fullfile(savedir,compose("PC23_tune_chan%s.pdf",unitstr)))
 % set(ax2, 'Position', [0.5303    0.0500    0.4347    0.9049]);
 % set(ax1, 'position', [0.0500    0.0700    0.4018    0.8050]);
 %%

@@ -15,7 +15,8 @@ phi2_grid = min(phi_grid + 9,  90) /180 *pi;
 theta1_grid = max(theta_grid - 9,  -90) /180 *pi;
 theta2_grid = min(theta_grid + 9,   90) /180 *pi;
 Wgrid = abs(sin(phi2_grid) - sin(phi1_grid)).*(theta2_grid - theta1_grid);
-%%
+
+%% Data structure that contains cortical distance and some tuning similarity.
 CortiDisCorr = repmat(struct(),1,numel(MapVarStats));
 %%
 figdir = "E:\OneDrive - Washington University in St. Louis\CortiDistCorr";
@@ -74,10 +75,11 @@ subtightplot(1,5,3);imagesc(corrmat1d);axis image;colorbar;title("Average Correl
 subtightplot(1,5,4);imagesc(corrmat_sph);axis image;colorbar;title("Average Correlation(Sph)")
 subtightplot(1,5,5);imagesc(cortexDistmat);axis image;colorbar;title("Cortical Distance")
 suptitle(compose("%s Exp%02d manif PrefChan %s",Animal,Expi,preflab))
-fignm = compose("%s_Exp%02d_manif_corrmats",Animal,Expi);
-saveas(1,fullfile(figdir,fignm+".png"))
-saveas(1,fullfile(figdir,fignm+".pdf"))
-savefig(1,fullfile(figdir,fignm+".fig"))
+saveallform(figdir,compose("%s_Exp%02d_manif_corrmats",Animal,Expi),1)
+% fignm = compose("%s_Exp%02d_manif_corrmats",Animal,Expi);
+% saveas(1,fullfile(figdir,fignm+".png"))
+% saveas(1,fullfile(figdir,fignm+".pdf"))
+% savefig(1,fullfile(figdir,fignm+".fig"))
 end
 
 [cval,pval] = corr(sgtr_corrmat(:),cortexDistmat(:),'row','complete');
@@ -131,7 +133,7 @@ Sp = summary_mat_corr(corrmat_sph, cortexDistmat, FSigMsk&(cortexDistmat>0)&FSig
     ["allDfCh_F","V1DfCh_F", "V4DfCh_F", "ITDfCh_F"], Sp);
 CortiDisCorr(Expi).avgsph = Sp;
 
-%%
+%% Summarize basic statistics (mean, sem, N) of correlation matrices
 CC = [];
 CC = summary_corrmat(corrmat1d, [], {[], V1msk, V4msk, ITmsk}, ["All", "V1area", "V4area", "ITarea"], ...
     ["cc_all","cc_V1", "cc_V4", "cc_IT"], CC);
@@ -161,10 +163,11 @@ addScatterWmask(ax3, corrmat1d, cortexDistmat, FSigMsk&(cortexDistmat>0)&FSigMsk
     {[], V1msk, V4msk, ITmsk}, ["DiffChan Fsignif","V1DiffChan Fsignif", "V4DiffChan Fsignif", "ITDiffChan Fsignif"])
 title(ax3, "All Pairs with different channel and F signif")
 suptitle(compose("%s Exp%02d manif PrefChan %s",Animal,Expi,preflab))
-fignm = compose("%s_Exp%02d_manif_corrDistScatter",Animal,Expi);
-saveas(2,fullfile(figdir,fignm+".png"))
-saveas(2,fullfile(figdir,fignm+".pdf"))
-savefig(2,fullfile(figdir,fignm+".fig"))
+saveallform(figdir,compose("%s_Exp%02d_manif_corrDistScatter",Animal,Expi),2)
+% fignm = compose("%s_Exp%02d_manif_corrDistScatter",Animal,Expi);
+% saveas(2,fullfile(figdir,fignm+".png"))
+% saveas(2,fullfile(figdir,fignm+".pdf"))
+% savefig(2,fullfile(figdir,fignm+".fig"))
 end
 toc
 end

@@ -1,4 +1,5 @@
 function Manif_Map_show_fun(MapVarStats, Animal, Expi, chan2plot)
+% Put Manifold maps into a flow tiled layout
 si = 1;
 figure(3); clf; set(3,'pos',[ 805         197        1559         781]); % all manifold images montaged
 set(0,'CurrentFigure',3); clf;T=tiledlayout('flow','tilesp','compact','padd','compact');
