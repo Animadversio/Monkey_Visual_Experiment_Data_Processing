@@ -1,15 +1,19 @@
-function figh=RF_contour_plot(RFStat, style)
-if nargin == 1
-    style="edge";
+function figh = RF_contour_plot(RFStat, style, chanmask)
+% chanmask: mask for the channels to be plotted in a plot.
+% style: a string "edge" "fill"
+if nargin == 1, style="edge"; end
+if nargin < 3, 
+    chanmask = ones(size(RFStat.unit.chan_num_arr),'logical');
 end
+area_colormap = containers.Map({'V1','V4','IT'},{[1,0,0],[0,1,0],[0,0,1]});
+
 uniqsize_deg = unique(RFStat.stim.size_deg)';
-msk = ones(size(RFStat.unit.chan_num_arr),'logical');
+msk = chanmask;
 Fmsk = RFStat.stats.F_P<0.001;
 Tmsk = RFStat.stats.T_P<0.001;
-activ_chans = find(Fmsk & msk)';
+activ_chans = find(Fmsk & Tmsk & msk)';
 % activ_chans = find(Fmsk & Tmsk & msk)';
 % activ_chans = find(msk)';
-area_colormap = containers.Map({'V1','V4','IT'},{[1,0,0],[0,1,0],[0,0,1]});
 Xq = -8:0.2:8; Yq = -8:0.2:8;
 [XX,YY] = meshgrid(Xq,Yq);
 Nsize = numel(uniqsize_deg);

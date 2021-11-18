@@ -1,5 +1,6 @@
 function axs = AlignAxisCLimits(axs)
 % Given a group of axis, make their Color limit the same as each other
+    if iscell(axs), axs = [axs{:}]; end
     CLIM = caxis(axs(1));
     for i = 2:numel(axs)
         CLIM_tmp = caxis(axs(i));

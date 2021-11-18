@@ -32,6 +32,7 @@ for j = 1:size(img_list, 2)
             frame_img_list{i,j} = [];
         else
             scale_val = (score_mat(i,j) - Cmin) / (Cmax - Cmin);
+            scale_val = max(0,min(1,scale_val)); % added to clip the value
             c = interp1(cmap, scale_val * (size(cmap, 1) - 1) + 1); % Note, interpolation can be done from 1-64, not from 0
             if isstring(img_list{i,j}) || ischar(img_list{i,j})
                 img = imread(img_list{i,j});

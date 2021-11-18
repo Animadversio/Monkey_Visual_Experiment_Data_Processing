@@ -1,5 +1,5 @@
 function reportStats = calc_tune_stats(psth_cells, wdw_vect)
-% similar function to calc_tuning_stats, but simpler just input an cell
+% similar function to calc_tuning_stats, but with simpler input format: just a cell
 % array of **psth** and it can compute T and F for you. 
 % Input format:
 %   psth_cells: cell array of psth array. each cell is a condition. Eahc
@@ -11,9 +11,9 @@ function reportStats = calc_tune_stats(psth_cells, wdw_vect)
 % 
 if nargin == 1
     wdw_vect = [];
-    MovF = false;
+    MovF = false; % calculate F for a single time windows 50:200
 else
-    MovF = true;
+    MovF = true; % calculate F for moving time windows
 end
 % PSTH Chacteristics F to baseline, t of baseline 
 reportStats = struct();
@@ -22,7 +22,7 @@ indices = reshape(1:numel(psth_cells),size(psth_cells));
 idx_vect = arrayfun(@(L, idx) idx*ones(L,1), groupsize, indices, 'uni', false);
 
 act_wdw = 51:200; bsl_wdw=1:50; % default value for activation and baseline window
-score_vect = cellfun(@(psth)squeeze(mean(psth(1,act_wdw,:),2)),psth_cells,'uni',false);
+score_vect = cellfun(@(psth)squeeze(mean(psth(1,act_wdw,:),2)),psth_cells,'uni',false); % non-baseline subtracted activation.
 basel_vect = cellfun(@(psth)squeeze(mean(psth(1,bsl_wdw,:),2)),psth_cells,'uni',false);
 idx_vect = cell2mat(reshape(idx_vect,[],1));
 score_vect = cell2mat(reshape(score_vect,[],1));

@@ -9,6 +9,6 @@ sem_arr = [sem(group1),sem(group2)];
 [~,P,CI,TST] = ttest2(fisherR2Z(group1),fisherR2Z(group2));
 tval = TST.tstat;
 pval = P;
-sumstr = sprintf("%s (%.3f n=%d) - %s (%.3f n=%d): t=%.3f(df=%d), P=%.1e, CI=[%.1f,%.1f]\n",g1label,g1_mean,numel(group1),g2label,g2_mean,numel(group2),tval,TST.df,P,CI(1),CI(2));
+sumstr = sprintf("%s (%.3f+-%.3f n=%d) - %s (%.3f+-%.3f n=%d): t=%.3f(df=%d), P=%.1e, CI=[%.1f,%.1f]\n",g1label,g1_mean,sem_arr(1),numel(group1),g2label,g2_mean,sem_arr(2),numel(group2),tval,TST.df,P,CI(1),CI(2));
 fprintf(sumstr)
 end

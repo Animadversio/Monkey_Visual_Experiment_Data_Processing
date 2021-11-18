@@ -14,7 +14,8 @@ elseif strcmp(sfx, "pdf")
 %    pos = get(h,'Position');
 %    set(h,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
 %    print(h,fullfile(figdir,fignm+"."+sfx),'-dpdf','-bestfit')
-   exportgraphics(h,fullfile(figdir,fignm+"."+sfx),'ContentType','vector')
+   % function available in Matlab 2021, if older version use the commented part above. 
+   exportgraphics(h,fullfile(figdir,fignm+"."+sfx),'ContentType','vector') 
 else
    saveas(h,fullfile(figdir,fignm+"."+sfx))
 end
