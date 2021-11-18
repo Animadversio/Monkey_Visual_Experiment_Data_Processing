@@ -2,12 +2,25 @@ saveroot = "E:\OneDrive - Washington University in St. Louis\Evol_BigGAN_FC6_cmp
 setMatlabTitle("BigGAN_FC6 compare");
 
 Animal = "Beto"; Set_Path; 
-ftrrows = find(contains(ExpRecord.expControlFN,"generate_") & (ExpRecord.Exp_collection=="BigGAN_fc6" |...
-               ExpRecord.Exp_collection=="BigGAN_FC6" | ExpRecord.Exp_collection=="BigGAN_FC6_CMAHess"));
+ftrrows = find(contains(ExpRecord.expControlFN,"generate_") & ...
+              (ExpRecord.Exp_collection=="BigGAN_fc6" |...
+               ExpRecord.Exp_collection=="BigGAN_FC6" |...
+               ExpRecord.Exp_collection=="BigGAN_FC6_CMAHess"|...
+               ExpRecord.Exp_collection=="BigGAN_Hessian"));
 disp(ExpRecord(ftrrows,:))
-[meta_new, rasters_new, lfps_new, Trials_new] = loadExperiments(ftrrows(30:end), Animal, false);
+%%
+[meta_new, rasters_new, lfps_new, Trials_new] = loadExperiments(ftrrows([43,45,46:end]), Animal, false);%43,45
+%7,47;7,47,86:
+
+%%
+eptymsk = cellfun(@isempty,meta_new);
+meta_new(eptymsk)=[];
+rasters_new(eptymsk)=[];
+Trials_new(eptymsk)=[];
 %% New Function
-BFEStats = Evol_BigGAN_FC6_Collect_Stats_fun(meta_new, rasters_new, Trials_new);
+BFEStats = Evol_BigGAN_FC6_Collect_Stats_fun(meta_new(1:end), rasters_new(1:end), Trials_new(1:end));
+%%
+
 %% Evol_BigGAN_FC6_Collect_Stats.m
 BFEStats = repmat(struct(),1,numel(meta_new));
 for Triali = 1:numel(meta_new)
@@ -127,4 +140,19 @@ end
 %%
 mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics"; 
 save(fullfile(mat_dir, Animal + "_BigGAN_FC6_Evol_Stats.mat"), 'BFEStats'); 
-%% 
+
+%%
+mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics"; 
+for Animal = ["Alfa","Beto"]
+BFEStats = [];
+fdrlist = strtrim(string(ls(saveroot)));
+for i = 1:numel(fdrlist)
+    fdrnm = fdrlist(i);
+    if contains(fdrnm,Animal) && fdrnm~="2020-07-20-Beto-01"
+    D = load(fullfile(saveroot,fdrnm,"EvolStat.mat"),'EvolStat');
+    BFEStats = [BFEStats;D.EvolStat];
+    end
+end
+fprintf("Found %d BigGAN FC6 paired experiment for %s\n",numel(BFEStats),Animal)
+save(fullfile(mat_dir, Animal + "_BigGAN_FC6_Evol_Stats.mat"), 'BFEStats'); 
+end

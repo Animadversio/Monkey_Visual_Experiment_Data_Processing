@@ -16,7 +16,7 @@ BFEStats(iTr).Animal = Animal;
 % BFEStats(Expi).Expi = Expi; 
 BFEStats(iTr).imageName = Trials.imageName;
 BFEStats(iTr).meta = meta;
-
+if ~isfield(Trials,"TrialRecord") || isempty(Trials.TrialRecord), fprintf("Missing Trial Record\n");continue; end
 pref_chan = Trials.TrialRecord.User.prefChan;
 unit_in_pref_chan = cell2mat(Trials.TrialRecord.User.evoConfiguration(:,4))';
 imgpos = cell2mat(Trials.TrialRecord.User.evoConfiguration(:,2));
@@ -31,7 +31,7 @@ unit_name_arr = generate_unit_labels(meta.spikeID);
 [activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
 end
 % note if the evolved channel is marked as null 0 then this can fail! 
-try
+try % important to continue going when facing issues.
 pref_chan_id = zeros(1, thread_num);
 for i = 1:thread_num % note here we use the unit_num_arr which exclude the null channels.
     pref_chan_id(i) = find(meta.spikeID==pref_chan(i) & ... % the id in the raster and lfps matrix 
@@ -135,6 +135,7 @@ BFEStats(iTr).ref.rspmat = nat_rspmat_col;
 % distmat_evBG = D.distmat_B(cat(4,BGimgs{:,:})); % 240 sec for 950 images
 % toc
 % BFEStats(Expi).evol.distmat_BG = distmat_evBG;
+%% Create the folder and file at last
 stimparts = split(meta.stimuli,"\");
 expday = datetime(meta.expControlFN(1:6),'InputFormat','yyMMdd');
 % fdrnm = compose("%s-%s-Chan%02d-1",datestr(expday,'yyyy-mm-dd'), Animal, pref_chan(1));
