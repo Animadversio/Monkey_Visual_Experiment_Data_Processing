@@ -1,6 +1,8 @@
 %% Set Path 
 system("subst S: E:\Network_Data_Sync") % set this alias! so that copying and syncing could work 
+if ~strcmp(getenv('COMPUTERNAME'), "DESKTOP-MENSD6S")
 system('subst N: \\storage1.ris.wustl.edu\crponce\Active')
+end
 if strcmp(getenv('COMPUTERNAME'), 'LAPTOP-U8TSR4RE')
     system('subst O: "D:\OneDrive - Washington University in St. Louis"')
     system("subst S: D:\Network_Data_Sync") % set this alias! so that copying and syncing could work 
