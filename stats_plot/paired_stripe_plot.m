@@ -19,7 +19,11 @@ figure;hold on;set(gcf,'pos',[1000         357         430         625])
 for i=1:Ncol
 for mi=1:numel(msks)
     offset = offsets(mi);
-    scatter(i+offset+xjit(msks{mi}), varmat(msks{mi},i),'DisplayName',compose("%s-%s",varnms(i),labels(mi)),varargin{:});
+    varmean = mean(varmat(msks{mi},i));
+    varsem = sem(varmat(msks{mi},i));
+    varN = numel(varmat(msks{mi},i));
+    scatter(i+offset+xjit(msks{mi}), varmat(msks{mi},i),...
+        'DisplayName',compose("%s-%s %.1f+-%.1f(N=%d)",varnms(i),labels(mi),varmean,varsem,varN),varargin{:});
 end
 end
 for mi=1:numel(msks)
