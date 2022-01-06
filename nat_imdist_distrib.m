@@ -9,7 +9,7 @@ GB = torchBigGAN();
 imagenet_root = "N:\Stimuli\imagenet-2012\imagenet12\images";
 [imgids,INimgs] = imagenet_sampler(imagenet_root, 500);
 ImgNet_imdist = struct();
-%%
+%% Compute the distance based on different metrics
 tic
 D = torchImDist("squeeze");
 distMat = D.distmat_B(INimgs,50);
@@ -37,6 +37,14 @@ save(fullfile(figroot,'ImageNet_test_dist.mat'),'ImgNet_imdist','imgids')
 figure;montage(INimgs(:,:,:,1:49))
 saveas(gcf,fullfile(figroot,'ImageNet_test_examples.png'))
 
+%% Compute distance between nearest neighbors
+imdist_lpips = ImgNet_imdist.squ;
+imdist_lpips = imdist_lpips + diag(nan(1,size(imdist_lpips,1)));
+nearneighb_dist = nanmin(imdist_lpips,[],1);
+D_m = mean(nearneighb_dist);
+D_s = std(nearneighb_dist);
+D_prc = prctile(nearneighb_dist,[5,95]);
+fprintf("Distance between nearest neighbors\n%s Mean %.3f+-%.3f [5, 95] Percentile [%.3f, %.3f]\n", "squ", D_m, D_s, D_prc(1), D_prc(2))
 
 
 %% Randomly sample images from the GAN space
@@ -72,6 +80,8 @@ save(fullfile(figroot,'FC6GAN_rand_img_dist.mat'),'FC6G_imdist')
 %%
 figure;montage(imgs(:,:,:,1:49))
 saveas(gcf,fullfile(figroot,'FC6GAN_rand_examples.png'))
+
+
 %% BigGAN images space. 
 BigGAN_imdist = struct();
 %%
@@ -105,6 +115,31 @@ save(fullfile(figroot,'BigGAN_rand_img_dist.mat'),'BigGAN_imdist','codes')
 %%
 figure;montage(imgs(:,:,:,1:49))
 saveas(gcf,fullfile(figroot,'BigGAN_rand_examples.png'))
+
+
+%% Actual FC6 Images in Manifold Experiments
+mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
+minDvec_all = [];
+for Animal = ["Alfa","Beto"]
+load(fullfile(mat_dir, Animal+"_Manif_ImDist.mat"),"ManifImDistStat")
+for Expi = 1:numel(ManifImDistStat)
+minDvec = dist2nneighbor(ManifImDistStat(Expi).squ, 1);
+% nneighbor_dist_summary(minDvec,"lpips")
+minDvec_all = [minDvec_all, minDvec];
+end
+end
+nneighbor_dist_summary(minDvec_all,"lpips")
+%%
+load(fullfile(mat_dir, "gab_imdist.mat"),'gab_imdist')
+load(fullfile(mat_dir, "pasu_imdist.mat"),'pasu_imdist')
+%%
+fprintf("In the gabor patch space, ")
+minDvec = dist2nneighbor(gab_imdist.squ, 0);
+nneighbor_dist_summary(minDvec,"lpips")
+fprintf("In the Pasupathy shape space, ")
+minDvec = dist2nneighbor(pasu_imdist.squ, 0);
+nneighbor_dist_summary(minDvec,"lpips")
+%% Summary statistics
 %% Print the summary string for each image space 
 figroot = "E:\OneDrive - Washington University in St. Louis\ImDist_ref";
 mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
@@ -133,6 +168,25 @@ for metric = string(fieldnames(DistStruct)')
     D_prc2 = prctile(Dmat,[20,80],'all');
     fprintf("%s Mean %.3f +- %.3f [20, 80] Percentile [%.3f, %.3f] [5, 95] Percentile [%.3f, %.3f]\n", metric, D_m, D_s, D_prc2(1), D_prc2(2), D_prc(1), D_prc(2))
 end
+end
+
+function nneighbor_dist_summary(mindist, metric)
+D_m = nanmean(mindist,'all');
+D_s = nanstd(mindist,1,'all');
+D_prc = prctile(mindist,[5,95],'all');
+D_prc2 = prctile(mindist,[20,80],'all');
+fprintf("Distance to nearest neightbor: %s Mean %.3f+-%.3f [5, 95] Percentile [%.3f, %.3f]\n", metric, D_m, D_s, D_prc(1), D_prc(2))
+end
+
+function mindist = dist2nneighbor(distmat, manif)
+% return vector of distance to nearest neighbor.
+if nargin == 1, manif = false; end
+if manif
+    assert(all(size(distmat)==[121,121]))
+    distmat = distmat(11:111,11:111);
+end
+distmat = distmat + diag(nan(1,size(distmat,1)));
+mindist = nanmin(distmat,[],1);
 end
 % vis_distmat: function description
 function vis_distmat(distMat,imspace_str,metric_str,h) % [outputs] = 
