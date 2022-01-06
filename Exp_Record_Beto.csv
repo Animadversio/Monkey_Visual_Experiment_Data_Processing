@@ -2258,7 +2258,7 @@ I can use fixation window like 1.35 deg, tighter than yesterday.
 Next time we can spend less water on this RFmapping
 Disabled penalty, and therre is one time I mistakenly distabled the image showing time ( became 1ms hopefullit It does not matter.
 Monkey working great, 7 blocks 7:42 mins.",Beto-27102021-001,211027_Beto_rfMapper_basic,NaN,NaN,NaN,
-3,FC6Evol_Decomp,NaN,,"002 Generate BigGAN starts 12:12
+3,FC6Evol_Decomp,1,,"002 Generate BigGAN starts 12:12
 Ch64  [0  0]   3  1  CMAES Hessian
 Spike form looks 3/5 MU
 PSTH looks nice
@@ -2270,7 +2270,7 @@ Monkey gets sleepy...? Or bored closed his eye at 18gens
 This guy keeps climbing for 30 gens … crazy.
 Very efficient, 18mins 35 blocks with a monkey nap in the middle. Hessian is good.
 Finish post processing at 12:45",Beto-27102021-002,211027_Beto_generate_BigGAN,64,1,3,N:\Stimuli\2021-EvolDecomp\2021-10-27-Beto-01\2021-10-27-12-15-46
-3,FC6Evol_Decomp,NaN,,"003 EvolFactorization
+3,FC6Evol_Decomp,1,,"003 EvolFactorization
 Starts 12:50 – 13:10
 Ch64  [0  0]   3  1 
 Monkey taking a nap after 5 blocks
@@ -2283,7 +2283,7 @@ Good boy Beto.
 Super efficient.
 80->71 performance.
 7 mins 6 blocks",Beto-28102021-001,211028_Beto_rfMapper_basic(1),NaN,NaN,NaN,
-3,FC6Evol_Decomp,NaN,,"002 Evolution
+3,FC6Evol_Decomp,2,,"002 Evolution
 42  [0.4  0.0]  3  1  CMAES_Hessian
 Today's signal is really good. Climb instantaneously
 1.25 fixation
@@ -2299,7 +2299,7 @@ the scores are different, so it may be another neuron than yesterday.
 WTF. This evolution is so sudden.. Suddenly there is a jump from 40-> 100
 40->120
 Completed",Beto-28102021-003,211028_Beto_generate_BigGAN(1),64,1,3,N:\Stimuli\2021-EvolDecomp\2021-10-28-Beto-02\2021-10-28-12-17-26
-3,FC6Evol_Decomp,NaN,,"004 Evol Factorization
+3,FC6Evol_Decomp,2,,"004 Evol Factorization
 42  [0.4  0.0]  3  1  CMAES_Hessian
 Monkey seems tired, lets give him some rest....
 Fact2 corrmap is kicking ass!
@@ -2325,9 +2325,9 @@ Monkey sleeping
 is it really evolvable?
 140->170->140->160.  firing rate going up and down.
 An interesting ""V1"" cell? The RF is quite extrafoveal, right lower corner.",Beto-29102021-003,211029_Beto_generate_BigGAN(1),30,1,3.5,N:\Stimuli\2021-EvolDecomp\2021-10-29-Beto-02\2021-10-29-12-09-56
-3,FC6Evol_Decomp,NaN,,"004 Evolution.
+3,FC6Evol_Decomp,3,,"004 Evolution.
 26 [0  0 ]  2  1 CMAES Hessian",Beto-29102021-004,211029_Beto_generate_BigGAN(2),26,1,2,N:\Stimuli\2021-EvolDecomp\2021-10-29-Beto-03\2021-10-29-12-34-33
-3,FC6Evol_Decomp,NaN,,"005 EvolFactoriation
+3,FC6Evol_Decomp,3,,"005 EvolFactoriation
 26 [0  0 ]  2  1
 Great patterns
 53 performance",Beto-29102021-005,211029_Beto_selectivity_basic(1),26,1,2,N:\Stimuli\2021-EvolDecomp\2021-10-29-Beto-03-decomp
@@ -2346,7 +2346,7 @@ Orientation stimuli as control
 Extra foveal
 Interestingly this guy is responsive but not too evolvable.
 Failed totally ….",Beto-02112021-002,211102_Beto_generate_BigGAN,9,1,4,N:\Stimuli\2021-EvolDecomp\2021-11-02-Beto-01\2021-11-02-16-41-18
-1.5,FC6Evol_Decomp,NaN,,"3
+1.5,FC6Evol_Decomp,4,,"3
 23 [0 0 ]  2 deg  1 CMAES Hessian
 SU 1.5/5
 This guy is really interesting,
@@ -2356,7 +2356,7 @@ BTW, the initial response phase definitely looks like a singel unitin V1
 Pretty successful evolution.
 17mins 30blocks 56% performance.
 250mL already",Beto-02112021-003,211102_Beto_generate_BigGAN(1),23,1,2,N:\Stimuli\2021-EvolDecomp\2021-11-02-Beto-02\2021-11-02-16-57-56
-1.5,FC6Evol_Decomp,NaN,,"004 Evol Decomposition.
+1.5,FC6Evol_Decomp,4,,"004 Evol Decomposition.
 23 [0 0 ]  2 deg  1
 Note this plot is showing the whole channel instead of the unit 1.
 We can compare the two units in it.
@@ -2374,7 +2374,7 @@ MU 4/5
 Scores fluctuate a lot.
 Great performance 80%+ but evolve not too well. Going up and down 100->120->100->120. No clear trend.
 Good exp/",Beto-03112021-002,211103_Beto_generate_BigGAN,16,1,3,N:\Stimuli\2021-EvolDecomp\2021-11-03-Beto-01\2021-11-03-16-09-34
-3,FC6Evol_Decomp,NaN,,"003   Evolution
+3,FC6Evol_Decomp,5,,"003   Evolution
 MU3/5
 12 [2.2 -1.8]  3  unit1
 This seems to mixed a SU (unsorted) and a MU.
@@ -2395,7 +2395,7 @@ Fr 40->53 not bad.
 Promising but slowly evolving.
 7 mins 19 generations.
 Not bad. 71 performance.",Beto-03112021-004,211103_Beto_generate_BigGAN(2),13,1,3,N:\Stimuli\2021-EvolDecomp\2021-11-03-Beto-03\2021-11-03-16-49-03
-3,FC6Evol_Decomp,NaN,,"005 Evol Factorization
+3,FC6Evol_Decomp,5,,"005 Evol Factorization
 Really interesting V4 factorization …
 12 [2.2 -1.8]  3  unit1
 Interesting , this guy has a lot of metamers.
@@ -2405,3 +2405,623 @@ fac1_map_corrresnet50_linf8-layer3_03
 Predictions are quite successful for this V4 cell.
 Not sure why some noise come to V1 V4 arrays....
 complete!",Beto-03112021-005,211103_Beto_selectivity_basic,12,1,3,N:\Stimuli\2021-EvolDecomp\2021-11-03-Beto-02-decomp
+NaN,,NaN,,"001 11/05 RFMapping
+really high performance.
+Monk slept
+Great fixation! Really tight! Maybe a good day to drink more.
+10 mins 7 blocks
+Today the IT array is full of noise....????
+No IT channel has any real RF and real PSTH.... very bad. Is it connection or hardware?",Beto-05112021-001,211105_Beto_rfMapper_basic,NaN,NaN,NaN,
+NaN,FC6Evol_Decomp,NaN,,"002  Evolution
+13  [2.4  -1.3]  3  1  CMAES_Hessian
+MU5/5
+450->490 good. ->600??????
+Great performance.
+natural image finring rate also fluctuate a lot.
+Natural image threa id evolving too ???? What happened....
+Monkey slept again.
+May be this is a drifting baseline problem?
+17 mins 31 blocks 70 performance.
+V4 reference images",Beto-05112021-002,211105_Beto_generate_BigGAN,13,1,3,N:\Stimuli\2021-EvolDecomp\2021-11-05-Beto-01\2021-11-05-12-39-30
+NaN,FC6Evol_Decomp,NaN,,"003  Evolution
+8  [1.7  -1.8]   4   1   CMAES_Hessian
+MU4/5
+V4 reference images
+monk slept again.
+So the natural image is table, but the generated going upand down. Fluctuate between 180 and 200, not large dynamic range.
+Kind of success?? Not classic optim curve.
+180 
+140 
+Not really successful. There are more successful ones.",Beto-05112021-003,211105_Beto_generate_BigGAN(1),8,1,4,N:\Stimuli\2021-EvolDecomp\2021-11-05-Beto-02\2021-11-05-13-03-06
+NaN,FC6Evol_Decomp,NaN,,"004  Evolution
+11   [2.4  -1.4]   4   1   CMAES_Hessian
+MU5/5
+V4 reference images
+4.6 
+025 
+0.15 
+Full of noise??? Why",Beto-05112021-004,211105_Beto_generate_BigGAN(2),11,1,4,N:\Stimuli\2021-EvolDecomp\2021-11-05-Beto-03\2021-11-05-13-24-15
+NaN,FC6Evol_Decomp,NaN,,"005 Evolution
+21  [2.6  -1.3]    4   2   CMAES Hessian
+MU 4/5
+Many channels are super noisy.
+OK 21 looks good.
+flucturating up and down....
+Start to climb around 20 gens. 80->100
+Plateau around 100
+This is definitely successful!
+18 min 36 blocks",Beto-05112021-005,211105_Beto_generate_BigGAN(3),21,2,4,N:\Stimuli\2021-EvolDecomp\2021-11-05-Beto-04\2021-11-05-13-30-46
+NaN,FC6Evol_Decomp,NaN,,"006 Evol Factorized
+13  [2.4  -1.3]  3  1  CMAES_Hessian
+Signal is quite unstable... so may need post hoc processing.
+Monkey slept a lot....
+Take special note on the result....
+the evolution data quality is of concern so may be one reason why this faile.d
+There is nice structure in it!
+Monkey gets really motivated at block 5 => 88% performance.
+fac2_map_corrresnet50_linf8-layer3_01,
+fac2_cntpnt_shuffleresnet50_linf8-layer3_00,
+facttsr_maponly_patchshuffleresnet50_linf8-layer3_02
+I don't quite understand this..... interesting.
+5 blocks
+Really noisy data indeed.
+Also not super illuminating ….",Beto-05112021-006,211105_Beto_selectivity_basic,13,1,3,N:\Stimuli\2021-EvolDecomp\2021-11-05-Beto-01-decomp
+NaN,FC6Evol_Decomp,NaN,,"007 Evol Factorized
+21  [2.6  -1.3]    4   2   CMAES Hessian
+50% performance last experiment
+Seems prediction is less successful .
+High activation images are shuffled….
+So definitely failed prediction.",Beto-05112021-007,211105_Beto_selectivity_basic(1),21,2,4,N:\Stimuli\2021-EvolDecomp\2021-11-05-Beto-04-decomp
+NaN,,NaN,,"001 RFMapping
+13:38-13:46
+Pretty good, high performance
+24  [0  0]  3  1
+27  [0  0]  3  1
+14  [3.4  -2.9]   6 1
+11  [3.2  -0.8]   4  1",Beto-09112021-001,211109_Beto_rfMapper_basic,NaN,NaN,NaN,
+NaN,FC6Evol_Decomp,NaN,,"002 Evolution
+14  [3.4  -2.9]   6 1
+Not successful failed.
+Really flat evolution.
+Not super useful or significant?",Beto-09112021-002,211109_Beto_generate_BigGAN,14,1,6,N:\Stimuli\2021-EvolDecomp\2021-11-09-Beto-01\2021-11-09-14-00-22
+NaN,FC6Evol_Decomp,NaN,,"003 Evolution
+7   [0.7  -2.2]   4   1   'CMAES_Hessian'
+SU 1.5/5
+Great, neat psth, but Evolution doesn't really shoot up.
+This is one hard to evolve case....",Beto-09112021-003,211109_Beto_generate_BigGAN(1),7,1,4,N:\Stimuli\2021-EvolDecomp\2021-11-09-Beto-02\2021-11-09-14-20-29
+NaN,FC6Evol_Decomp,NaN,,"004 Evolution
+24 [0 0]  3  1 CMAES Hessian
+There may be a single unit mixed in this unit.
+Response PSTH is OK, pretty noisy
+MU 4/5
+150->240 ->344 ! Pretty nice.
+As always V1 neurons are easier to evolve....
+Fast converge,",Beto-09112021-004,211109_Beto_generate_BigGAN(2),24,1,3,N:\Stimuli\2021-EvolDecomp\2021-11-09-Beto-03\2021-11-09-14-38-08
+NaN,FC6Evol_Decomp,NaN,,"006  EvolDecompose
+24 [0 0]  3  1 
+3 factor decomposition.
+Facttsr looks good
+Monk sleep a lot...
+Really good prediction
+fac0_map_corrresnet50_linf8-layer3_02,
+facttsr_corrresnet50_linf8-layer3_03,
+evol_best_01_block027_thread000_gen_gen026_000801
+Definitely a V1 cell. Very illuminating.",Beto-09112021-006,211109_Beto_selectivity_basic(2),24,1,3,N:\Stimuli\2021-EvolDecomp\2021-11-09-Beto-03-decomp
+NaN,,NaN,,"001 RF Mapping
+Monkey is not working from the start
+retried still not working
+Aborted",Beto-11112021-001,211111_Beto_rfMapper_basic,NaN,NaN,NaN,
+NaN,FC6Evol_Decomp,NaN,,"3
+19  [0  0]  3  2   
+Really bad performance < 30%
+Evolution looks good.
+Maybe monkey is just super tired?
+20 mins 7 blocks
+Pretty successful evolution.
+140->250
+OK his performance jumped to 100 ….. Why you are doing that.",Beto-11112021-003,211111_Beto_generate_BigGAN,19,2,3,N:\Stimuli\2021-EvolDecomp\2021-11-11-Beto-01\2021-11-11-12-19-05
+NaN,FC6Evol_Decomp,NaN,,"004 Evol Factorization
+19  [0  0]  3  2   
+Pretty good Evol Factorization exp for V1 neuron.
+cf 
+Crap discard.
+Aborted
+001 RFMapping
+Monkey slept for 12mins no trial.
+Monkey slept 16mins … no trials
+Aborted",Beto-11112021-004,211111_Beto_selectivity_basic,19,2,3,N:\Stimuli\2021-EvolDecomp\2021-11-11-Beto-01-decomp
+NaN,,NaN,,"002 RFMapping (1)
+Some reward not coming through problem
+6 bocks 7mins
+15  [2.3 -0.3]  4  1 'CMAES_Hessian'
+            29  [2.2 -1.2]  4  1  'CMAES_Hessian'
+            27  [0   0]  2.5  1  'CMAES_Hessian'",Beto-16112021-002,211116_Beto_rfMapper_basic(1),NaN,NaN,NaN,
+NaN,FC6Evol_Decomp,NaN,,"003 Evolution
+15  [2.3 -0.3]  4  1 'CMAES_Hessian'
+Monkey working well.
+Hash Unit V4.
+Definitely evolving, 103->117
+Find sth in gen 13.
+Fluctruating a bit. Not sure it’s eye signal or sth else.
+Not super successful. Going up and then down.
+Completed",Beto-16112021-003,211116_Beto_generate_BigGAN,15,1,4,N:\Stimuli\2021-EvolDecomp\2021-11-16-Beto-01\2021-11-16-15-40-25
+NaN,FC6Evol_Decomp,NaN,,"004 Evolution (1)
+29  [2.2 -1.2]  4  1  'CMAES_Hessian'
+Good evolution . 130->150 stay ther -> 170,180 190",Beto-16112021-004,211116_Beto_generate_BigGAN(1),29,1,4,N:\Stimuli\2021-EvolDecomp\2021-11-16-Beto-02\2021-11-16-15-58-22
+NaN,FC6Evol_Decomp,NaN,,"005 Evol Factorization
+15  [2.3 -0.3]  4  1
+Super interesting !
+Even the evolution is not quite successful
+The correlation process could still extract interesting tuning information.
+facttsr_maponly_patchshuffleresnet50_linf8-layer3_02,
+facttsr_maponly_patchshuffleresnet50_linf8-layer3_00,
+facttsr_corrresnet50_linf8-layer3_02
+It seems the features are correct but the spatial locations are not.
+OK performance 43%",Beto-16112021-005,211116_Beto_selectivity_basic,15,1,4,N:\Stimuli\2021-EvolDecomp\2021-11-16-Beto-01-decomp
+NaN,FC6Evol_Decomp,NaN,,"005 Evol Factorization
+29  [2.2 -1.2]  4  1
+V1 factorization study
+Monkey shaked a little bit. Not good.
+Prediction is not good performance is good.
+Let's analyze this.",Beto-16112021-006,211116_Beto_selectivity_basic(1),29,1,4,N:\Stimuli\2021-EvolDecomp\2021-11-16-Beto-02-decomp
+NaN,,NaN,,"001 rf Mapping
+12 mins 7 blocks
+Today IT array is full of noise (not many spikes,just noise). Cannot see anything. 
+Not sure if it's electric connection or sth else. 
+Sccc",Beto-19112021-001,211119_Beto_rfMapper_basic,NaN,NaN,NaN,
+5,FC6Evol_Decomp,NaN,,"002 Evolution
+1  [2.2  -1.2]  4   1  CMAES Hessian
+MU 5/5
+Great performance ! Monkey doing well
+Gen images doing slightly better. And climbing.
+240->288 ->297 ->300 -> 321 - >340S -> 376
+Definitely super successful.
+150
+Also interesting dynamics in this neuron. ( double peak after evolution, before it's single peak
+very interesting neuron.
+Very efficient, 49 blocks 21mins, 70 performance",Beto-19112021-002,211119_Beto_generate_BigGAN,1,1,4,N:\Stimuli\2021-EvolDecomp\2021-11-19-Beto-01\2021-11-19-15-04-22
+NaN,FC6Evol_Decomp,NaN,,"003 Evolution
+2  [2.4  -1.9]  3
+8 8 E 8 
+This guy also has an interesting dynamics like Chan 1
+Evolving it will not be easy.",Beto-19112021-003,211119_Beto_generate_BigGAN(1),2,1,3,N:\Stimuli\2021-EvolDecomp\2021-11-19-Beto-02\2021-11-19-15-29-32
+NaN,FC6Evol_Decomp,NaN,,"004 EvolFactorization
+Actually the prediction is great,
+Fact 1 corrmap is the best.
+ZFact2 corrmap looks good too
+32 mins good performance in the end!
+evol_best_02_block037_thread000_gen_gen036_001099,
+fac1_map_corrresnet50_linf8-layer3_00,
+fac0_map_map_patchshuffleresnet50_linf8-layer3_02
+Will be a tricky experiment to analyze....pattern is not super clear, maybe we didn't find the correct axis.",Beto-19112021-004,211119_Beto_selectivity_basic,1,1,4,N:\Stimuli\2021-EvolDecomp\2021-11-19-Beto-01-decomp
+NaN,,NaN,,"001  took longer than expected
+7 blocks 14mins....
+But let's see how good the rfs are.
+42 is good again.
+42   [1.0   0.1] 
+11   [2.0  -1.4] 
+10   [1.8  -0.9] 
+16   [2.1  -1.8]",Beto-01122021-001,211201_Beto_rfMapper_basic,NaN,NaN,NaN,
+NaN,FC6Evol_Decomp,NaN,,"002  Evolution
+11   [2.0  -1.4] 
+fluctuating, not super meaningful.
+Evolved but not large effect size.
+Around gen 24 the firing rate cushed down and the monkey behavio is weird... maybe head moved.
+Not sure what to get from this",Beto-01122021-002,211201_Beto_generate_BigGAN,11,1,4,N:\Stimuli\2021-EvolDecomp\2021-12-01-Beto-01\2021-12-01-12-16-52
+NaN,FC6Evol_Decomp,NaN,,"003  Evolution
+16   [2.1  -1.8]   1
+Flat evolution, not really useful.
+Monkey slept …. around gen 18
+Hash 5/5  super noisy
+Natural reference activity suddenly jumpted
+Huge fluctuations....
+Fluctuation may comes from sorting error sometimes huge noise gets classied as spikes...
+29mins 39blocks
+ Data not good quality...... Beware!",Beto-01122021-003,211201_Beto_generate_BigGAN(1),16,1,4,N:\Stimuli\2021-EvolDecomp\2021-12-01-Beto-02\2021-12-01-12-38-28
+NaN,FC6Evol_Decomp,NaN,,"004  Evolution
+42   [1.0   0.1]   3  1  'CMAES_Hessian' 
+IT channel natural references
+add 200ml more
+Hash 3/5
+34 mins to finish! 30 blocks takes too long.
+But fairly successful.
+Try some post hoc analysis to see the clue of what it likes
+Complete Successful c",Beto-01122021-004,211201_Beto_generate_BigGAN(2),42,1,3,N:\Stimuli\2021-EvolDecomp\2021-12-01-Beto-03\2021-12-01-13-11-49
+NaN,,NaN,,"001 Rf Mapping
+42  [0.4  0]  3
+42  [0.4  0]  3   1
+12  [2.3  -1,9]  4  1
+22  [0  0]  3   1",Beto-03122021-001,211203_Beto_rfMapper_basic,NaN,NaN,NaN,
+4,FC6Evol_Decomp,NaN,,"002 Evoluton BigGAN
+42  [0.4  0]  3   1
+MU 4/5
+Good psth good evolution , not as dramatic as yesterday.
+Monkey working at 80% performance pretty good!
+15 mins  40 blocks, 160-> 300 sp /sec
+0.5 
+0.05 
+0.1 
+.15 
+025 
+Completed, Great evolution, see difference from yesterday's SU evolution
+SU vs Hash Evolution",Beto-03122021-002,211203_Beto_generate_BigGAN,42,1,3,N:\Stimuli\2021-EvolDecomp\2021-12-03-Beto-01\2021-12-03-12-28-47
+1,FC6Evol_Decomp,NaN,,"003 Evolution BigGAN
+22  [0  0]  3   1
+Unit 1 is a SU. Unit 2 is MU.
+SU 1/5
+Starts from 20->30",Beto-03122021-003,211203_Beto_generate_BigGAN(1),22,1,3,N:\Stimuli\2021-EvolDecomp\2021-12-03-Beto-02\2021-12-03-12-52-30
+4,FC6Evol_Decomp,NaN,,"004 EvolFactorization
+42  [0.4  0]  3   1
+MU 4/5
+fac1_map_corrresnet50_linf8-layer3_03,
+facttsr_corrresnet50_linf8-layer3_03,
+facttsr_corrresnet50_linf8-layer3_00
+211203_Beto_generate_BigGAN(3) crashed not suing
+Beto-03122021-005",Beto-03122021-004,211203_Beto_selectivity_basic,42,1,3,N:\Stimuli\2021-EvolDecomp\2021-12-03-Beto-01-decomp
+1,FC6Evol_Decomp,NaN,,"006 Evolution
+12  [2.3  -1,9]  4  1 % I put it wrong.
+12  [2.3  -1]  4  1  % this is the actual position...
+THERE is a mismatch in location, maybe that's the reason.
+Super Duper sparse response,
+SU 1/5
+Evolution Trajectory prefchan 12, 4.0 deg pos [2.3 -1.0], thread 1 
+AAWWA 
+50
+SUPER SUPER interesting experiment. Starts from 0 -> ~40
+SUper dramatic experiment
+12  [2.3  -1,9]  4  1   'CMAES_Hessian'",Beto-03122021-006,211203_Beto_generate_BigGAN(3),12,1,4,N:\Stimuli\2021-EvolDecomp\2021-12-03-Beto-03\2021-12-03-13-37-44
+NaN,,NaN,,"001 RFMapping
+Good performance and good eye signal!
+Slept a little bit.
+Super efficient, good performance!
+8min 7blocks
+IT channel looks bad....
+12  [1.9  -2.0]    4  1 SU 2.5/5
+28  [0.0   -0.5]   3   1  SU 3/5",Beto-07122021-001,211207_Beto_rfMapper_basic,NaN,NaN,NaN,
+2.5,FC6Evol_Decomp,NaN,,"002 Evolution.
+12  [1.9  -2.0]    4  1 SU 2.5/5
+Less sparse than last time but still super good signal.
+Should be evolvable. May take longer.
+Great evolution as last time.
+a blue textury horizontal bars.
+10 -> 46
+Super high performance 24min 53 blocks >70 performance",Beto-07122021-002,211207_Beto_generate_BigGAN,12,1,4,N:\Stimuli\2021-EvolDecomp\2021-12-07-Beto-01\2021-12-07-11-50-02
+3,FC6Evol_Decomp,NaN,,"003 Evoluyion
+28  [0.0   -0.5]   3   1  SU 3/5
+The seperation is not clear. PSTH is not too pretty.
+It evolved from 20-50
+10 
+15 
+Very efficient 32 blocks 17 mins
+Not bad , but go up and down",Beto-07122021-003,211207_Beto_generate_BigGAN(1),28,1,3,N:\Stimuli\2021-EvolDecomp\2021-12-07-Beto-02\2021-12-07-12-19-47
+2.5,FC6Evol_Decomp,NaN,,"004 Factorization
+Factorization failed quite badly....
+The predicted stimuli didn't match up to the evolution best stimuli
+Is this the general case for SU evolutions? Harder to predict?
+Or maybe it's a SU MU thing?rrr
+More over the Tsr and Fact Tsr out perform all the other models. So 3 factor may not be enough
+So this cell seems to be ""AND"" operator over the featurer
+Some cells seems to be """"OR operator.
+We hypothesize that ""AND"" neurons are harder to evolve and less stable when evolved.
+5 blocks 26 mins
+40% performance really bad",Beto-07122021-004,211207_Beto_selectivity_basic,12,1,4,N:\Stimuli\2021-EvolDecomp\2021-12-07-Beto-01-decomp
+2.5,FC6Evol_Decomp,NaN,,"005 validation last friday
+Using factorized images from Friday
+12  [2.3  -1]  1
+Though the units are different …
+36 perormance
+evol_best_01_block052_thread000_gen_gen051_001534,
+evol_best_02_block061_thread000_gen_gen060_001818,
+facttsr_corrresnet50_linf8-layer3_03
+006/7 Validation
+[1.9 -2.0]
+Aborted 3 trils onl.....",Beto-07122021-005,211207_Beto_selectivity_basic(1),12,1,4,N:\Stimuli\2021-EvolDecomp\2021-12-07-Beto-01-decomp2
+NaN,,NaN,,"001 RFMaping
+The SU at ch 12 is still there. Reat PSTH.
+Ch 4   [0.9  -1.6]   4  1
+Ch 10  [2.1  -1.1]   4  1
+Ch 12   [2.1  -2.1]   4   1
+Ch 17   [1.1   -0.8]   3   1",Beto-10122021-001,211210_Beto_rfMapper_basic,NaN,NaN,NaN,
+4,FC6Evol_Decomp,NaN,,"002 Evolution
+Ch 4   [0.9  -1.6]   4  1
+MU 4/5
+Eye signal is unstable 110->130->140->130 flucturate
+IT's evolving but not a classic gradual evolution, just suddenly evoled. Rrc
+Eye signal is very unstable.
+Recalibrate 4-5 times ….. and not sure if that’s the reason neural signal is not stbale.
+Ch 4   [0.9  -1.6]   4  1
+Ch 4   [0.9  -1.6]   4  1
+Ch 4   [0.9  -1.6]   4  1
+003 Validation
+Crashed randomly..... Computer delay thing
+Aborted...",Beto-10122021-002,211210_Beto_generate_BigGAN,4,1,4,N:\Stimuli\2021-EvolDecomp\2021-12-10-Beto-01\2021-12-10-12-14-28
+4,FC6Evol_Decomp;natrefvalid,NaN,,"004 Validatin
+12  [2  -2]  4  1
+Validation of Last 2 Chan 12 experiments
+lets see why , OK now it's fine
+pretty efficient 12 mins nearly 5 blocks.
+14 mins finish 5 blocks
+buildings_222_City_Pittsburgh_Permits_Licenses_Inspections,
+306,
+humans_pic_02",Beto-10122021-004,211210_Beto_selectivity_basic(1),12,1,4,N:\Stimuli\2021-EvolDecomp\2021-12-10-Beto-02-natvalid
+4,FC6Evol_Decomp,NaN,,"005 EvolutionFactorization
+Ch 4   [0.9  -1.6]   4  1
+MU 4/5
+evol_best_01_block034_thread000_gen_gen033_001018,
+evol_best_04_block035_thread000_gen_gen034_001021,
+fac0_cntpnt_shuffleresnet50_linf8-layer3_00",Beto-10122021-005,211210_Beto_selectivity_basic(2),4,1,4,N:\Stimuli\2021-EvolDecomp\2021-12-10-Beto-01-decomp
+3,FC6Evol_Decomp,NaN,,"006 Evolution 12
+12  [2  -2]  4  1
+SU 3/5
+Evolution jumped again at 35 blocks! Found some new stuff.
+30->75->99->85
+90 is not stable up and down between 75->90
+Now->110! ->119
+44 mins   60 blocks 55 performance pretty good!",Beto-10122021-006,211210_Beto_generate_BigGAN(1),12,1,4,N:\Stimuli\2021-EvolDecomp\2021-12-10-Beto-02\2021-12-10-13-36-12
+NaN,,NaN,,"001 RFMapping
+Didn’t start the connection
+Aborted....",Beto-15122021-001,211215_Beto_rfMapper_basic,NaN,NaN,NaN,
+NaN,,NaN,,"002 RFMapping
+Redo, get the connection...
+14  [2.0  -1.5]  4  1
+15  [2.0  -1.4]  4  1",Beto-15122021-002,211215_Beto_rfMapper_basic(1),NaN,NaN,NaN,
+4.5,FC6Evol_Decomp,NaN,,"003 Evolution
+14  [2.0  -1.5]  4  1
+MU 4.5/5
+Promising dcc
+Curiously t didn’t evolved....
+Really high performance though.
+goinf up and down, better than natural but not really climbing a lot.
+100->118->126->120->130
+0.05 
+0.15 
+025 
+0.05 
+0.15 
+025",Beto-15122021-003,211215_Beto_generate_BigGAN,14,1,4,N:\Stimuli\2021-EvolDecomp\2021-12-15-Beto-01\2021-12-15-11-47-35
+5,FC6Evol_Decomp,NaN,,"004 Evolution
+15  [2.0  -1.4]  4  1
+MU 5/5
+Also going up and down not super successful.
+c
+R 8 
+Not successful.... 85->100 then back to 85",Beto-15122021-004,211215_Beto_generate_BigGAN(1),15,1,4,N:\Stimuli\2021-EvolDecomp\2021-12-15-Beto-02\2021-12-15-12-07-39
+4,FC6Evol_Decomp,NaN,,"005 Evolution
+MU4/5
+31   [1.5  -1.0]  3  1  'CMAES_Hessian'
+Natural and Generated are very correlated.
+starts around 125. r
+160 
+140 
+120 
+100 
+10 
+15 
+0.05 
+0.15 
+025 
+Monkey slept....
+It flucturates a lot.... didn't work well",Beto-15122021-005,211215_Beto_generate_BigGAN(2),31,1,3,N:\Stimuli\2021-EvolDecomp\2021-12-15-Beto-03\2021-12-15-12-25-48
+4.5,FC6Evol_Decomp,NaN,,"006 Evol Factorization
+14  [2.0  -1.5]  4  1
+fac0_cntpnt_shuffleresnet50_linf8-layer3_02,
+fac2_full_corrresnet50_linf8-layer3_03,
+fac2_map_map_patchshuffleresnet50_linf8-layer3_00",Beto-15122021-006,211215_Beto_selectivity_basic,14,1,4,N:\Stimuli\2021-EvolDecomp\2021-12-15-Beto-01-decomp
+NaN,,NaN,,"001 RFMapper
+very efficient great exp.
+2   [0.6  -1.8]   4  1  'CMAES_Hessian'
+2   [0.6  -1.8]   4  1  'CMAES'
+SU 1/5",Beto-20122021-001,211220_Beto_rfMapper_basic,NaN,NaN,NaN,
+1,FC6Evol_Decomp;BigGAN_FC6,NaN,,"002 Evol BigGAN
+2   [0.6  -1.8]   4  1  'CMAES_Hessian'  FC6
+2   [0.6  -1.8]   4  1  'CMAES'  BigGAN
+SU 1/5 beautiful
+SU 1/5  high quality SU!
+FC6 greeat evolution ! 3 spk/sec -> 17spk/sec -> 21 spk/sec
+BigGAN stay put.
+Indeed for this V4 unit, the FC6 evolved from the start BigAN didn t response
+BigGAN evolved a bit but not as strong as FC6
+F**K BigGAN caught up at around 13 gens.
+FC6 ~ 24 spk/sce 
+BigGAN ~ 15 spk/sec
+OK now they crossed their path.
+Wow.... crazy evolution!
+Wow BigGAN surpass FC6 around gen 24
+Both stays around 31 spk/sec at the end.
+Baseline and response to control are both super low!
+IT SEEMS LIKE THE CHOKER or NECK part of the face.
+Monkey performance is super high.
+38mins, 40 blocks for 2 threads super efficient! Great job beto!",Beto-20122021-002,211220_Beto_generate_BigGAN,2,1,4,N:\Stimuli\2021-EvolDecomp\2021-12-20-Beto-01\2021-12-20-12-50-36
+1,FC6Evol_Decomp;natrefvalid,NaN,,"003 Mixed set Selectivity Validation
+Top selective stuffs are still human instead of otehrs.
+A very selective peak.
+humans_pic_04,
+humans_pic_01,
+humans_pic_03
+Not exactly our lab members but some GAN generated images...?",Beto-20122021-003,211220_Beto_selectivity_basic,2,1,4,N:\Stimuli\2021-EvolDecomp\2021-12-20-Beto-01-natvalid
+1,BGEvol_Decomp,NaN,,"004  Evol Factorization Validation
+2   [0.6  -1.8]   4  1 CMAES BigGAN thread 2
+F**K Attibution using BigGAN Evolution also worked!!
+I mixed in 5 best evolution images from the FC6 thread.
+Super interesting structure!! But the Evolved and the first factor seems to be great",Beto-20122021-004,211220_Beto_selectivity_basic(1),2,1,4,N:\Stimuli\2021-EvolDecomp\2021-12-20-Beto-01-decomp-BigGAN
+1,FC6Evol_Decomp,NaN,,"005 Another EvolFactorization Validation
+2   [0.6  -1.8]   4  1 CMAESHesian FC6  thread 1
+This is an AMAZING experiment THANKS GOD THANK YOU BETO.
+The prediction ACTUALLY WORKED TOOOOO for FC6 evolution though it doesn't look anithing interpretable to us!!!!
+Crazily AMAZING
+Truly amazing!!!
+Such a productive day!
+2 evolution and 3 selectivity datasets SO MUCH to play with
+BTW this cell also have a MU in company so can be great to compare!
+ 
+facttsr_corrresnet50_linf8-layer3_03,
+tsr_corrresnet50_linf8-layer3_03,
+facttsr_map_patchshuffleresnet50_linf8-layer3_00
+Completed",Beto-20122021-005,211220_Beto_selectivity_basic(2),2,1,4,N:\Stimuli\2021-EvolDecomp\2021-12-20-Beto-01-decomp
+NaN,,NaN,,"001 RFMapping
+We still got the Gorgeous single unit! Great
+2    [0.5   -1.5]  4  1
+12  [2.6  -2.0]  4  1
+18  [0   0]   3    1
+24  [0   0]   3    1
+Completed",Beto-22122021-001,211222_Beto_rfMapper_basic,NaN,NaN,NaN,
+2,FC6Evol_Decomp;BigGAN_FC6,NaN,,"002  Evolution BigGAN
+Channel 12 BigGAN vs FC6
+SU2/5
+12  [2.6  -2.0]  4  1 FC6 CMAES_Hessian
+12  [2.6  -2.0]  4  1 BigGAN (full space) CMAES
+Good separation sparse signal good for evolution!
+Dissimilar to channel 2 the BigGAN did well first
+Monkey is doing fantastic job. Starting from
+5->11->
+FC6 shoot up!
+BigGAN shoot up around 14 gens. ?????????
+Both shoot up around 15 gens, go far beyond the natural reference. ????????
+Wow both stay really high but one has a disk one has the curves.
+Both are around 25, really on par with each other.
+Both stuck around 25 quite stable. But still not so much similarity is found. In the evolved images.
+OK at this final stage, BigGAN > FC6, BigGAN around 33, FC6 around 25
+BigGAN keep going up! WOW....rrr
+5->5
+Interestingly, FC6 fall down the hill but BigGAN stayes herye.
+38.5 mins, 45 blocks for 2 threads pretty efficient!
+Completed",Beto-22122021-002,211222_Beto_generate_BigGAN,12,1,4,N:\Stimuli\2021-EvolDecomp\2021-12-22-Beto-01\2021-12-22-12-42-36
+2,FC6Evol_Decomp;natrefvalid,NaN,,"003  Natural Validation
+Mixed Set Natural reference images
+PolarRadial is great
+Building City Pittsburg is also good.
+Really informative. Merging SU and MU
+buildings_222_City_Pittsburgh_Permits_Licenses_Inspections,
+humans_pic_02,
+PolarRadial_08_04
+Completed",Beto-22122021-003,211222_Beto_selectivity_basic,12,1,4,N:\Stimuli\2021-EvolDecomp\2021-12-22-Beto-01-natvalid
+2,BGEvol_Decomp,NaN,,"004 Evol Factorization
+BigGAN thread
+It seems for the factorization based on BigGAN,
+Though it's very good to our eyes, neurons doesn't like it that much...?
+One confounding thing is the SUMU is merged in the online plot.
+Maybe offline plot is better....
+Some structure seems to emerge after 5 repetitions.
+I think it's the MU is not predicted well by this factorization.
+But SU may be predicted wll.
+evol_best_01_block029_thread001_gen_gen028_001669,
+evol_best_03_block031_thread001_gen_gen030_001774,
+evol_best_00_block022_thread001_gen_gen021_001272
+Completed",Beto-22122021-004,211222_Beto_selectivity_basic(1),12,1,4,N:\Stimuli\2021-EvolDecomp\2021-12-22-Beto-01-decomp-BigGAN
+2,FC6Evol_Decomp,NaN,,"005  Evol Factorization
+FC6  thread
+This seems much more successful thant the BigGAN factorization.....
+The predictive structure is really clear!
+Fact2 is apparently good.
+Factor 2 is basically that signature curved grating thing.
+And more importantly the certain map is > the curve.
+These two experiments are the best we have got in half a year
+facttsr_corrresnet50_linf8-layer3_02,
+fac2_map_corrresnet50_linf8-layer3_02,
+facttsr_corrresnet50_linf8-layer3_03
+Completed",Beto-22122021-005,211222_Beto_selectivity_basic(2),12,1,4,N:\Stimuli\2021-EvolDecomp\2021-12-22-Beto-01-decomp
+NaN,,NaN,,"002 RFMapping (using the debugged BXW folder)
+69% performance
+7mins
+Generally the eye signal is much more stable than the other rig.
+1.25 rad could work.
+Spend > 0.5 hour solving spike sorting issue, connection issue.
+bug in the older code, and loading issue ….
+complete",Beto-04012022-002,220104_Beto_rfMapper_basic,NaN,NaN,NaN,
+4,FC6Evol_Decomp;BigGAN_FC6,NaN,,"003 Evol BigGAN
+64  [0  0]  3  1  FC6   CMAHess
+64  [0  0]  3  1  BigGAN   CMA
+Fixed the reference image problem 
+BigGAN definitely evolved. 160->220 very stable.
+BigGAN rise dramatically ->260 at gen 8 and 9
+FC6 evolved too at around 15. The two threads meet each other at 17 blocks ~ 200
+Dog face vs ?
+FC6 evolved but not ….as high...
+Getting closer around gen 22.
+The PSTH were nearly indistinguishable around gen 23! Really matched each other. ~ 250
+Great experiment!
+Super cool evolution traces.
+WTF, FC6 exceeds BigGAN at around 30gens …. crazy!
+I feel it's the nose of the animal.
+Why Beto Keeps pumping out great data (while losing weight)
+The final PSTHs are really similar to each other.
+2.5 
+0.5 
+005 
+0.1 
+0.2 
+025 
+SUPER efficient 28min 40 blocks.
+Mean activation are indistinguishable,
+266.43 vs 261.480
+complete",Beto-04012022-003,220104_Beto_generate_BigGAN,64,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-04-Beto-01\2022-01-04-12-50-04
+4,FC6Evol_Decomp;natrefvalid,NaN,,"4
+Debugging the Evol Factor experiments also took a while.
+Then debugged the Selectivity exp
+Then debug the plot function... It’s super slow.
+This cell's favoriate iamge is capybaras.
+and monkeys
+Note current plotting is super slow not sure why.....
+I think there are some unnecessary processings down there like PSTH....
+Monkeys are still its favorite. Rrrrr
+ITI ~ 3.5 Sec!!!
+004 14 mins 6 blocks not bad!
+monkeys_36_20180321151851_3674311_large,
+monkey (5),
+dogYawn (10)
+complete",Beto-04012022-004,220104_Beto_selectivity_basic,64,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-04-Beto-01-natvalid
+4,BGEvol_Decomp,NaN,,"005 FC6 Factorization
+OK, the long ITI problem solved.
+Monkey performance is super high, ~ 87%
+Our evolved guys still outperform the natural ones.
+Though the predictions are not successful.
+Some natural images are left in the cohort.
+So the prediction is not totally failure. Structure could be seen from the curves.
+13 mins 7 blocks
+complete",Beto-04012022-005,220104_Beto_selectivity_basic(1),64,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-04-Beto-01-decomp
+4,FC6Evol_Decomp,NaN,,"006 BigGAN factorization
+STill evolved are the best
+The others are less.
+evol_best_01_block039_thread001_gen_gen038_002242, evol_best_03_block034_thread001_gen_gen033_001953, evol_best_04_block010_thread001_gen_gen009_000576
+complete
+2022-01-05 00:00:00",Beto-04012022-006,220104_Beto_selectivity_basic(2),64,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-04-Beto-01-decomp-BigGAN
+NaN,,NaN,,"001 RFMapper
+RFMapping
+Good performance fast",Beto-05012022-001,220105_Beto_rfMapper_basic,NaN,NaN,NaN,
+4,FC6Evol_Decomp;BigGAN_FC6,NaN,,"002 Evol BigGAN FC6
+42  [0.5  0.0]   3   1   FC6
+42  [0.5  0.0]   3   1   BigGAN
+MU 4/5, clear PSTH should be easy to evolve.
+once again BigGAN evolved first.
+BigGAN jumped up at gen 10. FC6 is slow...
+So now BigGAN becomes a shwpe In the nowhere.
+FC7 slowly evolved too.
+Actually we can estimate the repitition suppression precisely from the response to natural images.
+And then use it to correct for repitition suppression in the evolved images.
+Both evolved well.
+at gen 23 two threads are quite comparable.
+Monkey is more tired than before. Slept quite a bit.
+jumped up again at gen 27
+wow the two gets really comparable around gen 28
+OK once again FC6 surpass BigGAN at the last stage.
+Alternate and comparable at last stage.
+0.682
+44mins 46 blocks",Beto-05012022-002,220105_Beto_generate_BigGAN,42,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-05-Beto-01\2022-01-05-12-21-35
+4,FC6Evol_Decomp;natrefvalid,NaN,,"003  Natural Validation
+natural images mixed set
+Bob Ross Easel .
+Familiar toy...? What's that
+Mutually grooming ponies????
+Monkeys are still activating
+monk is tired...
+animals_8_, monkey(12), monkey (5)",Beto-05012022-003,220105_Beto_selectivity_basic,42,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-05-Beto-01-natvalid
+4,BGEvol_Decomp,NaN,,"004   FC6 Evol Factorization
+evol_best_03_block035_thread000_gen_gen034_001994, evol_best_00_block041_thread000_gen_gen040_002332, evol_best_01_block042_thread000_gen_gen041_002380
+Evolved are quite good, so is the tsr and facttsr images, but not as activating.",Beto-05012022-004,220105_Beto_selectivity_basic(1),42,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-05-Beto-01-decomp
+4,FC6Evol_Decomp,NaN,,"005 BigGAn evol Factorization
+Looks cleaner and better@! Let's see if this work.
+Performance is super low here. But the predictionf is fine. Good structure in the prediction .
+Many equivalent class are discovered in this way.
+48 % performance
+22 mins 6blocks
+Complete",Beto-05012022-005,220105_Beto_selectivity_basic(5),42,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-05-Beto-01-decomp-BigGAN
