@@ -1,8 +1,11 @@
-function Manif_Map_show_fun(MapVarStats, Animal, Expi, chan2plot)
+function Manif_Map_show_fun(MapVarStats, Animal, Expi, chan2plot, figh)
+if nargin < 5
+    figh = 3;
+end
+figure(figh); clf; set(figh,'pos',[ 805         197        1559         781]); % all manifold images montaged
+set(0,'CurrentFigure',figh); clf;T=tiledlayout('flow','tilesp','compact','padd','compact');
 % Put Manifold maps into a flow tiled layout
 si = 1;
-figure(3); clf; set(3,'pos',[ 805         197        1559         781]); % all manifold images montaged
-set(0,'CurrentFigure',3); clf;T=tiledlayout('flow','tilesp','compact','padd','compact');
 % T=tiledlayout(1,2,'tilesp','compact','padd','compact');
 pref_chan = MapVarStats(Expi).units.pref_chan;
 tic

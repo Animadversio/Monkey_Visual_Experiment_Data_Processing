@@ -1,4 +1,4 @@
-% Make tuning curve figure and exemplar prototype simplified compare figures
+% Make tuning curve figure and exemplar prototype simplified compare figures (Figure 3,4)
 %% Prep data collection
 Animal="Both";Set_Path;
 py.importlib.import_module("pickle");
