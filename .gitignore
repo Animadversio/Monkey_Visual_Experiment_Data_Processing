@@ -1,4 +1,5 @@
-
+*.mat
+*.fig
 Image_analysis.asv
 NS_response/NS_Channel45.png
 *.png
@@ -13,5 +14,6 @@ NMCoF.asv
 .idea/modules.xml
 .idea/Monkey_Visual_Experiment_Data_Processing.iml
 .idea/vcs.xml
+.idea/other.xml
 ~$Alfa_Exp_Record_sort.xlsx
 ~$Alfa_Exp_Record_draft.xlsx
