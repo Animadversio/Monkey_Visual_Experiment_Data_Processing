@@ -69,8 +69,8 @@ xpos = unique(uniqpos(:,1));
 ypos = unique(uniqpos(:,2));
 nPos = size(uniqpos,1);
 % This is a key assumption! The position could be factorized into a square grid. 
-assert(nPos==length(xpos)*length(xpos)); % if there is multiple sets of xpos this will fail
-posgrid = reshape([uniqpos, (1:nPos)'],[length(xpos),length(ypos),3]);
+% assert(nPos==length(xpos)*length(xpos)); % if there is multiple sets of xpos this will fail
+% posgrid = reshape([uniqpos, (1:nPos)'],[length(xpos),length(ypos),3]);
 % sort neural responses by getting the trial indices
 idx_grid = cell(length(ypos),length(xpos)); % trial index
 iPos_grid = cell(length(ypos),length(xpos)); % position index for grid
