@@ -1,4 +1,4 @@
-function selectivity_basic_PostExpAnalysis_prefchan(Sel_bhv2, imgdir)
+function D = vis_GUI_selective_prefchan(Sel_bhv2, imgdir)
 if nargin == 0
 Sel_bhv2 = string(ls([datestr(now,'yymmdd'),'*.bhv2']))
 return
@@ -65,25 +65,27 @@ for iXY = 1:xy_n
     end % of iPic
     
 end % of iXY
-%% Text reprsentation 
+%% Calculate the response and sem of it. 
 iCh = TrialRecord.User.prefChan;
 iUnit = 1;
 rspvec_pfch = squeeze(responseTensor(iCh,iUnit+1,:));
 semvec_pfch = squeeze(responseTensor_sem(iCh,iUnit+1,:));
+%% Text reprsentation 
 for iPic = 1:pics_n
     imgnm = pics_unique{iPic} ; 
     fprintf("%s %.2f (%.2f)\n", imgnm, rspvec_pfch(iPic), semvec_pfch(iPic));
 end
-%%
+%% mapping picture names to the full paths
 [imgfps, mapper] = map2fullpath(pics_unique, imgdir);
-%%
+%% 
 parts = split(Sel_bhv2,".");
 imgnms = string(ls(fullfile(imgdir,"*.png")));
 matnm = fullfile(compose("%s_prefchan_rsp.mat",parts(1)));
 save(matnm,'rspvec_pfch','semvec_pfch',...
     'responseTensor','responseTensor_sem','resp_trial_col','imgfps')
+D = load(matnm);
 %% Interactive Analysis of selectivity experiment
-h1 = figure;set(h1,'pos',[519        -950        1365         440])
+h1 = figure;set(h1,'pos',[519        50        1365         440])
 % h2 = figure;
 global ax2 ax1 pics_unique
 % imgfps = strcat(pics_unique,'.png');
@@ -141,7 +143,10 @@ montage(ax2.UserData.img_col)
 end
 
 function [imgfps, mapper] = map2fullpath(picnm_arr, imgdir)
-imgnm_wsfx = deblank(string([ls([imgdir+"\*.png"]);ls([imgdir+"\*.jpg"]);ls([imgdir+"\*.jpeg"])]));
+imgnm_wsfx = deblank([string(ls(imgdir+"\*.png"));...
+                      string(ls(imgdir+"\*.jpg"));...
+                      string(ls(imgdir+"\*.jpeg"));...
+                      string(ls(imgdir+"\*.bmp"))]);
 [~,imgnms,sfxs] = fileparts(imgnm_wsfx);
 mapper = containers.Map(imgnms,fullfile(imgdir, imgnm_wsfx));
 imgfps = cellfun(@(I)mapper(I),picnm_arr,'uni',0);

@@ -1,4 +1,6 @@
 %% Animation of Evolution image change
+%  Older version, old API. 
+%%
 expftr = contains(ExpSpecTable_Aug.expControlFN,"generate") & ...
      ExpSpecTable_Aug.Expi==7 &...
      contains(ExpSpecTable_Aug.Exp_collection, "Manifold");

@@ -1,13 +1,13 @@
 % Analyze the new Evolution decomposition experiments. 
 % 
 Animal = "Both";Set_Path;
-expftr = contains(ExpRecord.expControlFN,["210628_Alfa","210625_Alfa"]);%& contains(ExpRecord.expControlFN, "selectivity");; %& ,"200812"contains(ExpRecord.Exp_collection,"BigGAN_Hessian");% & contains(ExpRecord.Exp_collection,"BigGAN");
+expftr = contains(ExpRecord.expControlFN,["210716_Alfa"]);%& "210628_Alfa","210625_Alfa"contains(ExpRecord.expControlFN, "selectivity");; %& ,"200812"contains(ExpRecord.Exp_collection,"BigGAN_Hessian");% & contains(ExpRecord.Exp_collection,"BigGAN");
 fllist = find(expftr);no_return=true;
 loadExperiments(fllist(1:end),Animal,no_return);%[meta_new,rasters_new,~,Trials_new] = 
 %%
 Animal = "Alfa";Set_Path;
 ftrrows = find(...
-               contains(ExpRecord.expControlFN,["210621_Alfa"])&...
+               contains(ExpRecord.expControlFN,["210716_Alfa"])&...
                contains(ExpRecord.expControlFN,["select"])&...
                contains(ExpRecord.Exp_collection,["FC6Evol_Decomp"])...
                );
@@ -69,7 +69,7 @@ img_idxarr = cellfun(@(imgnm)find(strcmp(Trials.imageName,imgnm)),imgname_uniq,'
 % group_idxarr = cellfun(@(idxuniq) find(contains(Trials.imageName,
 % imgname_uniq(idxuniq))), group_uniqidxs, 'uni', 0); % WRONG OBsolete
 group_idxarr = cellfun(@(idxuniq) cell2mat(img_idxarr(idxuniq)), group_uniqidxs, 'uni', 0); % trial index for all images in a group
-%%
+%% Sort out spikes 
 evkwdw = [51:200];
 bslwdw = [1:50];
 for iCh = prefchan_ids'
@@ -400,7 +400,10 @@ end
 
 function [imgfps, mapper] = map2fullpath(picnm_arr, imgdir)
 % map the imgnm without suffix to the full path, for all images in a folder.
-imgnm_wsfx = deblank(string([ls([imgdir+"\*.png"]);ls([imgdir+"\*.jpg"]);ls([imgdir+"\*.jpeg"])]));
+imgnm_wsfx = deblank([string(ls(imgdir+"\*.png"));...
+                      string(ls(imgdir+"\*.jpg"));...
+                      string(ls(imgdir+"\*.jpeg"));...
+                      string(ls(imgdir+"\*.bmp"))]);
 [~,imgnms,sfxs] = arrayfun(@fileparts, imgnm_wsfx); % older version matlab
 mapper = containers.Map(imgnms,fullfile(imgdir, imgnm_wsfx));
 imgfps = cellfun(@(I)mapper(I),picnm_arr,'uni',0); % image full path of tht input picnms 
