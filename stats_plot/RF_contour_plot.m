@@ -11,7 +11,8 @@ uniqsize_deg = unique(RFStat.stim.size_deg)';
 msk = chanmask;
 Fmsk = RFStat.stats.F_P<0.001;
 Tmsk = RFStat.stats.T_P<0.001;
-activ_chans = find(Fmsk & Tmsk & msk)';
+% activ_chans = find(Fmsk & Tmsk & msk)';
+activ_chans = find(Tmsk & msk)';%Fmsk & 
 % activ_chans = find(Fmsk & Tmsk & msk)';
 % activ_chans = find(msk)';
 Xq = -8:0.2:8; Yq = -8:0.2:8;
