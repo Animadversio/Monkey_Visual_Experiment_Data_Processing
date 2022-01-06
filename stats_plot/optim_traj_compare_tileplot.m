@@ -1,5 +1,7 @@
 function [figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
    mskcol, labcol, mskrow, labrow, thread_labels, plot_indiv, Xlim)
+% Plotting based on output of `optim_traj_process`
+% 
 if nargin<10, Xlim = true;end
 expN = numel(block_traj_extrap_col);
 if isempty(mskcol), mskcol={ones(expN,1,'logical')}; labcol="";

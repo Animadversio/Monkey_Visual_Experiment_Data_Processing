@@ -31,7 +31,7 @@ MAX = max(smooth_traj);
 normed_traj_col{i} = (traj_col{i}-MIN)/(MAX-MIN);
 end
 normed_traj_col = reshape(normed_traj_col, size(traj_col));
-else
+else % By default, normalize each traj to the max in that exp. 
 normed_traj_col = cellfun(@(traj) traj/max(traj),traj_col,'uni',0);
 end
 % block cell array

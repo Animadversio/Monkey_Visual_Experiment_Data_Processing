@@ -2,7 +2,7 @@
 
 Animal = "Both"; Set_Path;
 mat_dir = "O:\Mat_Statistics";
-
+% Collect score trajectory and put them into a table. 
 for Animal = ["Alfa", "Beto"]
 load(fullfile(mat_dir, Animal+'_Evol_stats.mat'), 'EStats') 
 load(fullfile(mat_dir, Animal+'_Manif_stats.mat'), 'Stats') 
@@ -65,7 +65,8 @@ end
 save(fullfile(mat_dir,Animal+"_EvolTrajStats.mat"),'EvolTrajStat')
 %%
 end 
-%%
+
+%% Transcribe the mat file into a table and save it. 
 for Animal = ["Alfa", "Beto"]
 load(fullfile(mat_dir,Animal+"_EvolTrajStats.mat"),'EvolTrajStat')
 load(fullfile(mat_dir, Animal+'_Evol_stats.mat'), 'EStats') 
@@ -79,12 +80,12 @@ for Expi = 1:numel(EStats)
 	StatTab(Expi).imgsize = EStats(Expi).evol.imgsize;
 	StatTab(Expi).imgpos = EStats(Expi).evol.imgpos;
     StatTab(Expi).step50 = EvolTrajStat(Expi).step50;
-    StatTab(Exp&mski).step63 = EvolTrajStat&msk(Expi).step63;
-    StatTab(Expi).step85 = EvolTrajStat(Expi)&msk.step85;
-    StatTab(Expi).init_act = EvolTrajStat(Expi)&msk.init_act;
-    StatTab(Expi).fina_act = EvolTrajStat(Expi)&msk.fina_act;
+    StatTab(Expi).step63 = EvolTrajStat(Expi).step63;
+    StatTab(Expi).step85 = EvolTrajStat(Expi).step85;
+    StatTab(Expi).init_act = EvolTrajStat(Expi).init_act;
+    StatTab(Expi).fina_act = EvolTrajStat(Expi).fina_act;
     StatTab(Expi).t_initmax = EvolTrajStat(Expi).t_initmax;
-	StatTab(Expi).t_p_initmax = E&mskvolTrajStat(Expi).t_p_initmax;
+	StatTab(Expi).t_p_initmax = EvolTrajStat(Expi).t_p_initmax;
 	StatTab(Expi).t_initend = EvolTrajStat(Expi).t_initend;
 	StatTab(Expi).t_p_initend = EvolTrajStat(Expi).t_p_initend;
 	StatTab(Expi).DAOA_initmax = EvolTrajStat(Expi).DAOA_initmax;
@@ -94,6 +95,7 @@ StatTab = struct2table(StatTab);
 %%
 writetable(StatTab, fullfile(mat_dir, Animal+"_EvolTrajStats.csv"))
 end
+
 %% Reload and merge the stats for evolution trajectories. 
 tabA = readtable(fullfile(mat_dir, "Alfa"+"_EvolTrajStats.csv"));
 tabB = readtable(fullfile(mat_dir, "Beto"+"_EvolTrajStats.csv"));
@@ -118,7 +120,8 @@ fprintf("V4 - V1: P=%.1e t=%.3f(df=%d),CI=[%.1f,%.1f]\n",P,TST.tstat,TST.df,CI(1
 fprintf("IT - V1: P=%.1e t=%.3f(df=%d),CI=[%.1f,%.1f]\n",P,TST.tstat,TST.df,CI(1),CI(2));
 [~,P,CI,TST] = ttest2(StatTab.step50(ITmsk&msk), StatTab.step50(V4msk&msk));
 fprintf("IT - V4: P=%.1e t=%.3f(df=%d),CI=[%.1f,%.1f]\n",P,TST.tstat,TST.df,CI(1),CI(2));
-%%
+
+%% plot the statistics and plot of it. 
 global sumdir
 sumdir = "O:\EvolTraj_Cmp\summary";
 Alfamsk = StatTab.Animal == "Alfa";
@@ -135,9 +138,9 @@ area_prog_cmp(StatTab, "step85", {V1msk&msk, V4msk&msk, ITmsk&msk}, ["V1", "V4",
 area_prog_cmp(StatTab, "step50", {V1msk&msk, V4msk&msk, ITmsk&msk}, ["V1", "V4", "IT"], {[3,1],[2,1],[3,2]})
 %% Plot example trajectories 
 Animal = "Alfa";
-A = load(fullfile(mat_dir,Animal+"_EvolTrajStats.mat"),'EvolTrajStat')
+A = load(fullfile(mat_dir,Animal+"_EvolTrajStats.mat"),'EvolTrajStat');
 Animal = "Beto";
-B = load(fullfile(mat_dir,Animal+"_EvolTrajStats.mat"),'EvolTrajStat')
+B = load(fullfile(mat_dir,Animal+"_EvolTrajStats.mat"),'EvolTrajStat');
 %% Creat masks
 sucsmsk = (StatTab.t_p_initmax<1E-2);
 V1msk = StatTab.pref_chan <=48 & StatTab.pref_chan >= 33;
@@ -178,6 +181,34 @@ summarize_trajs_merge(traj_col,"rng",3,{V1msk&sucsmsk,V4msk&sucsmsk,ITmsk&sucsms
     {Alfamsk,Betomsk},["Alfa","Beto"],figdir,"Both_RngNorm_scoreTraj_avg_Area_Anim_sucs_movmean_merge");
 summarize_trajs_merge(traj_col,"rng",3,{V1msk&sucsmsk,V4msk&sucsmsk,ITmsk&sucsmsk},["V1","V4","IT"],...
     {},["Both"],figdir,"Both_RngNorm_scoreTraj_avg_Area_sucs_movmean_merge");
+
+%% Newer version processing and API 
+
+figdir = "O:\EvolTraj_Cmp\summary";
+A = load(fullfile(mat_dir,"Alfa"+"_EvolTrajStats.mat"),'EvolTrajStat');
+B = load(fullfile(mat_dir,"Beto"+"_EvolTrajStats.mat"),'EvolTrajStat');
+EvolTrajStat = [A.EvolTrajStat,B.EvolTrajStat];
+StatTab = readtable(fullfile(mat_dir, "Both"+"_EvolTrajStats.csv"));
+sucsmsk = (StatTab.t_p_initmax<1E-2);
+StatTab.area = arrayfun(@area_map,StatTab.pref_chan);
+V1msk = StatTab.pref_chan <=48 & StatTab.pref_chan >= 33;
+V4msk = StatTab.pref_chan <=64 & StatTab.pref_chan >= 49;
+ITmsk = StatTab.pref_chan <=32 & StatTab.pref_chan >= 1;
+Alfamsk = StatTab.Animal == "Alfa";
+Betomsk = StatTab.Animal == "Beto";
+%%
+traj_col = arrayfun(@(E)E.act_traj_mean(1:end-1), EvolTrajStat,'uni',0);%{EvolTrajStat.act_traj_mean}
+%%
+summarize_trajs_merge_extrap(traj_col,"movmean_max",3,{V1msk&sucsmsk,V4msk&sucsmsk,ITmsk&sucsmsk},["V1","V4","IT"],...
+    {Alfamsk,Betomsk},["Alfa","Beto"],figdir,"Both_MaxNorm_scoreTraj_avg_Area_Anim_sucs_movmean_merge_extrap");
+%%
+summarize_trajs_merge_extrap(traj_col,"movmean_max",3,{V1msk&sucsmsk,V4msk&sucsmsk,ITmsk&sucsmsk},["V1","V4","IT"],...
+    {Alfamsk,Betomsk},["Alfa","Beto"],figdir,"Both_MaxNorm_scoreTraj_avg_Area_Anim_sucs_movmean_merge_extrap_singtraj",true);
+%%
+summarize_trajs_merge_extrap(traj_col,"movmean_max",3,{V1msk&sucsmsk,V4msk&sucsmsk,ITmsk&sucsmsk},["V1","V4","IT"],...
+    {Alfamsk,Betomsk},["Alfa","Beto"],figdir,"Both_MaxNorm_scoreTraj_avg_Area_Anim_sucs_movmean_merge_extrap_singtraj_smooth",true);
+
+
 function [h,score_m,score_s,blockvec] = summarize_trajs_tile(traj_col,norm_mode,movmean_N,major_msk,major_lab,minor_msk,minor_lab,figdir,fignm)
 % msk_col = {V1msk&validmsk, V4msk&validmsk, ITmsk&validmsk};
 % anim_msks = {Alfamsk&validmsk, Betomsk&validmsk};
@@ -187,7 +218,7 @@ function [h,score_m,score_s,blockvec] = summarize_trajs_tile(traj_col,norm_mode,
 if nargin<2, norm_mode="max";end
 if nargin<3, movmean_N=3;end
 if nargin<4, major_msk={ones(size(traj_col,1),1,'logical')}; major_lab=["all"]; end
-if nargin<6 || isempty(minor_msk), 
+if nargin<6 || isempty(minor_msk)
     minor_msk={ones(size(traj_col,1),1,'logical')}; 
 end
 if nargin<7 || isempty(minor_lab), minor_lab = ["all"]; end 

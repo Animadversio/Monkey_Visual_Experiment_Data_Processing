@@ -1,7 +1,11 @@
-function Evol_BigGAN_FC6_Animation_fun(EStats)
+function videopaths = Evol_BigGAN_FC6_Animation_fun(EStats)
+% Taking EStats output from `Evol_BigGAN_FC6_Collect_Stats_fun`
+% Visualize the parallel evolution and save them as video files. 
+% Input:
+%    EStats: array of struct. 
 result_dir = "E:\OneDrive - Washington University in St. Louis\BigGAN_Evol_Movies";
 ExpType = "BigGAN_FC6";
-
+videopaths = [];
 for Expi = 1:length(EStats)
 % fprintf("Processing BigGAN-FC6 Evolution Exp %d\n",Expi)
 Animal = EStats(Expi).Animal;
@@ -47,9 +51,12 @@ score_sem = cellfun(@(psth)std(squeeze(mean(psth(:,51:200,:),[1,2])))...
 %% Generate Movies
 savepath = result_dir; mkdir(savepath) % fullfile(result_dir, compose("%s_Evol_"))
 color_seq = EStats(Expi).color_seq;
+videopath = fullfile(savepath,compose('%s_BGFC6Evol_%s_Best_PSTH.avi',Animal,stimparts{end-1}));
 % v = VideoWriter(fullfile(savepath,compose('%s_BGFC6Evol_Exp%02d_Best_PSTH',Animal,Expi)));
-v = VideoWriter(fullfile(savepath,compose('%s_BGFC6Evol_%s_Best_PSTH',Animal,stimparts{end-1})));
-v.FrameRate = 4;
+videopaths = [videopaths; videopath];
+fprintf("Video saved to %s\n",videopath) 
+v = VideoWriter(videopath); 
+v.FrameRate = 4; 
 open(v);
 % Set up figure canvas, get the object for use.
 h3=figure(4);set(4,'position',[263         148        1341         735]);clf;
@@ -88,7 +95,7 @@ end
 stimparts = split(EStats(Expi).meta.stimuli,"\");
 expday = datetime(EStats(Expi).meta.expControlFN(1:6),'InputFormat','yyMMdd');
 % fdrnm = compose("%s-Chan%02d", stimparts{end-1}, pref_chan(1));
-ST = suptitle(compose("%s BigGAN FC6 Evol Exp %02d pref chan %s", ...
+ST = sgtitle(compose("%s BigGAN FC6 Evol Exp %02d pref chan %s", ...
     stimparts{end-1}, Expi, EStats(Expi).units.unit_name_arr(EStats(Expi).units.pref_chan_id(1))));
 % Dynamically change the components on figure;
 for blocki = 1:EStats(Expi).evol.block_n-1

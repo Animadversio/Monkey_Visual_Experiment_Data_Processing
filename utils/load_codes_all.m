@@ -1,4 +1,7 @@
 function [codes_all, img_ids, code_geni] = load_codes_all(stim_path, threadi, loadblocks)
+% Signature
+%   [codes_all, img_ids, code_geni] = load_codes_all(stim_path, threadi, loadblocks)
+% 
 % Parameters: 
 % stim_path: backuped stimuli path to the evolution experiment 
 %            e.g. "N:\Stimuli\2019-12-Evolutions\2020-03-10-Alfa-01\2020-03-10-13-50-57";
@@ -12,6 +15,11 @@ function [codes_all, img_ids, code_geni] = load_codes_all(stim_path, threadi, lo
 %            offset=-1
 %            There is test to make sure the file name you are loading is 
 %            "block%03d_thread%03d_code.mat"%( block_k + offset, threadi - 1)
+% 
+% Return 
+%  codes_all: all codes concatentated as a matrix codevecNum-by-latentDimen
+%  img_ids: img name / ids, string array 1-by-codevecNum
+%  code_geni: Generation number as a vector 1-by-codevecNum
 if nargin == 1, threadi = 1; loadblocks=[]; end
 if nargin == 2, loadblocks=[]; end
 data_fn  = ls(fullfile(stim_path, sprintf("*_thread%03d_code.mat", threadi - 1)));

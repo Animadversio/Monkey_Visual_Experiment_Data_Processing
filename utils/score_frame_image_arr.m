@@ -1,11 +1,21 @@
 function frame_img_list = score_frame_image_arr(img_list, score_mat, clim, cmap, LineWidth)
 % Use the cmap and clim to map values in hl_mat to color, and form color frame
 % for corresponding image in the img_list. 
+% Signature
+%   frame_img_list = score_frame_image_arr(img_list, score_mat, clim, cmap, LineWidth)
+% 
+% Example 
+%   img_frame = score_frame_image_arr(code_mean_imgs(:,:,:,1:4:end),actmean(1:4:end));
+%   mtg = imtile(img_frame, 'GridSize',[3,7],'Thumb',[296,296]);
+%   montage(img_frame)
 % 
 % Arguments 
 % img_list is a image cell array, same shape as score_mat. 
 %           Now support image file path (string array) as well, the images
 %           will be read and padded. @Feb.4th
+%           Now support 4d image tensor assume to be [H,W,C,B], will be
+%           converted to 1d image cell array in the parsing, and then
+%           reshaped to match the score_mat. 
 % score_mat is a score matrix, with nan is images with no observation.
 % clim is the limit of value mapped to color Can be automatized
 % cmap is a K-by-3 matrix coding the RGB values in 1:64. e.g. `jet`,
@@ -14,6 +24,7 @@ function frame_img_list = score_frame_image_arr(img_list, score_mat, clim, cmap,
 %
 % Returns
 %   frame_img_list: Cell array of framed images
+% 
 if nargin <= 4 % default parameters
 LineWidth = 10;
 if nargin <= 3
@@ -21,7 +32,14 @@ cmap = parula;
 if nargin == 2
 clim = [min(score_mat,[],'all'), max(score_mat,[],'all')];
 end;end;end
+
 Cmin = clim(1); Cmax = clim(2);
+fprintf("Current color limit [%.2f,%.2f]\n",Cmin,Cmax)
+if ndims(img_list)==4 && ~iscell(img_list)
+    Nimgs = size(img_list,4);
+    img_list = arrayfun(@(imgi)img_list(:,:,:,imgi),1:Nimgs,'uni',0);
+    img_list = reshape(img_list, size(score_mat));
+end
 assert(all(size(img_list) == size(score_mat)), ...
     "Score matrix and image cell array size doesn't matach")
 % LineWidth = 50; % Key parameter controlling the width of margin, can be different for different

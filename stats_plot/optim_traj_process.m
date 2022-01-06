@@ -3,8 +3,9 @@ function [score_m_traj_col, block_traj_col, score_m_traj_extrap_col, block_traj_
 	optim_traj_process(block_traces, score_traces, thread_labels, norm_scheme, blockN_extrap)
 % Stand alone preprocessing function that modularize the analsis done to: 
 %   CMA vs GA; Full vs RedDim; BigGAN vs FC6 evolution comparison. 
-% 
-%  the key input data is 
+%  
+%  Comparing pairs of optimization trajectories, the key inputs are 
+%  
 % Input
 %   block_traces: N by 2 cell array. Full block number vector per thread
 %   score_traces: N by 2 cell array. Full Score vector per thread 
