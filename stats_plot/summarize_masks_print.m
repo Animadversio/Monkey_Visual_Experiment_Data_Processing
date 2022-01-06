@@ -15,7 +15,7 @@ for mi=1:numel(msks)
     num = sum(msk);
     lab = compose("%s-%s",labels(mi),minorlabels(mj));
     ydata = reshape(tab.(varnm)(msk),[],1);
-    stat_sum = compose("%s-%s %.3f+-%.3f N=%d",labels(mi),minorlabels(mj),mean(ydata),sem(ydata),num);
+    stat_sum = compose("%s-%s %.3f+-%.3f N=%d",labels(mi),minorlabels(mj),mean(ydata,'omitnan'),sem(ydata),num);
     fprintf("%s: %s\n",lab,stat_sum)
     statstr = statstr+stat_sum;
     end
