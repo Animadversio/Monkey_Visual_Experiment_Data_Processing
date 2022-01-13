@@ -3,6 +3,9 @@ function videopaths = Evol_BigGAN_FC6_Animation_fun(EStats)
 % Visualize the parallel evolution and save them as video files. 
 % Input:
 %    EStats: array of struct. 
+% Note the Response/score plotted in the video is the 
+%    block average evoke activity - block average baseline activity 
+% (so it's bsl subtracted)
 result_dir = "E:\OneDrive - Washington University in St. Louis\BigGAN_Evol_Movies";
 ExpType = "BigGAN_FC6";
 videopaths = [];
@@ -48,6 +51,12 @@ evol_stim_sem = cell2mat(reshape(evol_stim_sem',1,1,[],thread_n));
 score_avg = cellfun(@(psth)mean(psth(:,51:200,:),'all') - mean(psth(:,1:50,:),'all'),EStats(Expi).evol.psth);
 score_sem = cellfun(@(psth)std(squeeze(mean(psth(:,51:200,:),[1,2])))...
     /sqrt(size(psth,3)),EStats(Expi).evol.psth); % - mean(psth(:,1:50,:),[1,2])
+% Scalor score for evolution
+evoke_avg = cellfun(@(psth)mean(psth(:,51:200,:),'all'),EStats(Expi).evol.psth);
+basel_avg = cellfun(@(psth)mean(psth(:,1:50,:),'all'),EStats(Expi).evol.psth);
+psth_cat = cat(3,EStats(Expi).evol.psth{:});
+bsl_allavg = mean(psth_cat(:,1:50,:),'all');
+bsl_allsem = sem(mean(psth_cat(:,1:50,:),2),'all');
 %% Generate Movies
 savepath = result_dir; mkdir(savepath) % fullfile(result_dir, compose("%s_Evol_"))
 color_seq = EStats(Expi).color_seq;
@@ -63,11 +72,17 @@ h3=figure(4);set(4,'position',[263         148        1341         735]);clf;
 ax1_1 = subtightplot(2,4,1,0.07); % Axes 1 images
 % set(ax1_1,"position",[0.07,0.578,0.439,0.3412]);
 title(compose("%s",EStats(Expi).evol.optim_names(1)))
-scoreYLIM = [0,max(score_avg(:,1:end-1)+score_sem(:,1:end-1),[],'all')]; % Preset and align the YLIM
+scoreXLIM = [0, EStats(Expi).evol.block_n];
+scoreYLIM = [max(0, bsl_allavg-bsl_allsem),max(evoke_avg(:,1:end-1)+score_sem(:,1:end-1),[],'all')]; % Preset and align the YLIM
 ax3_1 = subtightplot(2,4,2,0.07); % Axes 2 score trajectory
-shadedErrorBar([],score_avg(1,1:end-1),score_sem(1,1:end-1),...
-        'lineprops',{'Color','k','LineWidth',1.5},'transparent',1,'patchSaturation',0.15);%'lineprops',{'Color',[color_seq(blocki, :),0.85]},
-xlabel("Generations");ylabel("Response fr (Hz)");axis tight;ylim(scoreYLIM)
+% shadedErrorBar([],score_avg(1,1:end-1),score_sem(1,1:end-1),...
+%         'lineprops',{'Color','k','LineWidth',1.5},'transparent',1,'patchSaturation',0.15);
+shadedErrorBar([], evoke_avg(1,1:end-1), score_sem(1,1:end-1),...
+        'lineprops',{'Color','k','LineWidth',1.5},'transparent',1,'patchSaturation',0.15);
+hline(bsl_allavg, '-.b');hline(bsl_allavg-bsl_allsem, ':b');hline(bsl_allavg+bsl_allsem, ':b')
+xlabel("Generations");ylabel("Response fr (Hz)");
+axis tight;ylim(scoreYLIM);xlim(scoreXLIM)
+L1 = vline(1, '-r');
 title(EStats(Expi).evol.optim_names(1)+" Evol Traj");
 psthYLIM = [0,max(evol_stim_fr(ui,:,1:end-1,:)+evol_stim_sem(ui,:,1:end-1,:),[],'all')];% Preset and align the YLIM
 ax2_1 = subtightplot(2,2,3,0.07,0.07,0.05); % Axes 3 PSTH evolution
@@ -81,30 +96,38 @@ ax1_2 = subtightplot(2,4,3,0.07); % Axes 1 images
 % set(ax1_2,"position",[0.07,0.578,0.439,0.3412]);
 title(compose("%s",EStats(Expi).evol.optim_names(2)))
 ax3_2 = subtightplot(2,4,4,0.07); % Axes 2 score trajectory
-shadedErrorBar([],score_avg(2,1:end-1),score_sem(2,1:end-1),...
-        'lineprops',{'Color','k','LineWidth',1.5},'transparent',1,'patchSaturation',0.15);%'lineprops',{'Color',[color_seq(blocki, :),0.85]},
-xlabel("Generations");ylabel("Response fr (Hz)");axis tight;ylim(scoreYLIM)
+% shadedErrorBar([],score_avg(2,1:end-1),score_sem(2,1:end-1),...
+%         'lineprops',{'Color','k','LineWidth',1.5},'transparent',1,'patchSaturation',0.15);
+shadedErrorBar([],evoke_avg(2,1:end-1),score_sem(2,1:end-1),...
+        'lineprops',{'Color','k','LineWidth',1.5},'transparent',1,'patchSaturation',0.15);
+hline(bsl_allavg, '-.b');hline(bsl_allavg-bsl_allsem, ':b');hline(bsl_allavg+bsl_allsem, ':b')
+xlabel("Generations");ylabel("Response fr (Hz)");
+axis tight;ylim(scoreYLIM);xlim(scoreXLIM)
+L2 = vline(1, '-r');
 title(EStats(Expi).evol.optim_names(2)+" Evol Traj");
 ax2_2 = subtightplot(2,2,4,0.07,0.07,0.05); % Axes 3 PSTH evolution
 bgpsth_2 = plot(squeeze(evol_stim_fr(ui,:,1:end-1,2)),'Color',[0.7,0.7,0.7]);hold on
 sEB_2 = shadedErrorBar([],evol_stim_fr(ui, :, 1, 2),evol_stim_sem(ui, :, 1, 2),...
-        'lineprops',{'Color','r','LineWidth',1.5},'transparent',1,'patchSaturation',0.15);%'lineprops',{'Color',[color_seq(blocki, :),0.85]},
+        'lineprops',{'Color','r','LineWidth',1.5},'transparent',1,'patchSaturation',0.15);
 ylabel("PSTH (Hz)");xlabel("time(ms)");ylim(psthYLIM)
 title("Evoked PSTH")
 end
+
 stimparts = split(EStats(Expi).meta.stimuli,"\");
 expday = datetime(EStats(Expi).meta.expControlFN(1:6),'InputFormat','yyMMdd');
 % fdrnm = compose("%s-Chan%02d", stimparts{end-1}, pref_chan(1));
 ST = sgtitle(compose("%s BigGAN FC6 Evol Exp %02d pref chan %s", ...
     stimparts{end-1}, Expi, EStats(Expi).units.unit_name_arr(EStats(Expi).units.pref_chan_id(1))));
-% Dynamically change the components on figure;
+%% Dynamically change the components on figure;
 for blocki = 1:EStats(Expi).evol.block_n-1
     set(h3,"CurrentAxes",ax1_1)  % change the image shown
     imshow(imgColl{blocki,1}); 
     title(compose("Gen%d Best Rate %.1f", blocki, scoreColl(blocki,1))) ; 
+    L1.XData = [blocki,blocki];
     if thread_n==2,set(h3,"CurrentAxes",ax1_2)
     imshow(imgColl{blocki,2}); 
     title(compose("Gen%d BestRate %.1f", blocki, scoreColl(blocki,2))) ; 
+    L2.XData = [blocki,blocki];
     end
     % Change the title of PSTH
     ax2_1.Title.String = compose("Evoked PSTH Gen%d Evoked Rate %.1f", blocki, meanscoreColl(blocki,1));
