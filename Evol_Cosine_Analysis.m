@@ -15,6 +15,7 @@ targmap = get_refimg_map(refcoldir);
 %%
 global figdir explabel
 MAXUNUM = 4;
+array_layout = "Alfa";
 P.plotCriter = true;
 P.plotPopuEvol = true;
 P.plotImageSeq = true;
@@ -24,7 +25,7 @@ figh = figure(1);
 movh = figure(2);
 mtgh = figure(3);
 h = figure(4);
-for iTr = 1:numel(meta_new)%numel(meta_new)-6:
+for iTr = 3:numel(meta_new)%numel(meta_new)-6:
 meta = meta_new{iTr};
 rasters = rasters_new{iTr};
 Trials = Trials_new{iTr};
@@ -60,6 +61,7 @@ imgsize = Trials.TrialRecord.User.evoConfiguration{iThr,3};
 explabel = explabel + compose(" %s (trg: %s)\n%s (%s)",score_mode{iThr},target_cfg{iThr}{2},spacenm,optimnm);
 explabel = explabel + compose("   Pos [%.1f,%.1f] Size %.1f deg",imgpos,imgsize);
 end
+
 %% Online computed score
 figh0 = figure;hold on 
 score_avg = cellfun(@mean,scores_rec);
@@ -75,6 +77,7 @@ saveas(figh0,fullfile(figdir,"online_scoretraj.png"))
 saveas(figh0,fullfile(figdir,"online_scoretraj.pdf"))
 % save(fullfile(figdir,"EvolStat.mat"),'EvolStat')
 % fprintf("ExpStats saved to %s EvolStat.mat!\n",figdir)
+
 %% Form the activation
 act_mat = squeeze(mean(rasters(:,51:200,:),2));
 % bsl_mat = squeeze(mean(rasters(:,1:50,:),[2,3])); % baseline matrix for each channel
@@ -87,7 +90,8 @@ uniti = meta.unitID(iCh);
 act_tsr(chani,uniti+1,:) = act_mat(iCh,:);
 bslMat(chani,uniti+1) = bsl_mat(iCh);
 end
-%%
+
+%% Masks for calculating distance to target 
 chan_arr = [1:64]';
 unit_arr = 0:MAXUNUM;
 chanMat = repmat(chan_arr,1,MAXUNUM+1);
@@ -100,10 +104,11 @@ FMat = Trials.TrialRecord.User.maskMat{iThr}; % Mask in the ReprTsr file, F sign
 mode = score_mode{iThr};
 targetName = target_cfg{iThr}{2};
 targimg = imread(targmap(targetName)); % get the target image
-objMask = parse_mode2mask(mode); % Parse out the chanXunit mask used to evaluate objective. (area specific)
+objMask = parse_mode2mask(mode,array_layout); % Parse out the chanXunit mask used to evaluate objective. (area specific)
 maskMat = objMask & FMat & ~isnan(targetActMat); % Channel Selection & F significant
 % score_recalc = squeeze(nansum(((act_tsr - meanActMat)./stdActMat).*....*targetActMat.*maskMat,[1,2]));
 %                       ((targetActMat- meanActMat)./stdActMat).*maskMat,[1,2]));
+
 % Note to baseline subtract! or correlation will be bad.
 vec_reprs = reshape(act_tsr(repmat(maskMat,1,1,size(act_tsr,3))),[],size(act_tsr,3)) - bslMat(maskMat); 
 vec_targs = targetActMat(maskMat);
@@ -342,35 +347,6 @@ vline([ITV4sep,V1V4sep],'-.r')
 xlim([0,size(reprBlkMat,1)+1])
 xlabel("Channels");ylabel("Activation");
 title(compose("PopRepr Evol\n%s",explabel),'interpreter','none')
-end
-
-function [chanmsk, targ_area] = parse_mode2mask(mode, chan_arr, unit_arr)
-% Parse the score_mode string into a channel mask of which channels are
-% used in the exp.
-% chanmsk = parse_mode2mask("corr_V4IT");
-MAXUNUM = 4;
-if nargin ==1, chan_arr=[1:64]'; unit_arr = 0:MAXUNUM; end
-chanMat = repmat(chan_arr,1,numel(unit_arr));
-unitMat = repmat(unit_arr,numel(chan_arr),1);
-targ_area = "";
-if ~contains(mode,["V1","V4","IT"]) || contains(mode,"All")
-    chanmsk = ones(size(chanMat),'logical');
-    targ_area = "V1V4IT";
-else
-    chanmsk = zeros(size(chanMat),'logical');
-    if contains(mode,"IT")
-        chanmsk = chanmsk | ((chan_arr<=32));
-        targ_area=targ_area+"IT";
-    end
-    if contains(mode,"V4")
-        chanmsk = chanmsk | ((chan_arr>=49));
-        targ_area=targ_area+"V4";
-    end
-    if contains(mode,"V1")
-        chanmsk = chanmsk | ((chan_arr<49) & (chan_arr>32));
-        targ_area=targ_area+"V1";
-    end
-end
 end
 
 function [figh, mean_corr_gen, sem_corr_gen, mean_corr_nat, sem_corr_nat] = ...

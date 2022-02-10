@@ -3193,3 +3193,283 @@ OK so this is even worse than FC6 prediction ….
 I don't quite understand....
 evol_best_01_block036_thread001_gen_gen035_002079, fac0_cntpnt_shuffleresnet50_linf8-layer3_02, evol_best_03_block030_thread001_gen_gen029_001722
 Completer",Beto-12012022-005,220112_Beto_selectivity_basic(2),7,1,4,N:\Stimuli\2021-EvolDecomp\2022-01-12-Beto-01-decomp-BigGAN
+NaN,,NaN,,"001 RFMapping
+Basically we have two populations V4 and V1.",Beto-14012022-001,220114_Beto_rfMapper_basic,NaN,NaN,NaN,
+1,FC6Evol_Decomp;BigGAN_FC6,NaN,,"002 Evolution BigGAN in V1 …
+22 [0  -0.4]  3  1  FC6
+BigGAN
+SU 1/5
+The signal is super clean and sparse
+FC6 is trying to go up and down.....
+We think this is not its maximum, it's too sparse. It has to succeed somehow.
+OK FC6 starts to run.
+Gen 13 both get on par kind of.
+BigGAN FC6 both stays up!
+FC6 is definietly going up BigGAN is not.
+2sp/sec -> 7 sp/sec
+FC6 finally get on the right track
+he slept again.
+Monkey slept again.
+BigGAN up and down very unstable. FC6 is ine converge around 10 sp/sec
+Actually biggan is not bad interms of max value, but bad with its mean.
+It has large dispersal.
+47 min 45 blocks for 2 threads not bad!
+Evolution Trajectory prefchan 22, 3.0 deg pos [0.0 -0.4], thread 1 
+20 
+15",Beto-14012022-002,220114_Beto_generate_BigGAN,22,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-14-Beto-01\2022-01-14-12-55-52
+1,FC6Evol_Decomp;natrefvalid,NaN,,"003  Natural validation
+22 [0  -0.4]  3  1  FC6
+humans_pic_05, humans_pic_01, Cat_and_Kitten
+Human cat dogs....",Beto-14012022-003,220114_Beto_selectivity_basic,22,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-14-Beto-01-natvalid
+1,FC6Evol_Decomp,NaN,,"004 FC6 Evol factorizatin
+Today's factorizaion is beautiful.
+Finally Fac0 gets back on top.
+Great job. Fact 0 ying ma le....
+And the map seems not to matter much.
+fac0_map_corrresnet50_linf8-layer3_01,
+fac0_map_maponly_patchshuffleresnet50_linf8-layer3_00,
+evol_best_00_block038_thread000_gen_gen037_002173
+As expected Fact one is great!
+ 8 blocks getting hard . 21 mins 8 blocks",Beto-14012022-004,220114_Beto_selectivity_basic(1),22,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-14-Beto-01-decomp
+1,BGEvol_Decomp,NaN,,"005 BigGAN Evol Factorization
+Final one let him go.
+evol_best_00_block039_thread001_gen_gen038_002259, fac2_cntpnt_corrresnet50_linf8-layer3_03, facttsr_corrresnet50_linf8-layer3_02
+Surprisingly the factorization is not bad....",Beto-14012022-005,220114_Beto_selectivity_basic(2),22,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-14-Beto-01-decomp-BigGAN
+NaN,,NaN,,"001 RFMapping starts 13:27
+Basically we have two populations V4 and V1.
+Need to choose from V1 or V4, it's pretty foveal. Could cover both.
+8 mins 8 blocks",Beto-18012022-001,220118_Beto_rfMapper_basic,NaN,NaN,NaN,
+NaN,PopulEvol,NaN,,"002 Selectivity Population Encoding signature
+V4 and V1 both look promising.
+n03450230_4398, 01_18, n03530642_1271
+003  Cosine Evolution
+Cosine V4 objective 01_18  Monkey ear.
+CMAES Hessian optimizer
+ 
+Aborted space error
+4   [1.5  -1.5]  4  1  'CMAES_Hessian'
+220118_Beto_selectivity_RespTsr",Beto-18012022-002,220118_Beto_selectivity_basic,NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-01-18-Beto-refRepr
+NaN,PopulEvol_V4,NaN,,"004 Cosine Evolution
+4   [1.5  -1.5]  4  1  'CMAES_Hessian'
+220118_Beto_selectivity_RespTsr
+01_18  reconstruct the ear
+Noise ceiling 0.340
+wow.... this surpass the noise ceiling in one gens....
+this is quite amazing, and the patterns match quite well.
+0.47-0.44
+I feel we got the ear back.
+10 
+Evo Trajecto 
+15 
+Generation 
+Population pattern matchin 
+4 
+channel 
+60 
+Around 0.49
+F**K it grows too 0.52
+lauueqo 
+uaøued uonelnd 
+17 mins 35 blocks not bad, but the eye is not stable... moving around.",Beto-18012022-004,220118_Beto_generate_BigGAN_cosine(1),NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-01-18-Beto-01\2022-01-18-14-19-01
+NaN,PopulEvol_V4,NaN,,"005  Cosine Evolution
+n03450230_4398 Red Dress lady dancer
+Cosine V4 evolution
+Maxim 0.633+-0.171  High ceiling good evolution
+There definitely is interesting pattern to evolve to …
+not sure if it could make it.
+Super high pergtosmsnvr.
+F**K got 0.65 really high!
+0.59 prety good.
+F**K it's getting really close!crrcrccrr
+Another surprising thing is IT is not flat at all. It gets evolved.
+There are significant modulations in IT/
+lauueqo 
+uaøued uonelnd 
+Evo Trajecto 
+0.5 
+-0.5 
+Generation",Beto-18012022-005,220118_Beto_generate_BigGAN_cosine(2),NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-01-18-Beto-02\2022-01-18-14-41-31
+NaN,PopulEvol_V1V4,NaN,,"006 Cosine Evolution
+n03450230_4398 Red Dress lady dancer
+Let's try Cosine V1 V4|
+Gaussian Noise ceiling 0.547+-0.122
+This evolution is very successful. V1 gets converged well.
+Gets > 0.4 Gets > 0.5
+Gets exremel close to noise ceiling  0.50
+Population pattern matching 
+10 
+channel 
+This exp is really successful.
+Now the evolution fluctuates around the ceiling
+pulation pattern matchin 
+10 
+channel 
+Crazil good
+0.58 now
+Converge around 0.55",Beto-18012022-006,220118_Beto_generate_BigGAN_cosine(3),NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-01-18-Beto-03\2022-01-18-15-00-02
+NaN,PopulEvol_IT,NaN,,"007 Cosine Evolution
+n03450230_4398 Red Dress lady dancer
+Let's try Cosine IT
+Celing is quite low
+0.358+-0.195
+This guy reached ceiling even! 0.320
+reached 0.4
+Basivally Cosine evolution works even for IT …. As noisy as it is .
+Two units evolved but the whole populatin didn...t approach the target.
+The pattern looks highly interestin though I don';t know what that is.
+F**K 0.40 surpas the ceiling again.",Beto-18012022-007,220118_Beto_generate_BigGAN_cosine(4),NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-01-18-Beto-04\2022-01-18-15-18-25
+NaN,,NaN,,"001 RFMapping  2022/01/26
+The signal today is hyper noisy...... smaller amplitude everywhere.
+Even V4 has smller signal .
+7 mins",Beto-26012022-001,220126_Beto_rfMapper_basic,NaN,NaN,NaN,
+4.5,FC6Evol_Decomp;BigGAN_FC6,NaN,,"002  BigGAN FC6 evolution
+47    [0.0  0.0]  3   1  'CMAES_Hessian'
+47    [0.0  0.0]  3   1  'CMAES'
+Hash 4.5 /5 2nd unit doesn’t have good rf but 1st unit have it
+Good PSTH! Promising.
+Debugging eye signal for a while
+definitely evolving 30->55, 30->45. for another.
+F**K FC6 doing great ->65.
+FC6 converge around 60~65
+BigGAN no luck...
+45 mins 43 blocks not too bad",Beto-26012022-002,220126_Beto_generate_BigGAN,47,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-26-Beto-01\2022-01-26-13-17-44
+4.5,FC6Evol_Decomp;natrefvalid,NaN,,"003 Natural validaion images
+pref: stuffedMonkey (2), monkey (7), foods_1405718624697",Beto-26012022-003,220126_Beto_selectivity_basic,47,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-26-Beto-01-natvalid
+4.5,FC6Evol_Decomp,NaN,,"004 FC6 factorization
+Very good prediction experiments
+Fac 1 corr really excelled and surpassed the original prototype. R
+Great prediction and factorization .",Beto-26012022-004,220126_Beto_selectivity_basic(1),47,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-26-Beto-01-decomp
+4.5,BGEvol_Decomp,NaN,,"005 BigGAN Factorization
+Final experiments BigGAn seems to factoirze out a fox or cat / dot .
+Actually tis factorization is also really successful.
+Fact0 map and facttsr corrmap are both successful.
+Actually it's not as bad as we expected
+The fct 2 full and fact 0 corrmap is quite successful",Beto-26012022-005,220126_Beto_selectivity_basic(2),47,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-26-Beto-01-decomp-BigGAN
+NaN,,NaN,,"001 RFMapping starts 14:xx",Beto-21012022-001,220121_Beto_rfMapper_basic,NaN,NaN,NaN,
+NaN,PopulEvol_PCA,NaN,,"002 Selectivity
+[1.5 -1.5]  4 DEG IMAGE
+ Bigger set of selectivity encoding experiments
+80 images. More comprehensive... still too little for estimating the PC structure no?
+This cell is surprisingly very interested in cats.... and kittens like me.
+12 mins
+ch. 4, pref: cat (1), n03450230_4398, Cat_and_Kitten",Beto-21012022-002,220121_Beto_selectivity_basic,NaN,NaN,4,N:\Stimuli\2022-PCCosineEvol\2022-01-21-Beto-refRepr
+NaN,PopulEvol_V4_PCA,NaN,,"003 PC Cosine Evolution
+'220121_Beto_selectivity_RespTsr.mat'  'V4_PC_2_pos'  'dir_cosine_V4'
+ok THIS pc LOOKS QUITE SPECIFIC!
+it has loading on a few  channels, not really distributed.
+I feel this could succeed, lets see.
+This PC looks quite similar to Channel 12's evolution.
+Defnitly evolving just not as differentiating as it seems.
+stays around 0.09
+0.10 quite stable now.
+Getting down again...
+Super high performance.... ~90%
+Population pattern matchin 
+4 
+channel 
+60",Beto-21012022-003,220121_Beto_generate_BigGAN_PCcosine,NaN,NaN,4,N:\Stimuli\2022-PCCosineEvol\2022-01-21-Beto-01\2022-01-21-14-53-06
+NaN,PopulEvol_V4_PCA,NaN,,"004  PCcosine evolution
+V4 PC2  2  positive direction
+PC dot product V4
+Dot product visualization
+This evlution used anoter channel channel 2 a lot.
+Defintely evolved but not as high....
+End  around ~ 4.5 2.6
+I think it's channel 2 that gets evolved.
+Population attern matchin 
+10 
+channel 
+The cosine and dot didn't seem to work super well is it because it demands all other channels to be suppressed execpt a few?
+It's evolving but the generated images are not even going pass the natural green images.
+End around 3
+85% performance. 16 mins 40 blocks super good!",Beto-21012022-004,220121_Beto_generate_BigGAN_PCcosine(1),NaN,NaN,4,N:\Stimuli\2022-PCCosineEvol\2022-01-21-Beto-02\2022-01-21-15-18-43
+NaN,PopulEvol_V4_PCA,NaN,,"005  PCcosine  Evolution
+'V4_PC_3_pos'  'dir_cosine_V4'
+Definitely evolving!
+Wow surpassing natural baseline.
+Great job.
+If PCA doesn make sense shall we try sth like NMF?
+Pretty good.... converge around 0.1
+This thing crahsed a bit around 32 gens.
+Population pattern matching 
+10 
+channel 
+Shoot to 0.17 at the end.
+Needs to clear up the scene to inhibit the other units.
+Is it monkey reading a book??? Wgat",Beto-21012022-005,220121_Beto_generate_BigGAN_PCcosine(2),NaN,NaN,4,N:\Stimuli\2022-PCCosineEvol\2022-01-21-Beto-03\2022-01-21-15-41-44
+NaN,PopulEvol_IT_PCA,NaN,,"006  PCcosine  Evolution
+'IT_PC_2_pos'  'dir_cosine_IT'
+Final evolution lets see if IT even work
+So this guy the baseline is already high !
+And generated > the evolved.
+Back to > 0.22
+F**k this IT evolution is creazily good.
+0.30??????!!! W** YHE F**K
+I feel it's a blue ball
+Why it's so good and stable.
+WTF I'm goinf to cry!!!
+It's soooo good.
+lauueqo 
+uaøued uonelnd 
+Wow crying I am
+So good
+0.38.... WOC WTF
+Population pattern matching 
+10 
+channel 
+Population pattern matching 
+10 
+channel 
+F**K Christ
+Population attern matchin 
+channel 
+He ends with 0.40 cosine angle so high .
+Population attern matchin 
+channel 
+So good exp
+55 % performance   35 mins 41 blocks super good",Beto-21012022-006,220121_Beto_generate_BigGAN_PCcosine(3c),NaN,NaN,4,N:\Stimuli\2022-PCCosineEvol\2022-01-21-Beto-04\2022-01-21-16-08-13
+NaN,,NaN,,"001 RFMapper
+7mins 8 blocks
+Pretty good signal as usual",Beto-09022022-001,220209_Beto_rfMapper_basic,NaN,NaN,NaN,
+NaN,PopulEvol_PCA,NaN,,"002  Population pattern encoding
+80 image set, IT cortex,
+[1,5 –1.5 ]  6deg
+150 
+100 
+Channel 64 01_18, humans_pic_04, dogButt (6)
+IT population PCA",Beto-09022022-002,220209_Beto_selectivity_basic,NaN,NaN,5,N:\Stimuli\2022-PCCosineEvol\2022-02-09-Beto-refRepr
+NaN,PopulEvol_IT_PCA,NaN,,"003  Evolution
+[1.5 -1.5 ]  4 deg
+Target: IT PC2 positive direction.
+Cosine similarity
+OK it's definitely evolving. IT cosine distance.
+Again quite good 0.42
+0.6 
+-0.2 
+10 
+Evo Trajecto ry 
+15 
+Generation 
+FK 0.48 now!  So good.
+SUPER good control. 40 gen 0.48.
+17 min 45 blocks, really good.
+Very similar to last time!",Beto-09022022-003,220209_Beto_generate_BigGAN_PCcosine,NaN,NaN,4,N:\Stimuli\2022-PCCosineEvol\2022-02-09-Beto-02\2022-02-09-13-44-42
+NaN,PopulEvol_IT_PCA,NaN,,"004 Evolution
+[1.5 -1.5 ]  5 deg
+Target: IT PC3 positive direction.
+Cosine similarity
+Not super good but it is evolving, 0.21 at gen 18
+It's pretty good at the end! Definietly evolving, but the score is not super high .",Beto-09022022-004,220209_Beto_generate_BigGAN_PCcosine(1),NaN,NaN,5,N:\Stimuli\2022-PCCosineEvol\2022-02-09-Beto-03\2022-02-09-14-13-36
+NaN,PopulEvol_IT_PCA,NaN,,"005 Evolution
+[1.5 -1.5 ]  5 deg
+Target: IT PC4 positive direction.
+Cosine similarity
+PC 4 is quite miserable....
+Population pattern matching 
+10 
+channel",Beto-09022022-005,220209_Beto_generate_BigGAN_PCcosine(2),NaN,NaN,5,N:\Stimuli\2022-PCCosineEvol\2022-02-09-Beto-03\2022-02-09-14-13-36
+NaN,PopulEvol_IT_PCA,NaN,,"006 Evolution  (3)
+F*K Crazy! Wow IT PC2 is so easy to evolve.
+Wow to the moon 0.55 at gen 24
+0.58 at gen 25
+0.65 at gen 27",Beto-09022022-006,220209_Beto_generate_BigGAN_PCcosine(3),NaN,NaN,5,N:\Stimuli\2022-PCCosineEvol\2022-02-09-Beto-04\2022-02-09-14-42-39

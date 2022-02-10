@@ -1,4 +1,4 @@
-function scores = scorePopulationResponse_vec(acttsr, targetMat, meanMat, stdMat, maskMat, score_mode)
+function scores = scorePopulationResponse_vec(acttsr, targetMat, meanMat, stdMat, maskMat, score_mode,array_layout)
 % acttsr: shape [64, MAXUNUM+1, imgN]
 % 	 We assume the acttsr 's  activation have been baseline subtracted. 
 % targetMat: shape [64, MAXUNUM+1, ]
@@ -9,12 +9,15 @@ function scores = scorePopulationResponse_vec(acttsr, targetMat, meanMat, stdMat
 % score_mode: str for scoring mode, it contains a criterion like "corr", "MSE", "dot", "L1"
 %    And it can contain areal qualification like "_V1", "_V4", "_V1V4"
 %    Score will be computed in the intersected map between maskMat and score_mode. 
+% array_layout: it would be "Alfa" or "Beto_new" correspond to different mappings of channel number to brain areas.
 % 
 % Return: 
 %  scores: vector of shape [imgN]
+if nargin == 6, array_layout = "Alfa"; end
+
 acttsr_norm = (acttsr - meanMat) ./ stdMat;
 targmat_norm = (targetMat - meanMat) ./ stdMat;
-chanmsk = parse_mode2mask(score_mode); % parse out the areal qualification in score_mode
+chanmsk = parse_mode2mask(score_mode,array_layout); % parse out the areal qualification in score_mode
 finalmsk = maskMat & chanmsk; % do intersection. 
 imgN = size(acttsr_norm,3);
 % Apply the mask and get vector format population activation. 

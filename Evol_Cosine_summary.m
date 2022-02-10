@@ -18,6 +18,7 @@ imwrite(mtg,fullfile(saveroot,"CosineSummary","CosineTraj_summary.png"))
 MAXUNUM = 4;
 saveroot = "O:\Evol_Cosine";
 matdir = "O:\Mat_Statistics";
+array_layout = "Alfa";
 CosSummary = [];
 CosStats = [];
 for iTr = 4:numel(meta_new)
@@ -82,42 +83,42 @@ for iTr = 4:numel(meta_new)
     FMat = Trials.TrialRecord.User.maskMat{iThr}; % Mask in the ReprTsr file, per F significance
     end
     baseMask = FMat & ~isnan(targetActMat); % basic mask for valid entries
-    [objMask, targ_area] = parse_mode2mask(score_mode); % Parse out the chanXunit mask used to evaluate objective. (area specific)
+    [objMask, targ_area] = parse_mode2mask(score_mode,array_layout); % Parse out the chanXunit mask used to evaluate objective. (area specific)
     objMask = objMask & FMat & ~isnan(targetActMat); % Same Channel Selection as Evol & F significant
 
     % Characterize Successfulness of evol 
     [expS, S] = evol_score_stats({scores_rec, natscores_rec}, "ol", gen_idx_seq,nat_idx_seq);
     %% Other offline scores, noise ceiling of the scores. 
     % Same areas as online (use objMask), but use different criterion
-    L1_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, objMask, "L1");
+    L1_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, objMask, "L1",array_layout);
     [expS, S] = evol_score_stats(L1_vec, "L1", gen_idx_seq,nat_idx_seq,expS,S);
-    MSE_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, objMask, "MSE");
+    MSE_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, objMask, "MSE",array_layout);
     [expS, S] = evol_score_stats(MSE_vec, "MSE", gen_idx_seq,nat_idx_seq,expS,S);
-    corr_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, objMask, "corr");
+    corr_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, objMask, "corr",array_layout);
     [expS, S] = evol_score_stats(corr_vec, "corr", gen_idx_seq,nat_idx_seq,expS,S);
     
     % Different areas, different criterions.
-    L1_All_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, baseMask, "L1_All");
+    L1_All_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, baseMask, "L1_All",array_layout);
     [expS, S] = evol_score_stats(L1_All_vec, "L1_All", gen_idx_seq,nat_idx_seq,expS,S);
-    MSE_All_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, baseMask, "MSE_All");
+    MSE_All_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, baseMask, "MSE_All",array_layout);
     [expS, S] = evol_score_stats(MSE_All_vec, "MSE_All", gen_idx_seq,nat_idx_seq,expS,S);
-    corr_All_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, baseMask, "corr_All");
+    corr_All_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, baseMask, "corr_All",array_layout);
     [expS, S] = evol_score_stats(corr_All_vec, "corr_All", gen_idx_seq,nat_idx_seq,expS,S);
-    MSE_IT_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, baseMask, "MSE_IT");
+    MSE_IT_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, baseMask, "MSE_IT",array_layout);
     [expS, S] = evol_score_stats(MSE_IT_vec, "MSE_IT", gen_idx_seq,nat_idx_seq,expS,S);
-    corr_IT_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, baseMask, "corr_IT");
+    corr_IT_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, baseMask, "corr_IT",array_layout);
     [expS, S] = evol_score_stats(corr_IT_vec, "corr_IT", gen_idx_seq,nat_idx_seq,expS,S);
-    MSE_V1V4_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, baseMask, "MSE_V1V4");
+    MSE_V1V4_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, baseMask, "MSE_V1V4",array_layout);
     [expS, S] = evol_score_stats(MSE_V1V4_vec, "MSE_V1V4", gen_idx_seq,nat_idx_seq,expS,S);
-    corr_V1V4_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, baseMask, "corr_V1V4");
+    corr_V1V4_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, baseMask, "corr_V1V4",array_layout);
     [expS, S] = evol_score_stats(corr_V1V4_vec, "corr_V1V4", gen_idx_seq,nat_idx_seq,expS,S);
-    MSE_V4_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, baseMask, "MSE_V4");
+    MSE_V4_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, baseMask, "MSE_V4",array_layout);
     [expS, S] = evol_score_stats(MSE_V4_vec, "MSE_V4", gen_idx_seq,nat_idx_seq,expS,S);
-    corr_V4_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, baseMask, "corr_V4");
+    corr_V4_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, baseMask, "corr_V4",array_layout);
     [expS, S] = evol_score_stats(corr_V4_vec, "corr_V4", gen_idx_seq,nat_idx_seq,expS,S);
-    MSE_V1_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, baseMask, "MSE_V1");
+    MSE_V1_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, baseMask, "MSE_V1",array_layout);
     [expS, S] = evol_score_stats(MSE_V1_vec, "MSE_V1", gen_idx_seq,nat_idx_seq,expS,S);
-    corr_V1_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, baseMask, "corr_V1");
+    corr_V1_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, baseMask, "corr_V1",array_layout);
     [expS, S] = evol_score_stats(corr_V1_vec, "corr_V1", gen_idx_seq,nat_idx_seq,expS,S);
     %%
     expStat = struct();
@@ -238,10 +239,10 @@ h = stripe_plot(CosSumTab, "MSE_bestscore", {MSEmsk,CCmsk,dotmsk,L1msk}, ["MSE",
                     "all Exp", "Obj_cmp", {[1,2]},'MarkerEdgeAlpha',0.9);
 
 %%
-% cos_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, objMask, "cosine_V1V4");
-% cos_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, baseMask, "corr_IT");
+% cos_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, objMask, "cosine_V1V4",array_layout);
+% cos_vec = scorePopulationResponse_vec(evk_tsr, targetActMat, meanActMat, stdActMat, baseMask, "corr_IT",array_layout);
 % figure;plot(block_arr(row_gen), cos_vec(row_gen), '.') % Fast visualization of a stats
-% parse_mode2mask("V1ITV4")
+% parse_mode2mask("V1ITV4","Alfa")
 function [D, S] = evol_score_stats(scorevec,pfx,gen_idx_seq,nat_idx_seq,D,S)
     % This will clip the last generation in gen_idx_seq, nat_idx_seq by default. 
     if nargin == 1, prefix=""; end
@@ -297,35 +298,6 @@ refnmMap = containers.Map();
 for i = 1:numel(refimgs)
     [~,fn,ext] = fileparts(refimgs(i).name);
     refnmMap(string(fn)) = string(fullfile(refimgs(i).folder,refimgs(i).name));
-end
-end
-
-function [chanmsk, targ_area] = parse_mode2mask(mode, chan_arr, unit_arr)
-% Parse the score_mode string into a channel mask of which channels are
-% used in the exp.
-% chanmsk = parse_mode2mask("corr_V4IT");
-MAXUNUM = 4;
-if nargin ==1, chan_arr=[1:64]'; unit_arr = 0:MAXUNUM; end
-chanMat = repmat(chan_arr,1,numel(unit_arr));
-unitMat = repmat(unit_arr,numel(chan_arr),1);
-targ_area = "";
-if ~contains(mode,["V1","V4","IT"]) || contains(mode,"All")
-    chanmsk = ones(size(chanMat),'logical');
-    targ_area = "V1V4IT";
-else
-    chanmsk = zeros(size(chanMat),'logical');
-    if contains(mode,"IT")
-        chanmsk = chanmsk | ((chan_arr<=32));
-        targ_area=targ_area+"IT";
-    end
-    if contains(mode,"V4")
-        chanmsk = chanmsk | ((chan_arr>=49));
-        targ_area=targ_area+"V4";
-    end
-    if contains(mode,"V1")
-        chanmsk = chanmsk | ((chan_arr<49) & (chan_arr>32));
-        targ_area=targ_area+"V1";
-    end
 end
 end
 
