@@ -3108,7 +3108,7 @@ NaN,,NaN,,"001 RFMapper
 11 mins finish 10 blocks",Alfa-19022021-001,210219_Alfa_rfMapper_basic,NaN,NaN,NaN,
 NaN,PopulEvol,NaN,,"002 Selectivity
 [-3 –3 ] 7 deg of image
-4 mins finish!",Alfa-19022021-002,210219_Alfa_selectivity_basic,NaN,NaN,7,N:\Stimuli\2020-BigGAN\2021-02-19-Alfa-01\2021-02-19-13-03-12
+4 mins finish!",Alfa-19022021-002,210219_Alfa_selectivity_basic,NaN,NaN,7,N:\Stimuli\2020-CosineEvol\2021-02-19-Alfa-refRepr
 NaN,BigGAN_FC6_CMAHess,NaN,,"003 evolving BigGAN FC6
 FC6 Hessian, BigGAN CMAES full space
 [-3 -3 ] 7 deg huge image.
@@ -3286,11 +3286,11 @@ But it definitely drives to a human face + dog face zone ",Alfa-04032021-005,21
 NaN,,NaN,,"001 RFMappng 11:25r 
 Super good performace  
 8 reps blocks 
-002 ReprEncoding ",Alfa-09032021-001,210309_Alfa_rfMapper_basic,NaN,NaN,NaN,N:\Stimuli\2020-CosineEvol\2021-03-09-Alfa-refRepr
+002 ReprEncoding ",Alfa-09032021-001,210309_Alfa_rfMapper_basic,NaN,NaN,NaN,
 NaN,PopulEvol_V1V4,NaN,,"003 Repr Encoding 
 Add more gabor patches.  
 [0, 0 ] 4 deg. 
-5 mins 18 reps  ",Alfa-09032021-003,210309_Alfa_selectivity_basic(1),NaN,NaN,4,
+5 mins 18 reps  ",Alfa-09032021-003,210309_Alfa_selectivity_basic(1),NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2021-03-09-Alfa-refRepr
 NaN,PopulEvol_V1V4,NaN,,"004 Generate Cosine 
 MSE all 3 arrays 
 gabor_ori_120_freq_1.00 

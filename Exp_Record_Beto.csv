@@ -3427,7 +3427,7 @@ He ends with 0.40 cosine angle so high .
 Population attern matchin 
 channel 
 So good exp
-55 % performance   35 mins 41 blocks super good",Beto-21012022-006,220121_Beto_generate_BigGAN_PCcosine(3c),NaN,NaN,4,N:\Stimuli\2022-PCCosineEvol\2022-01-21-Beto-04\2022-01-21-16-08-13
+55 % performance   35 mins 41 blocks super good",Beto-21012022-006,220121_Beto_generate_BigGAN_PCcosine(3),NaN,NaN,4,N:\Stimuli\2022-PCCosineEvol\2022-01-21-Beto-04\2022-01-21-16-08-13
 NaN,,NaN,,"001 RFMapper
 7mins 8 blocks
 Pretty good signal as usual",Beto-09022022-001,220209_Beto_rfMapper_basic,NaN,NaN,NaN,
@@ -3453,13 +3453,13 @@ Generation
 FK 0.48 now!  So good.
 SUPER good control. 40 gen 0.48.
 17 min 45 blocks, really good.
-Very similar to last time!",Beto-09022022-003,220209_Beto_generate_BigGAN_PCcosine,NaN,NaN,4,N:\Stimuli\2022-PCCosineEvol\2022-02-09-Beto-02\2022-02-09-13-44-42
+Very similar to last time!",Beto-09022022-003,220209_Beto_generate_BigGAN_PCcosine,NaN,NaN,4,N:\Stimuli\2022-PCCosineEvol\2022-02-09-Beto-01\2022-02-09-13-24-01
 NaN,PopulEvol_IT_PCA,NaN,,"004 Evolution
 [1.5 -1.5 ]  5 deg
 Target: IT PC3 positive direction.
 Cosine similarity
 Not super good but it is evolving, 0.21 at gen 18
-It's pretty good at the end! Definietly evolving, but the score is not super high .",Beto-09022022-004,220209_Beto_generate_BigGAN_PCcosine(1),NaN,NaN,5,N:\Stimuli\2022-PCCosineEvol\2022-02-09-Beto-03\2022-02-09-14-13-36
+It's pretty good at the end! Definietly evolving, but the score is not super high .",Beto-09022022-004,220209_Beto_generate_BigGAN_PCcosine(1),NaN,NaN,5,N:\Stimuli\2022-PCCosineEvol\2022-02-09-Beto-02\2022-02-09-13-44-42
 NaN,PopulEvol_IT_PCA,NaN,,"005 Evolution
 [1.5 -1.5 ]  5 deg
 Target: IT PC4 positive direction.
@@ -3473,3 +3473,652 @@ F*K Crazy! Wow IT PC2 is so easy to evolve.
 Wow to the moon 0.55 at gen 24
 0.58 at gen 25
 0.65 at gen 27",Beto-09022022-006,220209_Beto_generate_BigGAN_PCcosine(3),NaN,NaN,5,N:\Stimuli\2022-PCCosineEvol\2022-02-09-Beto-04\2022-02-09-14-42-39
+NaN,,NaN,,"001 RFMapping
+V4 all have beautiful receptive fields.",Beto-11022022-001,220211_Beto_rfMapper_basic,NaN,NaN,NaN,
+NaN,PopulEvol_PCA,NaN,,"002 population charting
+[1.5  -1.5]  5
+80 Population encoding images
+Cats and human pictures are the best.
+9 mins 10 blocks
+ch. 2, pref: 08-cat-cancer-sq, humans_pic_04, humans_pic_01",Beto-11022022-002,220211_Beto_selectivity_basic,NaN,NaN,5,N:\Stimuli\2022-PCCosineEvol\2022-02-11-Beto-refRepr
+NaN,PopulEvol_V4_PCA,NaN,,"003 IT PC evol
+V4 PC2  Cosine distance 'V4_PC_2_pos'   'dir_cosine_V4'
+[1.5  -1.5]  5
+CMAES Hessian
+Very fast evolution. Gets to 0.21 in a few gens.
+0.33 in 4,5 gens. 0.35 in 11 gens.
+0.47 wow this is REALLY good.
+0.52 at gen 29
+0.56 at gen 30
+Super efficient, 14 mins  40 blocks",Beto-11022022-003,220211_Beto_generate_BigGAN_PCcosine,NaN,NaN,5,N:\Stimuli\2022-PCCosineEvol\2022-02-11-Beto-01\2022-02-11-15-55-54
+NaN,PopulEvol_V4_PCA,NaN,,"004  V4 PC evol
+V4 PC3  Cosine distance 'V4_PC_3_pos'   'dir_cosine_V4'
+[1.5  -1.5]  5
+CMAES Hessian
+Definitely evolved but on the negative side to zero.
+Note this trend is quite like the other type.
+The major peak didn't evolved.
+Super efficient!",Beto-11022022-004,220211_Beto_generate_BigGAN_PCcosine(1),NaN,NaN,5,N:\Stimuli\2022-PCCosineEvol\2022-02-11-Beto-02\2022-02-11-16-12-36
+NaN,PopulEvol_IT_PCA,NaN,,"005  IT  PC evol
+IT  PC2  Cosine distance 'IT_PC_2_pos'   'dir_cosine_IT'
+[1.5  -1.5]  5
+CMAES Hessian
+This PC2 seems to be different from the PC2 yesterday...?
+seems channel 64 is part of this...
+Really fast 0.25 in gen 9
+Reached  0.3 just now.
+0.37 from gen 19!
+0.42 at gen 22!
+70% performance really good evolution.",Beto-11022022-005,220211_Beto_generate_BigGAN_PCcosine(2),NaN,NaN,5,N:\Stimuli\2022-PCCosineEvol\2022-02-11-Beto-03\2022-02-11-16-31-18
+NaN,PopulEvol_IT_PCA,NaN,,"006  IT PC evol
+IT  PC3  Cosine distance
+'IT_PC_3_pos'   'dir_cosine_IT'
+0.25 at some moment not bad!
+0.28 now!
+Noisy evolution but quite successful.
+Land around 0.30",Beto-11022022-006,220211_Beto_generate_BigGAN_PCcosine(3),NaN,NaN,5,N:\Stimuli\2022-PCCosineEvol\2022-02-11-Beto-04\2022-02-11-16-54-06
+NaN,,NaN,,"2022-02-14 00:00:00
+001 RFMapping
+8:43 s 8 mins.",Beto-14022022-001,220214_Beto_rfMapper_basic,NaN,NaN,NaN,
+5,FC6Evol_Decomp;BigGAN_FC6,NaN,,"002 BigGAN FC6
+Chan 59 [0.6  0.1]  1  4 deg
+MU 5/5
+Super noisy cell but has a good RF
+BigGAN is evolving.
+Both evolved. BigGAN starts higher! FC6 also climbed
+BG 90-> 120
+FC6 78->88
+Doggies are definitely evolving.
+the gap narrowed at gen 22
+FC6 is marginally above baseline
+FC6 jumped to 100 at one moment.",Beto-14022022-002,220214_Beto_generate_BigGAN,59,1,4,N:\Stimuli\2021-EvolDecomp\2022-02-14-Beto-01\2022-02-14-13-20-24
+5,FC6Evol_Decomp;natrefvalid,NaN,,"003 Natural image validation.
+Chan 59 [0.6  0.1]  1  4 deg
+It seems the faces may be a good candidate.
+The noise is enormous!!! Error bar is huge.
+This is generally the reason of low activation achieved.
+Monkey face and dog butts are the most informative.
+The max found by this random set is 99 monkey (5)
+Olivia will be really happy with this hhh",Beto-14022022-003,220214_Beto_selectivity_basic,59,1,4,N:\Stimuli\2021-EvolDecomp\2022-02-14-Beto-01-natvalid
+5,BGEvol_Decomp,NaN,,"004 BigGAN factorization validation
+Maybe... it's butt instead of face
+The BigGAN prediction is actually quite not successful....
+The generation process is great it's really dog like, but the neuron doesn't really like it.
+Factorized tensor model is doing great.
+The max score is comparable or lower than natrual  85 max; nat image 93 max",Beto-14022022-004,220214_Beto_selectivity_basic(1),59,1,4,N:\Stimuli\2021-EvolDecomp\2022-02-14-Beto-01-decomp-BigGAN
+5,FC6Evol_Decomp,NaN,,"005 FC6 Factorization validation
+Maybe... it's butt instead of face
+Actually.... this prediction is even more sucessful than the BigGAN one even though the evol max images are not that high
+Fact 1 center
+Fact 0 map corr are both good
+Fact 1 Fact 2 both are pretty good better than evolve max.
+The peaks are valid but not as high as the one in BigGAN or Natural iamges.
+Fact1 center, Fact 1 map are both pretty good.
+fac1_cntpnt_corrresnet50_linf8-layer3_03,
+evol_best_02_block023_thread000_gen_gen022_001306,
+fac0_full_corrresnet50_linf8-layer3_00",Beto-14022022-005,220214_Beto_selectivity_basic(2),59,1,4,N:\Stimuli\2021-EvolDecomp\2022-02-14-Beto-01-decomp
+NaN,,NaN,,"001 RF Mapping",Beto-16022022-001,220216_Beto_rfMapper_basic,NaN,NaN,NaN,
+NaN,PopulEvol_PCA,NaN,,"002 Population encoding
+[0.5  -0.5]  Chan 27  unit  1
+FIxagtion really bad today
+performance is fine, 12mins 9 blocks. 50% performance",Beto-16022022-002,220216_Beto_selectivity_basic,NaN,NaN,4,N:\Stimuli\2022-PCCosineEvol\2022-02-16-Beto-refRepr
+NaN,PopulEvol_V1_PCA,NaN,,"003 Cosine Evolution
+V1 PC2 Positive direction,
+[0.5  -0.5]  Chan 27  unit  1
+Monkey performing great; the 
+The
+Wow the evove worked !
+[0.5  -0.5]  Chan 27  unit  1
+Wow it's super specific .
+NEWBIE 0.42 at gen 23
+Now very robust.
+F** this control is so good.
+The highest point is 0.51! super close. And the trajectory meander",Beto-16022022-003,220216_Beto_generate_BigGAN_PCcosine,NaN,NaN,4,N:\Stimuli\2022-PCCosineEvol\2022-02-16-Beto-01\2022-02-16-13-04-38
+NaN,PopulEvol_V1_PCA,NaN,,"004 Cosine Evolution
+V1 PC3 Positive direction,
+[0.5  -0.5]  Chan 27  unit  1
+Evolves really well and
+it saturatures around 0.37  0.39 cannot go higher than 0.40",Beto-16022022-004,220216_Beto_generate_BigGAN_PCcosine(1),NaN,NaN,4,N:\Stimuli\2022-PCCosineEvol\2022-02-16-Beto-02\2022-02-16-13-23-40
+NaN,PopulEvol_V1_PCA,NaN,,"005 Cosine Evolution
+V1 PC4 Positive direction,
+[0.5  -0.5]  Chan 27  unit  1
+Wo the system jumped up at gen 11 goes to 0.19 cosine
+0.22 now ! Pretty good.
+0.40 and then dropped to 0.21
+now up to 0.27 again.
+Channel 32 is really active. R
+Now stays above 0.30
+33 mins 46 blocks",Beto-16022022-005,220216_Beto_generate_BigGAN_PCcosine(2),NaN,NaN,4,N:\Stimuli\2022-PCCosineEvol\2022-02-16-Beto-03\2022-02-16-14-02-22
+NaN,,NaN,,"001 RF Mapping
+80 performance for 8 blocks
+V4 maybe?",Beto-18022022-001,220218_Beto_rfMapper_basic,NaN,NaN,NaN,
+NaN,PopulEvol_PCA,NaN,,"002 Encoding IT cortex
+47 [0, 0 ]  4  1
+Mny IT receptive fields are foveall so lets try even more foveal today.
+Let's do the encoding first and see the PC structure.
+47 polar radial -> consistent with the obsevrvation before.
+Chan 47 selectiviy",Beto-18022022-002,220218_Beto_selectivity_basic,NaN,NaN,4,N:\Stimuli\2022-PCCosineEvol\2022-02-18-Beto-refRepr
+NaN,PopulEvol_IT_PCA,NaN,,"003  Cosine Evolution
+IT  PC2 Positive Direction
+[0  0 ]  4  1
+CMAES Hessian  FC6 GAN
+Definitely evovlved ! From –0.1 to postive 0.20
+Quite smoothe actually.
+0.26 now
+Cool it's on the way there.
+Though the pattern looks quite V1 like.
+20 mins 50 blocsk
+F**K crazy!",Beto-18022022-003,220218_Beto_generate_BigGAN_PCcosine,NaN,NaN,4,N:\Stimuli\2022-PCCosineEvol\2022-02-18-Beto-01\2022-02-18-13-25-40
+NaN,PopulEvol_IT_PCA,NaN,,"004  Cosine evoluion
+IT  PC2 Negative Direction
+[0  0 ]  4  1
+The heavy lifting unit is 47
+CMAES Hessian  FC6 GAN
+Definitely evolvable, ot's around 0.20 now.
+The pattern is not super stable.
+Selectively suppressing the channel
+It was once 0.30!
+Now it stablize around 0.30.
+44 blocks 24 mins not bad.",Beto-18022022-004,220218_Beto_generate_BigGAN_PCcosine(1),NaN,NaN,4,N:\Stimuli\2022-PCCosineEvol\2022-02-18-Beto-02\2022-02-18-13-52-39
+NaN,PopulEvol_IT_PCA,NaN,,"005  Cosine evoluion
+IT  PC3 Positive Direction
+[0  0 ]  4  1
+The heavy lifting unit is 40
+May not evolve... seems not too active in the RFMapping exp.
+Reached 0.28 pretty good
+OK Chan 40 is evolvable.
+0.30 now pretty good.
+0.36 now
+0.37 now !
+0.45 now!
+0.61 now!
+Converge and Stays around 0.50.
+0.60 again!!!
+F**K
+Stays around 0.60 now.
+It's so good Makes me cry.",Beto-18022022-005,220218_Beto_generate_BigGAN_PCcosine(2),NaN,NaN,4,N:\Stimuli\2022-PCCosineEvol\2022-02-18-Beto-03\2022-02-18-14-30-13
+NaN,PopulEvol_IT_PCA,NaN,,"006 Cosine Evolution
+IT  PC4 Positive Direction
+[0  0 ]  4  1
+Now the heavy lifting is 42
+0.26 now, pretty good.
+Converged around 0.30
+30 mins 50 blocks super good ezp",Beto-18022022-006,220218_Beto_generate_BigGAN_PCcosine(3),NaN,NaN,4,N:\Stimuli\2022-PCCosineEvol\2022-02-18-Beto-04\2022-02-18-15-04-21
+NaN,,NaN,,"001 RFMapping
+10 mins 8 blocks
+Experiments 70 performance",Beto-21022022-001,220221_Beto_rfMapper_basic,NaN,NaN,NaN,
+NaN,PopulEvol_PCA,NaN,,"002  Population Encoding
+[1.8  -1.0]  5 deg
+Debug the Eye Scan system by tuning the iris setting
+The noise is reduced by a lot.
+Monkey fell asleep a few times.
+18 mins 9 blocks 45 performance.",Beto-21022022-002,220221_Beto_selectivity_basic,NaN,NaN,5,N:\Stimuli\2022-PCCosineEvol\2022-02-21-Beto-refRepr
+NaN,PopulEvol_V4_PCA,NaN,,"003  Cosine Evolution
+V4 [1.8  -1.0]  5 deg
+V4  PC2 Positive Direction
+Most loading on chan 2 unit 1,2,3,
+Evolution is pretty good reached 0.46 at gen 13.
+It feels like encoding a ball.
+0.60 at gen 20, nearly single neuron evolution!
+0.66 at gen 21 super high activation for chan 2 1, ,2,3
+The peak is around 0.71! super high
+Great experiments,  80% performance 16 mins 41 blocks",Beto-21022022-003,220221_Beto_generate_BigGAN_PCcosine,NaN,NaN,5,N:\Stimuli\2022-PCCosineEvol\2022-02-21-Beto-01\2022-02-21-13-18-45
+NaN,PopulEvol_V4_PCA,NaN,,"004   Cosine Evolution
+V4 [1.8  -1.0]  5 deg
+V4  PC4 Positive Direction
+It is more distributed!
+0.22 cosine now.
+0.28 now
+0.33 now
+Not very stable goes up and down a lot.
+Not really stable",Beto-21022022-004,220221_Beto_generate_BigGAN_PCcosine(1),NaN,NaN,5,N:\Stimuli\2022-PCCosineEvol\2022-02-21-Beto-02\2022-02-21-13-43-21
+NaN,PopulEvol_V4_PCA,NaN,,"006  Cosine  Evolution
+Debug the code, and change the inclusion criterion for P from 1E-6 to 1E-5
+V4 [1.8  -1.0]  5 deg
+V4  PC3 Positive Direction
+Chan 12 is the major heavy lifting unit.
+But it seems chan 12 is not as signal ish as before.
+The thing stays around 0.00 doesn't change very much.
+Maybe this is the first experiment that the population objective fails.
+Very interesting, Chan 12 is not evolving today.
+Maybe it's chance maybe it's not.
+57% performance  28mins  40 gens",Beto-21022022-006,220221_Beto_generate_BigGAN_PCcosine(3),NaN,NaN,5,N:\Stimuli\2022-PCCosineEvol\2022-02-21-Beto-04\2022-02-21-14-25-25
+NaN,PopulEvol_V4_PCA,NaN,,"007  Cosine Evolution
+V4 [1.8  -1.0]  5 deg
+V4  PC 4 Negative Direction
+definitely evolved, to 0..23 / 0.16 in gen 13
+Fluctuate too much...
+Generally it evolved but the natural images still fluctuate a lot.",Beto-21022022-007,220221_Beto_generate_BigGAN_PCcosine(4),NaN,NaN,5,N:\Stimuli\2022-PCCosineEvol\2022-02-21-Beto-05\2022-02-21-14-57-21
+NaN,,NaN,,"001 RFMapp
+70 performance not bad!
+8blocks 8 mins",Beto-19012022-001,220119_Beto_rfMapper_basic,NaN,NaN,NaN,
+NaN,,NaN,,"002  Selectivity Repr Encoding
+V4
+[1.5 -1.5]  4 deg
+eye siganl was highly unstable.... performance < 32%
+So I re adjsut the eyescan and re do the calibration
+17 blocks 30% performace",Beto-19012022-002,220119_Beto_selectivity_basic,NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-01-19-Beto-refRepr
+NaN,PopulEvol_V1V4IT,NaN,,"003  Cosine Evolution
+Target: 08-Cat-Cancer-Sq
+Yesterday 0.699 +- 0.157 high ceiling
+Today  0.590+-0.140  High ceiling too.
+Performance too high.... >92% perforamcne
+reached 0.41
+It become unstable and dropped at 15 gens not sure why
+Finally stays around 0.5 0.47
+Population pattern matching 
+10 
+channel",Beto-19012022-003,220119_Beto_generate_BigGAN_cosine,NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-01-19-Beto-01\2022-01-19-14-33-30
+NaN,PopulEvol_V1V4IT,NaN,,"004 Cosine Evolution
+BigGAN  all   CMAES
+Objective Cosine
+Target: Cat cancer
+Population all channel V1, V4, IT
+Ceiling 0.485+-0.101
+WTF -> reached 0.601
+Really high
+And animal face (cat or dog emerged!)
+Population pattern matchin 
+channel 
+This reconstruction is crazily good.
+monkey is sleepy
+Converge to around 0.574, and the image is a dog face / cat face",Beto-19012022-004,220119_Beto_generate_BigGAN_cosine(1),NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-01-19-Beto-02\2022-01-19-14-55-09
+NaN,PopulEvol_V1V4IT,NaN,,"004 Cosine Evolution
+G: BigGAN all 
+Target: Red DRess lady
+Opt: CMAES
+Objective Cosine
+Population all channel V1, V4, IT
+Ceiling 0.466+-0.104
+Wow it's increasing. 0.2xxx -? 0.343
+We got the head
+F**K this guy got beyond the ceiling again.",Beto-19012022-005,220119_Beto_generate_BigGAN_cosine(2),NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-01-19-Beto-03\2022-01-19-15-21-04
+NaN,PopulEvol_V1V4IT,NaN,,"005 Cosine Evolution
+G: FC6 all 
+Target: Red DRess lady
+Opt: CMAES
+Objective Cosine
+Population all channel V1, V4, IT
+WTF this is super good again!
+Population attern matchin",Beto-19012022-006,220119_Beto_generate_BigGAN_cosine(3),NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-01-19-Beto-04\2022-01-19-15-42-17
+NaN,,NaN,,"001 RFMapping",Beto-25022022-001,220225_Beto_rfMapper_basic,NaN,NaN,NaN,
+NaN,PopulEvol,NaN,,"002 Repr Encoding
+[1.8  -1.0]  5
+Verty efficient 8 mins 10 blocks
+Chan 11
+animals_11_, Capybaras, stuffedMonkey (1)",Beto-25022022-002,220225_Beto_selectivity_basic,NaN,NaN,5,N:\Stimuli\2020-CosineEvol\2022-02-25-Beto-refRepr
+NaN,PopulEvol_V1V4,NaN,,"003  Cosine Evolution
+11   [1.8  -1.0]  5  1  'CMAES_Hessian'
+FC6 space
+'220225_Beto_selectivity_RespTsr.mat'  'tree (5)'  'cosine_V1V4'
+cosine_V1V4 Mean 0.524 Std 0.114 Sem 0.004 (i.i.d. Gauss Noise)
+Cosine matching in V1,V4.
+Getting pretty well ; reaching 0.39 in 10 gens.
+Reaching 0.50 / noise ceiling in gen 10 really well.
+0.58 0.61 Cosine Matching at gen 18
+ACTUALLY THIS IMAGE DOESN'T RECRUIT v4 PATTERNS A LOT.
+0.63
+SUPER GOOD RECONSTRUCTION.
+RECON VALUE AROUND 0.63
+FINAL AT 0.72! SUPER GOOD.",Beto-25022022-003,220225_Beto_generate_BigGAN_cosine,NaN,NaN,5,N:\Stimuli\2020-CosineEvol\2022-02-25-Beto-01\2022-02-25-15-28-10
+NaN,PopulEvol_V1V4,NaN,,"004  Cosine Evolution
+Target:  08-cat-cancer-sq
+0.532 +-0.124
+11   [1.8  -1.0]  5  1  'CMAES_Hessian'
+'220225_Beto_selectivity_RespTsr.mat'  '08-cat-cancer-sq'  'cosine_V1V4'
+FC6
+Quite efficient, 0.36 at gen 8
+So this guy needs to recruit the first channel but is didn’t really respond? And actually marching in the opposite direction.
+Monkey is doing pretty well today performance is ~ 90!
+0.46  So it’s not as perfract as last time
+Fluctuating between 0.52 and 0.42
+Definitely evolved.
+So there is a peak we'd like to match but didn't... so it evolved but not as ideal.",Beto-25022022-004,220225_Beto_generate_BigGAN_cosine(1),NaN,NaN,5,N:\Stimuli\2020-CosineEvol\2022-02-25-Beto-02\2022-02-25-15-54-34
+NaN,PopulEvol_V1V4,NaN,,"005  Cosine Evolution
+P1030838
+Ceil 0.678 +-0.083
+VERY VERy GOOD! If you hae a high ceilling we can reach there.
+0.68 at gen 21
+0.72 at gen 27
+Super stable now, 0.71
+0.75 now
+0.72",Beto-25022022-005,220225_Beto_generate_BigGAN_cosine(2),NaN,NaN,5,N:\Stimuli\2020-CosineEvol\2022-02-25-Beto-03\2022-02-25-16-14-33
+NaN,PopulEvol_V1V4,NaN,,"006  Cosine Evolution
+n04435653_449
+Capybaras  
+ceil 0.617 pretty good
+0.55
+Suddenly
+0.66 at gen 35 WOW exceedingly good.
+Really metamer like at gen 34 ! But going up and down a little bit.
+Images are really interesting.
+Wow this is soo  good top again.
+0.67 now ! Getting great",Beto-25022022-006,220225_Beto_generate_BigGAN_cosine(3),NaN,NaN,5,N:\Stimuli\2020-CosineEvol\2022-02-25-Beto-04\2022-02-25-16-39-08
+NaN,PopulEvol_V1V4,NaN,,"007  Cosine Evolution
+Frigatebird-sq
+Ceil 0.514,
+navigate the activation space esp. For V1 is not hard.
+So not super stable esp. The V1 population it’s going up and downs.
+Not super stable, esp. For V1 population .
+Reached 0.51 now 0.53 now
+Meta met !",Beto-25022022-007,220225_Beto_generate_BigGAN_cosine(4),NaN,NaN,5,N:\Stimuli\2020-CosineEvol\2022-02-25-Beto-05\2022-02-25-17-02-42
+NaN,,NaN,,"001  RFMapping
+Really high performance.
+8 blocks 8mins",Beto-28022022-001,220228_Beto_rfMapper_basic,NaN,NaN,NaN,
+NaN,PopulEvol,NaN,,"002   Selectivity Repr Encoding.
+2   [1.0  -1.0]   5   1
+This is the face, neck cell we described previously .
+This cell is really sparse.... so as we know it before.
+Really good response pattern. Face, paradoleia etc.
+Tree-pareidolia-1024x1544, Capybaras, 07_face_human_13_sh
+Great single unit really selective for face like stuff.....",Beto-28022022-002,220228_Beto_selectivity_basic,NaN,NaN,5,N:\Stimuli\2020-CosineEvol\2022-02-28-Beto-refRepr
+NaN,PopulEvol_V1V4,NaN,,"003  Cosine Evolution .
+Target:  gabor_ori_120_freq_0.50
+Criterion Cosine V1V4
+Wow this target is mostly negative.... not sure how it evolve there.
+Ceiling is 0.756
+Converging really fast, 0.54 now...
+0.69 now.... seems easy to suppress everything.
+0.77 now totally converging to the pattern
+Basically it's all white now wipe out the whole scene....
+0.79
+0.85 now …. so very very successful in suppressing all activity, but it's not that interesting
+0.84,,
+0.87 now …. this is too crazy..
+32 generations, monkey really good job.",Beto-28022022-003,220228_Beto_generate_BigGAN_cosine,NaN,NaN,5,N:\Stimuli\2020-CosineEvol\2022-02-28-Beto-01\2022-02-28-13-15-11
+NaN,PopulEvol_V1V4,NaN,,"004 Cosine Evolution
+Cosine V1V4 Objective
+Cosine Ceiling 0.633 +-0.102
+Target:  monkeys_13
+Note a bunch of V1 units are really positive about this stimuli.
+0.58 now at gen 10 indeed, controlling V1 population is relatively easy.
+0.63 at gen 22
+So it realy seems like the eye of the monkey ?
+The fur color looks nice too.
+0.64 now
+OK this evolution gets a bit too far and decrease from the peak a lttle bit.
+This is not the best trial but it looks close.",Beto-28022022-004,220228_Beto_generate_BigGAN_cosine(1),NaN,NaN,5,N:\Stimuli\2020-CosineEvol\2022-02-28-Beto-02\2022-02-28-13-31-10
+NaN,PopulEvol_V1V4,NaN,,"005 Cosine Evolution
+Target:  Tree-pareidolia-1024x1544
+Ceiling 0.577+-0.1
+At gen 8m It's 0.48 now but the key channel Unit 2 seems not moving.
+What is driving the change or difference?
+Flucturate around 0.47 up and down
+Reach the ceiling 0.55 now. R
+0.55 now close to celing pretty good.
+0.60 now crazy!
+Hard to evolve a sparse single unit using this population evolution paradigm",Beto-28022022-005,220228_Beto_generate_BigGAN_cosine(2),NaN,NaN,5,N:\Stimuli\2020-CosineEvol\2022-02-28-Beto-03\2022-02-28-13-50-01
+NaN,PopulEvol_V1V4,NaN,,"008 Cosine Evolution
+V1V4 Cosine  Ceiling 0.611
+Same setting
+0.56 now really good.
+Target:  block119_gen_Chan247plants_15_backup_tex.jpg_receptive_field
+0.68 now,,,,
+0.67 now really good.
+0.66 now again. At gen 34
+very stable 0.68",Beto-28022022-008,220228_Beto_generate_BigGAN_cosine(4),NaN,NaN,5,N:\Stimuli\2020-CosineEvol\2022-02-28-Beto-04\2022-02-28-14-46-06
+NaN,,NaN,,"001 RFMapper
+001 8 blocks 11 mins",Beto-02032022-001,220302_Beto_rfMapper_basic,NaN,NaN,NaN,
+NaN,,NaN,,"002 Selectivity
+Selectivity mixed images 80 images.
+Pref unit is 24.
+002, 10 blocks 11 mins.
+Some top images: 
+08-cat-cancer-sq
+animals_5_, 08-cat-cancer-sq, tree (5)
+animals_5_, n01770393_5609, Grapes_sq",Beto-02032022-002,220302_Beto_selectivity_basic,NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-03-02-Beto-refRepr
+NaN,PopulEvol_V1V4,NaN,,"003 Cosine Evolution
+Image: 24  [0.0 0.0]  4  1  'CMAES_Hessian'%
+Distance: Cosine V1V4 
+Target: Grapes_sq
+Cosine Ceiling  0.682+-0.111
+Grapes, now 0.40 correlation  pretty good.
+Converging 0.39
+Reaching 0.50 at gen32
+0.6 
+-04 
+10 
+EVO Trakcto 
+Generation 
+So definitely not perfect....
+Going up and then down.",Beto-02032022-003,220302_Beto_generate_BigGAN_cosine,NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-03-02-Beto-01\2022-03-02-12-10-45
+NaN,PopulEvol_V1,NaN,,"004 Cosine Evolution
+Image: 24  [0.0 0.0]  4  1  'CMAES_Hessian'%
+Distance: Cosine V1
+Target: Grapes_sq
+Ceil 0.667 +- 0.145
+0.51 at gen 25
+So the error bar?
+0.56 at gen 35 pretty stable.
+ange from Variability is HUGE. -0.54-0.89
+0.62 at gen 40 Great!!
+Population pattern matchin 
+3 
+-2 
+channel 
+50 
+Population pattern matching 
+10 
+channel 
+19 mins 45 blocks",Beto-02032022-004,220302_Beto_generate_BigGAN_cosine(1),NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-03-02-Beto-02\2022-03-02-12-34-49
+NaN,PopulEvol_V1,NaN,,"005   Cosine Evolution
+Image: 24  [0.0 0.0]  4  1  'CMAES_Hessian'%
+Distance: Cosine V1
+Target: animals_5_
+Cosine ceiling 0.657 +- 0.143
+Pretty good 0.44 now!
+Converge to 0.47 now pretty good !
+0.57 at gen 18
+Population pattern matchin 
+channel 
+F**K This is metamer!
+If this is not metamer I'm not sure what it.
+0.60 now
+0.65 now at gen 25 fantastic,!
+Since V1 RF is tiny, it's really sensitive to the eyeposition and Recentering …. caveat.
+0.62 again!!! 0.65 now Great evolution
+Reached the noise ceiling fully!",Beto-02032022-005,220302_Beto_generate_BigGAN_cosine(2),NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-03-02-Beto-03\2022-03-02-12-59-20
+NaN,PopulEvol_V1V4,NaN,,"006   Cosine Evolution
+Image: 24  [0.0 0.0]  4  1  'CMAES_Hessian'%
+Distance: Cosine V1V4
+Target: animals_5_
+Cosine ceiling 0.601+-0.130
+Lets see how adding V4 could help / hinder this reconstruction.
+0.40 now at gen 12, V4 converged well already, V1 still going.
+0.55 cosine at gen 15 Really good.
+0.60 now! Reached the ceiling!
+0.57 now
+0.61 at gen 37 super beautiful
+End at 0.64
+45 mins 47 % rate, 45 blocks !",Beto-02032022-006,220302_Beto_generate_BigGAN_cosine(3),NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-03-02-Beto-04\2022-03-02-13-29-03
+NaN,,NaN,,"001  03/07 RFMapping
+Very efficient",Beto-07032022-001,220307_Beto_rfMapper_basic,NaN,NaN,NaN,
+NaN,PopulEvol,NaN,,"002  Ref Encoding  Repr mapping",Beto-07032022-002,220307_Beto_selectivity_basic,NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-03-07-Beto-refRepr
+NaN,PopulEvol_V1V4,NaN,,"003 Cosine Evol
+CMAES Hessian
+FC6GAN
+Cat and Kitten   Cosine V1V4  0.638  0.101
+image [0.5  -0.5 ]  4 deg 
+V1 converge really fast. V4 converge slower
+Most V1 and V4 units were pretty positiv.e
+Target image
+The convergence is not quite good, fluctuate between 0.2 and 0.35
+V4 stay not so active...V1 nearly converged. 0.44 at gen 31
+0.46 at gen 42! Looks really like the cats' fure
+The traj is stable but a large gap is always there.
+V4 is not
+REally hard there is a large gap between the V4 activation and the real ones.
+This is interesting.",Beto-07032022-003,220307_Beto_generate_BigGAN_cosine,NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-03-07-Beto-01\2022-03-07-12-59-38
+NaN,PopulEvol_V1V4,NaN,,"004  Cosine Evol
+CMAES BigGAN 
+Cat and Kitten  
+Cosine V1V4  0.645  0.101
+image [0.5  -0.5 ]  4 deg 
+Try if BigGAN prior could make the reconstruction easier... or not.
+Really complex BigGAN stuff, see how well it controls.
+Definitely, V4 is much happier now. Activations are much closer to the target.
+May be the social information ? Makes it closer?
+F**K using BigGAN  V1 and V4 converged right away.....
+V4 is nearly metamer!
+WTF.
+But BigGAN evolution is not that stable.... the thing goes up and down a bit.
+0.548 now at gen 18 really efficient.
+0.622 reached celing at gen 27
+Stays around 0.454",Beto-07032022-004,220307_Beto_generate_BigGAN_cosine(1),NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-03-07-Beto-02\2022-03-07-13-20-53
+NaN,PopulEvol_V1,NaN,,"005 Cosine Evol
+CMAES Hessian FC6
+Cat and Kitten  
+Cosine V1V4  0.684  0.101
+image [0.5  -0.5 ]  4 deg 
+Controlling V1 is much easier?
+0.50 at gen 11, V1 part converge quite well.
+0.54 at gen 20 now
+Also not really stable...
+Maybe it's not a problem of the monkey but the problem of our measure …
+Use poisson variability model instead of gaussian?
+0.51  now S
+So for this image, our generator and optimizer clearly cannot extract all the informations.
+Single V1 evolution is not even fully successful ….",Beto-07032022-005,220307_Beto_generate_BigGAN_cosine(2),NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-03-07-Beto-03\2022-03-07-13-38-28
+NaN,PopulEvol_IT,NaN,,"006 Cosine Evol
+CMAES BigGAN 
+Cat and Kitten  
+Cosine IT 0.553 +-0.125
+image [0.5  -0.5 ]  4 deg 
+Reconstruction score grows very fast. 0.266at gen 7
+0.474 now Getting really close to the celing.
+0.507 at gen 21 majorly converged.
+Well converged to cat space, but still … not perfect.
+The cat becomes some rabbit ro rodent?",Beto-07032022-006,220307_Beto_generate_BigGAN_cosine(3),NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-03-07-Beto-04\2022-03-07-14-03-26
+NaN,PopulEvol_IT,NaN,,"007 Cosine Evol
+CMAES_Hessian  fc6  
+Cat and Kitten  
+Cosine IT 0.565 +-0.127
+image [0.5  -0.5 ]  4 deg  r
+Iguess the IT will not be easliy controlled by this FC6 generator.
+F**K
+The learning suddenly succeed around gen 20-27 rapidly growing.
+0.41 now !
+Reached 0.50 even ???? WTF why  this thing is a cat?
+0.61 ???? Throug the ceiling....
+Actually FC6 becomae more successful than BigGAN in the end.
+The thing crashed suddenly around 40!!?? Why
+Above the ceiling once again.",Beto-07032022-007,220307_Beto_generate_BigGAN_cosine(4),NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-03-07-Beto-05\2022-03-07-14-34-37
+NaN,,NaN,,"001 rfMapping
+2022-03-09 00:00:00
+Pretty efficient 
+IT channels are super noisy not much active channel.",Beto-09032022-001,220309_Beto_rfMapper_basic,NaN,NaN,NaN,
+NaN,PopulEvol,NaN,,"002 Selectivity
+[1.5  -1.0]  5  1  'CMAES_Hessian'
+IT is super bad, only 2 IT channels are modulated. 
+I think signal is bad and also the RF is not well covering IT",Beto-09032022-002,220309_Beto_selectivity_basic,NaN,NaN,5,N:\Stimuli\2020-CosineEvol\2022-03-09-Beto-refRepr
+NaN,PopulEvol_V1V4,NaN,,"003 Cosine Evolution 
+24  [1.5  -1.0]  5  1  'CMAES_Hessian'
+Distance Metrc: Cosine V1V4 
+Target: Blue-GrayGnatcatcher_sq
+Very sleepy monkey today
+Cosine Noise Celing 0.531
+0.33 pretty well 
+Stuck at 0.33 
+ 0.37 now! 
+Not perfect.  but not bad",Beto-09032022-003,220309_Beto_generate_BigGAN_cosine,NaN,NaN,5,N:\Stimuli\2020-CosineEvol\2022-03-09-Beto-01\2022-03-09-13-13-51
+NaN,PopulEvol_V4,NaN,,"004 Cosine Evolution 
+24  [1.5  -1.0]  5  1  'CMAES_Hessian'
+V4 Cosine criterion 
+Noise Ceiling 0.627 +-0.131
+Gradually converging, 0.36 
+0.46 at gen19
+Convergence is steady.
+0.48 now! Quite steady
+Nolonger stable...
+Decay to 0.13 …. not uite stable.
+Importantly the peak didn't get evolved.
+Going up and then down... not quite successful.
+0.58 at one moment
+Not really stable, but may got there once.",Beto-09032022-004,220309_Beto_generate_BigGAN_cosine(1),NaN,NaN,5,N:\Stimuli\2020-CosineEvol\2022-03-09-Beto-02\2022-03-09-13-41-57
+NaN,PopulEvol_V4,NaN,,"005 Cosine Evol
+animals_12_
+24  [1.5  -1.0]  5  1  'CMAES_Hessian'
+V4 Cosine criterion 
+Noise Ceiling 0.589 +- 0.162
+0.31 now at gen 5
+0.40 now at gen 7 really well activity reconstruction 
+0.42 now again. Pretty good. 
+Not sure why but all exp today are not really stable.... 
+Weird. 
+0.52 at gen 28 
+back to 0.41 
+0.53! now at gen 36",Beto-09032022-005,220309_Beto_generate_BigGAN_cosine(2),NaN,NaN,5,N:\Stimuli\2020-CosineEvol\2022-03-09-Beto-03\2022-03-09-14-06-03
+NaN,PopulEvol_V1,NaN,,"006 Cosine Evol
+animals_12_
+24  [1.5  -1.0]  5  1  'CMAES_Hessian'
+V1 Cosine criterion 
+Noise Ceiling 0.648 +- 0.162
+0.44 at gen 4. 
+0.55 at gen 6 converging rapidly. 
+0.59 at gen 8 rrrrrrr
+Wowo 0.60 now at gen 18 easy piecey. 
+Converge fast. 
+wow 0.63 at gen 22, really good convergence and stable! >",Beto-09032022-006,220309_Beto_generate_BigGAN_cosine(3),NaN,NaN,5,N:\Stimuli\2020-CosineEvol\2022-03-09-Beto-04\2022-03-09-14-42-03
+NaN,PopulEvol_V4,NaN,,"007 Cosine Evol
+Finally try something 
+dogYawn (10) c
+cosine V4  metric 
+0.735+-0.110  Super high celing 
+the whole V4 is quite active, 0.41  activation.
+0.57 now
+0.60 now at gen 7 
+0.62 at gen 18 
+0.71 at gen 
+Metameric!!!! 
+37 mins 32 gens Pretty hard.",Beto-09032022-007,220309_Beto_generate_BigGAN_cosine(4),NaN,NaN,5,N:\Stimuli\2020-CosineEvol\2022-03-09-Beto-05\2022-03-09-15-04-01
+NaN,,NaN,,"001 RFMapping
+10blocks 10 mins
+IT signal gets slightly better today!",Beto-11032022-001,220311_Beto_rfMapper_basic,NaN,NaN,NaN,
+NaN,,NaN,,"002  ReprEncoding
+Lets to Foveal to make life easier
+[1  -1]   4   1
+V1  V4  
+Eye signal is super noisy , not stable .
+40% perforance
+Pref of 32 unit
+Very long time and took a lot
+Note, using resampling instead of adding Gaussian noise make it excruciationly slow",Beto-11032022-002,220311_Beto_selectivity_basic,NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-03-11-Beto-refRepr
+NaN,PopulEvol_V4,NaN,,"004 Cosine Evol
+FC6  CMAESHessian
+Grape Sq   noiseMSE V4 area
+Eye recalibrated
+0.80 now pretty good evolution
+0.77 now
+Population pattern matchin 
+channel 
+score -0.84
+-0.82 converge",Beto-11032022-004,220311_Beto_generate_BigGAN_cosine(1),NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-03-11-Beto-02\2022-03-11-14-09-02
+NaN,PopulEvol_V1,NaN,,"005 Cosine Evol
+FC6  CMAESHessian
+Grape Sq   noiseMSE V4 area
+Converging well from –2.54 -> -1.14
+The purpleish taint is there.
+Reached ceiling now at gen 23
+Stays very close to the ceiling.
+Population pattern matching 
+10 
+channel 
+-0.5 
+10 
+Evo Trajecto ry 
+15 
+20 25 
+Generation",Beto-11032022-005,220311_Beto_generate_BigGAN_cosine(2),NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-03-11-Beto-03\2022-03-11-14-29-15
+NaN,PopulEvol_V1,NaN,,"006 Cosine Evol
+FC6  CMAESHessian
+block119_gen_Chan247plants_15_backup_tex.jpg_receptive_field
+noiseMSE V1   area   Criterion
+-0.87 at gen 18
+Around 0.81 now 
+converged quite stably. -.83",Beto-11032022-006,220311_Beto_generate_BigGAN_cosine(3),NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-03-11-Beto-04\2022-03-11-14-48-46
+NaN,PopulEvol_V4,NaN,,"007 Cosine Evol (4)
+FC6  CMAESHessian
+block119_gen_Chan247plants_15_backup_tex.jpg_receptive_field
+noiseMSE V4   area   Criterion
+-1.64->-1.12 now
+Converged",Beto-11032022-007,220311_Beto_generate_BigGAN_cosine(4),NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-03-11-Beto-05\2022-03-11-15-15-14
