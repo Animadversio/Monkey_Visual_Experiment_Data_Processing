@@ -2,23 +2,29 @@
 %  This new analysis script is written in more modular fashion. 
 %  Each experiment in a bundle is processed first to be a struct and then
 %  visualization and statistics are created from it. 
-%  [In development]
+%  [In development, more quantitative analysis to be added.]
 Animal="Beto"; Set_Path;
 rootdir = "O:\CorrFactor_natvalid";
 %%
-rowlist = find(contains(ExpRecord.ephysFN,"04012022"));
+% "20122021", "22122021", "04012022", "05012022", "07012022", "10012022", "12012022", "14012022", "26012022"
+rowlist = find(contains(ExpRecord.ephysFN,["14022022"]));%...
+%      & contains(ExpRecord.expControlFN,"generate"));
 [meta_new,rasters_new,~,Trials_new] = loadExperiments(rowlist, Animal, false);
 %% Evolution Experiments 
-S = Evol_BigGAN_FC6_Collect_Stats_fun(meta_new(2), rasters_new(2), Trials_new(2));
+iTr = 2;
+S = Evol_BigGAN_FC6_Collect_Stats_fun(meta_new(iTr), rasters_new(iTr), Trials_new(iTr));
 fdrnm = S.meta.fdrnm;
 expdir = fullfile(rootdir,fdrnm); 
 mkdir(expdir)
 %% Visualize Evolution Experiments 
 vidpath = Evol_BigGAN_FC6_Animation_fun(S);
-copyfile(vidpath, expdir)
+for iS = 1:numel(vidpath)
+    copyfile(vidpath(iS), fullfile(rootdir,S(iS).meta.fdrnm))
+end
 %% Selectivity Experiments 
 %% Format the selectivity Exepriemnts data
-Snat = selectivity_Collect_Stats_fun(meta_new(3:5), rasters_new(3:5), Trials_new(3:5));
+iTr = 3:5;
+Snat = selectivity_Collect_Stats_fun(meta_new(iTr), rasters_new(iTr), Trials_new(iTr));
 % %% The rig version Obsolete
 % D = vis_GUI_selective_prefchan("N:\Data-Behavior (BHV2)\211220_Beto_selectivity_basic.bhv2", ...
 %                 "N:\Stimuli\2021-EvolDecomp\2021-12-20-Beto-01-natvalid");
@@ -32,7 +38,7 @@ fprintf("Stats Structures of Evolution and Validation (Selectivity) saved to %s\
 %% Visualize and Print the Selectivity Experimental Response. 
 unitidx = S.units.pref_chan_id(1,1);
 chan = S.units.pref_chan(1);
-unit = S.units.unit_in_pref_chan(1);%2
+unit = S.units.unit_in_pref_chan(1);
 unitidx = find((S.units.spikeID==chan)&(S.units.unit_num_arr==unit));
 unitlab = S.units.unit_name_arr(unitidx);
 for Si = 1:numel(Snat)
