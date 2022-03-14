@@ -1,4 +1,8 @@
 function SS = selectivity_Collect_Stats_fun(meta_new, rasters_new, Trials_new)
+saveroot = "E:\OneDrive - Washington University in St. Louis\Evol_Cosine";
+disp("This is the experiental data root you want to save into?")
+disp(saveroot)
+keyboard
 % Extract enough statistics from the files to do plotting. 
 for iTr = 1:numel(meta_new)
 meta = meta_new{iTr};
@@ -7,27 +11,40 @@ Trials = Trials_new{iTr};
 if contains(meta.ephysFN,["Alfa","ALfa"]), Animal = "Alfa";
 elseif contains(meta.ephysFN,["Beto"]), Animal = "Beto";
 end
+fprintf(compose("Processing experiment %d %s\n",iTr,meta.ephysFN))
+fprintf([meta.comments,'\n'])
 % Meta info 
-SS(iTr).Animal = Animal;
-% BFEStats(Expi).Expi = Expi; 
-SS(iTr).imageName = Trials.imageName;
-SS(iTr).meta = meta;
+expday = datetime(meta.expControlFN(1:6),'InputFormat','yyMMdd');
+stimparts = split(meta.stimuli,"\");
+fdrnm = compose("%s", stimparts{end});
 
+SS(iTr).Animal = Animal;
+SS(iTr).imageName = string(Trials.imageName);
+SS(iTr).meta = meta;
+SS(iTr).meta.fdrnm = fdrnm; 
+SS(iTr).meta.expday = expday; 
+SS(iTr).meta.figdir = fullfile(saveroot, SS(iTr).meta.fdrnm); 
 %% units information
 if isfield(meta,"unitID")
 unit_num_arr = meta.unitID;
+if any(isnan(unit_num_arr)) % deal with nan in meta.unitID
+    fprintf("encounter nan unit %d, ignore and regarded as 0",...
+        find(isnan(meta.unitID)));
+    unit_num_arr(isnan(unit_num_arr)) = 0;
+end
 unit_name_arr = generate_unit_labels_new(meta.spikeID, meta.unitID);
 activ_msk = unit_num_arr~=0;
 else
 unit_name_arr = generate_unit_labels(meta.spikeID);
 [activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
 end
+assert(~any(isnan(unit_num_arr)),'nan still found in unit ID check')
 prefchan = Trials.TrialRecord.User.prefChan;
 if isfield(Trials.TrialRecord.User,"prefUnit")
     prefUi = Trials.TrialRecord.User.prefUnit;
     % prefUi = ExpRecord.pref_unit(exp_rowi);
 else
-    frpintf("pref unit information not found, use unit 1\n")
+    fprintf("pref unit information not found, use unit 1\n")
     prefUi = 1;
 end	
 prefchan_ids = find(meta.spikeID == prefchan & meta.unitID>0);
@@ -45,7 +62,6 @@ SS(iTr).units.pref_chan_id = pref_chan_id;
 SS(iTr).units.unit_in_pref_chan = unit_in_pref_chan;
 
 %% sort images 
-fprintf([meta.comments,'\n'])
 impos = Trials.TrialRecord.User.uniquePositions;
 imsize_pix = Trials.width(1,1);
 % imsize_deg = ExpRecord.stim_size(exp_rowi);
@@ -54,13 +70,13 @@ imgname_uniq = unique(Trials.imageName);
 [imgfps, mapper] = map2fullpath(string(imgname_uniq), meta.stimuli);
 img_idxarr = cellfun(@(imgnm)find(strcmp(Trials.imageName,imgnm)),imgname_uniq,'uni',0); % trial id each image 
 
-SS(iTr).stim.imgfn_mapper = mapper;
-SS(iTr).stim.imgfps = imgfps;
+SS(iTr).stim.imgfn_mapper = mapper; % matlab map from image name(no suffix) to full path.
+SS(iTr).stim.imgfps = imgfps; % full paths to the images
 SS(iTr).stim.impos = impos;
 SS(iTr).stim.imsize_pix = imsize_pix;
 SS(iTr).stim.imsize_deg = imsize_deg;
 SS(iTr).stim.imgname_uniq = imgname_uniq;
-SS(iTr).stim.img_idxarr = img_idxarr;
+SS(iTr).stim.img_idxarr = img_idxarr; % cell array, trial ids for each image. 
 
 %% format all experiments 
 
@@ -83,7 +99,9 @@ resp_meanMat = cat(2,resp_mean_col{:}); % chan N-by-image N
 resp_stdMat = cat(2,resp_std_col{:}); % chan N-by-image N 
 resp_semMat = cat(2,resp_sem_col{:}); % chan N-by-image N 
 
-SS(iTr).resp.trial_col = resp_trial_col;
+% `resp_trial_col` single trial response as an cell array shape imageN-by-1
+%                  Each cell contains a matrix of chan N-by-rep N 
+SS(iTr).resp.trial_col = resp_trial_col; % not subtracted baseline.
 SS(iTr).resp.meanMat = resp_meanMat;
 SS(iTr).resp.stdMat = resp_stdMat;
 SS(iTr).resp.semMat = resp_semMat;
@@ -98,5 +116,10 @@ SS(iTr).resp.semvec_pref = resp_semMat(pref_chan_id, :);
 
 %% format into a tensor , TODO
 
+%% Save the stats 
+ReprStat = SS(iTr);
+mkdir(SS(iTr).meta.figdir);
+save(fullfile(SS(iTr).meta.figdir,"ReprStat.mat"),'ReprStat')
+fprintf("Selectivity Exp stats saved to %s\n",fullfile(SS(iTr).meta.figdir,"ReprStat.mat"))
 end
 end 
