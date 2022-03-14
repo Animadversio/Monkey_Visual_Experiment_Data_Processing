@@ -1,4 +1,4 @@
-function frame_img_list = score_frame_image_arr(img_list, score_mat, clim, cmap, LineWidth)
+function [frame_img_list, Clim] = score_frame_image_arr(img_list, score_mat, clim, cmap, LineWidth)
 % Use the cmap and clim to map values in hl_mat to color, and form color frame
 % for corresponding image in the img_list. 
 % Signature
@@ -34,6 +34,7 @@ clim = [min(score_mat,[],'all'), max(score_mat,[],'all')];
 end;end;end
 
 Cmin = clim(1); Cmax = clim(2);
+Clim = [Cmin, Cmax];
 fprintf("Current color limit [%.2f,%.2f]\n",Cmin,Cmax)
 if ndims(img_list)==4 && ~iscell(img_list)
     Nimgs = size(img_list,4);
@@ -54,15 +55,21 @@ for j = 1:size(img_list, 2)
             c = interp1(cmap, scale_val * (size(cmap, 1) - 1) + 1); % Note, interpolation can be done from 1-64, not from 0
             if isstring(img_list{i,j}) || ischar(img_list{i,j})
                 img = imread(img_list{i,j});
+                color_scale = 255;
             else
                 img = img_list{i,j};
+                if max(img,[],'all') > 1.2 || isa(img,"uint8")
+                color_scale = 255;
+                else
+                color_scale = 1;
+                end
             end
             pad_img = padarray(img, [2*LineWidth, 2*LineWidth], 0);
             tmp_img = insertShape(pad_img, ...
                 'Rectangle', [LineWidth+1,LineWidth+1,...
                             size(img,2)+2*LineWidth,...
                             size(img,1)+2*LineWidth], ...
-                'LineWidth', 2 * LineWidth, 'Color', 256 * c);
+                'LineWidth', 2 * LineWidth, 'Color', color_scale * c);
             frame_img_list{i,j} = tmp_img;
         end
     end

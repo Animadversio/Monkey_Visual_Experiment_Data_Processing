@@ -1,4 +1,5 @@
 function figh = RF_contour_plot(RFStat, style, chanmask)
+% Plot RF of population of neurons as one contour plot with area filled or not. 
 % chanmask: mask for the channels to be plotted in a plot.
 % style: a string "edge" "fill"
 if nargin == 1, style="edge"; end

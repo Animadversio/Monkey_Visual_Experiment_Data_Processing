@@ -147,10 +147,13 @@ S.meta.datetime = datetime(date_str,'InputFormat','ddMMyyyy');
 
 act_col_vec = cellfun(@(A)reshape(A,[],1), S.psth.act_col,'Unif',0);
 act_col_vec = cat(1, act_col_vec{:});
+actmean_mat = cell2mat(cellfun(@(A) mean(A,2), act_col_vec,'Unif',0)');
 allF = zeros(size(rasters,1),1);
 allF_P = zeros(size(rasters,1),1);
 allT = zeros(size(rasters,1),1);
 allT_P = zeros(size(rasters,1),1);
+all_bestT = zeros(size(rasters,1),1);
+all_bestT_P = zeros(size(rasters,1),1);
 for iCh = 1:size(rasters,1) % Go through all channels see if there is some modulation (w/ ANOVA)
     [~,p,~,TST] = ttest(rsp_vec(iCh,:)-bsl_mean(iCh)); % Debug at Sep.6,2021
     allT(iCh,1) = TST.tstat;
@@ -158,11 +161,21 @@ for iCh = 1:size(rasters,1) % Go through all channels see if there is some modul
     STS = anova_cells(cellfun(@(act)act(iCh,:),act_col_vec,'uni',0));
     allF(iCh,1) = STS.F;
     allF_P(iCh,1) = STS.F_P ; 
+    actmean_vec = actmean_mat(iCh,:)-bsl_mean(iCh); % above baseline activation
+    
+    [~,best_cond_idx] = maxk(actmean_vec, 5);
+%     best_cond_idx = find(actmean_vec > 0.5 * max(actmean_vec)); % find conditions(size, pos) that evoke > 0.5 above baseline activation.
+    best_cond_resp = cell2mat(cellfun(@(act)act(iCh,:),act_col_vec(best_cond_idx),'uni',0)');  
+    [~,p,~,TST] = ttest(best_cond_resp); % Debug at Sep.6,2021
+    all_bestT(iCh,1) = TST.tstat;
+    all_bestT_P(iCh,1) = p;
 end
 S.stats.F = allF;
 S.stats.F_P = allF_P;
 S.stats.T = allT;
 S.stats.T_P = allT_P;
+S.stats.bestT = all_bestT;
+S.stats.bestT_P = all_bestT_P;
 %%
 % gprMdl_arr = [];
 % for iCh = 1:numel(unit_num_arr)
@@ -175,7 +188,9 @@ S.stats.T_P = allT_P;
 % Save stat to the folder
 if P.collectstat, S_col = [S_col,S]; end
 RFStat = S;
-save(fullfile(savedir, compose("%s_%s_RFStat.mat",Animal,datestr(S.meta.datetime,"yyyymmdd"))), "RFStat");
+savepath = fullfile(savedir, compose("%s_%s_RFStat.mat",Animal,datestr(S.meta.datetime,"yyyymmdd")));
+save(savepath, "RFStat");
+fprintf("RF stats saved to %s\n",savepath)
 %%
 if P.plotEachChan
 figure;plot(psthbest_mean')
