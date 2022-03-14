@@ -263,6 +263,8 @@ close(v);
 end
 
 function [sortchanX] = getChanX(sortchan)
+% Util function, get the X coordinate for the sorted array of channel to plot. 
+% used in `summary_movie` function. 
 sortchanX = sortchan;
 for i = 1:numel(sortchan)
     totN = sum(sortchan==sortchan(i));
