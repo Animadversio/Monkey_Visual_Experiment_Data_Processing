@@ -1,7 +1,8 @@
 
 Animal = "Beto";Set_Path;
-%"220118", "220119", "220225", "220228", "220302","220307", "220309", 
-currows = find(contains(ExpRecord.expControlFN,["220311"])); 
+%"220118", "220119", "220225", "220228", "220302","220307", "220309",
+%"220311", "220404", "220406"
+currows = find(contains(ExpRecord.expControlFN,["220406"])); 
 [meta_new, rasters_new, lfps_new, Trials_new] = loadExperiments(currows, Animal, false);
 bhvfns = ExpRecord.expControlFN(currows);
 saveroot = "E:\OneDrive - Washington University in St. Louis\Evol_Cosine";
@@ -44,6 +45,7 @@ visualize_Cosine_PopEvol(CStats(:),9);
 visualize_Cosine_score_traj(CStats(:),10);
 visualize_PCCosine_imageEvol(CStats(:),7,8)
 calc_Cosine_RFmask_fun(CStats(:))
+visusalize_resp_distri_allchan(SelS_col);
 %% 
 animate_Cosine_Evol_summary(CStats(:),15)
 

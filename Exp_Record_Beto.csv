@@ -4122,3 +4122,174 @@ block119_gen_Chan247plants_15_backup_tex.jpg_receptive_field
 noiseMSE V4   area   Criterion
 -1.64->-1.12 now
 Converged",Beto-11032022-007,220311_Beto_generate_BigGAN_cosine(4),NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-03-11-Beto-05\2022-03-11-15-15-14
+NaN,,NaN,,"4/4/2022 revive
+002 RFMapping
+ V4 signal is pretty bad. IT signal is bad too.
+only V1 looks relatively good.",Beto-04042022-002,220404_Beto_rfMapper_basic(1),NaN,NaN,NaN,
+NaN,PopulEvol,NaN,,"003  Selectivity
+Representation encoding
+Selectivity 
+[0  0]  3 deg 
+pref chan 26  3 
+We may need to play with V1 today...
+Chan 26, top 3, prefer 
+n03530642_1271, gabor_ori_150_freq_1.00, tree (5)
+V4 has no selective channel
+IT has 6 selective units, V1 has 11",Beto-04042022-003,220404_Beto_selectivity_basic,NaN,NaN,3,N:\Stimuli\2020-CosineEvol\2022-04-04-Beto-refRepr
+NaN,PopulEvol_V1,NaN,,"004  Cosine Evolution 1
+Noise ceil  is  0.794
+[0 0] 3.0  FC6  GAN   CMAES Hessian
+Polarcc_03  Cosine V1
+Criterion
+Converged really fast really well.
+0.75 at gen 9 !
+0.83 at gen 10 ! R
+0.88 cosine now!!
+fantastic
+11 mins 31 blocks pretty good!",Beto-04042022-004,220404_Beto_generate_BigGAN_cosine,NaN,NaN,3,N:\Stimuli\2020-CosineEvol\2022-04-04-Beto-01\2022-04-04-13-24-54
+NaN,PopulEvol_V1,NaN,,"005 Cosine Evolution 2
+Setting: [0 0] 3.0  FC6  GAN   CMAES Hessian
+Target: Sinewave_06_225 
+Criterion: Cosine V1
+Ceiling 0.7915
+F**K converge to 0.86 at gen 10
+Passed the noise ceiling already.
+Reached noise ceil pretty fast.  I think it's because suppression.",Beto-04042022-005,220404_Beto_generate_BigGAN_cosine(1),NaN,NaN,3,N:\Stimuli\2020-CosineEvol\2022-04-04-Beto-02\2022-04-04-13-41-57
+NaN,PopulEvol_V1,NaN,,"006 Cosine Evolution 3
+Setting:  [0 0] 3.0  FC6  GAN   CMAES Hessian
+Target:  block119_gen_Chan247plants_15_backup_tex.jpg_receptive_field
+Criterion:  Cosine V1
+Ceiling 0.753
+There is one neuron that peaked, need to evolve it.
+Evolving this neuron to high activation is harder than suppressing it to nihil.
+I think it's about the space volume corresponding to different activation s.
+This is challenging, but it's evolving, just not positive yet.
+WOW starts to be positive at gen 13. 0.21 now.
+0.31 now at gen 17 pretty good job.
+0.45 now
+I think it will succeed!!!!!! Exciting...
+This is getting higher 0.44 at gen 24.
+It got the exact shape but not the activation.
+0.55 now!!!! Super duper exciting.
+Still score is variable.
+So it seems to get the red eye center, but not the surrounding blue color.
+0.56 now.
+0.59 now at gen 40
+0.60 at gen 43
+50 generations. Terminate.
+Super duper good experiments.",Beto-04042022-006,220404_Beto_generate_BigGAN_cosine(2),NaN,NaN,3,N:\Stimuli\2020-CosineEvol\2022-04-04-Beto-03\2022-04-04-13-58-15
+NaN,PopulEvol_V1,NaN,,"007  Cosine Evolution 4
+Setting:  [0 0] 3.0  FC6  GAN   CMAES Hessian
+Target:  objects-familiar-10
+Criterion:  Cosine V1
+Ceiling  0.724 
+Gen 6 reached 0.82, pretty fast convergence....
+0.88 converged at gen
+36 gen stays around 0.90. =? But this is kind of hacking. Supressing all the neurons.",Beto-04042022-007,220404_Beto_generate_BigGAN_cosine(3),NaN,NaN,3,N:\Stimuli\2020-CosineEvol\2022-04-04-Beto-04\2022-04-04-14-19-31
+NaN,PopulEvol_V1,NaN,,"008  Cosine Evolution
+Setting:  [0 0] 3.0  FC6  GAN   CMAES Hessian
+Target:  animals_11_
+Criterion:  Cosine V1
+0.719 ceiling pretty activa units
+Very easy to evolve. Got close to ceiling around gen 13.
+reached noise ceiling at gen 15.
+Get noise ceiling at gen 20 again.
+Reached 0.59 at gen 22.
+This evolution is actually similar to the last one which got a red head.
+Really high performance, did well.",Beto-04042022-008,220404_Beto_generate_BigGAN_cosine(4),NaN,NaN,3,N:\Stimuli\2020-CosineEvol\2022-04-04-Beto-05\2022-04-04-15-01-57
+NaN,PopulEvol_V1,NaN,,"009  Cosine Evolution
+Setting:  [0 0] 3.0  FC6  GAN   CMAES Hessian
+Target:  Grapes_sq
+Criterion:  Cosine V1
+Ceiling 0.672
+Taking too long!",Beto-04042022-009,220404_Beto_generate_BigGAN_cosine(5),NaN,NaN,3,N:\Stimuli\2020-CosineEvol\2022-04-04-Beto-06\2022-04-04-15-26-34
+NaN,,NaN,,"001 RFMapping
+Nice that V4 channels come back to life!",Beto-06042022-001,220406_Beto_rfMapper_basic,NaN,NaN,NaN,
+NaN,PopulEvol,NaN,,"002  Image Encoding
+Chan 11
+[1  -1]  4 deg image
+Super high performance.
+10 repititions super high performance.",Beto-06042022-002,220406_Beto_selectivity_basic,NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-04-06-Beto-refRepr
+NaN,PopulEvol_V4,NaN,,"003  Cosine Evolution
+Target Grapes_sq 
+Criterion  Cosine V4
+Space and generator  FC6 CMAES_Hessian
+Population V4  [1  -1]  4 deg image
+Noise ceiling 0.564
+V4 evolution is harder.
+This is pretty positive
+0.24 at gen 13
+0.34 at gen 20
+Definitely evolving. 0.32 at gen 25
+Fall and climb again.
+Up and down a lot, not sure it's because the V4 channel is less so the score is more noisY?
+Reached 0.50 at the end! 0.36 or 0.40 still.
+Stays around 0.40.
+21 mins
+55 blocks",Beto-06042022-003,220406_Beto_generate_BigGAN_cosine,NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-04-06-Beto-01\2022-04-06-13-53-46
+NaN,PopulEvol_V4,NaN,,"004   Cosine Evolution
+Target Tree-pareidolia-1024x1544
+Criterion  Cosine V4
+Space and generator  FC6 CMAES_Hessian
+0.676
+This is majorly a single unit coding it.
+I think that's a face neuron 02-1 coding the face parts.
+Evolving gradually 0.19
+It raced 0.21 at gen 17
+Very unstable, basically failed.
+The channel is suppressed instead  of enhanced.",Beto-06042022-004,220406_Beto_generate_BigGAN_cosine(1),NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-04-06-Beto-02\2022-04-06-14-19-56
+NaN,PopulEvol_V4,NaN,,"005   Cosine Evolution
+Target Tree-pareidolia-1024x1544
+Criterion  Cosine V4
+Space and generator  BigGAN  CMAES
+Noise ceiling 0.676
+BigGAN made the guy very happy !
+Ch2-U1 is firing a LOT
+It got a nice doggy face, but it's still fluctuating. (Better than FC6 but not so good)
+0.3 at gen 28
+Now at 0.365 at gen 36
+0.463 at gen 46 pretty close now.
+Lesson:
+if the target is too sparse or hard to find.
+We still cannot make it.
+So didn't reach the ceiling!
+But still more successful than expected.",Beto-06042022-005,220406_Beto_generate_BigGAN_cosine(2),NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-04-06-Beto-03\2022-04-06-14-45-55
+NaN,PopulEvol_V4,NaN,,"006   Cosine Evolution
+block119_gen_Chan247plants_15_backup_tex.jpg_receptive_field
+Noise ceiling 0.578
+Score 0.31 at gen 12
+Score 0.47 at gen 14 nearly metameric!
+Back to metameric...
+The recodding is not really stable....???
+So the reference is fluctuating a lot.
+Basically success and then failed miserably.
+Very much not stable.",Beto-06042022-006,220406_Beto_generate_BigGAN_cosine(3),NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-04-06-Beto-04\2022-04-06-15-10-39
+NaN,PopulEvol_V4,NaN,,"007  Cosine Evolution
+Target: n03530642_1271
+Criterion  Cosine V4
+Space and generator  FC6  CMAES_Hessian
+Original image is the bee house hive.
+Noise ceiling 0.573
+Evolved now but stay around 0.24 , 0.25
+Fluctuation very large!!!! WTF
+Why V4 is so unstable???
+Non of the V4 evol reached as successful as the V1 version we did on Monday.
+Stays around 0.30 ~ 0.35",Beto-06042022-007,220406_Beto_generate_BigGAN_cosine(4),NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-04-06-Beto-05\2022-04-06-15-31-34
+NaN,PopulEvol_V4,NaN,,"009 Cosine Evolution
+Target Grapes_sq 
+Criterion  Cosine V1
+Space and generator  FC6 CMAES_Hessian
+Population V1 [1  -1]  4 deg image
+0.735 +- 0.131
+V1 Cosine is far more stable ….
+0.47 gen  0.57 now
+Converging better!
+0.61  at gen 15 nice .
+0.69 at gen 19
+Very very stable. 0.70 for gen 20
+0.72  at gen 21 super nice !
+Stable convergence.
+last vblock 23 kind of failed very low firing rate and the monkey seems to be staring at the dot
+=> maybe he is day dreaming?
+Back to 0.70 / 0.69 / 0.71
+Stays around 0.71, there is a small gap to 0.73",Beto-06042022-009,220406_Beto_generate_BigGAN_cosine(6),NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-04-06-Beto-06\2022-04-06-16-01-58

@@ -49,7 +49,7 @@ for Mi = 1:2
    end
 end
 %%
-save(fullfile(mat_dir,"evo_drift_codes_all.mat"),'evol_codes','drft_codes','evo_meta')
+
 %%
 
 load(fullfile(mat_dir,"evol_ctrl_codes.mat"),'drft_codes_col')

@@ -1,4 +1,6 @@
 function [chanX_broke, vec_broke] = prepare_broken_target(chanX_targ, vec_targ)
+% Add nan to gaps in the chanX array such that plotting will not add
+% straigt lines across the missing gaps.
 % Example 
 %   [chanX_broke, vec_broke] = prepare_broken_target([1,2,5,6,8], [10,5,56,4,5]);
 % 
