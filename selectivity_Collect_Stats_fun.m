@@ -1,5 +1,6 @@
 function SS = selectivity_Collect_Stats_fun(meta_new, rasters_new, Trials_new)
 saveroot = "E:\OneDrive - Washington University in St. Louis\Evol_Cosine";
+saveroot = "E:\OneDrive - Harvard University\Manifold_Invariance";
 disp("This is the experiental data root you want to save into?")
 disp(saveroot)
 keyboard
@@ -83,7 +84,7 @@ SS(iTr).stim.img_idxarr = img_idxarr; % cell array, trial ids for each image.
 %% sort all responses into images 
 evkwdw = [51:200];  bslwdw = [1:40];
 bslmean = squeeze(mean(rasters(:, bslwdw, :),[2,3])); %average baseline activity 
-bslsem = sem(squeeze(mean(rasters(:, bslwdw, :),[2])),3); % variability between trials in baseline. 
+bslsem = sem(squeeze(mean(rasters(:, bslwdw, :),[2])),2); % variability between trials in baseline. 
 evoke_trials  = squeeze(mean(rasters(:, evkwdw, :),[2])); % evoked firing rate
 evkbsl_trials = evoke_trials - bslmean; % evk - bsl score using overall baseline 
 

@@ -6,6 +6,15 @@ currows = find(contains(ExpRecord.expControlFN,["220406"]));
 [meta_new, rasters_new, lfps_new, Trials_new] = loadExperiments(currows, Animal, false);
 bhvfns = ExpRecord.expControlFN(currows);
 saveroot = "E:\OneDrive - Washington University in St. Louis\Evol_Cosine";
+%%
+
+Animal = "Alfa";Set_Path;
+%"220118", "220119", "220225", "220228", "220302","220307", "220309",
+%"220311", "220404", "220406"
+currows = find(contains(ExpRecord.expControlFN,["210325"])); 
+[meta_new, rasters_new, lfps_new, Trials_new] = loadExperiments(currows, Animal, false);
+bhvfns = ExpRecord.expControlFN(currows);
+saveroot = "E:\OneDrive - Washington University in St. Louis\Evol_Cosine";
 
 %%
 % Alfa-23032021-006 and 210323_Alfa_generate_BigGAN_cosine(3) files have different numbers of words! Check inputs
@@ -40,15 +49,16 @@ CStats = Evol_Cosine_Collect_Stats_fun(meta_new(evoidx), rasters_new(evoidx), Tr
 %%
 CStats(10).meta % "2022-02-28-Beto-01-cosine_V1V4"
 %% Visualizations
+%%
 visualize_TargetImg(CStats(:))
 visualize_Cosine_PopEvol(CStats(:),9);
 visualize_Cosine_score_traj(CStats(:),10);
 visualize_PCCosine_imageEvol(CStats(:),7,8)
 calc_Cosine_RFmask_fun(CStats(:))
+%%
 visusalize_resp_distri_allchan(SelS_col);
 %% 
 animate_Cosine_Evol_summary(CStats(:),15)
-
 %%
 visualize_Cosine_score_traj(CStats(10),10);
 
