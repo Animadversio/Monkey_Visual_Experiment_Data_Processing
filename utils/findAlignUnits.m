@@ -15,6 +15,9 @@ for iCh = reshape(srcchans,1,[])
     Cunit = CStat.meta.unitID(iCh);
     Rch = find(RFStat.meta.spikeID==Cchan &...
                RFStat.meta.unitID==Cunit );
+    if isempty(Rch)
+        Rch = nan;
+    end
     Rchans = [Rchans; Rch];
 end
 end

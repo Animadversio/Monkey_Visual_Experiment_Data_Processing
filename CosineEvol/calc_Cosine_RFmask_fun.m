@@ -1,4 +1,5 @@
 function calc_Cosine_RFmask_fun(CStats)
+% Calculate a population based RF mask for Cosine experiments. 
 dataroot = "O:\Evol_Cosine";
 area_colormap = containers.Map({'V1','V4','IT'},{[1,0,0],[0,1,0],[0,0,1]});
 figh = 11; figh2 = 12; figh3=13; figmtg = 14;
@@ -24,6 +25,10 @@ targAct = CStat.targ.targetActVec{1}(targlist);
 % Find the units that are involved in the objective. Idx according to the
 % RF experiments
 RFchlist = findAlignUnits(targlist, CStat, RFStat);
+if any(isnan(RFchlist))
+    targAct(isnan(RFchlist)) = [];
+    RFchlist(isnan(RFchlist)) = [];
+end
 assert(numel(targAct)==numel(RFchlist))
 % Find units that has significant RFs experiments
 % Note that, some units don't have a good RF estimate but it's still
@@ -58,7 +63,7 @@ TFvalidlist = find((RFStat.stats.bestT_P<1E-3) & (RFStat.stats.F_P<1E-5));
 % saveallform(CStat.meta.figdir,"RFcontour_all_fullview",figh2)
 
 %% Collect all Alpha masks 
-iSz = 1;
+iSz = 1; % choose size 1! this is kind of arbitrary. 
 FLATMAP_VAL = 0.1;
 alphamask = {};
 alphamask_thr = {};
@@ -67,13 +72,13 @@ for ich = RFchlist'
 predmap = maskS(ich).pred_rfmat{iSz};
 peak = max(predmap,[],'all');
 predRNG = (max(predmap(:)) - min(predmap(:)));
-if predRNG > 1E-2
+if predRNG > 1E-2 % dynamic range of predicted value is not zero
 cval = 0.606 * peak;
 alphamask{end+1} = min(predmap / cval,1);
 thrval = 0.500 * peak;
 alphamask_thr{end+1} = max((predmap - thrval) / (peak - thrval), 0);
 alphamask_bin{end+1} = double((predmap - thrval)>0);
-else % the predicted map is not informative! just assume flat prior
+else % the predicted map constant thus it is not informative! just assume flat prior
 alphamask{end+1} = FLATMAP_VAL * ones(size(predmap));
 alphamask_thr{end+1} = FLATMAP_VAL * ones(size(predmap));
 alphamask_bin{end+1} = FLATMAP_VAL * ones(size(predmap));
@@ -85,6 +90,7 @@ alphamasks_bin = cat(3, alphamask_bin{:});
 %% Average the RF masks collected.
 % Weighted average of the alpha masks save to the struct
 alpha_msk = struct();
+% Each unit has the same weight. uniform average. 
 alpha_msk.unif_wt = mean(alphamasks,3);
 alpha_msk.unif_wt_thr = mean(alphamasks_thr,3);
 alpha_msk.unif_wt_bin = mean(alphamasks_bin,3);

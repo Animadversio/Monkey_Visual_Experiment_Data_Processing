@@ -45,11 +45,11 @@ scores = 1-pdist2(vec_targs_norm', vec_reprs_norm', 'cosine')';
 elseif contains(score_mode,'MSE')
 scores = -mean((vec_targs_norm - vec_reprs_norm).^2,1); % nan
 % error("MSE is not a suitable distance for direction")
-error("Method not implemented")
+% error("Method not implemented")
 elseif contains(score_mode,'L1')
 scores = -mean(abs(vec_targs_norm - vec_reprs_norm),1); % nan
 % error("L1 is not a suitable distance for direction")
-error("Method not implemented")
+% error("Method not implemented")
 else
 error("Method not implemented")
 end
