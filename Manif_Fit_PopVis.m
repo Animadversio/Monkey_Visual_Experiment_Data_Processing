@@ -1,5 +1,8 @@
 %% Visualize all the manifold tuning maps and the fittings like a montage!
 %  This script plot the maps on sphere. 
+%  older version . 
+%  For new version see `Manif_Map_VisMontage.m`
+%  
 Animal="Both";Set_Path;
 tabdir = "O:\Manif_Fitting\Kent_summary";
 poptabdir = "O:\Manif_Fitting\popstats";

@@ -1,4 +1,6 @@
+%% Manifold paper Supplementary figure 06/07
 %% Plot montage of numerous tuning maps (of driving units) eps. grouped by area or animal
+%  newer functional version 
 Animal="Both";Set_Path;
 ang_step = 18;
 [phi_grid, theta_grid] = meshgrid(-90:18:90, -90:18:90); 
