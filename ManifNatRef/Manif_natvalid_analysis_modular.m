@@ -3,7 +3,8 @@ set(groot,'defaultAxesTickLabelInterpreter','none');
 saveroot = "E:\OneDrive - Harvard University\Manifold_Invariance";
 Animal = "Beto";Set_Path;
 %"220118", "220119", "220225", "220228", "220302","220307", "220309", 
-currows = find(contains(ExpRecord.expControlFN,["220516"])); 
+%"220516", "220524", "220531", "220607", "220613"
+currows = find(contains(ExpRecord.expControlFN,["220613"])); 
 % currows = 437:558;%find(contains(ExpRecord.expControlFN,["220311"])); 
 [meta_new, rasters_new, lfps_new, Trials_new] = loadExperiments(currows, Animal, false);
 bhvfns = ExpRecord.expControlFN(currows);
@@ -11,7 +12,7 @@ bhvfns = ExpRecord.expControlFN(currows);
 rfidx = contains(bhvfns,"rfMapper");
 RFS_col = RF_Calc_Stats_fun(meta_new(rfidx), rasters_new(rfidx), Trials_new(rfidx));
 %  Process RF data and get the masks saved to disk. 
-for iRF = 1:numel(RFS_col)
+for iRF = 2:numel(RFS_col)
     RFStat = RFS_col(iRF);
     maskS = RFStats_indiv_chan_gen_mask(RFStat);
     expdir = fullfile(saveroot, compose("%s-%s-RF",datestr(RFStat.meta.datetime,"yyyy-mm-dd"),RFStat.Animal));
@@ -20,7 +21,9 @@ for iRF = 1:numel(RFS_col)
     save(fullfile(expdir,'maskStat.mat'),'maskS')
 end
 %%
-BFEStats = Evol_BigGAN_FC6_Collect_Stats_fun(meta_new(2), rasters_new(2), Trials_new(2));
+
+%%
+BFEStats = Evol_BigGAN_FC6_Collect_Stats_fun(meta_new(3), rasters_new(3), Trials_new(3));
 Evol_BigGAN_FC6_Animation_fun(BFEStats)
 %%
 selidx = contains(bhvfns,"selectivity_basic") & ~cellfun(@isempty,meta_new');
@@ -28,14 +31,18 @@ SelS_col = selectivity_Collect_Stats_fun(meta_new(selidx), rasters_new(selidx), 
 % plot the response distribution for each channel. 
 visusalize_resp_distri_allchan(SelS_col);
 %% Invariance Manifold analysis
-visualize_invariance_map_allchan(SelS_col(2:3))
+visualize_invariance_map_allchan(SelS_col(1))
 
 %% Dynamic visualization of the selectivity experiments 
-
-
-
-
-
+calc_invariance_fun(SelS_col(1))
+%%
+calc_sparseness_fun(SelS_col(1))
+%%
+Fstats = [];
+for iCh = 1:numel(ReprStat.units.spikeID)
+Fstat = anova_cells(cellfun(@(A)A(iCh,:),ReprStat.resp.trial_col,'uni',0));
+Fstats = [Fstats; Fstat];
+end
 %% find the idx mat 
 [objnames, objcats] = object_names();
 sfxs = ["left", "med", "right", "small", "large", "background"];

@@ -45,22 +45,8 @@ for Expi = 1:numel(EStats)
 end
 %%
 save(fullfile(mat_dir,Animal+"_EvolTrajPCcoefs.mat"),'ETrajStats')
-%%
-PC123projs_mat = cell2mat(arrayfun(@(E)E.lastgen_PCprojs_m(1:3),ETrajStats','uni',0));
-[THE,PHI,Rvec] = cart2sph(-PC123projs_mat(:,1),PC123projs_mat(:,2),PC123projs_mat(:,3));
-%%
-figure;
-scatter3(-PC123projs_mat(:,1),PC123projs_mat(:,2),PC123projs_mat(:,3))
-axis equal
-%%
-figure;
-scatter(THE,PHI);% very clustered
-xlim([-pi/2,pi/2]);ylim([-pi/2,pi/2]);axis equal;
-%% get the basis from python saving
-% py.importlib.import_module("torch");
-data = py.numpy.load(fullfile(stim_path,"PC_imgs","PC_vector_data.npz"));
-PC_vecs = data.get('PC_vecs').double;
-%%
+
+%% Find the generation with the highest score / activation and project it on the Manifold plane
 for Animal = ["Alfa","Beto"]
 load(fullfile(mat_dir,Animal+"_EvolTrajPCcoefs.mat"),'ETrajStats');
 load(fullfile(mat_dir,Animal+"_Evol_stats.mat"),'EStats');
@@ -78,7 +64,25 @@ ETrajStats(Expi).bestgen_PCprojs_s = bestgen_PCprojs_s;
 end
 save(fullfile(mat_dir,Animal+"_EvolTrajPCcoefs.mat"),'ETrajStats');
 end
+
+%% Plot the PC23 plane end points on the coordinate plane or in 3d space 
+PC123projs_mat = cell2mat(arrayfun(@(E)E.lastgen_PCprojs_m(1:3),ETrajStats','uni',0));
+[THE,PHI,Rvec] = cart2sph(-PC123projs_mat(:,1),PC123projs_mat(:,2),PC123projs_mat(:,3));
 %%
+figure;
+scatter3(-PC123projs_mat(:,1),PC123projs_mat(:,2),PC123projs_mat(:,3))
+axis equal
+%%
+figure;
+scatter(THE,PHI);% very clustered
+xlim([-pi/2,pi/2]);ylim([-pi/2,pi/2]);axis equal;
+%% get the basis from python saving
+% py.importlib.import_module("torch");
+% data = py.numpy.load(fullfile(stim_path,"PC_imgs","PC_vector_data.npz"));
+% PC_vecs = data.get('PC_vecs').double;
+
+
+%% Reload the data and do statistics 
 ETrajStats = [];
 for Animal = ["Alfa","Beto"]
 D = load(fullfile(mat_dir,Animal+"_EvolTrajPCcoefs.mat"),'ETrajStats');
