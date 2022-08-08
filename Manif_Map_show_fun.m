@@ -1,4 +1,12 @@
 function Manif_Map_show_fun(MapVarStats, Animal, Expi, chan2plot, figh)
+% Load data from `MapVarStats` and show an montage of heatmap plots for `chan2plot` 
+% Heatmap plot without the image inset in it. 
+% 
+% Parameters:
+%   MapVarStats:  collected Stats from `Manif_MapVarSmooth_Stat.m`
+%   Animal: used to generate label string
+%   Expi:   # of exp, used to fetch data. 
+%   chan2plot: array of channels to show on the figure.
 if nargin < 5
     figh = 3;
 end

@@ -1,11 +1,11 @@
-% Similar content to Manif_NonParametrics_Pop.m 
 %% Compute the nonparametric statistics for tuning maps of all exp all channels pop. 
+%  Similar content to Manif_NonParametrics_Pop.m 
 poptabdir = "O:\Manif_Fitting\popstats";
 alfatab_pop = readtable(fullfile(poptabdir,"Alfa_Exp_all_KentStat_bsl_pole.csv"));
 betotab_pop = readtable(fullfile(poptabdir,"Beto_Exp_all_KentStat_bsl_pole.csv"));
 poptab = [alfatab_pop;betotab_pop];
 
-%% Compute and curate stats about 
+%% Compute and curate non parametric stats about single channel tuning map
 tic
 S_col = [];
 for Animal = ["Alfa","Beto"]
@@ -36,7 +36,8 @@ actmap_mean = cellfun(@(A)...
 bslmat = cell2mat(reshape(MapVarStats(Expi).manif.bsl_col{spi},1,[]));
 bslmean = mean(bslmat(iCh,:));
 % bslstd = std(bslmat(iCh,:));
-S = Manif_Map_NonParam_stat_fun(actmap_mean, bslmean, S);
+% Major workhorse here 
+S = Manif_Map_NonParam_stat_fun(actmap_mean, bslmean, S); 
 S_col = [S_col;S];
 end
 end

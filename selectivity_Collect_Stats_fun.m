@@ -111,6 +111,13 @@ SS(iTr).resp.bslsem = bslsem;
 SS(iTr).resp.meanvec_pref = resp_meanMat(pref_chan_id, :);
 SS(iTr).resp.stdvec_pref = resp_stdMat(pref_chan_id, :);
 SS(iTr).resp.semvec_pref = resp_semMat(pref_chan_id, :);
+%%
+Fstats = [];
+for iCh = 1:numel(SS(iTr).units.spikeID)
+Fstat = anova_cells(cellfun(@(A)A(iCh,:),SS(iTr).resp.trial_col,'uni',0));
+Fstats = [Fstats; Fstat];
+end
+SS(iTr).stat.Fstats = Fstats;
 %% psth of pref chan , TODO
 
 

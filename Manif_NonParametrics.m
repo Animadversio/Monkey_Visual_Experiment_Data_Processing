@@ -190,8 +190,7 @@ Mvec = [sum(Xvec.* Wvec), sum(Yvec.* Wvec), sum(Zvec.* Wvec)]/sum(Wvec);
 [CoMtheta, CoMphi, CoMrho] = cart2sph(CoMvec(1),CoMvec(2),CoMvec(3));
 [Mtheta, Mphi, Mrho] = cart2sph(Mvec(1),Mvec(2),Mvec(3));
 end
-function addField()
-end
+
 % %% Visualize
 % msk = NPtab.F_P<1E-3;
 % suffix = "_P90"; prefix = "CoM";

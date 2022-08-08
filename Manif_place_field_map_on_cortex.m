@@ -1,7 +1,6 @@
-%% PC space tuning summary on cortex 
+%% Manifold tuning plotted on cortex for all exps
 % Using MapVarStats instead of original data to work 
-% Basic structure is kept and 
-% Renovate this code 
+% Basic structure is kept and renovate this code 
 % global  Trials rasters channel sphere_norm ang_step Reps
 % storedStruct = load("D:\\Manifold_Exps.mat");
 Animal = "Beto"; Set_Path; 

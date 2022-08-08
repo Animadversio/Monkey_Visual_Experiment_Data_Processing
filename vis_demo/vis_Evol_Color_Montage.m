@@ -1,11 +1,12 @@
 %% vis Evol ColorFrame Montage for paper. Figure 2B 
+%% Sequence of images evolve through time, 
+%% Large montage of tuning map with image embedded in it. 
 %%
 Set_Path;
 mat_dir = "O:\Mat_Statistics"; 
 %%
 Animal = "Beto"; 
 load(fullfile(mat_dir, Animal+"_Evol_stats.mat"))
-load(fullfile(mat_dir, Animal+"_Manif_stats.mat"))
 load(fullfile(mat_dir, Animal+"_Manif_stats.mat"))
 %% Evolution stimuli
 stimdir = EStats(11).meta.stimuli;

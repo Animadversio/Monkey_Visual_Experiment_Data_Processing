@@ -1,4 +1,5 @@
 function [reportStats] = anova_cells(score_cell)
+% Alternative siganature for using anova. calling anova for an cell array.
 reportStats	= struct();
 groupsize = cellfun(@(S) numel(S), score_cell); % how many elements under that condition
 indices = reshape(1:numel(score_cell),size(score_cell)); % index for that condition
