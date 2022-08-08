@@ -2,12 +2,13 @@
 %  See if the Evolution works 
 %  (Newer Refactored version using new plotting API comparing to Evol_RedDim_summary.m. May. 2021)
 %  Plot the evolution trajectory comparison
-%  With handy stats function below. 
+%  With handy stats function at bottom. 
 
 %% Set path and load most basic exp summary
 Animal = "Both"; Set_Path;
 global figdir
 figdir = "O:\Evol_ReducDim\summary";
+
 ExpType = "RDEvol";
 if strcmp(Animal,"Both") % load stats
 A = load(fullfile(matdir, "Alfa"+"_RDEvol_stats.mat"), 'RDStats');
@@ -17,13 +18,15 @@ else
 load(fullfile(matdir, Animal+"_RDEvol_stats.mat"), 'RDStats')
 end
 Corder = colororder; % default color seq
-%% 
+
+%% Collect all traces into a cell array from the `RDStats`.
+%  For future plotting purpose.
 RDEvol_Stats = []; % struct list, higher level summary, easy for plotting and testing.
 unitnum_arr = zeros(length(RDStats),1);
 prefchan_arr = zeros(length(RDStats),1);
 validmsk = ones(numel(RDStats), 1, 'logical'); % whether the exp should be excluded. (unconventional optimizer setup)
-score_traces = cell(numel(RDStats), 2); 
-zscore_traces = cell(numel(RDStats), 2); 
+score_traces = cell(numel(RDStats), 2); % activation vector 
+zscore_traces = cell(numel(RDStats), 2); % activation vector zscored for each session 
 block_traces = cell(numel(RDStats), 2); % vector of block num for plotting
 % ref_traces = cell(numel(RDStats), 2);
 % ref_block_traces = cell(numel(RDStats), 2); % vector of block num for plotting
@@ -53,7 +56,7 @@ S.pref_chan = RDStats(Expi).evol.pref_chan(1);
 S.pref_unit = RDStats(Expi).evol.unit_in_pref_chan(1);
 % Generate stats on the cell array of scores. 
 if all(RDStats(Expi).evol.optim_names == ["ZOHA Sphere lr euclid", "ZOHA Sphere lr euclid ReducDim"]) 
-% make sure the thread order
+% make sure the thread order optimizer order is correct
 for thr_i = [1,2] % collect the vectorized scores into the summary stats
 score_traces{Expi, thr_i} = cat(1,score_vec_col{thr_i,1:end-1}); % Full vector of score
 zscore_traces{Expi, thr_i} = cat(1,zscore_vec_col{thr_i,1:end-1}); % Full vector of zscore
@@ -88,44 +91,51 @@ end
 RDEvol_Stats = [RDEvol_Stats, S];
 end
 RDEvolTab = struct2table(RDEvol_Stats);
-%% Collect stats and save
+%% save the collected stats as mat and csv
 writetable(RDEvolTab, fullfile(figdir, Animal+"_RDEvol_trajcmp.csv"))
 save(fullfile(figdir, Animal+"_RDEvol_summaryStats.mat"), "RDEvol_Stats")
 
-%% Newer API verions
+%% Newer API verions: Process the collected data from all the experiment pairs. 
 [score_m_traj_col, block_traj_col, score_m_traj_extrap_col, block_traj_extrap_col, ...
    extrap_mask_col, sucsmsk_end, sucsmsk_max, tval_end_arr, pval_end_arr, tval_max_arr, pval_max_arr] =...
    optim_traj_process(block_traces, score_traces, ["Full", "50D"], "max12", 55);
-%%
+
+%% Plot the summary of trajectories.
 figdir = "O:\Evol_ReducDim\summary";
 outdir = "O:\Manuscript_Manifold\Figure3\RedDimEffectProg";
-anim_arr = [RDStats.Animal]';
 prefchan_arr = arrayfun(@(S)S.evol.pref_chan(1),RDStats');
 area_arr = arrayfun(@area_map,prefchan_arr);
+anim_arr = [RDStats.Animal]';
+%% creat masks to filter array
 V1msk = area_arr=="V1";
 V4msk = area_arr=="V4";
 ITmsk = area_arr=="IT";
-Amsk = anim_arr=="Alfa";
-Bmsk = anim_arr=="Beto";
+Alfamsk = anim_arr=="Alfa";
+Betomsk = anim_arr=="Beto";
 anysucsmsk = any(RDEvolTab.t_p_succ<0.01,2);
 allsucsmsk = all(RDEvolTab.t_p_succ<0.01,2);
-%%
+
+%% Plot optimization trajectory separated by visual area, with individual optim traces 
 figh = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
-	{V1msk&sucsmsk_end,V4msk&sucsmsk_end,ITmsk&sucsmsk_end}, ["V1","V4","IT"], {}, [], ["Full", "50D"], true);
-%%
+   {V1msk&sucsmsk_end,V4msk&sucsmsk_end,ITmsk&sucsmsk_end}, ["V1","V4","IT"], {}, [], ["Full", "50D"], true);
+
+%% Plot optimization trajectory separated by visual area and animal, with individual optim traces 
 [figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
-   {V1msk&sucsmsk_end,V4msk&sucsmsk_end,ITmsk&sucsmsk_end}, ["V1","V4","IT"], {Amsk,Bmsk}, ["Alfa","Beto"], ["Full", "50D"], true);
+   {V1msk&sucsmsk_end,V4msk&sucsmsk_end,ITmsk&sucsmsk_end}, ["V1","V4","IT"], {Alfamsk,Betomsk}, ["Alfa","Beto"], ["Full", "50D"], true);
 title(T, "Reduced Dimension Evolution Trajectory Comparison (End gen success P<0.01)")
 saveallform([figdir,outdir],"Both_MaxNorm_extrapSmth_windiv_NOYLIM",figh,["png","pdf"])
 for i=1:6,nexttile(T,i);ylim([0,1]);end
 saveallform([figdir,outdir],"Both_MaxNorm_extrapSmth_windiv",figh,["png","pdf"])
-%%
+
+%% Plot optimization trajectory separated by visual area and animal, summary only, no individual traces.
 [figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
-   {V1msk&sucsmsk_end,V4msk&sucsmsk_end,ITmsk&sucsmsk_end}, ["V1","V4","IT"], {Amsk,Bmsk}, ["Alfa","Beto"], ["Full", "50D"], false);
+   {V1msk&sucsmsk_end,V4msk&sucsmsk_end,ITmsk&sucsmsk_end}, ["V1","V4","IT"], {Alfamsk,Betomsk}, ["Alfa","Beto"], ["Full", "50D"], false);
 title(T, "Reduced Dimension Evolution Trajectory Comparison (End gen success P<0.01)")
 saveallform([figdir,outdir],"Both_MaxNorm_extrapSmth",figh,["png","pdf"])
+
+
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Trajectory Summary plot: 
+%% Older more verbose API Trajectory Summary plot: 
 %% Re-normalize the trajectories to show together.
 score_C_m_trajs = {};
 score_G_m_trajs = {};
@@ -146,15 +156,6 @@ for Expi=1:size(score_traces,1)
     score_G_s_trajs{Expi} = score_G_s/scaling;
     block_trajs{Expi} = blockvec;
 end
-%% Filtering Array
-Animal_arr = struct2table(RDEvol_Stats).Animal;
-Alfamsk = Animal_arr=="Alfa";
-Betomsk = Animal_arr=="Beto";
-V1msk = prefchan_arr <=48 & prefchan_arr>=33;
-V4msk = prefchan_arr <=64 & prefchan_arr>=49;
-ITmsk = prefchan_arr <=32 & prefchan_arr>=1;
-anysucsmsk = any(RDEvolTab.t_p_succ<0.01,2);
-allsucsmsk = all(RDEvolTab.t_p_succ<0.01,2);
 %% Plot trajectory comparison for each individual session.
 h=figure;hold on;fignm=compose("%s_MaxNorm_scoreTraj_indiv_all", Animal);
 set(h,'pos',[1000         315         765         663])
@@ -341,6 +342,12 @@ end
 saveallform(figdir,fignm+"_Xlim");
 
 
+%%
+% score2cmp = score_vec_col(:,2:3);
+% S = score_cmp_stats(score2cmp, "init23");
+% S = score_cmp_stats(score_vec_col(:,end-2:end-1), "last23", S);
+% Dprime_integral(score_vec_col)
+
 function S = optimtraj_integral(score_traj2cmp, S)
 % Integrate the area under the optimization trajectory.
 % Return a structure. Collect various kinds of stats for 2 trajectories
@@ -397,7 +404,8 @@ S.("Dpr_int_norm") = Dpr_int_norm;
 end
 
 function S = score_cmp_stats(score2cmp, prefix, S)
-% Comparing cell array of firing rates and write stats 
+% Comparing cell array of firing rates and write stats in S
+% 
 % score2cmp: a cell array of scores, 2 rows, each row is a thread / optimizer
 % prefix: prefix to name the fields of the struct.
 % S: Struct containing the stats, if given then write the stats into it; if not, create a new one.  
@@ -433,29 +441,3 @@ scoreM = mean(score_all_vec);
 scoreS = std(score_all_vec);
 zscore_vec_col = cellfun(@(vec)(vec-scoreM) / scoreS, score_vec_col, 'uni', 0);
 end
-
-% function [score_m,score_s,blockvec] = sort_scoreblock(blockarr,scorearr)
-% % sort an array of scores according to the block array labels. compute the
-% % mean and std for each block. 
-% % really useful function to summarize multiple evolution trajectories into
-% % a mean one. 
-% blockvec = min(blockarr):max(blockarr);
-% score_m = [];score_s = [];
-% for blocki = min(blockarr):max(blockarr)
-%     score_m(blocki) = mean(scorearr(blockarr==blocki));
-%     score_s(blocki) = sem(scorearr(blockarr==blocki));
-% end
-% end
-% % 
-% function saveallform(figdir,fignm,h,sfxlist)
-% % Save a (current) figure with all suffices in a figdir. 
-% if nargin <=3, h=gcf; end
-% if nargin <=4, sfxlist = ["fig","pdf","png"]; end
-% for sfx = sfxlist
-% if strcmp(sfx, "fig")
-%    savefig(h,fullfile(figdir,fignm+"."+sfx))
-% else
-%    saveas(h,fullfile(figdir,fignm+"."+sfx))
-% end
-% end
-% end
