@@ -4,7 +4,7 @@ sumdir = "E:\OneDrive - Washington University in St. Louis\CortiDistCorr\summary
 SUMUdir = "E:\OneDrive - Washington University in St. Louis\Manif_SUHash\summary";
 %% Load the tuning map similarity matrix 
 Animal = "Both";Set_Path;
-mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
+mat_dir = "O:\Mat_Statistics";
 if strcmp(Animal,"Both") % load stats
 A = load(fullfile(mat_dir, "Alfa"+'_CortiDisCorr.mat'), 'CortiDisCorr');
 B = load(fullfile(mat_dir, "Beto"+'_CortiDisCorr.mat'), 'CortiDisCorr');

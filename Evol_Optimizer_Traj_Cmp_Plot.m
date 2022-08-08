@@ -1,5 +1,6 @@
 %% function to make the figure of Grant, Optimizer Comparison in vivo
 % run the data processing code before running this
+% Used in GECCO 2022 paper. 
 
 meanscore_nat_share = nan(size(rasters, 1), length(block_list));
 stdscore_nat_share = nan(size(rasters, 1), length(block_list));

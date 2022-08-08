@@ -9,6 +9,7 @@ load(fullfile(mat_dir, Animal+"_Manif_stats.mat"))
 sucstab = readtable(fullfile(mat_dir, Animal+"_EvolTrajStats.csv"));
 % Get pairs of experiments
 [Expi2cmp, prefchan_arr] = get_cmp_pairs(sucstab);
+
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Evolution Comparison 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -136,7 +137,6 @@ msk = (fittab_B.R2(Expi2cmp(:,1))>0.4)&(fittab_B.R2(Expi2cmp(:,2))>0.4);
 paired_stripe_plot({fittab_B.kappa(Expi2cmp(:,1)),fittab_B.kappa(Expi2cmp(:,2))},...
             ["Kappa 1 deg","Kappa 3 deg"],{msk},["fit succes"])
 %%
-        
 
 %% Load in non parametric statistics 
 nonpardir = "O:\Manif_NonParam\summary";
@@ -165,7 +165,7 @@ saveallform(outdir,"normVUS_imsize_cmp",figh)
 
 
 %%  Radial tuning curve AUC 
-summarydir = "E:\OneDrive - Washington University in St. Louis\ImMetricTuning\summary";
+summarydir = "O:\ImMetricTuning\summary";
 tab = readtable(fullfile(summarydir,"Beto"+"_RadialTuningStatsTab_squ.csv"));
 %%
 normAUC_cmp = tab.normAUC_mani(Expi2cmp);
@@ -189,12 +189,14 @@ vis_EvolManif_pair(Expi2cmp(ipair,:), EStats, Stats, 1);
 fprintf("%.3f  %.3f \n",normAUC_cmp(ipair,1),normAUC_cmp(ipair,2))
 pause
 end
+
 %% Experiment on that day of Beto Manifold Exp 44,45
 load('N:\Data-Ephys-MAT\Beto-05122019-001_formatted.mat')
 RFStats = RF_Calc_Stats_fun({meta}, {rasters}, {Trials});
 %% Experiment of the previous day
 load('N:\Data-Ephys-MAT\Beto64chan-04122019-003_formatted.mat')
 RFStats = RF_Calc_Stats_fun({meta}, {rasters}, {Trials});
+
 %%
 figdir = "E:\OneDrive - Harvard University\Manuscript_Manifold\FigureS3C";
 % figh = RF_contour_plot(RFStats, "edge");
@@ -217,6 +219,9 @@ maxval = max(S(44).interp_rfmat{1},[],'all');
 caxis([maxval/20,maxval])
 colormap("gray")
 saveallform(figdir,"rfmap_spline_half_active",figh)
+
+
+
 function vis_EvolManif_pair(idxs, EStats, Stats, fignum)
 if nargin == 3
 figure('pos',[680   444   670   530])

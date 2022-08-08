@@ -14,7 +14,7 @@ popfittab = [alfatab_pop;betotab_pop];
 clear alfatab_pop betotab_pop
 %% Load the tuning map similarity matrix 
 Animal = "Both";Set_Path;
-mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics";
+mat_dir = "O:\Mat_Statistics";
 if strcmp(Animal, "Both") % load stats
 A = load(fullfile(mat_dir, "Alfa"+'_CortiDisCorr.mat'), 'CortiDisCorr');
 B = load(fullfile(mat_dir, "Beto"+'_CortiDisCorr.mat'), 'CortiDisCorr');
@@ -23,6 +23,7 @@ clear A B
 else
 load(fullfile(mat_dir, Animal+'_CortiDisCorr.mat'), 'CortiDisCorr') 
 end
+
 %% Find examples of SU-MU Tune map pair and show examples montage of their maps
 Animal="Alfa"; iTr = 15;
 unit_num_arr = CortiDisCorr(iTr).units.unit_num_arr;
@@ -67,6 +68,7 @@ MU_statvec(end+1,:) = expstatvec(pair_ids(j,2));
 end
 end
 ttest2_print(SU_statvec, MU_statvec, "SU maxAct", "MU maxAct", true)
+
 %% SU,MU kappa value (parametric tuning width) of all pairs
 SU_statvec = [];
 MU_statvec = [];
@@ -89,6 +91,7 @@ MU_statvec(end+1,:) = expstatvec(pair_ids(j,2));
 end
 end
 ttest2_print(SU_statvec, MU_statvec, "SU kappa", "MU kappa", true)
+
 %% Compare the similarity of SU-MU
 %% Collect pairs of SU MU correlation into 
 areacorrvec_col = {}; % nExp by 5 cell array, containing vectorized corr coef
