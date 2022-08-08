@@ -3086,7 +3086,7 @@ BigGAN is dropiing even lower. Not sure why.
 Fluctuating.... not really evolving
 Fluctuating up and down... not going up.
 Aborting
-10 mins, 10 blocks not too bad.",Beto-10012022-002,220110_Beto_generate_BigGAN,1,16,4,N:\Stimuli\2021-EvolDecomp\2022-01-10-Beto-01\2022-01-10-14-00-05
+10 mins, 10 blocks not too bad.",Beto-10012022-002,220110_Beto_generate_BigGAN,16,1,4,N:\Stimuli\2021-EvolDecomp\2022-01-10-Beto-01\2022-01-10-14-00-05
 5,FC6Evol_Decomp;BigGAN_FC6,NaN,,"003 Evolution
 13   [1.3  -1.0]  3  1 'CMAES_Hessian'
 13   [1.3  -1.0]  3  1 'CMAES'
@@ -3116,11 +3116,11 @@ FC6 85->88
 0.15 
 0.2 
 025 
-OK it's my fault, the image shall be larger like [2.3 -1.0]  4",Beto-10012022-003,220110_Beto_generate_BigGAN(1),1,13,3,N:\Stimuli\2021-EvolDecomp\2022-01-10-Beto-02\2022-01-10-14-16-06
+OK it's my fault, the image shall be larger like [2.3 -1.0]  4",Beto-10012022-003,220110_Beto_generate_BigGAN(1),13,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-10-Beto-02\2022-01-10-14-16-06
 5,FC6Evol_Decomp;natrefvalid,NaN,,"004 Naural Validation
 Mixed set
 13   [1.3  -1.0]  3  1
-This guy seems noisy....",Beto-10012022-004,220110_Beto_selectivity_basic,1,13,3,N:\Stimuli\2021-EvolDecomp\2022-01-10-Beto-02-natvalid
+This guy seems noisy....",Beto-10012022-004,220110_Beto_selectivity_basic,13,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-10-Beto-02-natvalid
 5,BGEvol_Decomp,NaN,,"005 Selectivity BigGAN factoize
 13   [1.3  -1.0]  3  1
 SUPER dificult 20 mins mearly 2 blocks. 25% performance.
@@ -3129,7 +3129,7 @@ After adjusting the towel performance back to 70%
 Fact 0 is not bad...
 its landscape is really flat like the Friday one.
 actually the prediction is not too bad....
-38 performance! 36 mins 7 blocks",Beto-10012022-005,220110_Beto_selectivity_basic(1),1,13,3,N:\Stimuli\2021-EvolDecomp\2022-01-10-Beto-02-decomp-BigGAN
+38 performance! 36 mins 7 blocks",Beto-10012022-005,220110_Beto_selectivity_basic(1),13,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-10-Beto-02-decomp-BigGAN
 5,FC6Evol_Decomp,NaN,,"006 Selectivity FC6 Factorizae
 13   [1.3  -1.0]  3  1
 Error bar for this cell is HUGE …
@@ -3138,7 +3138,7 @@ Prediction has that structure! Nice. But the max is not as high as natural
 ch. 13, pref:
 fac0_full_corrresnet50_linf8-layer3_00,
 evol_best_01_block009_thread000_gen_gen008_000495,
-fac0_cntpnt_shuffleresnet50_linf8-layer3_03",Beto-10012022-006,220110_Beto_selectivity_basic(2),1,13,3,N:\Stimuli\2021-EvolDecomp\2022-01-10-Beto-02-decomp
+fac0_cntpnt_shuffleresnet50_linf8-layer3_03",Beto-10012022-006,220110_Beto_selectivity_basic(2),13,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-10-Beto-02-decomp
 NaN,,NaN,,"001 RFMapping",Beto-12012022-001,220112_Beto_rfMapper_basic,NaN,NaN,NaN,
 5,FC6Evol_Decomp;BigGAN_FC6,NaN,,"002 Evolution BiaGAN
 7   [2.1  -1.0]  4  1
@@ -4390,3 +4390,95 @@ NaN,natrefvalid_invariance,NaN,,"005 Invariance at another location
 Large image invariance expeirment
 12   [0 0 ] 7 deg
 Full of noise …. Not much signal in it.",Beto-16052022-005,220516_Beto_selectivity_basic(2),NaN,NaN,7,N:\Stimuli\2021-EvolDecomp\2022-05-16-Beto-02-Invariance
+NaN,BigGAN_FC6,NaN,,"001 RFMapping
+Pretty good signal today",Beto-24052022-001,220524_Beto_rfMapper_basic,NaN,NaN,NaN,
+5,BigGAN_FC6,NaN,,"002 BigGAN FC6 Evolution
+chan 38 [0  0 ]  5 deg unit 1
+This channel doesn't have a reliable receptive field. But it has pretty significant modulation by the Natural imageds
+The peak images are faces and bodies of animals.
+The peak firing rate could be around 200.
+So we assume it should be evolvable.
+Indeed BigGAN evolved a bit.
+Both threads evolve to 73~ 80
+raised above the baseline but still not too high.",Beto-24052022-002,220524_Beto_generate_BigGAN,38,1,5,N:\Stimuli\2021-EvolDecomp\2022-05-24-Beto-01\2022-05-24-15-13-01
+5,BigGAN_FC6,NaN,,"003  Invariance
+chan 38 [0  0 ]  5 deg unit 1",Beto-24052022-003,220524_Beto_selectivity_basic,38,1,5,N:\Stimuli\2021-EvolDecomp\2022-05-24-Beto-01-Invariance
+5,BigGAN_FC6,NaN,,"004 Natural Image Validation
+chan 38 [0  0 ]  5 deg unit 1",Beto-24052022-004,220524_Beto_selectivity_basic(1),38,1,5,N:\Stimuli\2021-EvolDecomp\2022-05-24-Beto-01-natvalid
+NaN,,NaN,,"001 RFMapping
+calibrate eye, calibrate record array for long ime
+10 blocks",Beto-31052022-001,220531_Beto_rfMapper_basic,NaN,NaN,NaN,
+5,BigGAN_FC6,NaN,,"002 BigGAN FC6 evol
+[1.3  -1.2]  1 4
+MU 5/5
+150 -> 220 / 240.",Beto-31052022-002,220531_Beto_generate_BigGAN,8,1,4,N:\Stimuli\2021-EvolDecomp\2022-05-31-Beto-01\2022-05-31-13-26-33
+5,natrefvalid,NaN,,"003 nat valida
+chan 8 [1.3  -1.2]  4deg unit 1
+buildings_222_City_Pittsburgh_Permits_Licenses_Inspections,
+dogYawn (10),
+buildings_836c6ad71640be124e30c3c686a7178f",Beto-31052022-003,220531_Beto_selectivity_basic,8,1,4,N:\Stimuli\2021-EvolDecomp\2022-05-31-Beto-01-natvalid
+5,natrefvalid_invariance,NaN,,"004 nat Invariance
+chan 8 [1.3  -1.2]  4deg unit 1
+bing_birdcage_0001_seg_background,
+bing_birdcage_0001_seg_left,
+n13914608_726_seg_lrg
+This is quite selective to the bird cage texture.",Beto-31052022-004,220531_Beto_selectivity_basic(1),8,1,4,N:\Stimuli\2021-EvolDecomp\2022-05-31-Beto-01-Invariance
+5,FC6Evol_Decomp,NaN,,"005 Factorization
+chan 8 [1.3  -1.2]  4deg unit 1
+FC6 Evolution factorization
+evol_best_01_block052_thread000_gen_gen051_002987, evol_best_02_block046_thread000_gen_gen045_002619, fac2_map_corrresnet50_linf8-layer3_02
+This is quite significant",Beto-31052022-005,220531_Beto_selectivity_basic(2),8,1,4,N:\Stimuli\2021-EvolDecomp\2022-05-31-Beto-01-decomp
+NaN,,NaN,,"002 June 7 2022
+RF mapping
+His eye is not stable... take longer.",Beto-07062022-002,220607_Beto_rfMapper_basic(1),NaN,NaN,NaN,
+5,BigGAN_FC6,NaN,,"003 Generate BigGAN
+64  MU5/5
+[0  0]  5 deg rc
+FC6   CMAES Hessian
+BigGAN  CMAES
+Both threads pretty successful.
+from 70/60 -> 136, both converge to pretty good and comparable results.
+Just the firing rate differs.
+56 blocks
+Really good experiments!",Beto-07062022-003,220607_Beto_generate_BigGAN,64,1,5,N:\Stimuli\2021-EvolDecomp\2022-06-07-Beto-01\2022-06-07-13-29-46
+5,natrefvalid,NaN,,"004 Natural validation image selectivity",Beto-07062022-004,220607_Beto_selectivity_basic,64,1,5,N:\Stimuli\2021-EvolDecomp\2022-06-07-Beto-01-natvalid
+5,FC6Evol_Decomp,NaN,,"005  FC6 Evolution Factorization !
+Yeah the evolved images are doing great, the recreated ones are not.",Beto-07062022-005,220607_Beto_selectivity_basic(1),64,1,5,N:\Stimuli\2021-EvolDecomp\2022-06-07-Beto-01-decomp
+5,BGEvol_Decomp,NaN,,"006 BigGAN factorization
+Factor tensor is even doing better!
+Factor 2 is also doing good
+Similarly the reconstructed ones are not as good...",Beto-07062022-006,220607_Beto_selectivity_basic(2),64,1,5,N:\Stimuli\2021-EvolDecomp\2022-06-07-Beto-01-decomp-BigGAN
+5,natrefvalid_invariance,NaN,,"007 Invariance images
+Monkey images are really effective.
+n02487347_3641_seg_lrg, n02357911_47_seg_background, n02487347_3641_seg_small",Beto-07062022-007,220607_Beto_selectivity_basic(3),64,1,5,N:\Stimuli\2021-EvolDecomp\2022-06-07-Beto-01-Invariance
+NaN,natrefvalid,NaN,,"001 RF mapper
+06/13/2022 Pretty good!
+9 blocks
+9mins
+Signal is bad …. really bad. No area except for V1 has receptive field.
+Very very noisy.",Beto-13062022-001,220613_Beto_rfMapper_basic,NaN,NaN,NaN,
+NaN,natrefvalid,NaN,,"002 RFMapping
+Eye signal is much better no need to recaplib
+Brain signal may be better.
+002 Finish
+4.5/5",Beto-13062022-002,220613_Beto_rfMapper_basic(1),NaN,NaN,NaN,
+NaN,natrefvalid,NaN,,"004 Generate BigGAN
+Ch 6 [0.0, 0.0 ]  5  1
+not very good! But still the FC6GAn evolved a bit.
+160-200-210
+43 blocks  40 mins",Beto-13062022-004,220613_Beto_generate_BigGAN(1),NaN,NaN,NaN,N:\Stimuli\2021-EvolDecomp\2022-06-13-Beto-02\2022-06-13-14-12-33
+NaN,natrefvalid,NaN,,"005 Invariance
+bing_birdcage_0001_seg_background, n02487547_1709_seg_lrg, n02487347_3641_seg_small
+Inserting image...",Beto-13062022-005,220613_Beto_selectivity_basic,NaN,NaN,NaN,N:\Stimuli\2021-EvolDecomp\2022-06-13-Beto-02-Invariance
+NaN,natrefvalid,NaN,,"006 Natural validation mixed set
+n01774384_495, tribar_02_270, Cat_and_Kitten",Beto-13062022-006,220613_Beto_selectivity_basic(1),NaN,NaN,NaN,N:\Stimuli\2021-EvolDecomp\2022-06-13-Beto-02-natvalid
+NaN,natrefvalid,NaN,,"007 FC6 Evol Factorization
+Actually this factorization is immensely successful.
+Reaaly good facttsr,
+fac1 corrmap
+evol_best_02_block039_thread000_gen_gen038_002222, facttsr_corrresnet50_linf8-layer3_02,
+fac1_map_corrresnet50_linf8-layer3_03",Beto-13062022-007,220613_Beto_selectivity_basic(2),NaN,NaN,NaN,N:\Stimuli\2021-EvolDecomp\2022-06-13-Beto-02-decomp
+NaN,,NaN,,"003 Generate BigGAN
+Ch 2  [0  -2]  5
+MU 4.5/5
+Super noisy not working.",Beto-13062022-003,220613_Beto_generate_BigGAN,NaN,NaN,NaN,N:\Stimuli\2021-EvolDecomp\2022-06-13-Beto-01\2022-06-13-14-05-58
