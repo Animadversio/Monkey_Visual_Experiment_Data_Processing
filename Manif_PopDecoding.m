@@ -1,4 +1,6 @@
 %% Manifold Decoding
+% An attempt to use MLP / DNN to decode population response in manifold experiment into the image. 
+% Later we used simple bayesian decoding instead. 
 Set_Path;
 %%
 mat_dir = "O:\Mat_Statistics";
@@ -7,8 +9,9 @@ load(fullfile(mat_dir, Animal+'_Evol_stats.mat'), 'EStats')
 load(fullfile(mat_dir, Animal+'_Manif_stats.mat'), 'Stats') 
 % load(fullfile(mat_dir, Animal+"_ManifMapVarStats.mat"), 'MapVarStats')
 %%
-save(fullfile(mat_dir, Animal+'_Manif_stats.mat'), 'Stats') 
-%%
+% save(fullfile(mat_dir, Animal+'_Manif_stats.mat'), 'Stats') 
+
+%% Target y for the problem is the X, Y, Z coordinate on the PC123 space. (euclidean coordinate for the sphere surface). 
 [PHI, THETA] = meshgrid(-90:18:90.1,-90:18:90.1);
 XX = cosd(PHI).*cosd(THETA);
 YY = cosd(PHI).*sind(THETA);
@@ -43,6 +46,7 @@ for cvi = 1:Kfold
     Xtrain = zact_sel(trainmsk,:);
     Yvalid = targ_coord(validmsk,:);
     Xvalid = zact_sel(validmsk,:);
+    % Manual way to write OLS regression. 
     n2c_beta = pinv([ones(nTrain,1),Xtrain]) * Ytrain;
     coord_fit  = [ones(nTrain,1),Xtrain] * n2c_beta;
     coord_pred = [ones(nValid,1),Xvalid] * n2c_beta;
@@ -62,6 +66,10 @@ MSEvalid_arr = arrayfun(@(R)R.MSEvalid,result);
 MSEtrain_arr = arrayfun(@(R)R.MSEtrain,result);
 fprintf("%d fold CV MSE valid %.3f(%.3f), train %.3f(%.3f)\n",Kfold,mean(MSEvalid_arr),sem(MSEvalid_arr),...
     mean(MSEtrain_arr),sem(MSEtrain_arr))
+
+
+
+%% A Second try: MLP decoding 
 %%
 Kfold = 6;
 CV = cvpartition(121,'KFold',Kfold);

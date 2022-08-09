@@ -15,8 +15,8 @@ L2mat = squareform(pdist(targ_coord,'eucl'));
 cosmat = squareform(pdist(targ_coord,'cosine'));
 angmat = acos(1 - cosmat);
 
-%%
-Animal = "Alfa";
+%% Main loop, going through every experiment, perform decoding on it.
+for Animal = ["Alfa","Beto"]
 load(fullfile(mat_dir, Animal+'_Evol_stats.mat'), 'EStats') 
 load(fullfile(mat_dir, Animal+'_Manif_stats.mat'), 'Stats') 
 load(fullfile(mat_dir, Animal+"_ManifMapVarStats.mat"), 'MapVarStats')
@@ -31,7 +31,7 @@ nCh = numel(MapVarStats(Expi).units.spikeID);
 actmap_col = arrayfun(@(iCh)cellfun(@(A)...
     squeeze(A(iCh,:)),MapVarStats(Expi).manif.act_col{si},'uni',0),...
     1:nCh,'uni',0);
-
+% creat masks
 FStats = cellfun(@anova_cells,actmap_col); 
 Fmsk = struct2table(FStats).F_P < 0.001; 
 n_features = sum(Fmsk);
@@ -70,6 +70,7 @@ save(fullfile(decodedir,compose(Animal+"_Manif_Exp%02d_NaiveBayesdecode.mat",Exp
 toc
 end
 diary off;
+end
 
 
 %% Collect exp into a structure array. BayDecStats
