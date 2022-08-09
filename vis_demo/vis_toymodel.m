@@ -1,3 +1,6 @@
+%% Manifold Paper Figure 6
+%  2d toy model demonstrating the effect of tuning width and tuned dims on different stats.  
+
 xmax = 20; ymax = 20;
 Nx = 101; Ny = 101;
 Cx = 15; Cy = 15;
@@ -5,7 +8,8 @@ FLATSTD = 1000;
 xtick = linspace(-xmax,xmax,Nx);
 ytick = linspace(-ymax,ymax,Ny);
 gmap = gauss2d(xtick,ytick,0,0,5,5);
-%%
+
+%% Demo of the evolution on the dummy function. 
 centxy = zeros(1,2);
 traj = [centxy];
 for i = 1:10
@@ -55,15 +59,24 @@ saveallform("E:\OneDrive - Harvard University\Manuscript_Manifold\Figure6Toy",..
             "toymodel_2dexample")
 
 function G = gauss2d(xticks,yticks,mux,muy,sigx,sigy)
+% 2d gaussian function
+%  xticks, yticks are 1d vectors of the ticks 
 [xx,yy]=meshgrid(xticks,yticks);
 G=exp(-(((xx-mux)/sigx).^2+((yy-muy)/sigy).^2)/2);
 end
+
 function G = gauss2d_vec(xxyy,mux,muy,sigx,sigy)
+% vectorized 2d Gaussian function. 
+%  xxyy is N-by-2 array
 xx = xxyy(:,1); yy = xxyy(:,2);
 G=exp(-(((xx-mux)/sigx).^2+((yy-muy)/sigy).^2)/2);
 end
 
 function traj = guided_randwalk(centxy,steps,Cx,Cy,sigx,sigy)
+% Random walk guided by the Gaussian tuning function 
+%   specified by the parameter `Cx,Cy,sigx,sigy` 
+%   Cx, Cy is the center coordinate
+%   sigx, sigy is the std along x and y
 traj = [centxy];
 for i = 1:steps
 xxyy = centxy + randn(5,2);
