@@ -1,7 +1,24 @@
-%% Manif fitting match 
+%% Manifold Paper Figure 4: Tuning Width Progression along the Ventral Stream
+%  Post processing of the manifold fitting data. 
+%  Majorly test the trend of Kappa and Beta. 
+%  Write the diary to the summary folder 
+poptabdir = "O:\Manif_Fitting\popstats";
 sumdir = "O:\Manif_Fitting\Kent_summary";
-Vmsk = drivermsk&poptab.R2>.5;
-msks = {Vmsk&V1msk,Vmsk&V4msk,Vmsk&ITmsk};
+
+poptab = readtable(fullfile(poptabdir,"Both_Exp_all_KentStat_bsl_pole.csv"),'Format','auto');
+%% Create masks for the population. 
+valmsk = (poptab.unitnum>0) & ~((poptab.Animal=="Alfa") & (poptab.Expi==10)); % excluding one exp with fewer trials
+Fmsk = poptab.F_P<0.001;
+V1msk = poptab.area == "V1";
+V4msk = poptab.area == "V4";
+ITmsk = poptab.area == "IT";
+Alfamsk = poptab.Animal == "Alfa";
+Betomsk = poptab.Animal == "Beto";
+drivermsk = poptab.is_driver;
+
+%% create array of masks and public mask 
+Vmsk = drivermsk&poptab.R2>.5; % is driver and the fitting is good. 
+msks = {Vmsk&V1msk,Vmsk&V4msk,Vmsk&ITmsk}; 
 labels = ["V1","V4","IT"];
 
 %%
