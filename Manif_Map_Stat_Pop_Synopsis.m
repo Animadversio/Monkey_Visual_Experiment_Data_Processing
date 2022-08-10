@@ -1,13 +1,20 @@
 %% Manif_Map_Stat_Pop_Synopsis
 %  Very important! 
-%  Final script to generate the statistics for the figures in paper. 
+%  Final script to generate the population statistics for the figures in paper. 
 %  Useful to replicate stats, check criterion and so. 
+%  Summarize Kent fitting, non-parametric and smoothness characterization of individual tuning manifold. 
+%    plot or test difference between visual areas, driver vs non driver, su vs mu. 
 global figdir
 Animal="Both"; Set_Path;
+for Animal = ["Alfa", "Beto"]
+load(fullfile(mat_dir, Animal+"_Evol_stats.mat"), 'EStats')
+EStats_both.(Animal) = EStats;
+end
 %% Population Kent fitting data 
 poptabdir = "O:\Manif_Fitting\popstats";
 figdir = "O:\Manif_Fitting\summary";
 fitdir = "O:\Manif_Fitting\summary";
+%  use the latest version of KentStat with baseline and pole weighting. 
 alfafittab = readtable(fullfile(poptabdir,"Alfa_Exp_all_KentStat_bsl_pole.csv"),'Format','auto');
 betofittab = readtable(fullfile(poptabdir,"Beto_Exp_all_KentStat_bsl_pole.csv"),'Format','auto');
 FitTab = [alfafittab;betofittab];
@@ -23,13 +30,9 @@ Betomsk = FitTab.Animal == "Beto";
 PC12msk = FitTab.space==1;
 PC49msk = FitTab.space==2;
 PCRNmsk = FitTab.space==3;
-load(fullfile(mat_dir,"Alfa"+"_Evol_stats.mat"),'EStats')
-EStats_all.Alfa = EStats;
-load(fullfile(mat_dir,"Beto"+"_Evol_stats.mat"),'EStats')
-EStats_all.Beto = EStats;
 drivermsk = zeros(size(FitTab,1),1,'logical'); % Masks of real driver units instead of using the first. 
 for i = 1:numel(drivermsk)
-    driver_unit = EStats_all.(FitTab.Animal{i})(FitTab.Expi(i)).evol.unit_in_pref_chan;
+    driver_unit = EStats_both.(FitTab.Animal{i})(FitTab.Expi(i)).evol.unit_in_pref_chan;
     drivermsk(i) = (FitTab.unitnum(i) == driver_unit) & (FitTab.chan(i) == FitTab.prefchan(i));
 end
 %%
@@ -84,6 +87,7 @@ PCRNpairmsk = PCRNmsk&drivermsk;%&(FitTab.Expi<=10 & FitTab.Animal=="Animal");
 paired_stripe_plot({FitTab.(varnm)(PC12pairmsk),FitTab.(varnm)(PC49pairmsk),FitTab.(varnm)(PCRNpairmsk)}, ...
      ["PC12","PC4950","RND12"], {ITmsk(PC12pairmsk),V4msk(PC12pairmsk)}, ["IT","V4"])%,varargin)
 
+
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Non-Parametric Statistic of the Population
 nonpardir = "O:\Manif_NonParam\summary";
@@ -96,13 +100,9 @@ V4msk = NonParTab.area == "V4";
 ITmsk = NonParTab.area == "IT";
 Alfamsk = NonParTab.Animal == "Alfa";
 Betomsk = NonParTab.Animal == "Beto";
-load(fullfile(mat_dir,"Alfa"+"_Evol_stats.mat"),'EStats')
-EStats_all.Alfa = EStats;
-load(fullfile(mat_dir,"Beto"+"_Evol_stats.mat"),'EStats')
-EStats_all.Beto = EStats;
 drivermsk = zeros(size(NonParTab,1),1,'logical'); % Masks of real driver units instead of using the first. 
 for i = 1:numel(drivermsk)
-    driver_unit = EStats_all.(NonParTab.Animal{i})(NonParTab.Expi(i)).evol.unit_in_pref_chan;
+    driver_unit = EStats_both.(NonParTab.Animal{i})(NonParTab.Expi(i)).evol.unit_in_pref_chan;
     drivermsk(i) = (NonParTab.unitnum(i) == driver_unit) & (NonParTab.chan(i) == NonParTab.prefchan(i));
 end
 %% NonParametric tuning width comparison for well modulated neuronal sites across all exps
@@ -137,6 +137,7 @@ violin_plot_masks(NonParTab, "normAUS_bsl", {V1msk&Fmsk,V4msk&Fmsk,ITmsk&Fmsk}, 
      {Alfamsk,Betomsk}, ["Alfa","Beto"],'showData',true)
 ylim([0, 2*pi]);title("Non-Parametric Tuning Width Across Area,Animal (ANOVA P<0.001)")
 saveallform(nonpardir,"normVUS_bsl_cmp_area_anim_sep")
+
 
 %% Popluation Smoothness Comparison 
 tabdir = "O:\Manif_MapSmooth\popstats";
