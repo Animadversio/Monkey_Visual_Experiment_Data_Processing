@@ -1,79 +1,23 @@
 %% Make final population summary figures out of the Kent fittings
 % both for prefer driver channels and for non-driver channels
 % The plot functions are really WELL written! 
+%% Full population analysis
 Animal="Both";Set_Path;
-tabdir = "O:\Manif_Fitting\Kent_summary";
-poptabdir = "O:\Manif_Fitting\popstats";
-mat_dir = "O:\Mat_Statistics";
 global sumdir
 sumdir = "O:\Manif_Fitting\summary";
-load(fullfile(mat_dir,"Alfa"+"_Evol_stats.mat"),'EStats')
-EStats_all.Alfa = EStats;
-load(fullfile(mat_dir,"Beto"+"_Evol_stats.mat"),'EStats')
-EStats_all.Beto = EStats;
-%%
-alfatab = readtable(fullfile(tabdir,"Alfa_Kstats.csv"));
-betotab = readtable(fullfile(tabdir,"Beto_Kstats.csv"));
-preftab = [];
-Animal_tab = array2table(repmat("Alfa",size(alfatab,1),1),'VariableNames',{'Animal'});
-preftab = [preftab; Animal_tab, alfatab];
-Animal_tab = array2table(repmat("Beto",size(betotab,1),1),'VariableNames',{'Animal'});
-preftab = [preftab; Animal_tab, betotab];
-%% Making Masks for ploting 
-validmsk = ~((alltab.Animal=="Alfa")&(alltab.Expi==10)); % that exp is weird
-drivermsk = zeros(size(validmsk)); % Masks of real driver units
-for i = 1:numel(drivermsk)
-    driver_unit = EStats_all.(alltab.Animal(i))(alltab.Expi(i)).evol.unit_in_pref_chan;
-    drivermsk(i) = driver_unit == alltab.unit(i);
-end
-Alfamsk = (alltab.Animal=="Alfa");
-Betomsk = (alltab.Animal=="Beto");
-V1msk = (alltab.chan<=48 & alltab.chan>=33);
-V4msk = (alltab.chan>48);
-ITmsk = (alltab.chan<33);
-%%
-figure;hold on
-histogram(alltab.R2(validmsk&Alfamsk),20,'FaceAlpha',0.6)
-histogram(alltab.R2(validmsk&Betomsk),20,'FaceAlpha',0.6)
-%% Show only the real driver units in the channel 
-%  Compare the R2 histogram
-hist_plot(alltab, "R2", {validmsk&Alfamsk, validmsk&Betomsk},["Alfa","Beto"],...
-    "driver valid","anim_sep","count")
-hist_plot(alltab, "R2", {validmsk&V1msk, validmsk&V4msk, validmsk&ITmsk},["V1","V4","IT"],...
-    "driver valid","area_sep","count")
-%%
-hist_plot(alltab, "R2", {validmsk& drivermsk& Alfamsk, validmsk& drivermsk& Betomsk},["Alfa","Beto"],...
-    "pure driver valid","drv_anim_sep","count")
-hist_plot(alltab, "R2", {validmsk& drivermsk& V1msk, validmsk& drivermsk& V4msk, validmsk& drivermsk& ITmsk},["V1","V4","IT"],...
-    "pure driver valid","drv_area_sep","count")
-hist_plot(alltab, "R2", {validmsk& drivermsk},["All Driver"],...
-    "pure driver valid","drv_all","count")
-
-
-
-%% Full population analysis
+tabdir = "O:\Manif_Fitting\Kent_summary";
+mat_dir = "O:\Mat_Statistics";
 %% Current version, Get the fitting statistics for all channels with baseline.
 poptabdir = "O:\Manif_Fitting\popstats";
-alfatab_pop = readtable(fullfile(poptabdir,"Alfa_Exp_all_KentStat_bsl_pole.csv"));
-betotab_pop = readtable(fullfile(poptabdir,"Beto_Exp_all_KentStat_bsl_pole.csv"));
-poptab = [alfatab_pop;betotab_pop];
-for i = 1:size(poptab,1)
-    poptab.imgsize(i) = EStats_all.(poptab.Animal{i})(poptab.Expi(i)).evol.imgsize;
-    poptab.imgposX(i) = EStats_all.(poptab.Animal{i})(poptab.Expi(i)).evol.imgpos(1);
-    poptab.imgposY(i) = EStats_all.(poptab.Animal{i})(poptab.Expi(i)).evol.imgpos(2);
-end
-%% Creat masks for analysis
+poptab = readtable(fullfile(poptabdir,"Both_Exp_all_KentStat_bsl_pole.csv"),'Format','auto');
+%% Create the masks and find the drivers 
 validmsk = (poptab.unitnum>0) & ~((poptab.Animal=="Alfa") & (poptab.Expi==10));
 Alfamsk = (poptab.Animal=="Alfa");
 Betomsk = (poptab.Animal=="Beto");
-V1msk = (poptab.chan<=48 & poptab.chan>=33);
-V4msk = (poptab.chan>48);
-ITmsk = (poptab.chan<33);
-drivermsk = zeros(size(poptab,1),1); % Masks of real driver units instead of using the first. 
-for i = 1:numel(drivermsk)
-    driver_unit = EStats_all.(poptab.Animal{i})(poptab.Expi(i)).evol.unit_in_pref_chan;
-    drivermsk(i) = (poptab.unitnum(i) == driver_unit) & (poptab.chan(i) == poptab.prefchan(i));
-end
+V1msk = poptab.area == "V1";
+V4msk = poptab.area == "V4";
+ITmsk = poptab.area == "IT";
+drivermsk = poptab.is_driver;
 prefchmsk = poptab.chan==poptab.prefchan;
 Fsigmsk = poptab.F_P<0.001;
 R2msk = poptab.R2>0.5;
@@ -133,10 +77,12 @@ xscatter_plot(poptab,"kappa","beta",{msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4
     "All Exp (Driver P<0.001)", "bslfit_area_sep_Fsig")
 xscatter_plot(poptab,"kappa","beta",{msk&Alfamsk, msk&Betomsk}, ["Alfa","Beto"],...
     "All Exp (Driver P<0.001)", "bslfit_anim_sep_Fsig")
+
 %% Test the ratio between the two statis 
 testRatio(poptab,"kappa","beta",{msk},["All"]);
 testRatio(poptab,"kappa","beta",{msk,msk&poptab.R2>0.5},["All","R>0.5"]);
 testRatio(poptab,"kappa","beta",{msk&poptab.R2<0.5,msk&poptab.R2>0.5},["R<0.5","R>0.5"]);
+
 %% Plot  Kappa distribution
 msk = validmsk & drivermsk & poptab.R2 > 0.5;
 h = stripe_minor_plot(poptab, "kappa", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],...
@@ -146,6 +92,7 @@ h = stripe_plot(poptab, "kappa", {msk&V1msk&Alfamsk, msk&V4msk&Alfamsk, msk&ITms
     "All Alfa Exp (driver, R2>0.5)", "bslfit_area_Alfa", {[3,1],[2,1],[3,2]});
 h = stripe_plot(poptab, "kappa", {msk&V1msk&Betomsk, msk&V4msk&Betomsk, msk&ITmsk&Betomsk}, ["V1","V4","IT"],...
     "All Beto Exp (driver, R2>0.5)", "bslfit_area_Beto", {[3,1],[2,1],[3,2]});
+
 %% Fitting Validity across region. 
 msk = drivermsk;
 h = stripe_minor_plot(poptab, "R2", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],{Alfamsk,Betomsk},["Alfa","Beto"],...
@@ -154,6 +101,7 @@ h = stripe_minor_plot(poptab, "R2", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4
 msk = drivermsk & Fsigmsk;
 h = stripe_minor_plot(poptab, "R2", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],{Alfamsk,Betomsk},["Alfa","Beto"],...
     "All Exp (driver, ANOVA p<0.001)", "bslfit_anim_area_Fsig", {[3,1],[2,1],[3,2]});
+
 %% Fitting Validity in 2 monkeys separately.
 msk = drivermsk & Fsigmsk & Alfamsk;
 h = stripe_minor_plot(poptab, "R2", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1","V4","IT"],{msk},["Alfa"],...
@@ -195,6 +143,7 @@ h = stripe_minor_plot(poptab, "kappa", {msk&V1msk, msk&V4msk, msk&ITmsk}, ["V1",
     {msk&Alfamsk}, ["Alfa"], "All Exp (driver, R2>0.5, imgsize>1.0)", "bslfit_area_Alfa_nosmall", {[3,1],[2,1],[3,2]});
 %%
 RTtab = readtable(fullfile(summarydir,"Both"+"_RadialTuningStatsTab_squ.csv"));
+
 %% Test for progression for non-driving channels.
 popmsk = poptab.F_P < 1E-5 & poptab.R2 > 0.5 & poptab.kappa > 0;
 h = stripe_minor_plot(poptab, "kappa", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"],...
@@ -213,6 +162,7 @@ h = stripe_minor_plot(poptab, "kappa", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk
 popmsk = poptab.F_P < 1E-5 & poptab.R2 > 0.5 & poptab.kappa > 0 & ~drivermsk & Betomsk;
 h = stripe_minor_plot(poptab, "kappa", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"],...
     {popmsk&Betomsk}, ["Beto"], "All Exp (R2>0.5, ANOVA P<0.00001)", "bslfit_area_Beto_nondriver", {[3,1],[2,1],[3,2]});
+
 %% Print string for test parameter progression: kappa, beta, R2. across 3 areas in Alfa, Beto, or Both.
 diary(fullfile(sumdir,"popul_area_prog.log"))
 popmsk = poptab.F_P < 1E-5 & poptab.R2 > 0.5 & poptab.kappa > 0 & ~drivermsk;
@@ -222,6 +172,7 @@ testProgression(poptab, "R2", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1",
     "Both Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
 testProgression(poptab, "beta", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"], "area", ...
     "Both Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
+
 popmsk = poptab.F_P < 1E-5 & poptab.R2 > 0.5 & poptab.kappa > 0 & ~drivermsk & Alfamsk;
 testProgression(poptab, "kappa", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"], "area", ...
     "Alfa Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
@@ -229,6 +180,7 @@ testProgression(poptab, "R2", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1",
     "Alfa Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
 testProgression(poptab, "beta", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"], "area", ...
     "Alfa Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
+
 popmsk = poptab.F_P < 1E-5 & poptab.R2 > 0.5 & poptab.kappa > 0 & ~drivermsk & Betomsk;
 testProgression(poptab, "kappa", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"], "area", ...
     "Beto Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
@@ -237,6 +189,7 @@ testProgression(poptab, "R2", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1",
 testProgression(poptab, "beta", {popmsk&V1msk, popmsk&V4msk, popmsk&ITmsk}, ["V1","V4","IT"], "area", ...
     "Beto Monk All Exp (R2>0.5, ANOVA P<0.00001, non-driver)");
 diary off
+
 %% Paired kappa comparison for SU and MU
 msk1 = []; msk2 = [];
 for idx = find(poptab.unitnum==2)' % collect the pairs
@@ -268,6 +221,7 @@ end
 [~,P,CI,TST] = ttest(abs(poptab.kappa(msk1_dr)),abs(poptab.kappa(msk2_dr)))
 %
 h = stripe_paired_plot(poptab, "kappa", {msk1_dr, msk2_dr}, ["SU","MU"], "Drivers, both, ANOVA P<1E-5, R2>0.5", "SU-MU_driver");
+
 %% Statistical comparison of driver vs Non driver
 msk = validmsk & poptab.R2 >0.5;
 h = stripe_minor_plot(poptab, "kappa", {msk&drivermsk, msk&~drivermsk}, ["Driver","NonDriver"],...
@@ -303,7 +257,46 @@ msk = validmsk & poptab.F_P < 1E-3&poptab.R2>0.5;
 xscatter_plot(poptab,"kappa","beta",{msk&drivermsk,msk&~drivermsk},["Driver R>0.5","NonDriver R>0.5"],...
     "All Exp (Driver P<0.001 R2>0.5)", "bslfit_all_FsigRsig_drv-non_cmp")
 
+
 %% OBSOLETE, 
+%% Really old version with old Kstats 
+alfatab = readtable(fullfile(tabdir,"Alfa_Kstats.csv"));
+betotab = readtable(fullfile(tabdir,"Beto_Kstats.csv"));
+preftab = [];
+Animal_tab = array2table(repmat("Alfa",size(alfatab,1),1),'VariableNames',{'Animal'});
+preftab = [preftab; Animal_tab, alfatab];
+Animal_tab = array2table(repmat("Beto",size(betotab,1),1),'VariableNames',{'Animal'});
+preftab = [preftab; Animal_tab, betotab];
+%% Making Masks for ploting 
+validmsk = ~((alltab.Animal=="Alfa")&(alltab.Expi==10)); % that exp is weird
+drivermsk = zeros(size(validmsk)); % Masks of real driver units
+for i = 1:numel(drivermsk)
+    driver_unit = EStats_all.(alltab.Animal(i))(alltab.Expi(i)).evol.unit_in_pref_chan;
+    drivermsk(i) = driver_unit == alltab.unit(i);
+end
+Alfamsk = (alltab.Animal=="Alfa");
+Betomsk = (alltab.Animal=="Beto");
+V1msk = (alltab.chan<=48 & alltab.chan>=33);
+V4msk = (alltab.chan>48);
+ITmsk = (alltab.chan<33);
+%%
+figure;hold on
+histogram(alltab.R2(validmsk&Alfamsk),20,'FaceAlpha',0.6)
+histogram(alltab.R2(validmsk&Betomsk),20,'FaceAlpha',0.6)
+%% Show only the real driver units in the channel 
+%  Compare the R2 histogram
+hist_plot(alltab, "R2", {validmsk&Alfamsk, validmsk&Betomsk},["Alfa","Beto"],...
+    "driver valid","anim_sep","count")
+hist_plot(alltab, "R2", {validmsk&V1msk, validmsk&V4msk, validmsk&ITmsk},["V1","V4","IT"],...
+    "driver valid","area_sep","count")
+%%
+hist_plot(alltab, "R2", {validmsk& drivermsk& Alfamsk, validmsk& drivermsk& Betomsk},["Alfa","Beto"],...
+    "pure driver valid","drv_anim_sep","count")
+hist_plot(alltab, "R2", {validmsk& drivermsk& V1msk, validmsk& drivermsk& V4msk, validmsk& drivermsk& ITmsk},["V1","V4","IT"],...
+    "pure driver valid","drv_area_sep","count")
+hist_plot(alltab, "R2", {validmsk& drivermsk},["All Driver"],...
+    "pure driver valid","drv_all","count")
+
 %% All the channels (Popu) OBSOLETE!!!! baseline not taken into account. See above for newer datafile
 alfatab_pop = readtable(fullfile(poptabdir,"Alfa_Exp_all_KentStat.csv"));
 betotab_pop = readtable(fullfile(poptabdir,"Beto_Exp_all_KentStat.csv"));
