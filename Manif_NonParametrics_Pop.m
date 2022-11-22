@@ -92,7 +92,8 @@ end
 NPtab.theta_max = NPtab.theta_max / 180 * pi; % change unit 
 NPtab.phi_max = NPtab.phi_max / 180 * pi;
 writetable(NPtab,fullfile(nonpardir,"Both"+"_Pop_NonParamStat.csv"))
-%%
+
+%% Reload the NonParametrics to start the analysis
 nonpardir = "O:\Manif_NonParam\summary";
 NPtab = readtable(fullfile(nonpardir,"Both"+"_Pop_NonParamStat.csv"));
 %%
@@ -143,10 +144,15 @@ h = stripe_minor_plot(NPtab, "AUS_bsl", {msk&V1msk,msk&V4msk,msk&ITmsk}, ["V1","
 
                 
 %%
-plotTuneCenter(NPtab,Fmsk,"CoM","_P90","CoM 90ptile",'Fsig')
+% plotTuneCenter(NPtab,Fmsk,"CoM","_P90","CoM 90ptile",'Fsig')
 % plotTuneCenter(NPtab,msk,"M","_P90","Mean 90ptile",'Fsig')
 plotTuneCenter(NPtab,Fmsk,"CoM","_90","CoM 90% max",'Fsig')
-plotTuneCenter(NPtab,Fmsk,"","_max","max",'Fsig')
+% plotTuneCenter(NPtab,Fmsk,"","_max","max",'Fsig')
+%%
+plotTuneCenter(NPtab,Fmsk&drvmsk,"CoM","_90","CoM 90% max",'Fsig Driver')
+%%
+plotTuneCenterMultMsk(NPtab,{Fmsk&~drvmsk, Fmsk&drvmsk},["All non driver","Driver"],"CoM","_90","CoM 90ptile",'Driver-vs-non')
+
 %%
 plotTuneCenterMultMsk(NPtab,{Fmsk&V1msk, Fmsk&V4msk, Fmsk&ITmsk},["V1","V4","IT"],"CoM","_P90","CoM 90ptile",'Fsig_area_sep')
 plotTuneCenterMultMsk(NPtab,{Fmsk&V1msk, Fmsk&V4msk, Fmsk&ITmsk},["V1","V4","IT"],"CoM","_90","CoM 90% max",'Fsig_area_sep')
