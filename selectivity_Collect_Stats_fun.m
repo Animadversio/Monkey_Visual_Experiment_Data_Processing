@@ -1,6 +1,7 @@
 function SS = selectivity_Collect_Stats_fun(meta_new, rasters_new, Trials_new)
 saveroot = "E:\OneDrive - Washington University in St. Louis\Evol_Cosine";
-saveroot = "E:\OneDrive - Harvard University\Manifold_Invariance";
+saveroot = "E:\OneDrive - Harvard University\Evol_Cosine";
+% saveroot = "E:\OneDrive - Harvard University\Manifold_Invariance";
 disp("This is the experiental data root you want to save into?")
 disp(saveroot)
 keyboard
