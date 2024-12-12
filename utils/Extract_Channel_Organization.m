@@ -52,21 +52,21 @@ V1_chan_XY = pin18_V1_XY(V1_chan2pin, :);
 
 
 % %%
-% figure(1);clf
-% scatter(IT_chan_XY(:,1),IT_chan_XY(:,2), 225, 1:32)
-% set(gca,'Ydir','reverse')
-% axis equal tight
-% xlabel("posterior-anterior (mu)");ylabel("dorsal-ventral (mu)")
-% colorbar
-% %% Layout for IT channels 
-% figure(2);clf
-% t = tiledlayout(8,20);
-% for i = 1:32
-%     init_idx = calc_tile_init_idx(IT_chan_XY(i, 1), IT_chan_XY(i, 2), 8, 20);
-%     ax = nexttile(init_idx, [2, 2]);
-%     axis image
-%     title(num2str(i))
-% end
+figure(1);clf
+scatter(IT_chan_XY(:,1),IT_chan_XY(:,2), 225, 1:32)
+set(gca,'Ydir','reverse')
+axis equal tight
+xlabel("posterior-anterior (mu)");ylabel("dorsal-ventral (mu)")
+colorbar
+%% Layout for IT channels 
+figure(2);clf
+t = tiledlayout(8,20);
+for i = 1:32
+    init_idx = calc_tile_init_idx(IT_chan_XY(i, 1), IT_chan_XY(i, 2), 8, 20);
+    ax = nexttile(init_idx, [2, 2]);
+    axis image
+    title(num2str(i))
+end
 % %%
 % figure(2);clf
 % t = tiledlayout(8,20);

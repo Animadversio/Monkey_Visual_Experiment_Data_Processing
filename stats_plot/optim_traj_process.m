@@ -27,7 +27,6 @@ if nargin <= 3, norm_scheme = "max1"; end
 if nargin <= 3, blockN_extrap = 50; end 
 %% Normalize score by the max in one thread. 
 expN = size(score_traces,1);
-
 score_m_traj_col = cell(expN,2);
 block_traj_col = cell(expN,1);
 score_m_traj_extrap_col = cell(expN,2);
@@ -41,23 +40,39 @@ for iTr=1:expN
         block_traj_extrap_col(iTr,:) = {[]};
         extrap_mask_col(iTr,:) = {[]};
     else
+    % compute the mean, std of the blocks
     [score_C_m,score_C_s,blockvec] = sort_scoreblock(block_traces{iTr,1},score_traces{iTr,1});
     [score_G_m,score_G_s,blockvec] = sort_scoreblock(block_traces{iTr,2},score_traces{iTr,2});
     normmin = 0;
-    if strcmp(norm_scheme,"max1")
-    normmax = max(score_C_m);
+    if strcmp(norm_scheme,"max1") % Normalize score by the max in one thread. 
+        normmax = max(score_C_m);
     elseif strcmp(norm_scheme,"max2")
-    normmax = max(score_G_m);
-    elseif strcmp(norm_scheme,"max12")
-    normmax = max(cat(2,score_C_m,score_G_m));
-    elseif strcmp(norm_scheme,"init1")
-    normmax = mean(score_C_m(1:2));
+        normmax = max(score_G_m);
+    elseif strcmp(norm_scheme,"max12") % Normalize score by the max in both thread. 
+        normmax = max(cat(2,score_C_m,score_G_m));
+    elseif strcmp(norm_scheme,"init1") % Normalize score by the init activation in one thread. 
+        normmax = mean(score_C_m(1:2));
     elseif strcmp(norm_scheme,"init2")
-    normmax = mean(score_G_m(1:2));
-    elseif strcmp(norm_scheme,"init12")
-    normmax = mean([score_C_m(1:2),score_G_m(1:2)]);
+        normmax = mean(score_G_m(1:2));
+    elseif strcmp(norm_scheme,"init12") % Normalize score by the init activation in both thread. 
+        normmax = mean([score_C_m(1:2),score_G_m(1:2)]);
+    elseif strcmp(norm_scheme,"none") % Normalize score by the init activation in both thread. 
+        normmax = 1.0; normmin = 0.0;
+    elseif strcmp(norm_scheme,"raw_initsubtr1")
+        normmin = score_C_m(1); 
+        normmax = normmin + 1.0; 
+    elseif strcmp(norm_scheme,"raw_initsubtr2")
+        normmin = score_G_m(1); 
+        normmax = normmin + 1.0; 
+    elseif strcmp(norm_scheme,"raw_initsubtr12")
+        nC = sum(block_traces{iTr,1} == 1);
+        nG = sum(block_traces{iTr,2} == 1);
+        normmin = (score_C_m(1) * nC + score_G_m(1) * nG) / (nC + nG); 
+        normmax = normmin + 1.0; 
     else
-        
+        error("normalization scheme %s not recognized, " + ...
+            "need to be in ['max1', 'max2', 'max12','init1','init2','init12','none','raw_initsubtr']",...
+            norm_scheme)
     end
     scaling = abs(normmax - normmin);
     score_C_m_norm = (score_C_m-normmin)/scaling;
@@ -66,7 +81,8 @@ for iTr=1:expN
     score_m_traj_col{iTr,2} = score_G_m_norm;
     block_traj_col{iTr} = blockvec;
     % Flat extrapolation to the same gen
-    extrap_val_C = mean(score_C_m_norm(end-1:end));
+    % use the mean activation of last 2 generations to extrapolate
+    extrap_val_C = mean(score_C_m_norm(end-1:end)); 
     extrap_val_G = mean(score_G_m_norm(end-1:end));
     extrap_N = blockN_extrap - numel(blockvec);
     if numel(blockvec) < blockN_extrap
@@ -84,28 +100,28 @@ for iTr=1:expN
 end
 
 %% Compare the first few and last few / max gen activation. 
-tval_end_arr = []; pval_end_arr = [];
-tval_max_arr = []; pval_max_arr = [];
+tval_end_arr = zeros(expN,2); pval_end_arr = zeros(expN,2);
+tval_max_arr = zeros(expN,2); pval_max_arr = zeros(expN,2); % bug fixed Feb.03 2023. prev size change inducing zero.
 for iTr = 1:size(score_traces, 1)
 if (isempty(block_traces{iTr,1}) || isempty(block_traces{iTr,2})) % invalid trial
-tval_end_arr(iTr,:) = nan; pval_end_arr(iTr,:) = nan;
-tval_max_arr(iTr,:) = nan; pval_max_arr(iTr,:) = nan;
+    tval_end_arr(iTr,:) = nan; pval_end_arr(iTr,:) = nan;
+    tval_max_arr(iTr,:) = nan; pval_max_arr(iTr,:) = nan;
 else
-for ithread=1:2
-fprintf(thread_labels(ithread)+" ")
-blockN = max(block_traces{iTr,ithread});
-[tval,pval] = ttest2_print(score_traces{iTr,ithread}(any(block_traces{iTr,ithread}==[1,2],2)),...
-    score_traces{iTr,ithread}(any(block_traces{iTr,ithread}==[blockN-1,blockN],2)),"init12","last12");
-tval_end_arr(iTr,ithread) = tval;
-pval_end_arr(iTr,ithread) = pval;
-[score_m,score_s,blockvec] = sort_scoreblock(block_traces{iTr,ithread},...
-                score_traces{iTr,ithread});
-[~,maxN] = max(score_m);
-[tval,pval] = ttest2_print(score_traces{iTr,ithread}(any(block_traces{iTr,ithread}==[1,2],2)),...
-    score_traces{iTr,ithread}(any(block_traces{iTr,ithread}==[maxN-1,maxN],2)),"init12","max12");
-tval_max_arr(iTr,ithread) = tval;
-pval_max_arr(iTr,ithread) = pval;
-end
+    for ithread=1:2
+    fprintf(thread_labels(ithread)+" ")
+    blockN = max(block_traces{iTr,ithread});
+    [tval,pval] = ttest2_print(score_traces{iTr,ithread}(any(block_traces{iTr,ithread}==[1,2],2)),...
+        score_traces{iTr,ithread}(any(block_traces{iTr,ithread}==[blockN-1,blockN],2)),"init12","last12");
+    tval_end_arr(iTr,ithread) = tval;
+    pval_end_arr(iTr,ithread) = pval;
+    [score_m,score_s,blockvec] = sort_scoreblock(block_traces{iTr,ithread},...
+                    score_traces{iTr,ithread});
+    [~,maxN] = max(score_m);
+    [tval,pval] = ttest2_print(score_traces{iTr,ithread}(any(block_traces{iTr,ithread}==[1,2],2)),...
+        score_traces{iTr,ithread}(any(block_traces{iTr,ithread}==[maxN-1,maxN],2)),"init12","max12");
+    tval_max_arr(iTr,ithread) = tval;
+    pval_max_arr(iTr,ithread) = pval;
+    end
 end
 end
 % masks of experiments that any one of it succeed

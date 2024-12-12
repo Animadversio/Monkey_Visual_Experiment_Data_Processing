@@ -37,11 +37,11 @@ else, mskcol = cellfun(@(msk)reshape(msk,[],1),mskcol,'uni',0); end
 if isempty(mskrow), mskrow={ones(expN,1,'logical')}; labrow="";
 else, mskrow = cellfun(@(msk)reshape(msk,[],1),mskrow,'uni',0); end
 XLIM_Cutoff_Prctl = 75;
-Corder = colororder(); % by default the first condition is orange, 2nd is blue.
+Corder = [[1,0,0];[0,0,1]]; %colororder(); % by default the first condition is orange, 2nd is blue.
 blockN_arr = cellfun(@(M)sum(~M), extrap_mask_col); 
 ncol = numel(mskcol);
 nrow = numel(mskrow);
-figh = figure('position', [200,100,300*ncol,300*nrow]);
+figh = figure('position', [200,100,300*ncol,300*nrow+50]);
 T = tiledlayout(nrow,ncol,'TileSp','compact','Pad','compact');
 for ci = 1:ncol
    for ri = 1:nrow
