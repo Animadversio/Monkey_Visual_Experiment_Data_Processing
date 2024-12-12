@@ -1,6 +1,7 @@
 function calc_Cosine_RFmask_fun(CStats)
 % Calculate a population based RF mask for Cosine experiments. 
-dataroot = "O:\Evol_Cosine";
+% dataroot = "O:\Evol_Cosine";
+dataroot = "E:\OneDrive - Harvard University\Evol_Cosine";
 area_colormap = containers.Map({'V1','V4','IT'},{[1,0,0],[0,1,0],[0,0,1]});
 figh = 11; figh2 = 12; figh3=13; figmtg = 14;
 for iCS = 1:numel(CStats)
@@ -177,7 +178,8 @@ for geni = 1:numel(gen_idx_seq)
     [maxscore,maxidx] = max(CStat.score.offline_vec(gen_idx_seq{geni}));
     imgnm = CStat.imageName(gen_idx_seq{geni}(maxidx));
     best_imnam_col(geni) = fullfile(CStat.meta.stimuli, imgnm+".bmp");
-    best_img_col{geni} = imread(best_imnam_col(geni));
+    % Resize it to 256 by 256 if needed. Fixed Sep.13,2023
+    best_img_col{geni} = imresize(imread(best_imnam_col(geni)),[256,256]);
     mask_img_col{geni} = single(best_img_col{geni}) / 255.0 .* imgalphamsk;
 end
 scores_rec = cellfun(@(idx)CStat.score.offline_vec(idx),gen_idx_seq,'uni',0);

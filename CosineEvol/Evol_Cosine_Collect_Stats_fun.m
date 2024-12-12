@@ -6,6 +6,7 @@ function CosStats = Evol_Cosine_Collect_Stats_fun(meta_new, rasters_new, Trials_
 % saveroot = "E:\OneDrive - Washington University in St. Louis\Evol_PCCosine";
 dataroot = "N:\Stimuli\2020-CosineEvol";
 saveroot = "E:\OneDrive - Washington University in St. Louis\Evol_Cosine";
+saveroot = "E:\OneDrive - Harvard University\Evol_Cosine";
 for iTr = 1:numel(meta_new)
 fprintf("Process Experiment %d\n",iTr)
 % lfps = lfps_new{Triali};
@@ -93,7 +94,7 @@ CosStats(iTr).stim.block_arr = block_arr;
 %% Population activity for evolved images throughout evolution. 
 evkwdw = [51:200];  bslwdw = [1:40];
 bslmean = squeeze(mean(rasters(:, bslwdw, :),[2,3])); %average baseline activity 
-bslsem = sem(squeeze(mean(rasters(:, bslwdw, :),[2])),3); % variability between trials in baseline. 
+bslsem = squeeze(sem(mean(rasters(:, bslwdw, :),[2]),3)); % variability between trials in baseline. 
 evoke_trials  = squeeze(mean(rasters(:, evkwdw, :),[2])); % evoked firing rate
 evkbsl_trials = evoke_trials - bslmean; % evk - bsl score using overall baseline 
 

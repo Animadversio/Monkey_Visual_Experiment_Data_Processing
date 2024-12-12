@@ -1,20 +1,35 @@
 
 Animal = "Beto";Set_Path;
-%"220118", "220119", "220225", "220228", "220302","220307", "220309",
-%"220311", "220404", "220406"
-currows = find(contains(ExpRecord.expControlFN,["220406"])); 
-[meta_new, rasters_new, lfps_new, Trials_new] = loadExperiments(currows, Animal, false);
+currows = find(contains(ExpRecord.expControlFN,["220118", "220119", "220225", "220228", "220302","220307", "220309",...
+"220311", "220404", "220406"])); 
+[meta_new, rasters_new, lfps_new, Trials_new] = loadExperiments(currows(1:end), Animal, false);
 bhvfns = ExpRecord.expControlFN(currows);
-saveroot = "E:\OneDrive - Washington University in St. Louis\Evol_Cosine";
+% saveroot = "E:\OneDrive - Washington University in St. Louis\Evol_Cosine";
+saveroot = "E:\OneDrive - Harvard University\Evol_Cosine";
+
+%%
+Animal = "Beto";Set_Path;
+currows = find(contains(ExpRecord.expControlFN,["220404", "220406"]));  % 
+[meta_new, rasters_new, lfps_new, Trials_new] = loadExperiments(currows(1:end), Animal, false);
+bhvfns = ExpRecord.expControlFN(currows);
+% saveroot = "E:\OneDrive - Washington University in St. Louis\Evol_Cosine";
+saveroot = "E:\OneDrive - Harvard University\Evol_Cosine";
 %%
 
 Animal = "Alfa";Set_Path;
 %"220118", "220119", "220225", "220228", "220302","220307", "220309",
-%"220311", "220404", "220406"
-currows = find(contains(ExpRecord.expControlFN,["210325"])); 
+%"220311", "220404", "220406" 2022-03-11
+%"210202","210204","210205","210209","210211","210212","210218","210219","210225","210226",
+% "210302","210304","210309","210311","210323","210325","210330","210401","210402","210408",
+% "210413","210415"
+currows = find(contains(ExpRecord.expControlFN,[...
+    "210202","210204","210205","210209","210211","210212","210218","210219","210225","210226",...
+    "210302","210304","210309","210311","210323","210325","210330","210401","210402","210408",...
+    "210413","210415"])); 
 [meta_new, rasters_new, lfps_new, Trials_new] = loadExperiments(currows, Animal, false);
 bhvfns = ExpRecord.expControlFN(currows);
-saveroot = "E:\OneDrive - Washington University in St. Louis\Evol_Cosine";
+% saveroot = "E:\OneDrive - Washington University in St. Louis\Evol_Cosine";
+saveroot = "E:\OneDrive - Harvard University\Evol_Cosine";
 
 %%
 % Alfa-23032021-006 and 210323_Alfa_generate_BigGAN_cosine(3) files have different numbers of words! Check inputs
@@ -47,21 +62,33 @@ visusalize_resp_distri_allchan(SelS_col);
 evoidx = contains(bhvfns,"generate_BigGAN_cosine") & ~cellfun(@isempty,meta_new');
 CStats = Evol_Cosine_Collect_Stats_fun(meta_new(evoidx), rasters_new(evoidx), Trials_new(evoidx));
 %%
-CStats(10).meta % "2022-02-28-Beto-01-cosine_V1V4"
-%% Visualizations
-%%
+% CStats(10).meta % "2022-02-28-Beto-01-cosine_V1V4"
+% %% Visualizations
+% %%
 visualize_TargetImg(CStats(:))
 visualize_Cosine_PopEvol(CStats(:),9);
 visualize_Cosine_score_traj(CStats(:),10);
 visualize_PCCosine_imageEvol(CStats(:),7,8)
-calc_Cosine_RFmask_fun(CStats(:))
 %%
-visusalize_resp_distri_allchan(SelS_col);
-%% 
+calc_Cosine_RFmask_fun(CStats(15:end))
+%%
 animate_Cosine_Evol_summary(CStats(:),15)
 %%
 visualize_Cosine_score_traj(CStats(10),10);
 
+%%
+CosStats = load(fullfile(matdir, "Both_CosineStats.mat"));
+CosStats = CosStats.CosineStats;
+%% 
+visualize_Cosine_PopEvol_sorted(CosStats(46),12);%35
+%%
+visualize_Cosine_PopEvol_sorted(CosStats(:),12);%35
+
+%%
+visualize_PCCosine_imageEvol_sparse(CosStats_A(46),[nan,7],1:3:41,7,8)
+
+%%
+visualize_PCCosine_imageEvol_sparse(CosStats_A(48),[nan,7],[1:3:41],7,8)
 %%
 msktype = "rect_wt_thr";
 visualize_PCCosine_imageEvol_wMask(CStat, alpha_msk_flip, msktype, figmtg)

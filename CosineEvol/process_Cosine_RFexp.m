@@ -10,6 +10,7 @@ rfrows = rfrows((rfrows <= end_row) & (rfrows >= strt_row));
 %%
 RFS_col = RF_Calc_Stats_fun(meta_new(:), rasters_new(:), Trials_new(:));
 %Alfa-02022021-001
+
 %%
 saveroot = "O:\Evol_Cosine";
 for iRF = 1:numel(RFS_col)
