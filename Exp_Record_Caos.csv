@@ -1,0 +1,103 @@
+ChanQual,Exp_collection,Expi,WebCam,comments,ephysFN,expControlFN,pref_chan,pref_unit,stim_size,stimuli
+NaN,,NaN,NaN,"Rf mapping at 1:15
+200 ml water in tank
+Stopped after 6 block
+5 min rf mapping
+COMPLITED",Caos-06112023-001,231106_Caos_rfMapper_basic,NaN,NaN,NaN,N:\Stimuli\RFs\2023\11-06-Caos-01
+NaN,,NaN,NaN,"RF mapping at 1:27
+Finished at 1:33
+After 4 block
+1 degree stimuli
+COMPLITED",Caos-06112023-002,231106_Caos_rfMapper_basic(1),NaN,NaN,NaN,N:\Stimuli\RFs\2023\11-06-Caos-02
+NaN,,NaN,NaN,"Evolution started at 1:39 PM
+trying 71 (0 0 ) 3 1 CMAES
+Sparse PSTH, but let's see
+MU 3-4/5
+TERMINATED – Not improve in PSTH",Caos-06112023-003,231106_Caos_generate_integrated,71,NaN,NaN,N:\Stimuli\Evolutions\2023\2023-11-06-Caos-01
+NaN,,NaN,NaN,"Evolution started at 1:46PM
+trying 71 (0 0 ) 3 2 CMAES
+Evolving from Hash
+added 200 ml AJ to 300 levee (400 ml added in sum)
+Stopped at 25 block
+At 2:00
+Response onset enhancement
+COMPLITED",Caos-06112023-004,231106_Caos_generate_integrated(1),71,NaN,NaN,N:\Stimuli\Evolutions\2023\2023-11-06-Caos-02
+NaN,,NaN,NaN,"Occlusion at 2:05
+(0 0 ) 3
+COMPLITED",Caos-06112023-005,231106_Caos_selectivity_basic,3,NaN,NaN,N:\Stimuli\Selectivity\2023\11-06-Caos-01
+NaN,,NaN,NaN,"Selectivity at 2:07
+(0 0 ) 3
+COMPLITED",Caos-06112023-006,231106_Caos_selectivity_basic(1),3,NaN,NaN,N:\Stimuli\Selectivity\2023\11-06-Caos-02
+NaN,,NaN,NaN,"Reconstruction at 2:13
+(0 0 ) 3
+All channels
+Finished at 2:24
+COMPLITED",Caos-06112023-007,231106_141337_Caos_reconstruction_cosine,3,NaN,NaN,N:\Stimuli\Reconstruction\2023\2023-11-06-Caos-01
+NaN,,NaN,NaN,"Reconstruction at 2:25
+(0 0 ) 3, 06
+Just V4
+Stopped at 37 block
+COMPLITED",Caos-06112023-008,231106_142438_Caos_reconstruction_cosine,3,NaN,NaN,N:\Stimuli\Reconstruction\2023\2023-11-06-Caos-02
+NaN,,NaN,NaN,"Selectivity at 2:40
+Size tuning
+10 block
+-issue with the V1, IT, array
+COMPLITED",Caos-06112023-009,231106_Caos_selectivity_basic(2),NaN,NaN,NaN,N:\Stimuli\Selectivity\2023\11-06-Caos-03
+NaN,,NaN,NaN,"Selectivity at 2:50
+Size tuning
+17block
+COMPLITED",Caos-06112023-010,231106_Caos_selectivity_basic(3),NaN,NaN,NaN,N:\Stimuli\Selectivity\2023\11-06-Caos-04
+NaN,,NaN,NaN,"",Caos-12022024-001,241202_142439_Caos_rfMapper_basic,NaN,NaN,NaN,N:\Stimuli\RFs\2024\2024-01-03-RF-Caos-01
+NaN,BigGAN_FC6,NaN,NaN,"002 generate biggan
+ 91 (0 0) 2 2 cmaes SU 1/5
+ very suppressed SU!",Caos-12022024-002,241202_143902_Caos_generate_BigGAN,91,NaN,NaN,N:\Stimuli\Evolutions\2024\2024-12-02-Ev-Caos-01\2024-12-02-14-39-44
+NaN,BigGAN_Hessian,NaN,NaN,"Manifold with biggan
+ 003 at 309 PM, manifold. Had 100cc water and filled up to 200cc at 3.10PM.",Caos-12022024-003,241202_150857_Caos_selectivity_basic,91,NaN,NaN,N:\Stimuli\Evolutions\2024\2024-12-02-Ev-Caos-01\2024-12-02-14-39-44\Hess_imgs
+NaN,BigGAN_FC6,NaN,NaN," Generate biggan
+ 93 ( 0 0 ) 2 3 CMAES SU 1/5
+ Caas-12022024-004, started recording 3.20PM, suppressed with varying ptsh quality, Big gan and deepsim evolutions above reference from early stage relative to previous expt, but deepsim still ahead by substantial margin with big gan generated images appearing to remain stuck on people and dog-like features. biggan not doing a damn thing, but deepsim doing well
+ let's try an eye site?
+ STOPPED
+ COMPLETED, DEEPSIM successful, BIGGAN not",Caos-12022024-004,241202_151831_Caos_generate_BigGAN,93,NaN,NaN,N:\Stimuli\Evolutions\2024\2024-12-02-Ev-Caos-02\2024-12-02-15-20-08
+NaN,BigGAN_FC6,NaN,NaN,"Let's try chan 94, with hash
+ 005 biggan
+ 94 (0 0) 2 1 CMAES 5/5 hash
+ weak path3.45PM: has had 100+150cc, now down to 50cc, filling up to level of 150cc apple juice 3.46PM. Behav performance 84%. Deepsim sucks
+ Biggan won out by making doggies
+ now time to do manifold",Caos-12022024-005,241202_153847_Caos_generate_BigGAN,94,NaN,NaN,N:\Stimuli\Evolutions\2024\2024-12-02-Ev-Caos-03\2024-12-02-15-39-42
+NaN,BigGAN_Hessian,NaN,NaN," 006 manifold
+ alas, it's all dogs
+ 006 at 356 PM
+ 350cc total fluid consumed 4.03PM, stop 410PM consumed 325cc total.",Caos-12022024-006,241202_155547_Caos_selectivity_basic,94,NaN,NaN,N:\Stimuli\Evolutions\2024\2024-12-02-Ev-Caos-03\2024-12-02-15-39-42\Hess_imgs
+NaN,,NaN,NaN,"Started at 2.08PM
+001RFmapper
+ lots of debugging plexon with chris, anything strange with data is related to the Parmeter changes. 71-73 channels targeted with bigGan
+.",Caos-12042024-001,241204_120239_Caos_rfMapper_basic,NaN,NaN,NaN,N:\Stimuli\RFs\2024\2024-01-03-RF-Caos-01
+NaN,BigGAN_FC6,NaN,NaN,"002 biggan
+started at 218 PM
+71 (0 0) 2 2 CMAES deepsim and biggan
+psths are crap
+consumed 100cc juice
+Biggan succeeded",Caos-12042024-002,241204_141711_Caos_generate_BigGAN,71,NaN,2,N:\Stimuli\Evolutions\2024\2024-12-04-Ev-Caos-01\2024-12-04-14-18-16
+NaN,BigGAN_Hessian,NaN,NaN,"003 at 239 PM
+manifold
+(0,0) 2
+has had around a hundred after one hour, 240 PM
+will fill up with AJ to 200cc",Caos-12042024-003,241204_143902_Caos_selectivity_basic,71,NaN,2,N:\Stimuli\Evolutions\2024\2024-12-04-Ev-Caos-01\2024-12-04-14-18-16\Hess_imgs
+NaN,selectivity_movie,NaN,NaN,"004 selectivity movie start at 2:50 pm (0,0) 2
+Down to 100cc, 6 blocks completed in ~5.5 minutes, 87% accuracy",Caos-12042024-004,241204_145047_Caos_selectivity_movie,NaN,NaN,NaN,N:\Stimuli\Motion\2024\2024-12-04-MO-Caos-01\movies
+NaN,selectivity_movie,NaN,NaN,"005 selectivity basic (movie images) start at 2:58 pm (0,0) 2
+Total 225 cc, 6 blocks completed in ~9 minutes, 89% accuracy",Caos-12042024-005,241204_145851_Caos_selectivity_basic,NaN,NaN,NaN,N:\Stimuli\Motion\2024\2024-12-04-MO-Caos-01\images
+NaN,BigGAN_FC6,NaN,NaN,"Will try another biggan
+ch 72 ( 0 0) 2 1 CMAES
+006 start at 311 PM
+doesn’t sound like much
+Down to 25, has had 100+175 = 275
+will fill up with AJ to 100
+biggan climbing
+we're running out of time, we'll have to stop soon and do manifold
+losing biggan anyway",Caos-12042024-006,241204_151045_Caos_generate_BigGAN,72,NaN,NaN,N:\Stimuli\Evolutions\2024\2024-12-04-Ev-Caos-02\2024-12-04-15-11-33
+NaN,BigGAN_Hessian,NaN,NaN,"Running manifold
+007 at 3:30 PM
+ch 72 ( 0 0) 2 1 CMAES
+almost had 75, 350, back to 50 cc",Caos-12042024-007,241204_152944_Caos_selectivity_basic,72,NaN,NaN,N:\Stimuli\Evolutions\2024\2024-12-04-Ev-Caos-02\2024-12-04-15-11-33\Hess_imgs

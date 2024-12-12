@@ -1,0 +1,28 @@
+ChanQual,Exp_collection,Expi,WebCam,comments,ephysFN,expControlFN,pref_chan,pref_unit,stim_size,stimuli
+NaN,,NaN,NaN,"Started expt at 1.37PM.
+rf mapper",Diablito-03122024-001,241203_133352_Diablito_rfMapper_basic,NaN,NaN,NaN,N:\Stimuli\RFs\2024\2024-06-03-RF-Diablito-01
+NaN,BigGAN_FC6,NaN,NaN,"002 at 1.47PM.
+biggan
+56 (-1,0) 4 1 CMAES hash 5/5
+fairly decent psths
+both biggan and deepsim performance rapidly rising and consistently at similar levels, biggan appears to have created some wild boar-like images. Has drank 125cc at 2.0PM, filling up with 200cc juice. Biggan leveled out briefly but now rising again.
+ 
+150 
+100 
+0.5",Diablito-03122024-002,241203_134558_Diablito_generate_BigGAN,56,NaN,4,N:\Stimuli\Evolutions\2024\2024-12-03-Ev-Diablito-01\2024-12-03-13-46-53
+NaN,BigGAN_Hessian,NaN,NaN,"Running manifold
+takes time, seems to hang on figures??
+003 manifold at 212 PM
+he twnt to look
+Struggling at 58%, block 6 performance at 48%, changing to next task.
+has had around 200
+finished with 6 blocks",Diablito-03122024-003,241203_141151_Diablito_selectivity_basic,56,NaN,4,N:\Stimuli\Evolutions\2024\2024-12-03-Ev-Diablito-01\2024-12-03-13-46-53\Hess_imgs
+NaN,,NaN,NaN,"Heatmaps
+pair0
+004 at 2:26 PM
+alex face and gibbon
+has had around 225 cc
+has been at this experiment for almost 10 minutes",Diablito-03122024-004,241203_142601_Diablito_rfMapper_omniplex_userloop,NaN,NaN,NaN,N:\Stimuli\Heatmaps\2024\2024-11-26-HM-Caos-01
+NaN,NatImgSelectivity,NaN,NaN,"Finishing with 160
+005 at 239 PM
+Finished 5 blocks in 8min, has consumed 325cc juice total. 2.50",Diablito-03122024-005,241203_143927_Diablito_selectivity_basic,NaN,NaN,NaN,N:\Stimuli\2023_selectivity_imagenet\imagenet_selectivity_160_clusters
