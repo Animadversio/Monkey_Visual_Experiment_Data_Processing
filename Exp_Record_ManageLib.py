@@ -30,16 +30,18 @@ def process_concat_cells(df, out_excel, Animal):
     #%%
     msk = ~ df.ephysFN.isna()  # 500 rows
     # df.ephysFN[msk].str.contains("Alfa")  # 436 rows containing Alfa
-    if Animal is "Alfa":
+    if Animal == "Alfa":
         search_str = "Alfa|ALfa"
-    elif Animal is "Beto":
+    elif Animal == "Beto":
         search_str = "Beto"
-    elif Animal is "Caos":
+    elif Animal == "Caos":
         search_str = "Caos"
-    elif Animal is "Diablito":
+    elif Animal == "Diablito":
         search_str = "Diablito"
-    elif Animal is "Both":
+    elif Animal == "Both":
         search_str = "Beto|Alfa|ALfa"
+    elif Animal == "All":
+        search_str = "Diablito|Caos|Beto|Alfa|ALfa"
     else:
         search_str = "Diablito|Caos|Beto|Alfa|ALfa"
     ExpEphysNames = df.ephysFN[df.ephysFN.str.contains(search_str)==True]
@@ -59,7 +61,7 @@ def process_concat_cells(df, out_excel, Animal):
         else:
             nextrow = row_num
         print("\nExp %d\t %s\t %s"%( Expi, df.ephysFN[rowi], df.expControlFN[rowi]))
-        print(df.comments[rowi:nextrow].str.cat(sep="\n"))
+        print(df.comments[rowi:nextrow].str.cat(sep="\n").encode('utf-8').decode('utf-8'))
     # 
     stimuli_miss_cnt = 0  # Count how many stimuli entries are missed
     df_sort = df[df.ephysFN.str.contains(search_str)==True]
@@ -69,7 +71,7 @@ def process_concat_cells(df, out_excel, Animal):
             nextrow = RowidEphs[Expi + 1]
         else:
             nextrow = row_num
-        df_sort.comments[Expi] = df.comments[rowi:nextrow].str.cat(sep="\n")
+        df_sort.comments[Expi] = df.comments[rowi:nextrow].str.cat(sep="\n").encode('utf-8').decode('utf-8')
         df_sort.ephysFN[Expi] = df.ephysFN[rowi].strip() # use strip to get rid of leading and ending space ' '
         df_sort.expControlFN[Expi] = df.expControlFN[rowi].strip()
         if "Stimuli" in df.stimuli[rowi]:
