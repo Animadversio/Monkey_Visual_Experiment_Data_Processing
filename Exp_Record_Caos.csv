@@ -101,3 +101,97 @@ NaN,BigGAN_Hessian,NaN,NaN,"Running manifold
 007 at 3:30 PM
 ch 72 ( 0 0) 2 1 CMAES
 almost had 75, 350, back to 50 cc",Caos-12042024-007,241204_152944_Caos_selectivity_basic,72,NaN,NaN,N:\Stimuli\Evolutions\2024\2024-12-04-Ev-Caos-02\2024-12-04-15-11-33\Hess_imgs
+NaN,,NaN,NaN,"LOST ALL NOTES! DISASTER
+started with 001 rf mapping, lost the time
+153 PM per WC",Caos-12092024-001,241209_135131_Caos_rfMapper_basic,NaN,NaN,NaN,N:\Stimuli\RFs\2024\2024-01-03-RF-Caos-01
+NaN,BigGAN_FC6,NaN,NaN,"002 2:04 PM biggan
+79 (0 0) 2 1 CMAES 5/5 hash
+psth not great
+DEEPSIM succeeded, biggan not
+Experiment: generate_BigGAN 
+Conditions: generate_BigGAN 
+Subject: Caos 
+Start time: Dec-09-2024 
+End time: Dec-09-2024 
+(Elapsed: 
+# of completed blocks: 27 
+Success rate: 77.84% (z 453 1 582) 
+Open MLpIayer for replay 
+1.4 
+1.2 
+0.8 
+0.6 
+0.4 
+0.2 
+0.05 
+0.1 
+0.15 
+0.2 
+025",Caos-12092024-002,241209_140318_Caos_generate_BigGAN,79,NaN,2,N:\Stimuli\Evolutions\2024\2024-12-09-Ev-Caos-01\2024-12-09-14-03-59
+NaN,BigGAN_FC6,NaN,NaN,"Trying biggan again with SU in 92
+92 (0 0) 2 2 CMAES SU 1/5
+started biggan at 2.23PM -003
+Ptsh good, biggan working well in evolutions
+Stopped briefly to drain juicer, started again, evolutions biggan work well still
+0b 
+Experiment: generate_BigGAN 
+Conditions: generate_BigGAN 
+Subject: Caos 
+Start time: Dec-09-2024 14:23:19 
+End time: Dec-09-2024 
+(Elapsed: 
+# of completed blocks: 22 
+Success rate: 55.96% (z 366 1 654) 
+Open MLpIayer for replay 
+0.3 
+o. 
+o. 
+0.1 
+o. 
+o. 
+005 
+0.1 
+0.15 
+0.2 
+025 
+ENTERED INTO BIGGAN",Caos-12092024-003,241209_142223_Caos_generate_BigGAN,92,NaN,2,N:\Stimuli\Evolutions\2024\2024-12-09-Ev-Caos-02\2024-12-09-14-23-19
+NaN,BigGAN_Hessian,NaN,NaN,"Manifold selectivity basic started at 2.48PM -004
+92 (0 0) 2 2 CMAS 1/5
+Started 200cc, 180cc, drank 380cc total
+ENTERED INTO MANIFOLD
+Rf mapper
+biggan_evolution
+manifold",Caos-12092024-004,241209_144750_Caos_selectivity_basic,92,NaN,2,N:\Stimuli\Evolutions\2024\2024-12-09-Ev-Caos-02\2024-12-09-14-23-19\Hess_imgs
+NaN,,NaN,NaN,"RF mapping started 1.57PM
+Started 200cc water",Caos-12102024-001,241210_125535_Caos_rfMapper_basic,NaN,NaN,NaN,N:\Stimuli\RFs\2024\2024-01-03-RF-Caos-01
+NaN,BigGAN_FC6,NaN,NaN,"Channel 68 potentially great channel
+Biggan run with SU channel 68
+68 (0,0),2 2 started at 1.16PM CMAS 1/5
+ENTERED INTO BIGGAN",Caos-12102024-002,241210_131541_Caos_generate_BigGAN,68,NaN,2,N:\Stimuli\Evolutions\2024\2024-12-10-Ev-Caos-01\2024-12-10-13-16-26
+NaN,BigGAN_Hessian,NaN,NaN,"Manifold started at 1.41PM
+Filled up to 200cc juice, has drank 110cc at 1.42PM
+68 (0 0) 2,2 CMAS 1/5
+ENTERED INTO MANIFOLD",Caos-12102024-003,241210_134049_Caos_selectivity_basic,68,NaN,2,N:\Stimuli\Evolutions\2024\2024-12-10-Ev-Caos-01\2024-12-10-13-16-26\Hess_imgs
+NaN,,NaN,NaN,"Started biggan at 1.57PM
+Promising SU on channel 75 (0,0) 2,2
+0105 
+pas 
+Yikes
+Has drank 210cc total at 2.04PM
+Deepsim successful, biggan not. Channel appears working well.
+10 
+10 
+15",Caos-12102024-004,241210_135612_Caos_generate_BigGAN,NaN,NaN,NaN,N:\Stimuli\Evolutions\2024\2024-12-10-Ev-Caos-02\2024-12-10-13-57-17
+NaN,BigGAN_FC6,NaN,NaN,"Biggan MU on channel 69 (0,0) 2,1
+Started 2.18 PM
+02 
+025 
+That's more like it
+260cc total drank at 2.19PM
+ ENTERED INTO BIGGAN",Caos-12102024-005,241210_141645_Caos_generate_BigGAN,69,NaN,2,N:\Stimuli\Evolutions\2024\2024-12-10-Ev-Caos-03\2024-12-10-14-17-59
+NaN,BigGAN_Hessian,NaN,NaN,"Manifold started 2.40PM
+MU on channel 69
+(0,0) 2,1
+69 (0,0) 2,1
+Drank 310cc 2.41PM, 350cc total by end of expt at block 13 start.
+ENTERED INTO MANIFOLD",Caos-12102024-006,241210_143915_Caos_selectivity_basic,69,NaN,2,N:\Stimuli\Evolutions\2024\2024-12-10-Ev-Caos-03\2024-12-10-14-17-59\Hess_imgs
