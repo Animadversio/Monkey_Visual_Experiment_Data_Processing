@@ -9,9 +9,9 @@ if strcmp(getenv('COMPUTERNAME'), 'LAPTOP-U8TSR4RE')
     system("subst S: D:\Network_Data_Sync") % set this alias! so that copying and syncing could work 
 else
     system('subst O: "E:\OneDrive - Washington University in St. Louis"')
-    system("subst S: F:\Network_Data_Sync") % set this alias! so that copying and syncing could work 
+    % system("subst S: F:\Network_Data_Sync") % set this alias! so that copying and syncing could work 
+    system("subst S: G:\") % set this alias! so that copying and syncing could work 
 end
-%result_dir = "C:\\Users\\ponce\\OneDrive - Washington University in St. Louis\\PC_space_tuning";
 % it will load the newest version of ExpSpecTable and compute pref_chan_arr
 % and norm_arr from it! 
 if strcmp(getenv('COMPUTERNAME'), "DESKTOP-MENSD6S")  % At home

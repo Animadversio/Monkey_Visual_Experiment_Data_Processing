@@ -2,18 +2,18 @@
 function ExpRecord = loadBackupExpRecord(Animal)
 
 %% Set Path  % set this alias! so that copying and syncing could work 
-if ~strcmp(getenv('COMPUTERNAME'), "DESKTOP-MENSD6S")
-system('subst N: \\research.files.med.harvard.edu\Neurobio\PonceLab')
-system("subst S: F:\Network_Data_Sync")
-% system('subst N: \\storage1.ris.wustl.edu\crponce\Active')
-end
-if strcmp(getenv('COMPUTERNAME'), 'LAPTOP-U8TSR4RE')
-    system('subst O: "D:\OneDrive - Washington University in St. Louis"')
-    system("subst S: D:\Network_Data_Sync") % set this alias! so that copying and syncing could work 
-else
-    system('subst O: "E:\OneDrive - Washington University in St. Louis"')
-    system("subst S: F:\Network_Data_Sync") % set this alias! so that copying and syncing could work 
-end
+% if ~strcmp(getenv('COMPUTERNAME'), "DESKTOP-MENSD6S")
+% system('subst N: \\research.files.med.harvard.edu\Neurobio\PonceLab')
+% system("subst S: F:\Network_Data_Sync")
+% % system('subst N: \\storage1.ris.wustl.edu\crponce\Active')
+% end
+% if strcmp(getenv('COMPUTERNAME'), 'LAPTOP-U8TSR4RE')
+%     system('subst O: "D:\OneDrive - Washington University in St. Louis"')
+%     system("subst S: D:\Network_Data_Sync") % set this alias! so that copying and syncing could work 
+% else
+%     system('subst O: "E:\OneDrive - Washington University in St. Louis"')
+%     system("subst S: F:\Network_Data_Sync") % set this alias! so that copying and syncing could work 
+% end
 % it will load the newest version of ExpSpecTable and compute pref_chan_arr
 % and norm_arr from it! 
 if strcmp(getenv('COMPUTERNAME'), "DESKTOP-MENSD6S")  % At home
