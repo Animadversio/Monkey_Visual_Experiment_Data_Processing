@@ -14,5 +14,8 @@ end
 nSamples_notNan = sum(~isnan(x),dim)-1;
 
 y = nanstd(x,[],dim) ./ sqrt(nSamples_notNan);
+if length(x) == 0
+y=nan;
+end
 
 end

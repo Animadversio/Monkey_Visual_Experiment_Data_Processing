@@ -23,9 +23,14 @@ function [codes_all, img_ids, code_geni] = load_codes_all(stim_path, threadi, lo
 if nargin == 1, threadi = 1; loadblocks=[]; end
 if nargin == 2, loadblocks=[]; end
 data_fn  = ls(fullfile(stim_path, sprintf("*_thread%03d_code.mat", threadi - 1)));
+if strcmp(data_fn,"")
+error("No mat code file found for this thread"); 
+end 
 data_fn = sort(string(data_fn)); 
 if contains(data_fn{1}, "block000"), offset = -1; fprintf("Saved codes starts from 000. offset -1\n");
-elseif contains(data_fn{1}, "block001"), offset = 0; else error; end
+elseif contains(data_fn{1}, "block001"), offset = 0; 
+else error("error identifying first block"); 
+end
 % note older version starts from block000
 codes_all = [];
 code_geni = [];
