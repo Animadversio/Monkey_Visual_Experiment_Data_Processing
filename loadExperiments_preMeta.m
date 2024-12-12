@@ -37,7 +37,7 @@ for iExp = 1:length(preMeta)
         fprintf('Error trace:\n%s\n',err.getReport);
         disp(tMeta)
 %         keyboard
-        fileID = fopen('S:\Exp_error_log2.log','w+');
+        fileID = fopen('S:\Exp_error_log_new.log','w+');
         fprintf(fileID,'Error message:\n%s\n',err.message);
         fprintf(fileID,'Error trace:\n%s\n',err.getReport);
         fclose(fileID);

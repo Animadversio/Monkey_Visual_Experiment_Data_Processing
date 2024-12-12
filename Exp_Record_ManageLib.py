@@ -2,17 +2,22 @@ import pandas as pd
 import numpy as np
 import os
 
+Animal_strs = ["Alfa", "Beto", "Caos", "Diablito"]
 if os.environ['COMPUTERNAME'] == 'DESKTOP-9DDE2RH':  # PonceLab-Desktop 3
     os.system(r"subst S:  E:\Network_Data_Sync") # alias the disk if it has not been mounted.
-    tmp_input = r"D:\ExpRecord_tmp.xlsx"
-    tmp_output = r"D:\ExpRecord_out.xlsx"
-    df_paths = [r"S:\Exp_Record_Alfa.xlsx", r"S:\ExpSpecTable_Augment.xlsx"]
+    tmp_input = r"S:\ExpRecord_tmp.xlsx"
+    tmp_output = r"S:\ExpRecord_out.xlsx"
+    df_paths = [r"S:\Exp_Record_Alfa.xlsx", r"S:\ExpSpecTable_Augment.xlsx", r"S:\Exp_Record_Caos.xlsx", ]
 elif os.environ['COMPUTERNAME'] == 'DESKTOP-MENSD6S':  # Home_WorkStation
     tmp_input = "E:\\Monkey_Data\\ExpRecord_tmp.xlsx"
     tmp_output = "E:\\Monkey_Data\\ExpRecord_out.xlsx"
-    df_paths = ["E:\\Monkey_Data\\Exp_Record_Alfa.xlsx", "E:\\Monkey_Data\\ExpSpecTable_Augment.xlsx"]
+    df_paths = ["E:\\Monkey_Data\\Exp_Record_Alfa.xlsx", "E:\\Monkey_Data\\ExpSpecTable_Augment.xlsx", r"E:\\Monkey_Data\\Exp_Record_Caos.xlsx", ]
+elif os.environ['COMPUTERNAME'] == 'PONCELAB-OFF6': # 32 core machine 
+    tmp_input = r"S:\ExpRecord_tmp.xlsx"
+    tmp_output = r"S:\ExpRecord_out.xlsx"
+    df_paths = [r"S:\Exp_Record_Alfa.xlsx", r"S:\ExpSpecTable_Augment.xlsx", r"S:\Exp_Record_Caos.xlsx", r"S:\Exp_Record_Diablito.xlsx", ]
 
-
+    
 def process_concat_cells(df, out_excel, Animal):
     """Process the raw form excel copied from onenote to well formed excel
     Filter the array using `Animal` label""
@@ -29,10 +34,14 @@ def process_concat_cells(df, out_excel, Animal):
         search_str = "Alfa|ALfa"
     elif Animal is "Beto":
         search_str = "Beto"
+    elif Animal is "Caos":
+        search_str = "Caos"
+    elif Animal is "Diablito":
+        search_str = "Diablito"
     elif Animal is "Both":
         search_str = "Beto|Alfa|ALfa"
     else:
-        search_str = "Beto|Alfa|ALfa"
+        search_str = "Diablito|Caos|Beto|Alfa|ALfa"
     ExpEphysNames = df.ephysFN[df.ephysFN.str.contains(search_str)==True]
     RowidEphs = ExpEphysNames.index
     ExpBhv2Names = df.expControlFN[df.expControlFN.str.contains(search_str)==True]
@@ -84,7 +93,7 @@ def process_concat_cells(df, out_excel, Animal):
     return df_sort
 
 def available_Explabel():
-    Animal_strs = ["Alfa", "Beto"]
+    Animal_strs = ["Alfa", "Beto", "Caos", "Diablito"]
     for animal, out_path in zip(Animal_strs, df_paths):
         df_old = pd.read_excel(out_path)
         print("Existing labels for %s:"%animal)
@@ -113,7 +122,6 @@ def concat_table(df_old, df_new, addexplabel=None, out_path=None):
 
 def sort_merge_table(df_sort, addexplabel=None):
     """Current version to combine new table and old one."""
-    Animal_strs = ["Alfa", "Beto"]
     if isinstance(df_sort,str):
         df_sort = pd.read_excel(df_sort)
     # loop through animal name and sort corresponding exp to the collection
@@ -127,8 +135,9 @@ def sort_merge_table(df_sort, addexplabel=None):
                 print("%s Empty bhv file entry encountered" % df_sort.ephysFN[idx])
                 continue
             if animal in name:
-                if (df_old.expControlFN==name).any():
-                    print("%s  has been recorded in the excel index %d, please check. Skipping."%(name, (df_old.expControlFN==name).nonzero()[0][0]))
+                if (df_old.expControlFN == name).any():
+                    index = (df_old.expControlFN == name).idxmax() 
+                    print("%s  has been recorded in the excel index %d, please check. Skipping."%(name, index))
                 else:
                     id_col.append(idx)
         if len(id_col) == 0:
@@ -150,7 +159,8 @@ if __name__ == '__main__':
             Animal = "Both"#"Beto" # "Alfa" "ALfa"
         df_sort = process_concat_cells(tmp_input, tmp_output, Animal=Animal)
     else: # try to open the tempory output directly and parse from it.
-        pass
+        df_sort = pd.read_excel(tmp_output)
+    print(df_sort)
     available_Explabel() # Print the available Exp labels for the monkeys
     try:
         os.startfile(tmp_output)

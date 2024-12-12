@@ -29,6 +29,10 @@ switch animal
         ExpRecord = readtable("S:\ExpSpecTable_Augment.xlsx");
     case "Alfa"
         ExpRecord = readtable("S:\Exp_Record_Alfa.xlsx");
+    case "Caos"
+        ExpRecord = readtable("S:\Exp_Record_Caos.xlsx");
+    case "Diablito"
+        ExpRecord = readtable("S:\Exp_Record_Diablito.xlsx");
     case "Both"
         ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xlsx");
         ExpSpecTable_Aug_alfa = readtable("S:\Exp_Record_Alfa.xlsx");

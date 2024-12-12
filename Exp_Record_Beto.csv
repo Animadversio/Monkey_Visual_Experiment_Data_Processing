@@ -760,29 +760,29 @@ NaN,CMAGA_cmp,NaN,,"Rf basic Start 11:11, 35 ms reward. New units in 41, rf lo
 NaN,CMAGA_cmp,2,,"Generate integrate. Ch 5 hash (1/5) [-1.5, 1] 3 1; GA vs CMAES, bigset05 first 10 images Start at 11:23. Carlos recalibrated eye at block 2. working well 45 ms reward . Evolved images are climbing…..block 16, #1(black line) is top line Block 27: Black line is wayyy above the rest and still climbing. Reward at 50 at block 30,  Stopped at 12:04, 40 blocks completed ",Beto-27012020-003,200127_Beto_generate_integrated,5,NaN,3,N:\Stimuli\2019-12-Evolutions\2020-01-27-Beto-01\2020-01-27-11-23-03
 NaN,CMAGA_cmp,3,,"Generate integrated. Ch 20. hash 1/5. [-2, 1.5] 3 1. start at 12:06 Bigset20 first 10 images, reward at 90. starting to shake chair Upped to 130 reward. Added aq reward at block 16. 170 ms at block 20. Evolved images are climbing, both above natural now Hmm, nether really taking off yet. Block 28, 220+30 One image is more contrasting (white background, pink and dark colored object) Other image is more gray/pink and blended. monkey quitting. Experiment has enough blocks to call it completed, but we're really struggling to get the last few trials. Let's see if we make it to block 35.  ",Beto-27012020-004,200127_Beto_generate_integrated(1),20,NaN,3,N:\Stimuli\2019-12-Evolutions\2020-01-27-Beto-02\2020-01-27-12-06-20
 NaN,CMAGA_cmp,NaN,,"001 RFMapper 11:02 AM starts 
-2 deg -8:2:8 Rough mapping. Not working so well….. A few single units
-33 41 39 38seems large amplitude 41 super nice late response! Completed",Beto-30012020-001,200130_Beto_rfMapper_basic,NaN,NaN,2,N:\Stimuli\2019-06-RF-mapping\2020-01-30-Beto
+2 deg -8:2:8 Rough mapping. _x000B_Not working so well….. A few single units
+33 41 39 38_x000B_seems large amplitude _x000B_41 super nice late response! _x000B_Completed",Beto-30012020-001,200130_Beto_rfMapper_basic,NaN,NaN,2,N:\Stimuli\2019-06-RF-mapping\2020-01-30-Beto
 NaN,CMAGA_cmp,4,,"002 Generate integrated 11:18 AM
 41 [0.6 0.5] 3 1 CMAES
 41 [0.6 0.5] 3 1 GA
 Still beats GA algorithm ! Even for V1 cells.
 24min
 completed",Beto-30012020-002,200130_Beto_generate_integrated,41,NaN,3,N:\Stimuli\2019-12-Evolutions\2020-01-30-Beto-01\2020-01-30-11-18-38
-NaN,,NaN,,"(discarded not well mapped RF cannot evolve) 003 Generate Integrated  11:4641 [0.6 0.5] 1 1 CMAES41 [0.6 0.5] 1 1 GAOne degree tight image Seems the PSTH starts worse, nearly no response for both Syn and Nat .Not very successful >>>> Seems the RF is not mapped precisely?Do Rfmapping next! completed",Beto-30012020-003,200130_Beto_generate_integrated(1),41,NaN,1,N:\Stimuli\2019-12-Evolutions\2020-01-30-Beto-02\2020-01-30-11-46-00
-NaN,CMAGA_cmp,NaN,,"004 RFMapper (Heatmap) 11:59Using CMA Evolved image [0.6 0.5 ]  -1.5:0.5:1.5  3degHeatmap Protocol Seems still centered at 0.6, 0.5 
-But it means nothing, because we presented the image at 0.6 0.5. So it just means the neuron respond to the image in the original position. completed",Beto-30012020-004,200130_Beto_rfMapper_basic(1),NaN,NaN,3,N:\Stimuli\2019-06-RF-mapping\2020-01-30-Beto
-NaN,CMAGA_cmp,NaN,,"005 RFMapper  12:04 Monkey is doing well ! Fixation is tight [0 0 ] -1.5:0.5:1.5  1deg completed",Beto-30012020-005,200130_Beto_rfMapper_basic(2),NaN,NaN,1,N:\Stimuli\2019-06-RF-mapping\2020-01-30-Beto
+NaN,,NaN,,"(discarded not well mapped RF cannot evolve) 003 Generate Integrated  11:46_x000B_41 [0.6 0.5] 1 1 CMAES_x000B_41 [0.6 0.5] 1 1 GA_x000B_One degree tight image _x000B_Seems the PSTH starts worse, nearly no response for both Syn and Nat ._x000B_Not very successful >>>> Seems the RF is not mapped precisely?_x000B_Do Rfmapping next! _x000B_completed",Beto-30012020-003,200130_Beto_generate_integrated(1),41,NaN,1,N:\Stimuli\2019-12-Evolutions\2020-01-30-Beto-02\2020-01-30-11-46-00
+NaN,CMAGA_cmp,NaN,,"004 RFMapper (Heatmap) 11:59_x000B_Using CMA Evolved image _x000B_[0.6 0.5 ]  -1.5:0.5:1.5  3deg_x000B_Heatmap Protocol _x000B_Seems still centered at 0.6, 0.5 
+But it means nothing, because we presented the image at 0.6 0.5. _x000B_So it just means the neuron respond to the image in the original position. _x000B_completed",Beto-30012020-004,200130_Beto_rfMapper_basic(1),NaN,NaN,3,N:\Stimuli\2019-06-RF-mapping\2020-01-30-Beto
+NaN,CMAGA_cmp,NaN,,"005 RFMapper  12:04 _x000B_Monkey is doing well ! Fixation is tight _x000B_[0 0 ] -1.5:0.5:1.5  1deg _x000B_completed",Beto-30012020-005,200130_Beto_rfMapper_basic(2),NaN,NaN,1,N:\Stimuli\2019-06-RF-mapping\2020-01-30-Beto
 NaN,CMAGA_cmp,5,,"006 Generate Integrated 12:13
-Using the new RF mapped from the 005 41 [-0.1 -0.4 ] 1 1 CMAES41 [-0.1 -0.4 ] 1 1  GACool there are response! Fixation is tight. CMAES goes up right away! Still beats GA! Pretty quick within 20 gens still beats GA.  completed",Beto-30012020-006,200130_Beto_generate_integrated(2),41,NaN,1,N:\Stimuli\2019-12-Evolutions\2020-01-30-Beto-03\2020-01-30-12-13-42
-NaN,CMAGA_cmp,NaN,,"Hp at 10:45 AM001 at 1051 AM, rf mapping26 looks great. We'll go for it. SU ish",Beto-03022020-001,200203_Beto_rfMapper_basic,NaN,NaN,NaN,N:\Stimuli\2019-06-RF-mapping\2020-02-02-Beto
-NaN,,NaN,,"002 at 1105 AMgenerate integrated26 (-1,0) 3 1 CMAES
-26 (-1,0) 3 1 GAweak evolution for both algorithmsI also saw my signal drift - my single unit (yellow)  began to resemble the multiunit.  Finished at block 36 or so, will redo with the whole channel",Beto-03022020-002,200203_Beto_generate_integrated,26,NaN,3,N:\Stimuli\2019-12-Evolutions\2020-02-03-Beto-01\2020-02-03-11-04-34
+Using the new RF mapped from the 005 _x000B_41 [-0.1 -0.4 ] 1 1 CMAES_x000B_41 [-0.1 -0.4 ] 1 1  GA_x000B_Cool there are response! Fixation is tight. _x000B_CMAES goes up right away! _x000B_Still beats GA! _x000B_Pretty quick within 20 gens still beats GA.  _x000B_completed",Beto-30012020-006,200130_Beto_generate_integrated(2),41,NaN,1,N:\Stimuli\2019-12-Evolutions\2020-01-30-Beto-03\2020-01-30-12-13-42
+NaN,CMAGA_cmp,NaN,,"Hp at 10:45 AM_x000B_001 at 1051 AM, rf mapping_x000B_26 looks great. We'll go for it. SU ish",Beto-03022020-001,200203_Beto_rfMapper_basic,NaN,NaN,NaN,N:\Stimuli\2019-06-RF-mapping\2020-02-02-Beto
+NaN,,NaN,,"002 at 1105 AM_x000B_generate integrated_x000B_26 (-1,0) 3 1 CMAES
+26 (-1,0) 3 1 GA_x000B_weak evolution for both algorithms_x000B_I also saw my signal drift - my single unit (yellow)  began to resemble the multiunit.  Finished at block 36 or so, will redo with the whole channel",Beto-03022020-002,200203_Beto_generate_integrated,26,NaN,3,N:\Stimuli\2019-12-Evolutions\2020-02-03-Beto-01\2020-02-03-11-04-34
 NaN,CMAGA_cmp,6,,"003 at 1141 AM
-generate integratedsame as above, only this time using all threshold crossings for evolution (full channel)26 (-1,0) 3 1 CMAES
-26 (-1,0) 3 1 GAa clear result",Beto-03022020-003,200203_Beto_generate_integrated(1),26,NaN,3,N:\Stimuli\2019-12-Evolutions\2020-02-03-Beto-02\2020-02-03-11-39-57
-NaN,,NaN,,"001 RFMapping Chan 33 seems to have a SU plus a hash so try this -8:2:8 2 deg image Sampling is too loose and it even miss the receptive field! 
+generate integrated_x000B_same as above, only this time using all threshold crossings for evolution (full channel)26 (-1,0) 3 1 CMAES
+26 (-1,0) 3 1 GA_x000B_a clear result",Beto-03022020-003,200203_Beto_generate_integrated(1),26,NaN,3,N:\Stimuli\2019-12-Evolutions\2020-02-03-Beto-02\2020-02-03-11-39-57
+NaN,,NaN,,"001 RFMapping _x000B_Chan 33 seems to have a SU plus a hash so try this _x000B_-8:2:8 2 deg image _x000B_Sampling is too loose and it even miss the receptive field! 
 Weird !",Beto-04022020-001,200204_Beto_rfMapper_basic,NaN,NaN,2,N:\Stimuli\2019-06-RF-mapping\2020-02-04-Beto
-NaN,,NaN,,"002 RFMapping -1.5:0.5:1.5  1 deg image 
+NaN,,NaN,,"002 RFMapping _x000B_-1.5:0.5:1.5  1 deg image 
 33 has the foveal RF! 
 Great, let s do it.",Beto-04022020-002,200204_Beto_rfMapper_basic(1),NaN,NaN,1,N:\Stimuli\2019-06-RF-mapping\2020-02-04-Beto
 NaN,SUHash,1,,"003 Generate Integrated  12:35 starts
@@ -3086,7 +3086,7 @@ BigGAN is dropiing even lower. Not sure why.
 Fluctuating.... not really evolving
 Fluctuating up and down... not going up.
 Aborting
-10 mins, 10 blocks not too bad.",Beto-10012022-002,220110_Beto_generate_BigGAN,1,16,4,N:\Stimuli\2021-EvolDecomp\2022-01-10-Beto-01\2022-01-10-14-00-05
+10 mins, 10 blocks not too bad.",Beto-10012022-002,220110_Beto_generate_BigGAN,16,1,4,N:\Stimuli\2021-EvolDecomp\2022-01-10-Beto-01\2022-01-10-14-00-05
 5,FC6Evol_Decomp;BigGAN_FC6,NaN,,"003 Evolution
 13   [1.3  -1.0]  3  1 'CMAES_Hessian'
 13   [1.3  -1.0]  3  1 'CMAES'
@@ -3116,11 +3116,11 @@ FC6 85->88
 0.15 
 0.2 
 025 
-OK it's my fault, the image shall be larger like [2.3 -1.0]  4",Beto-10012022-003,220110_Beto_generate_BigGAN(1),1,13,3,N:\Stimuli\2021-EvolDecomp\2022-01-10-Beto-02\2022-01-10-14-16-06
+OK it's my fault, the image shall be larger like [2.3 -1.0]  4",Beto-10012022-003,220110_Beto_generate_BigGAN(1),13,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-10-Beto-02\2022-01-10-14-16-06
 5,FC6Evol_Decomp;natrefvalid,NaN,,"004 Naural Validation
 Mixed set
 13   [1.3  -1.0]  3  1
-This guy seems noisy....",Beto-10012022-004,220110_Beto_selectivity_basic,1,13,3,N:\Stimuli\2021-EvolDecomp\2022-01-10-Beto-02-natvalid
+This guy seems noisy....",Beto-10012022-004,220110_Beto_selectivity_basic,13,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-10-Beto-02-natvalid
 5,BGEvol_Decomp,NaN,,"005 Selectivity BigGAN factoize
 13   [1.3  -1.0]  3  1
 SUPER dificult 20 mins mearly 2 blocks. 25% performance.
@@ -3129,7 +3129,7 @@ After adjusting the towel performance back to 70%
 Fact 0 is not bad...
 its landscape is really flat like the Friday one.
 actually the prediction is not too bad....
-38 performance! 36 mins 7 blocks",Beto-10012022-005,220110_Beto_selectivity_basic(1),1,13,3,N:\Stimuli\2021-EvolDecomp\2022-01-10-Beto-02-decomp-BigGAN
+38 performance! 36 mins 7 blocks",Beto-10012022-005,220110_Beto_selectivity_basic(1),13,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-10-Beto-02-decomp-BigGAN
 5,FC6Evol_Decomp,NaN,,"006 Selectivity FC6 Factorizae
 13   [1.3  -1.0]  3  1
 Error bar for this cell is HUGE …
@@ -3138,7 +3138,7 @@ Prediction has that structure! Nice. But the max is not as high as natural
 ch. 13, pref:
 fac0_full_corrresnet50_linf8-layer3_00,
 evol_best_01_block009_thread000_gen_gen008_000495,
-fac0_cntpnt_shuffleresnet50_linf8-layer3_03",Beto-10012022-006,220110_Beto_selectivity_basic(2),1,13,3,N:\Stimuli\2021-EvolDecomp\2022-01-10-Beto-02-decomp
+fac0_cntpnt_shuffleresnet50_linf8-layer3_03",Beto-10012022-006,220110_Beto_selectivity_basic(2),13,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-10-Beto-02-decomp
 NaN,,NaN,,"001 RFMapping",Beto-12012022-001,220112_Beto_rfMapper_basic,NaN,NaN,NaN,
 5,FC6Evol_Decomp;BigGAN_FC6,NaN,,"002 Evolution BiaGAN
 7   [2.1  -1.0]  4  1
@@ -4083,6 +4083,10 @@ Eye signal is super noisy , not stable .
 Pref of 32 unit
 Very long time and took a lot
 Note, using resampling instead of adding Gaussian noise make it excruciationly slow",Beto-11032022-002,220311_Beto_selectivity_basic,NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-03-11-Beto-refRepr
+NaN,PopulEvol_V4,NaN,,"003  Cosine  Evol 
+FC6  CMAESHessian 
+Grape Sq   noiseMSE V4 area 
+Now ceiling is always –1.000 …. all",Beto-11032022-003,220311_Beto_generate_BigGAN_cosine,NaN,NaN,4,N:\Stimuli\2020-CosineEvol\2022-03-11-Beto-01\2022-03-11-13-51-12
 NaN,PopulEvol_V4,NaN,,"004 Cosine Evol
 FC6  CMAESHessian
 Grape Sq   noiseMSE V4 area
@@ -4482,3 +4486,27 @@ NaN,,NaN,,"003 Generate BigGAN
 Ch 2  [0  -2]  5
 MU 4.5/5
 Super noisy not working.",Beto-13062022-003,220613_Beto_generate_BigGAN,NaN,NaN,NaN,N:\Stimuli\2021-EvolDecomp\2022-06-13-Beto-01\2022-06-13-14-05-58
+NaN,,NaN,,"Rf mapper start at 958. Channels not looking promising..... 7 blocks complete stop.",Beto-28052021-001,210528_Beto_rfMapper_basic,NaN,NaN,NaN,
+5,BigGAN_FC6,NaN,,"Gen BG start at 1012. CH 29 (0,0) 3 1 hash.
+We have done this one before but i don’t have many other options...
+Wahoo! 17 blocks, climbing like crazy, visually responsive.
+Climbed. Gorilla?!?
+cma_restricted
+ENTERED INTO PROJECT_VALIDATE",Beto-28052021-002,210528_Beto_generate_BigGAN(1),29,1,3,N:\Stimuli\2020-BigGAN\2021-05-28-Beto-01\2021-05-28-10-28-01
+5,BigGAN_FC6,NaN,,"CH 25 (0,0) 3 hash. Nope, nothing....
+Okay it isnt much but it did climb a bit.
+Hmm block 32 it jumped up.
+36 blocks complete stop at 150. It did climb!!
+ENTERED INTO PROJECT_VALIDATE",Beto-28052021-003,210528_Beto_generate_BigGAN(2),25,NaN,3,N:\Stimuli\2020-BigGAN\2021-05-28-Beto-02\2021-05-28-10-12-47
+NaN,,NaN,,"7/24/20.  betadine today. In rig at 116
+001 rf mapping at 1:20 PM
+extra bumpy today
+already have acq rew on
+17 looks lively but very out, -1,0
+nothing. Upped to 60 ms. Gonna b e a short day",Beto-24072020-001,200724_Beto_rfMapper_basic,NaN,NaN,NaN,
+5,BigGAN_FC6,NaN,,"002 big gan
+17 (-1,0) 3 1 CMAES 5/5 hash, fc6 and biggan
+good psth, both first-gen fc6 and biggan similar in overall rate
+both climbing. He's extra bumpy
+Entered into Project_BigGan
+eyes!",Beto-24072020-002,200724_Beto_generate_BigGAN,17,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-24-Beto-01\2020-07-24-13-33-25

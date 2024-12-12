@@ -32,10 +32,16 @@ elseif strcmp(getenv('COMPUTERNAME'), 'LAPTOP-U8TSR4RE') % new BInxu laptop
 elseif exist("S:\",'dir') % Currently I set up S:\ at home as well, so everything should match
 	ExpSpecTable_Aug = readtable("S:\ExpSpecTable_Augment.xlsx",'Format','auto');
 	ExpSpecTable_Aug_alfa = readtable("S:\Exp_Record_Alfa.xlsx",'Format','auto');
+    ExpSpecTable_Aug_caos = readtable("S:\Exp_Record_Caos.xlsx",'Format','auto');
+    ExpSpecTable_Aug_diab = readtable("S:\Exp_Record_Diablito.xlsx",'Format','auto');
 	copyfile("S:\ExpSpecTable_Augment.xlsx", ".\ExpSpecTable_Augment.xlsx")
 	copyfile("S:\Exp_Record_Alfa.xlsx", ".\Exp_Record_Alfa.xlsx")
+	copyfile("S:\Exp_Record_Caos.xlsx", ".\Exp_Record_Caos.xlsx")
+	copyfile("S:\Exp_Record_Diablito.xlsx", ".\Exp_Record_Diablito.xlsx")
     writetable(ExpSpecTable_Aug, ".\Exp_Record_Beto.csv")
     writetable(ExpSpecTable_Aug_alfa, ".\Exp_Record_Alfa.csv")
+    writetable(ExpSpecTable_Aug_caos, ".\Exp_Record_Caos.csv")
+    writetable(ExpSpecTable_Aug_diab, ".\Exp_Record_Diablito.csv")
 else
     fprintf("load local exprecord in folder %s instead\n", pwd)
     keyboard;
@@ -67,6 +73,10 @@ switch Animal
         ExpRecord = ExpSpecTable_Aug_alfa;
     case "Beto"
         ExpRecord = ExpSpecTable_Aug;
+    case "Caos"
+        ExpRecord = ExpSpecTable_Aug_caos;
+    case "Diablito"
+        ExpRecord = ExpSpecTable_Aug_diab;
     case "Both"
         ExpRecord = [ExpSpecTable_Aug; ExpSpecTable_Aug_alfa];
 end 
