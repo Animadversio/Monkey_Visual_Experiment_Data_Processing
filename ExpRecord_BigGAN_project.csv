@@ -1,0 +1,1343 @@
+ChanQual,Exp_collection,Expi,WebCam,comments,ephysFN,expControlFN,pref_chan,pref_unit,stim_size,stimuli
+NaN,BigGAN,0,,"Generate big gan. Start at 12:40.
+CH 20 (-0.5 1) 3 1 hash 
+CMAES
+'BigGAN_class'  
+truncnorm.random([1,128]) * 0.7
+Default CMAES parameters
+init_sigma = 0.06;
+% optim_norm = 0.7;
+At block 6, its making a black object (dog, bird, backpack)
+Block 10, still black object.
+Omg, it might actually be climbing at block 12. Block 17, def climbing! Still black object on white background. I am just going to let it go and see how long it climbs.
+Little shakes at 1250.
+Still climbing at block 27.
+41 blocks complete stop at 1256.  complete
+entered into Matlab (BigGan)",Beto-20072020-002,200720_Beto_generate_BigGAN(1),20,NaN,NaN,N:\Stimuli\2020-Evolutions\2020-07-20-Beto-01\2020-07-20-12-40-51
+NaN,BigGAN,0,,"Same thing, same pics, just cmaes regular generate int in FC6
+Start at 1258.
+CH 20 (-0.5, 1) 3 1 CMAES, hash
+Block 6, dark reddish evolution, block 10, still dark reddish image, doesn’t really look like much. Possibly starting to climb around 12.
+Little nap at 108. Shakes at 112
+Still climbing at block 27. But still making a red colored object, not black. Block 34, looking a little dark/black. I think it is done climbing.
+Still going up at 39. Stop 42 block at 123.  complete
+entered into Matlab (BigGan)",Beto-20072020-003,200720_Beto_generate_integrated,20,NaN,NaN,N:\Stimuli\2020-Evolutions\2020-07-20-Beto-02\2020-07-20-12-58-55
+NaN,BigGAN_FC6,1,,"002 at 1014 on 07/22/2020
+5 (-0.7, 1) 3 2 CMAES,
+fc6
+biggan
+Completed
+Entered into Matlab",Beto-22072020-002,200722_Beto_generate_BigGAN,5,NaN,NaN,N:\Stimuli\2020-BigGAN\2020-07-22-Beto-01\2020-07-22-10-14-22
+NaN,BigGAN,2,,"Chan 2 at 11:00 on 07/22/2020
+5 (-0.7, 1) 6 2 (bigGAN, first set)
+5 (0,0) 6 2 (bigGAN, second set)
+We want to see if it will put the feature in the location of the RF
+End at 11:34
+Drank 350 ml
+Margins nice and clean
+completed",Beto-22072020-003,200722_Beto_generate_BigGAN(1),5,NaN,NaN,N:\Stimuli\2020-BigGAN\2020-07-22-Beto-02\2020-07-22-11-00-09
+NaN,BigGAN_FC6,3,,"002 at 359 PM
+29 (-0.8 1) 3 2 CMAES with both
+fc6 (1) 
+biggan_class (2)
+great psths so far",Beto-23072020-002,200723_Beto_generate_BigGAN,29,NaN,NaN,N:\Stimuli\2020-BigGAN\2020-07-23-Beto-01\2020-07-23-15-59-3
+NaN,BigGAN_FC6,1,,"002 biggan and fc6 evolution using ch 26 at 229 PM
+26 (-1.1,0) 3 1 CMAES with fc6 (first) and BG (second),5/5 hash
+good psth
+working at 75%, which is damn good
+259 PM , 73% has had ~110 cc",Beto-27072020-002,200727_Beto_generate_BigGAN,26,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-27-Beto-01\2020-07-27-14-29-47
+NaN,BigGAN_FC6,5,,"003 at 254 PM
+generate 15 (-0.5,1) 3 1  using
+CMAES for fc6 (first thread) and
+CMAES-ZOHA for BigGan, with the latter being the class and noise vector space together
+BigGAN  noise x Class  space ZOHA x CMAES evolution
+he's at 77% on this experiment.
+FC6 is super successful !
+Recruit quite a bit of late activity
+28 mins in total",Beto-28072020-003,200728_Beto_generate_BigGAN,15,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-28-Beto-01\2020-07-28-14-54-46
+NaN,BigGAN,5,,"006 BigGAN generate
+BigGAN  Class  space CMAES evolution
+BigGAN  noise x Class  space CMAES x CMAES evolution
+Seems like the 1st and the 2nd thread found some gradient around gen 21
+The images go up and down for a whiile.
+180 mL now!",Beto-28072020-006,200728_Beto_generate_BigGAN(1),15,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-28-Beto-02\2020-07-28-15-38-41
+NaN,BigGAN_FC6,NaN,,"Big gan generate start at 1028.
+CH 28 (0, 0.5) 3 1 CMAES fc6 and bigGan class. No climbing from either at 12 blocks... 🙁
+Ugh nothing.....at 19 maybe climbing, let it go a little more. The fc6 evolution looks interesting, just not climbing. Biggan making white dog. Nope... so sad stop at 26 blocks. Neither climbed but images did look kinda similar. 1058",Beto-29072020-002,200729_Beto_generate_BigGAN,28,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-29-Beto-01\2020-07-29-10-28-46
+NaN,BigGAN_FC6,NaN,,"Generate big gan start at 11:00.
+18 (-0.5, 1) 4 1  CMAES fc6 vs biggan class. Hash. Sounds RV, psth looks good. Lets hope this one climbes.
+Lots of shakes to start. Started recording shakes for this exp. Thought it was climbing at 9, maybe not at 12.
+Taking naps
+Bigan on a slow climb, both dropped at 18. Now back up. YAY! Jumped up at 22. But weird, natural images jumped tooooo......biggan making some sort of circle/round object, fc6 has dark round center. Stop at 1134. 24 blocks.",Beto-29072020-003,200729_Beto_generate_BigGAN(1),18,NaN,4,N:\Stimuli\2020-BigGAN\2020-07-29-Beto-02\2020-07-29-11-00-02
+NaN,BigGAN,NaN,,"CH 15 (0, 1) 3 1 CMAES just bigGan class. Hash.
+Start at 1137. This one was done yesterday as fc6 vs biggan and biggan did not climb. Trying again with just biggan. Nothing at 13. Hes almost done for the day, blasting him.",Beto-29072020-004,200729_Beto_generate_BigGAN(2),15,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-29-Beto-03\2020-07-29-11-37-30
+NaN,BigGAN_FC6,NaN,,"3
+GI (1) BigGAN starts 11:07
+29 [0 1.5]  3  2  CMAES
+FC6,  BigGAN class.
+Both starts growing in a sec. BigGAN seems to win.
+BigGAN goes to dog space. Grows easily.
+FC6 slowly catch up. But lack the late activity bump.
+Quite different PSTH. Around gen 18
+Still climbing, make CMA a hard foe to beat...
+Definitely still BigGAN recruit more late activity.
+So score starts to become comparable but PSTH is quite different.
+The FC6 space evokes a lot of initial activity and BigGAN does the sustained activity well.
+BigGAN is still better but a small gap!
+2 threads are quite comparable! And the thing is great!
+33 blocks  completed",Beto-31072020-003,200731_Beto_generate_BigGAN(1),29,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-31-Beto-01\2020-07-31-11-07-26
+NaN,BigGAN,NaN,,"004  Experimenting new BigGAN Optimizers
+GI (2) BigGAN strts 11:47
+BigGAN all  CMAES-CMAES
+BigGAN  class   CMAES-Hessian
+2 threads are quite comparable and evolve from start
+Both treads evolve quite well! One has dogs one has some abstrct stuff.
+Already 300mL
+Grow again around 18gens
+Around 27 gens he fins som enew gradient Evoke transient activity now
+33 blocks completed",Beto-31072020-004,200731_Beto_generate_BigGAN(2),29,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-31-Beto-02\2020-07-31-11-47-58
+NaN,BigGAN_FC6,NaN,,"Generate bigGan start at 942. CH 19 hash.  
+19 (0, 3) 4 1 CMAES fc6 so 
+19  （0， 3） CMAES hessian Biggan class。Hes workin well so far。 quiet channel， but VR and climbing at 12 blocks。 biggan really climbing fc6 is barely。fc6 was yellow background with gray/daark round object in center. Biggan looked similar, person with curve in similar spot. 31 blocks 1010 ",Beto-03082020-002,200803_Beto_generate_BigGAN,19,NaN,4,N:\Stimuli\2020-BigGAN\2020-08-03-Beto-01\2020-08-03-09-42-05
+NaN,BigGAN_FC6,NaN,,"Generate bigGan start at 1011. CH 19 hash.  
+19 (0, 3) 4 1 CMAES fc6  
+19  （0， 3）4 1 CMAES  Biggan class。 so weird。 all I changed was the Hesiann to CMAES OPtimizer and now the natural images are climbing like crazy。 the unit looks the same too。 Images do not look like the last evolution either, fc6 is colorful and biggan in busy. Something is up. 31 blocks 1047 ",Beto-03082020-003,200803_Beto_generate_BigGAN(1),19,NaN,4,N:\Stimuli\2020-BigGAN\2020-08-03-Beto-02\2020-08-03-10-11-01
+NaN,BigGAN_Hessian,2,,"block 28 at 223 pm 
+28 (-0.5,0) 3 1 , 5/5 Hash 
+BIG GAN GENERATE 
+002 at 156 PM 
+weakish PSTHs. Let's see 
+46 s bumpy  
+20 s bumpy at 216 PM 
+stuff climbing, generation 20, same for fc6 and Biggie 
+bumpie at 220 
+going for generation 30 at least 
+by gen 28, something crashed terribly, but I think that's baseline. He's been moving.  ",Beto-05082020-002,200805_Beto_generate_BigGAN,28,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-05-Beto-01\2020-08-05-13-56-11
+NaN,BigGAN_FC6,NaN,,"004 generate BigGAN 15:09 
+28 (-0.5,0) 3 1 , 5/5 Hash   FC6 space CMAES-Hessian 
+28 (-0.5,0) 3 1 , 5/5 Hash    BigGAN class CMAES-Hessian   
+Specs:  
+1/5 scaling,  0.2  init sigma 
+1/5 scaling,  6 init sigma 
+The score is meandering up and down.... 
+Pick up some gradient around gen 17.  
+Climbing of thread 0 is super slow, but at a steady pace....Like some of the in silico exps.  
+Need better design for the CMAES Hessian algorithm.  
+21 mins  21 generations~ pretty good performance  
+Interestingly finds some new gradient around gen 23. Ear of the dog? 
+So using Hessian in FC6 exp even makes it evolve slower  
+So basically there is very large spread within each generation of images..Better analyze the max and the min separately.  
+CMAES Hessina is evolving very slowly in the FC6 space.  
+We are getting close to 32!  ",Beto-05082020-004,200805_Beto_generate_BigGAN(1),28,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-05-Beto-02\2020-08-05-15-09-06
+NaN,BigGAN_Hessian,3,,"Generate biggan start at 930.  
+CH 20 (-0.4, 1.4) 3 1  cmaes op. Hash. Both started to climb at block 10.  
+Fc6 is making its pink eye, biggan is making a dog..... but both are still climbing. Big gan is climbing higher but fc6 has higher peak psth. 30 blocks complete stop at 1002. ",Beto-07082020-002,200807_Beto_generate_BigGAN,20,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-07-Beto-01\2020-08-07-09-30-49
+NaN,BigGAN,NaN,,"Gen biggan start at 953. CH 19 (0.3, 3.5) 4 1 hash. Had a great receptive field.  
+CMAES for both, fc6 vs big gan class. Big gan climbing at 7. biggan was doing great, making white dog face and climbing. Fc6 was doing nothing. Decided to try dif location closer to fovea. 23 blocks stop at 1021.  ",Beto-11082020-002,200811_Beto_generate_BigGAN(1),19,NaN,4,N:\Stimuli\2020-BigGAN\2020-08-11-Beto-01\2020-08-11-09-53-11
+NaN,BigGAN_Hessian,4,,"Gen biggan start at 1022. CH 19 (0, 2) 4 1 hash. Had a great receptive field.  
+CMAES for both, fc6 vs big gan class. Looks like both might be climbing at 15. 20 blocks, fc6 is sure trying, starting to climb a bit. 23 blocks com, both climbed!! Yayayay. Stop 1049. Biggan did better, made little dog face.  
+Now doing hess sel. Started python at 1051. I played video and gave dry treats. 1057 done. Took 6 min ",Beto-11082020-003,200811_Beto_generate_BigGAN(2),19,NaN,4,N:\Stimuli\2020-BigGAN\2020-08-11-Beto-02\2020-08-11-10-22-40
+NaN,BigGAN_Hessian,5,,"Generate BIggan fc6 vs biggan. CH 28 (-1.5, 0) 3 1 CMAES hash. 
+Start at 10:11. Block 12, still neither climbing. Both climbing together around 20. 30 blocks complete stop at 1042.  ",Beto-13082020-003,200813_Beto_generate_BigGAN(1),28,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-13-Beto-01\2020-08-13-10-11-18
+NaN,BigGAN_Hessian,6,,"CH 26 (-2, 0) 4 1 CMAES. Hash. Fc6 vs bigGAN class.  
+Start at 9:51. Fc6 started out gray, all good. Nothing yet. Psth looks good tho. Both are trying to climb. Biggan started much higher than fc6 but is staying flat. Fc6 is climbing. Biggan psth looks good and is higher than fc6 but it never climbed. Fc6 climbed. 32 blocks at 1024. complete 
+CH 25 (-2, 0) 4 1 CMAES. Hash. Fc6 vs bigGAN class. Start at 1026.  
+Both climbing block 7.  
+His head is moving more it seems. Bumpy. Stopped at 1040. Checked, hp screws were loose, he musy have bumped enough ",Beto-17082020-002,200817_Beto_generate_BigGAN(1),26,NaN,4,N:\Stimuli\2020-BigGAN\2020-08-17-Beto-01\2020-08-17-09-51-16
+NaN,BigGAN_FC6,7,,"002 at 402 PM 
+big gan 
+25 (-0.1,0) 3 1 CMAES, fc6 and biggan class 
+modest psths at first, comparable 
+5 min in, not much happening on any front.  
+biggan moving into reference territory, but fc6 crashing. Of note, we haven't had particularly good evolutions from 25 before (only two, kinda meh). 
+Will go to 25 
+411 PM, noise increasing, movement noise.  Block 15 is corrupted by noise. May be a reason to subtract baseline now. Yeah, signal is unstable. 
+414 bumpies begin. Starting acq reward. More instability.  
+He tongues the lixit out of the way. Should righten it up 
+Baseline is acting weird. Not sure what to believe here, although images are looking similar. Brown contour on the left side of the image, and background being cleared up 
+ended at block 35, gotta get those hessians 
+entered into proj biggan ",Beto-18082020-002,200818_Beto_generate_BigGAN,25,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-18-Beto-01\2020-08-18-16-02-08
+NaN,BigGAN_FC6,NaN,,"Generate bigGAN start at 938.  
+CH 15 (0, 1.5) hash. 4 1 CMAES  fc6 vs bigGAN. Hes working pretty well. Looking good, psth, both look to be climbing at block 7. fc6 is winning so far. Fc6 is climbing like crazy, biggan still struggling. Biggan is trying to make two objects in lower half of image, but is is so busy it doesn’t look like much. 28 blocks stop at 1008 
+entered into proj biggan ",Beto-20082020-002,200820_Beto_generate_BigGAN(1),15,NaN,4,N:\Stimuli\2020-BigGAN\2020-08-20-Beto-01\2020-08-20-09-38-38
+NaN,BigGAN_Hessian,8,,"Generate biggan start at 1011 
+CH 49 (0, 0) 3 1 CMAES. Hash. Fc6 vs bigGAN. Sounds very VR. Both are climbing at block 12. Biggan is a wheel. Both are climbing, fc6 more so.  it doesn’t help biggan started out higher to begin with though. 29 blocks stop at 1041. 
+entered into proj biggan ",Beto-20082020-003,200820_Beto_generate_BigGAN(2),49,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-20-Beto-02\2020-08-20-10-11-12
+NaN,BigGAN_Hessian,9,,"CH 52 (0, 0) 3 1 CMAES fc6 vs BigGAN. Hash. Sounds VR.  
+Beto is working well so far. Both are climbing at block 7. they started out similar as well. Climbing together but fc6 is staying slightly above. Block 15, fc6 is taking off. Stop at 1006. 27 blocks. Complete 
+entered into proj biggan ",Beto-24082020-002,200824_Beto_generate_BigGAN(1),52,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-24-Beto-01\2020-08-24-09-44-23
+NaN,BigGAN_FC6,NaN,,"CH 62 (0, 0) 3 1 CMAES fc6 vs BigGAN. Hash. Fc6 is climbing fast at block 4. biggan started out very high. Fc6 is climbing, biggan very slight. Stop at 11. 22 blocks. Complete 
+entered into proj biggan ",Beto-24082020-004,200824_Beto_generate_BigGAN(2),62,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-24-Beto-02\2020-08-24-10-37-47
+NaN,BigGAN_FC6,NaN,,"Generate bigGAN start at 1104. CH 61 (-3, -2.5) 3 1 CMAES hash 1/5. Noisey artifact from reward. But chan is visually responsive. Block 6, biggan is climbing more than fc6. Fc6 has not climbed yet. Wahoooo block 9, fc6 is climbing too! Block 14, both climbing stilll. Both making black object on left side. Biggan is making dog face. Images look very similar! Fc6 is still shooting up. 27 blocks at 1136. SO COOL. 
+entered into proj biggan ",Beto-26082020-005,200826_Beto_generate_BigGAN(1),61,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-26-Beto-01\2020-08-26-11-04-04
+NaN,BigGAN_FC6,NaN,,"CH 1 (0, 0) 3 1 Cmaes fc6 vs bigGan. Start at 952. Ugh hes being super bumpy. Now hes settled in. Hmm. Not looking great. 7 blocks in, not climbing. psth is flat too. Block 23. Still neither climbing at 23. But fc6 evo image is interesting. Letting it go. Fc6 Jumped up at 24. Fc6 is climbing! Beto is bumping a lot...... stop 28 blocks. 1030. complete 
+entered into biggan ",Beto-28082020-002,200828_Beto_generate_BigGAN,1,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-28-Beto-01\2020-08-28-09-52-32
+NaN,BigGAN_FC6,NaN,,"002 at 1052 AM 
+13 (-1,0) 3 1, CMAES, hash 
+FC6, BigGAN class , hash 5/5 
+PSTHs are not impressive 
+both started equally crappy 
+1054 bumpy 
+1057 bmpy 
+1059 sleepy time. At 54% participation, not his best... 
+1109 bmp, 71 % participation 
+very wildly variable rates. Monkey misbehaving. The overall stability of the monkey and array are getting to a less useful stage. 
+Biggan climbed – let's go to ~35 ish 
+update popup broke his flow! STill good experiment though 
+entered into biggan project ",Beto-31082020-002,200831_Beto_generate_BigGAN,13,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-31-Beto-01\2020-08-31-10-52-29
+NaN,BigGAN_FC6,NaN,,"003 at 240 PM 
+27 (0,0) 5 1 CMAES , SU 1/5,  
+using fc6 and Biggan class 
+great psths, very transient 
+Entered into project biggan 
+86% participation. Maybe 1-2 is best 
+256 pm, bumps ",Beto-01092020-003,200901_Beto_generate_BigGAN,27,NaN,5,N:\Stimuli\2020-BigGAN\2020-09-01-Beto-01\2020-09-01-14-40-41
+NaN,BigGAN_FC6,NaN,,"004 at 316 PM 
+29 (0,0) 5 1 CMAES, hash 5/5 
+fc6 vs biggan 
+bumpies. 3:30 PM. Has been working for an hour 
+entered into project biggan ",Beto-01092020-004,200901_Beto_generate_BigGAN(1),29,NaN,5,N:\Stimuli\2020-BigGAN\2020-09-01-Beto-02\2020-09-01-15-16-24
+NaN,BigGAN_FC6,NaN,,"Generate BigGAN start at 1017. CH 4 hash (-1, 0.5) 3 1 cmaes fc6 vs bigGAN. Block 8, neither climbing yet. Not looking promising. Both are making black object in center of image. Might be going up at 12. Biggan is very up and down. Hard to say, neither really climbed, kinda up and down along where they started. Give it a few more. Block 22, both jumped up, well see. 25 blocks stop, at 1047 . Call it a bust.  ",Beto-03092020-002,200903_Beto_generate_BigGAN(1),4,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-03-Beto-01\2020-09-03-10-17-39
+NaN,BigGAN_FC6,NaN,,"Generate BigGAN start at 1049. CH 60  hash (0, 0) 3 1 cmaes fc6 vs bigGAN.very active channel. Sounds vr. Both fc6 and BG started out high. Psth looks good too. Both climbing at block 10. He is sure bumping.......220 + 35 aq. This will be his last exp. For the day. 21 blocks at 1119. Both climbed.  
+entered into Matlab, project biggan ",Beto-03092020-003,200903_Beto_generate_BigGAN(2),60,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-03-Beto-02\2020-09-03-10-49-00
+NaN,BigGAN_FC6,NaN,,"002 at 1050 AM 
+5 (0,0) 3 2  CMAES , fc6 and biggan, hash 5/5. Very visually responsive tho 
+good psths 
+11 AM , first bump, has had around 50 cc 
+1107 bump. It's a weak rise by BG, worth a manifold? Not sure 
+Done at 21 blocks, 11:11 AM, going for a manifold 
+entered into project biggan ",Beto-07092020-002,200907_Beto_generate_BigGAN,5,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-07-Beto-01\2020-09-07-10-50-26
+NaN,BigGAN_FC6,NaN,,"006 at 1135 AM 
+51 (0,0) 2 1 CMAES hash 5/5 
+fc6 and biggan. PSTH is okaish 
+upped reward to 180 and then 200 upon 1138 bmp 
+1141 AM, so one hour so far. He should go at least another 15-20 minutes. 
+bmp 
+Oh no, noise increasing across the board! Isolation in danger... 
+Bad noise gone again, and even lower. He's moving a lot, and  I think the connector may have problems. It has become harder to plug in 
+Upped to 400 ms 
+1156 AM, has been on for one hour and 15 minutes, which is not bad. Let's finish him at 1 20' 
+12 PM he's bumpy. Should not stop during a bump or he'll learn the wrong lesson. ",Beto-07092020-006,200907_Beto_generate_BigGAN(2),51,NaN,2,N:\Stimuli\2020-BigGAN\2020-09-07-Beto-02\2020-09-07-11-35-06
+NaN,BigGAN_FC6,NaN,,"GenBG start at 1037. CH 17 (-1.5, 0) 3 1 CMAES. Hash 5/5. Sounds VR. Psth looks good. However, natural images starting on top, we will see how it goes. Fc6 has climbed, nothing from BG yet. They are staying together, under natural images. First shakes at 1049. Ouhh both look to be climbing at 16! Shake again at 1053. Looks like we lost waves in CH 35 & 50, just noise. Block 20, fc6 climbed but is about equal with natural images. BG is struggling to climb, but its still there. 25 blocks complete. 1102. Both climbed, on to sel.  
+entered into biggan ",Beto-10092020-002,200910_Beto_generate_BigGAN(1),17,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-10-Beto-01\2020-09-10-10-37-41
+NaN,BigGAN_FC6,NaN,,"Gen BG start at 1130. CH 4 (0, 1.5) hash. Receptive field wasnt great, but best of the options, want to give it a try. It’s a pretty quiet unit. 7 blocks in, not much yet. Hes had 200 ml so far, would like for him to get to 300. And work for at least 10 more minutes. they are both very slight climb. making black object in center.  ugh hes at 20 blocks but not it kinda looks like its climbing more. Hes done. 20 blocks at 1155. 
+entered into biggan  ",Beto-10092020-004,200910_Beto_generate_BigGAN(2),4,NaN,NaN,N:\Stimuli\2020-BigGAN\2020-09-10-Beto-02\2020-09-10-11-29-53
+NaN,BigGAN_FC6,NaN,,"CH 51(0, 0) 3 1 cmaes. Hash 5/5. Start at 10:13. Fc6 vs BG. Both climbing at block 6. block 15, doing the same thing again! Hes not moving or bumping but noise is taken over. 22 blocks, stop at 1030.  ",Beto-14092020-002,200914_Beto_generate_BigGAN(2),51,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-14-Beto-01\2020-09-14-10-12-27
+NaN,BigGAN_FC6,NaN,,"59, (0, 0)  3 1 CMAES. Fc6 vs BG. Hash 5/5. Start at 1033. looking good so far, psth high.  Bumping at 1038. Both climbed, stayed pretty high. Stop at 20 blocks, 1052. BG image was busy, but making 2 people or 2 round objects.  
+Completed 
+entered into biggan ",Beto-14092020-003,200914_Beto_generate_BigGAN(3),59,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-14-Beto-02\2020-09-14-10-33-12
+NaN,BigGAN_FC6,NaN,,"Generate BG fc6 vs BG start at 959. CH 29 (0,1)  3 1 CMAES. SU 2/5(see picture). Very VR, it sounds great.  
+Both Look to be climbing at block 8. taking another nap. Block 20, fc6 really climbing, BG right behind. Block 23, fc6 still going up. bumps at 1019. 30 blocks, fc6 slowing climb. BG staying flat too. Both successful. Stop 35 blocks complete at 1028. complete 
+entered into biggan 
+Doing Hessian selectivity images. Hes taking a nap while waiting. Thats nice. ",Beto-17092020-002,200917_Beto_generate_BigGAN(1),29,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-17-Beto-01\2020-09-17-09-59-59
+NaN,BigGAN_FC6,NaN,,"CH 64 (0, 0) 3 1 CMAES. Hash 5/5. Generate BG start at 1057. Blasting him, hes has been working pretty well for 1 hour, 15 minutes. This will be last exp today. Fc6 climbing a bit at B8, BG pretty flat. Both climbing at block 13. 16 blocks complete stop at 1117. Only 16 blocks, may not keep 
+completed 
+entered into biggan ",Beto-17092020-004,200917_Beto_generate_BigGAN(2),64,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-17-Beto-02\2020-09-17-10-57-23
+NaN,BigGAN_FC6,NaN,,"BG CH 57 (0,0) 3 1 cmaes. Fc6 vs BG. Start at 955. Hash 5/5. Looks good off the start. Fc6 and BG psth are high. Block 17, fc6 climbing. BG staying the same but it started higher than the rest. Both are making black blob on right side of image. 24 blocks stop at 1015. complete 
+entered into biggan ",Beto-23092020-002,200923_Beto_generate_BigGAN(1),57,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-23-Beto-01\2020-09-23-09-55-07
+NaN,BigGAN_FC6,NaN,,"CH 27 (0, 0) 3 1 hash. This ch has a SU (labeled as 2) but it is sparse and seems suppressed. Start at 1017. Block 10, still nothing. We will give it a few more. 18 blocks stop at 1033. Neither climbed.  complete ",Beto-23092020-003,200923_Beto_generate_BigGAN(2),27,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-23-Beto-02\2020-09-23-10-17-04
+NaN,BigGAN_FC6,NaN,,"CH 54 (0, 0) 3 1 cmaes. Napping. Hash 5/5. Start at 1034. Psth for both look good to start. Sounds VR. Fc6 already climbing at blcok 5. fc6 really climbing at block 8. shaking monkey. Fc6 still climbing at 16. Bg , same story, staying high but not climbing. both climved. BG very slight. 20 blocks at 1058. complete 
+entered into biggan ",Beto-23092020-004,200923_Beto_generate_BigGAN(3),54,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-23-Beto-03\2020-09-23-10-34-45
+NaN,BigGAN_FC6,NaN,,"BG vs fc6 CH 55 hash (0,0) 3 1 cmaes. Start at 1038. Fc6 climbing fast. Kinda weird, BG and fc6 are climbing together (same curve).... but fc6 higher. Hes almost done, just a few more blocks. Block 14 they are doing their own thing... napping. 18 blocks stop at 1102. complete ",Beto-29092020-005,200929_Beto_generate_BigGAN(2),55,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-29-Beto-02\2020-09-29-10-38-39
+NaN,BigGAN_FC6,NaN,,"003 FC6 BigGAN evol 
+FC6 CMAES_Hessian ,   ch5 2 (-0.5 0.7) 
+BigGAN CMAES,   ch5 2 (-0.5 0.7) 
+This CMAES only cut off Spectrum no rescaling!!! Use this version to save time. 
+4 mins finish 5 blocks pretty efficient  
+Taking a nap!  
+CMAES-Hessian goes up immediately.  
+Both climb .  
+11block 10 mins.  CMA Hessian does well on the FC6 
+~ 21 blocks. BigGAN also climbs a bit. Not too dramatic but steady. 
+Terminate ~ 30. Very efficient here!  
+During Saving the matlab crushed....  
+So TrialRecord is missing. Need to fix this bug!!!!! 
+Finished ",Beto-16102020-003,201016_Beto_generate_BigGAN(2),5,NaN,3,N:\Stimuli\2020-BigGAN\2020-10-16-Beto-01\2020-10-16-11-21-49
+5,BigGAN_FC6,NaN,,"BG start at 1012. CH 5 (0,0) 3 2 hash. cmaes. Fc6 vs BG class. I am doing the hash of CH 5 because it had better RF. I does have SU. Hmmmm evo images started about 20-40 s/s lower than natural. B9, might climb, psth is looking better. Fc6 climing B11. Fc6 still climbing at 17, good sign! Fc6 climbed! BG did not, 25 blocks stop at 1032",Beto-27102020-002,201027_Beto_generate_BigGAN,5,NaN,3,N:\Stimuli\2020-BigGAN\2020-10-27-Beto-01\2020-10-27-10-12-38
+5,BigGAN_FC6,NaN,,"CH 42, same as above, start at 1053. B10, fc6 is climbing, maybe.... B15-wahoo fc6 is climbing. BG might be too. His channels look better after re adjusting. He bumped and they stayed the same. 19 blocks stop at 1120.",Beto-27102020-004,201027_Beto_generate_BigGAN(2),42,NaN,2,N:\Stimuli\2020-BigGAN\2020-10-27-Beto-03\2020-10-27-10-53-12
+5,BigGAN_FC6,NaN,,"Lets try CH 39 for fun. (0,0) 3 2 hash. It climbed!",Beto-10112020-002,201110_Beto_generate_BigGAN(2),39,NaN,3,N:\Stimuli\2020-BigGAN\2020-11-10-Beto-01\2020-11-10-13-33-32
+2,BigGAN_FC6,NaN,,"CH 29 (0, 1). 3 degrees. SU (2/5), this might be a long shot but the rf looked good and it sounds like a good unit. Start at 1208. Psth for evo images is spiking. Block 8, looks like fc6 is climbing. Yep, fc6 is climbing! At block 23, it is getting a littl more noisey. 28 blocks complete stop at 1233.
+CH 25 (0,0) 3 1, hash (5/5). Start at 1235. Ehh this one not looking so hot. Psth not great. Nothing climing yet at 5 blocks. This one is not climbing. I want him to go 15 more minutes then stop. Yeah, 11 blocks in.... everything is climbing, unstable I stopped recording, no sense in saving.",Beto-20112020-002,201120_Beto_generate_BigGAN,29,NaN,3,N:\Stimuli\2020-BigGAN\2020-11-20-Beto-01\2020-11-20-12-08-07
+5,BigGAN_FC6,NaN,,"BG start at 1048. CH 48 (0,0) 3 1 cmaes. Hash 5/5. Fc6 vs BG. Psth actually looks decent. Sounds good too. 7 blocks in, BG started off high but fc6 is climbing. 12 blocks in, so far so good, no noise yet, looks to be climbing. Damn, he starts shaking and it moves, all goes noisey......22 blocks stop at 1109. Both climbed!! Fc6 more than BG.
+Start at 1113. CH 34 (0,0) 3 1 cmaes, fc6 vs bg. Hash 5/5. Ugh, channels not looking so good after he bumped. Much more noise. 34's psth not so great. Ugh, block 6, he bumps and they all go crazy. Surprisingly, when he stops bumping, channels return to normal. But that one little bump spurt made baseline climb .  I stopped recording, wasn’t worth keeping. But i am letting him keep working to get his water. Stopped at 16 blocks. Dont Save.",Beto-24112020-002,201124_Beto_generate_BigGAN(1),48,NaN,3,N:\Stimuli\2020-BigGAN\2020-11-24-Beto-02\2020-11-24-10-48-51
+5,BigGAN_FC6,NaN,,"Gen BG. Start at 1001. Ch 20 (0,2) 4 1 hash. I plugged in both arrays today. Look okay, getting some decent units/channels. But not super stable. Psth for 20 doesnt look promising. 23 blocks complete, nothing. Stop at 1020.",Beto-30112020-002,201130_Beto_generate_BigGAN(1),20,NaN,4,N:\Stimuli\2020-BigGAN\2020-11-30-Beto-01\2020-11-30-10-01-08
+5,BigGAN_FC6,NaN,,"BG ch 33 (0,0) 2 1 hash. Start 952.psth looks okay, channel sounds/looks stable. Block 6, fc6 is climbing. hard to see with small image but looks to be evolving black/white. Oh no, natural images dropped in block 14. 21 blocks stop at 1010.",Beto-04122020-002,201204_Beto_generate_BigGAN(1),33,NaN,2,N:\Stimuli\2020-BigGAN\2020-12-04-Beto-01\2020-12-04-09-52-18
+5,BigGAN_FC6,NaN,,"CH 57 (0,0) 2 1 hash. Start 1012. Right off the start, fc6 psth is high. 8 blocks in, looks goo, stable. Fc6 climbing, BG high but not climbing up. 18 blocks stop at 1030.",Beto-04122020-003,201204_Beto_generate_BigGAN(2),57,NaN,2,N:\Stimuli\2020-BigGAN\2020-12-04-Beto-02\2020-12-04-10-12-46
+5,BigGAN_FC6,NaN,,"CH 36 (0,0) 2 1 hash gen BG. Start at 821. Psth looks good to start off. Channel is stable so far. Block 10, fc6 is climbing , bg is as high as fc6 but pretty level, not climbing. Both climbing! 20 blocks stop at 840.",Beto-08122020-002,201208_Beto_generate_BigGAN(1),36,NaN,2,N:\Stimuli\2020-BigGAN\2020-12-08-Beto-01\2020-12-08-08-21-42
+1,BigGAN_FC6,NaN,,"BG gen start at 948. CH 19 SU. (0,0) 3 1. cmaes, fc6
+Block 4, I can hear it starting to pop with the images.
+Block 10, looks to be climbing.
+Peaked around block 13, flattening out now.
+Spoke too soon, still climbing a bit at block 20
+Image is white/blue/gray. With little black face/arm on left side
+30 blocks stop at 1003",Beto-13042021-002,210413_Beto_generate_BigGAN,19,NaN,3,N:\Stimuli\2020-BigGAN\2021-04-13-Beto-01\2021-04-13-09-48-15
+5,BigGAN_FC6,NaN,,"CH 29 hash (0,0) 3 degrees. Cmaes fc6.
+Start at 1050. Block 10, looks to be climbing! Sounds visually responsive!
+31 blocks complete stop at 1105. Climbed!!",Beto-27042021-002,210427_Beto_generate_BigGAN(1),29,NaN,3,N:\Stimuli\2020-BigGAN\2021-04-27-Beto-01\2021-04-27-10-49-29
+5,BigGAN_FC6,NaN,,"CH 12 (0,-2) hash, 3 degrees. Cmaes fc6. Start at 1106.
+6 blocks in, not looking great. 12 blocks stop, nothing. 1112. DID NOT CLIMB",Beto-27042021-003,210427_Beto_generate_BigGAN(2),12,NaN,3,N:\Stimuli\2020-BigGAN\2021-04-27-Beto-02\2021-04-27-11-05-57
+5,BigGAN_FC6,NaN,,"Ch 9 (0,0) 4 degrees. Hash. Start at 1114. Nope, 10 blocks, not looking promising
+Stop after 13 blocks, 1122, not successful",Beto-27042021-004,210427_Beto_generate_BigGAN(3),9,NaN,4,N:\Stimuli\2020-BigGAN\2021-04-27-Beto-03\2021-04-27-11-14-37
+5,BigGAN_FC6,NaN,,"Ch 25(0,0) 4 degrees. Hash. Cmaes fc6. Start at 1123. 15 blocks stop at 1132. Nothing. DID NOT CLIMB",Beto-27042021-005,210427_Beto_generate_BigGAN(4),25,NaN,4,N:\Stimuli\2020-BigGAN\2021-04-27-Beto-04\2021-04-27-11-23-11
+1,FC6Evol_Decomp;BigGAN_FC6,NaN,,"002 Evol BigGAN
+2   [0.6  -1.8]   4  1  'CMAES_Hessian'  FC6
+2   [0.6  -1.8]   4  1  'CMAES'  BigGAN
+SU 1/5 beautiful
+SU 1/5  high quality SU!
+FC6 greeat evolution ! 3 spk/sec -> 17spk/sec -> 21 spk/sec
+BigGAN stay put.
+Indeed for this V4 unit, the FC6 evolved from the start BigAN didn t response
+BigGAN evolved a bit but not as strong as FC6
+F**K BigGAN caught up at around 13 gens.
+FC6 ~ 24 spk/sce 
+BigGAN ~ 15 spk/sec
+OK now they crossed their path.
+Wow.... crazy evolution!
+Wow BigGAN surpass FC6 around gen 24
+Both stays around 31 spk/sec at the end.
+Baseline and response to control are both super low!
+IT SEEMS LIKE THE CHOKER or NECK part of the face.
+Monkey performance is super high.
+38mins, 40 blocks for 2 threads super efficient! Great job beto!",Beto-20122021-002,211220_Beto_generate_BigGAN,2,1,4,N:\Stimuli\2021-EvolDecomp\2021-12-20-Beto-01\2021-12-20-12-50-36
+2,FC6Evol_Decomp;BigGAN_FC6,NaN,,"002  Evolution BigGAN
+Channel 12 BigGAN vs FC6
+SU2/5
+12  [2.6  -2.0]  4  1 FC6 CMAES_Hessian
+12  [2.6  -2.0]  4  1 BigGAN (full space) CMAES
+Good separation sparse signal good for evolution!
+Dissimilar to channel 2 the BigGAN did well first
+Monkey is doing fantastic job. Starting from
+5->11->
+FC6 shoot up!
+BigGAN shoot up around 14 gens. ?????????
+Both shoot up around 15 gens, go far beyond the natural reference. ????????
+Wow both stay really high but one has a disk one has the curves.
+Both are around 25, really on par with each other.
+Both stuck around 25 quite stable. But still not so much similarity is found. In the evolved images.
+OK at this final stage, BigGAN > FC6, BigGAN around 33, FC6 around 25
+BigGAN keep going up! WOW....rrr
+5->5
+Interestingly, FC6 fall down the hill but BigGAN stayes herye.
+38.5 mins, 45 blocks for 2 threads pretty efficient!
+Completed",Beto-22122021-002,211222_Beto_generate_BigGAN,12,1,4,N:\Stimuli\2021-EvolDecomp\2021-12-22-Beto-01\2021-12-22-12-42-36
+4,FC6Evol_Decomp;BigGAN_FC6,NaN,,"003 Evol BigGAN
+64  [0  0]  3  1  FC6   CMAHess
+64  [0  0]  3  1  BigGAN   CMA
+Fixed the reference image problem 
+BigGAN definitely evolved. 160->220 very stable.
+BigGAN rise dramatically ->260 at gen 8 and 9
+FC6 evolved too at around 15. The two threads meet each other at 17 blocks ~ 200
+Dog face vs ?
+FC6 evolved but not ….as high...
+Getting closer around gen 22.
+The PSTH were nearly indistinguishable around gen 23! Really matched each other. ~ 250
+Great experiment!
+Super cool evolution traces.
+WTF, FC6 exceeds BigGAN at around 30gens …. crazy!
+I feel it's the nose of the animal.
+Why Beto Keeps pumping out great data (while losing weight)
+The final PSTHs are really similar to each other.
+2.5 
+0.5 
+005 
+0.1 
+0.2 
+025 
+SUPER efficient 28min 40 blocks.
+Mean activation are indistinguishable,
+266.43 vs 261.480
+complete",Beto-04012022-003,220104_Beto_generate_BigGAN,64,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-04-Beto-01\2022-01-04-12-50-04
+4,FC6Evol_Decomp;BigGAN_FC6,NaN,,"002 Evol BigGAN FC6
+42  [0.5  0.0]   3   1   FC6
+42  [0.5  0.0]   3   1   BigGAN
+MU 4/5, clear PSTH should be easy to evolve.
+once again BigGAN evolved first.
+BigGAN jumped up at gen 10. FC6 is slow...
+So now BigGAN becomes a shwpe In the nowhere.
+FC7 slowly evolved too.
+Actually we can estimate the repitition suppression precisely from the response to natural images.
+And then use it to correct for repitition suppression in the evolved images.
+Both evolved well.
+at gen 23 two threads are quite comparable.
+Monkey is more tired than before. Slept quite a bit.
+jumped up again at gen 27
+wow the two gets really comparable around gen 28
+OK once again FC6 surpass BigGAN at the last stage.
+Alternate and comparable at last stage.
+0.682
+44mins 46 blocks",Beto-05012022-002,220105_Beto_generate_BigGAN,42,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-05-Beto-01\2022-01-05-12-21-35
+5,FC6Evol_Decomp;BigGAN_FC6,NaN,,"002  Generate BigGAN FC6
+55  [1.3  -0.4]  4  1  FC6 
+55  [1.3  -0.4]  4  1   BigGAN CMA
+55 has weaker signal, flucturating
+55 MU 5/5 very hashy
+As expected from history record, this evolution is not very good..... risky risky....
+It evolved a little bit.... small effect size.
+I feel it's possible for biggan to jump
+today evolu is harder monkey sleep a lot/
+FC6 Jumped up and matched at 27
+Generally this is super flat... not much to be doen
+WOW get on par at gen 30 FC6 40->64
+FC6 stays around 60
+Very much on par in the end!",Beto-07012022-002,220107_Beto_generate_BigGAN,55,1,4,N:\Stimuli\2021-EvolDecomp\2022-01-07-Beto-01\2022-01-07-12-33-37
+5,FC6Evol_Decomp;BigGAN_FC6,NaN,,"003 Evolution
+13   [1.3  -1.0]  3  1 'CMAES_Hessian'
+13   [1.3  -1.0]  3  1 'CMAES'
+MU5/5
+Note this cell gabor and pasu response is comparable to BigGAN and FC6
+Probably simple cell!
+this guy evolved but saturated quite fast.... And BigGAN and FC6 are quite comparable.
+Not this cell has an obvious OFF response!
+Scores are actually dropping....
+How much can we learn from these fluctuations ?
+Keep fluctuating.... not good
+Keep goinf up and down in a small range....
+Good to see its nat image validation.
+firing rate keeps dropping.
+Technically this evolution succeed, but it didn't increase a lo.t r
+finally BigGAN 90->104
+FC6 85->88
+15 
+20 
+25 
+30 
+35 
+40 
+45 
+0.2 
+0.05 
+0.15 
+0.2 
+025 
+OK it's my fault, the image shall be larger like [2.3 -1.0]  4",Beto-10012022-003,220110_Beto_generate_BigGAN(1),1,13,3,N:\Stimuli\2021-EvolDecomp\2022-01-10-Beto-02\2022-01-10-14-16-06
+5,FC6Evol_Decomp;BigGAN_FC6,NaN,,"002 Evolution BiaGAN
+7   [2.1  -1.0]  4  1
+7   [2.1  -1.0]  4  1
+7   MU 5/5
+Really flat experiments.
+Fluctuate between 200 and 250
+Going up and down up and down .
+not consistent....
+could also see how it respond to natural images.
+natural and statistics
+Textury stuff.... not a fixed form.
+The psth looks super stable..... I bet there is not much variability in natural image selectivity too.
+Finally evolved a bit around gen 35
+I think it just likes textury busy stuff.
+Even so it's not quite stable.
+However the two thread seems to converge....
+to a center part with small objects.
+It once spikes up to 280 and then back to 250 ….
+Basically it's like a curved surface....?S",Beto-12012022-002,220112_Beto_generate_BigGAN,7,1,4,N:\Stimuli\2021-EvolDecomp\2022-01-12-Beto-01\2022-01-12-12-05-00
+1,FC6Evol_Decomp;BigGAN_FC6,NaN,,"002 Evolution BigGAN in V1 …
+22 [0  -0.4]  3  1  FC6
+BigGAN
+SU 1/5
+The signal is super clean and sparse
+FC6 is trying to go up and down.....
+We think this is not its maximum, it's too sparse. It has to succeed somehow.
+OK FC6 starts to run.
+Gen 13 both get on par kind of.
+BigGAN FC6 both stays up!
+FC6 is definietly going up BigGAN is not.
+2sp/sec -> 7 sp/sec
+FC6 finally get on the right track
+he slept again.
+Monkey slept again.
+BigGAN up and down very unstable. FC6 is ine converge around 10 sp/sec
+Actually biggan is not bad interms of max value, but bad with its mean.
+It has large dispersal.
+47 min 45 blocks for 2 threads not bad!
+Evolution Trajectory prefchan 22, 3.0 deg pos [0.0 -0.4], thread 1 
+20 
+15",Beto-14012022-002,220114_Beto_generate_BigGAN,22,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-14-Beto-01\2022-01-14-12-55-52
+4.5,FC6Evol_Decomp;BigGAN_FC6,NaN,,"002  BigGAN FC6 evolution
+47    [0.0  0.0]  3   1  'CMAES_Hessian'
+47    [0.0  0.0]  3   1  'CMAES'
+Hash 4.5 /5 2nd unit doesn’t have good rf but 1st unit have it
+Good PSTH! Promising.
+Debugging eye signal for a while
+definitely evolving 30->55, 30->45. for another.
+F**K FC6 doing great ->65.
+FC6 converge around 60~65
+BigGAN no luck...
+45 mins 43 blocks not too bad",Beto-26012022-002,220126_Beto_generate_BigGAN,47,1,3,N:\Stimuli\2021-EvolDecomp\2022-01-26-Beto-01\2022-01-26-13-17-44
+5,FC6Evol_Decomp;BigGAN_FC6,NaN,,"002 BigGAN FC6
+Chan 59 [0.6  0.1]  1  4 deg
+MU 5/5
+Super noisy cell but has a good RF
+BigGAN is evolving.
+Both evolved. BigGAN starts higher! FC6 also climbed
+BG 90-> 120
+FC6 78->88
+Doggies are definitely evolving.
+the gap narrowed at gen 22
+FC6 is marginally above baseline
+FC6 jumped to 100 at one moment.",Beto-14022022-002,220214_Beto_generate_BigGAN,59,1,4,N:\Stimuli\2021-EvolDecomp\2022-02-14-Beto-01\2022-02-14-13-20-24
+4,BigGAN_FC6,NaN,,"002 Generate BigGAN FC6
+47 [0,0 ] 3.5 unit s1sss
+The BigGAN FC6 match is good!
+MU 4/5
+30->56/60 consistently.
+Completed",Beto-06052022-002,220506_Beto_generate_BigGAN,47,1,3.5,N:\Stimuli\2020-BigGAN\2022-05-06-Beto-01\2022-05-06-13-36-52
+4,BigGAN_FC6,NaN,,"002  Evolution
+MU4/5
+12  1  [2.0  -1.7]    4 
+FC6 
+BigGAN 
+BigGAN evolved 4-> 8 spk . Sec in gen 12.
+Some rounded thing emereges.
+Neuron seems to like the rounded stuff quite much.
+bigGAN shoot up to 14 spk /sec
+the two threads get on par 10 spk/sec T GEN 34.
+Greenish ball spherical entity.
+This is one of those cells that are sparse and noisy
+BigGAN 14 spk /sec
+FC6  ~ 7-8 spk /sec
+50 
+50 
+50 
+gz•o 
+54 blocks 2 threads 37 mins very efficient",Beto-16052022-002,220516_Beto_generate_BigGAN,12,1,4,N:\Stimuli\2021-EvolDecomp\2022-05-16-Beto-01\2022-05-16-14-44-05
+5,BigGAN_FC6,NaN,,"002 BigGAN FC6 Evolution
+chan 38 [0  0 ]  5 deg unit 1
+This channel doesn't have a reliable receptive field. But it has pretty significant modulation by the Natural imageds
+The peak images are faces and bodies of animals.
+The peak firing rate could be around 200.
+So we assume it should be evolvable.
+Indeed BigGAN evolved a bit.
+Both threads evolve to 73~ 80
+raised above the baseline but still not too high.",Beto-24052022-002,220524_Beto_generate_BigGAN,38,1,5,N:\Stimuli\2021-EvolDecomp\2022-05-24-Beto-01\2022-05-24-15-13-01
+5,BigGAN_FC6,NaN,,"002 BigGAN FC6 evol
+[1.3  -1.2]  1 4
+MU 5/5
+150 -> 220 / 240.",Beto-31052022-002,220531_Beto_generate_BigGAN,8,1,4,N:\Stimuli\2021-EvolDecomp\2022-05-31-Beto-01\2022-05-31-13-26-33
+5,BigGAN_FC6,NaN,,"003 Generate BigGAN
+64  MU5/5
+[0  0]  5 deg rc
+FC6   CMAES Hessian
+BigGAN  CMAES
+Both threads pretty successful.
+from 70/60 -> 136, both converge to pretty good and comparable results.
+Just the firing rate differs.
+56 blocks
+Really good experiments!",Beto-07062022-003,220607_Beto_generate_BigGAN,64,1,5,N:\Stimuli\2021-EvolDecomp\2022-06-07-Beto-01\2022-06-07-13-29-46
+NaN,BigGAN_FC6_sep,0,,"Generate integrated start at 951.
+CH 12 (0, -0.5) 3 1 CMAES. Hash. It had great rf.
+Sounds visually responsive, lets hope it climbs.
+Block 10, climbing, image is black curve/ball.
+Possibly peak at 25 blocks. Still going up
+White background black ball on leftside, face/monkey furry on right.
+35 blocks complete stop at 1104. Complete
+Entered into Project_BigGan",Alfa-21072020-002,200721_Alfa_generate_integrated(1),12,1,3,N:\Stimuli\2020-Evolutions\2020-07-21-Alfa-01\2020-07-21-09-51-23
+NaN,BigGAN_FC6_sep,0,,"Same thing, but with Big gan
+Generate big gan start at 1006.
+CH 12 (0, -0.5) 3 1 CMAES. Hash.
+Starting off with some cute/weird dogs.
+Climbing at block 13, image is still a weird furry creature. 36 blocks complete. Stop at 1018.
+Image was always a fuzzy animal. Checked in betos rig, changed settings to match his, we are trying again with new gan settings in code. Complete
+Entered into Project_BigGan",Alfa-21072020-003,200721_Alfa_generate_BigGAN(2),12,1,3,N:\Stimuli\2020-BigGAN\2020-07-21-Alfa-01\2020-07-21-10-06-15
+NaN,BigGAN,NaN,,"Generate big gan start at 1019.
+CH 12 (0, -0.5) 3 1 CMAES. Hash.
+Now its just monkeys. Well now we know that works. 15 blocks complete stop at 1023. Complete
+Entered into Project_BigGan",Alfa-21072020-004,200721_Alfa_generate_BigGAN(3),12,1,3,N:\Stimuli\2020-BigGAN\2020-07-21-Alfa-02\2020-07-21-10-19-14
+NaN,BigGAN,NaN,,"Same thing, but with Big gan
+Generate big gan start at 1029.
+CH 12 (0, -0.5) 3 1 CMAES. Hash.
+Okay it did not start as dogs this time? Maybe I had a dog class picked without knowing it? I hope the generate is reliable. Block 10, it is climbing, black object. 43 block com at 1040. Complete
+Entered into Project_BigGan
+Generate int. Start at 1043.
+Ch 29 (0, 0) 3 SU 2/5. Had great rf. Nothing didn’t go anywhere stop at 1048.  didn’t save.",Alfa-21072020-005,200721_Alfa_generate_BigGAN(4),12,1,3,N:\Stimuli\2020-BigGAN\2020-07-21-Alfa-03\2020-07-21-10-28-52
+1,BigGAN_FC6_sep,NaN,,"Gi start at 1051.
+Ch 1 (-4, -2.5) 4 1  SU 1/5. Very pretty unit. CMAES
+It has got to climb. Sounds VR. Added 100 ml juice.
+Climbing at block 16!! Making a red/brown ball. Starting to be testy, well get it. 26 com at 1106. Complete
+Entered into Project_BigGan",Alfa-21072020-007,200721_Alfa_generate_integrated(3),1,1,4,N:\Stimuli\2020-Evolutions\2020-07-21-Alfa-02\2020-07-21-10-51-34
+1,BigGAN_FC6_sep,NaN,,"Big gan start at 1108.
+Ch 1 (-4, -2.5) 4 1  SU 1/5. BigGan
+Blasting him. Block 14 possibly climbing. Making dog/bird/ferret things. 26 com stop at 1124. Complete
+Entered into Project_BigGan
+7/22/20. Updated big gan code to allow for multiple threads at once.
+Do fc6 and biggan class 1128 0.7",Alfa-21072020-008,200721_Alfa_generate_BigGAN(5),1,1,4,N:\Stimuli\2020-BigGAN\2020-07-21-Alfa-04\2020-07-21-11-08-33
+NaN,BigGAN_FC6,NaN,,"Generate big Gan. Ch 6 (0, -3.5) 3 1 CMAES for fc6 and biggan class. Ugh hes not wanting to fixate. Added juice.. CH 6 SU 1/5. Hes only had 75 ml so far. Upped him to 200 plus aq rew. 5 blocks in 22 min.... geez, he got to the juice and now he is doing okay. 10 blocks stop at 1103. Complete, may not keep",Alfa-22072020-002,200722_Alfa_generate_BigGAN(3),6,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-22-Alfa-01\2020-07-22-10-30-01
+NaN,BigGAN_FC6,NaN,,"Ch 16 (0,0) 3 1, CMAES and bigGan class . Start at 1105. I am trying one with rf in center and see if that helps his work ethic. Stop at 1121. Complete, may not keep
+7/22/20. Alfa did not work great today. Not fixating, did not want to work. He got 200 mL total over 1 hour. After return to cage, we discovered he pooped in his chair.... could be the culprit
+7/23/20, chlorhexidine. In rig at 1015. 3, 5, 6, 7,",Alfa-22072020-003,200722_Alfa_generate_BigGAN(4),16,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-22-Alfa-02\2020-07-22-11-05-32
+NaN,BigGAN_FC6,NaN,,"Generate big Gan start at 1033.
+CH 3 (0, -3) 3 1 CMAES. Fc6 and BigGan class. CH 3 MU 1/5
+Block 5, biggan is climbing quick!!
+Psth from black lines are looking good, its got to climb!
+Looks like both are climbing at 25. Looks like they peaked around 25 blocks. 36 blocks stop at 1102.  complete",Alfa-23072020-002,200723_Alfa_generate_BigGAN(2),3,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-23-Alfa-01\2020-07-23-10-33-01
+NaN,BigGAN_FC6,NaN,,"CH 6 (-0.3, -3.3) 3 1 CMAES fc6 and bigGan. 
+CH 6 hash, rf looked good. Omg, possible SU in 6. I will try after this.
+At block 12, gan has really climbed, fc6 not so much...both going up at 16.
+27 blocks stop at 1130
+complete",Alfa-23072020-003,200723_Alfa_generate_BigGAN(3),6,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-23-Alfa-02\2020-07-23-11-06-08
+2,BigGAN_FC6,NaN,,"Gen bigGan start at 1136.
+CH 6 (0, -3) 3 1 CMAES fc6 and bigGan class. SU 2/5 this time.
+ Added 50 mL juice. 20 blocks com stop at 1205.
+complete",Alfa-23072020-005,200723_Alfa_generate_BigGAN(4),6,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-23-Alfa-02b\2020-07-23-11-36-31
+NaN,BigGAN_FC6,NaN,,"CH 28 (-2, -2.5) 4 1 cmaes fc6 and bigGan class.
+Start at 947. Hes working well today. Good job alfaman. Looks like biggan is climbing. Big gan still climbing 15. Biggan shot up at 28. Fc6 still nothing. 37 blocks com. Stop at 1012. Biggan climbed, fc6 did not. Image was very simple white background with one object. Complete",Alfa-27072020-002,200727_Alfa_generate_BigGAN(1),28,NaN,4,N:\Stimuli\2020-BigGAN\2020-07-27-Alfa-01\2020-07-27-09-47-40
+NaN,BigGAN_FC6,NaN,,"CH 2 (-2, -3.5) 3 1 cmaes. Fc6 and bigGan. Start at 10:18.
+BigGan maybe climbing at 19. Biggn is making a black furry ball. 32 blocks complete. Biggan climbed a tiny bit, fc6 was close, but did not climb. Complete
+Moved to project validate>>>>",Alfa-27072020-003,200727_Alfa_generate_BigGAN(2),2,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-27-Alfa-02\2020-07-27-10-18-57
+2,BigGAN_FC6,NaN,,"Biggan start at. 1056
+CH 27 (-0.2, -0.2) 3 1 CMAES fc6 vs BigGan. SU 2/5. Very active unit, sounds vr.
+15 blocks, both are climbing slightly. Hes working well. 20 blocks, both still climbing slightly. It also likes natural images too. Looks done at block 33. 1126. Both climbed, just not much. Biggan made dog on left side, f6c was kinda busy.  Complete",Alfa-28072020-002,200728_Alfa_generate_BigGAN(1),27,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-28-Alfa-01\2020-07-28-10-56-05
+NaN,BigGAN_FC6,NaN,,"Generate bigGan start at 1157. Fc6 and BigGan.
+Ch 9  (–2.2, -2.2) 4 1 CMAES. Hash, rf looked good.
+Replaced 150 ml water for juice. Block 10, bigGan is climbing, fc6 not yet. But the 2 evolutions do look similar, both gray blobby so far. 18 blocks, bigGan doing well, fc6 still nothing....... hes almost done, blasting him. 21 at 1233. Fc6 stayed flat(may have climbed a tiny bit) GinGan climbed.  Complete",Alfa-28072020-004,200728_Alfa_generate_BigGAN(2),9,NaN,4,N:\Stimuli\2020-BigGAN\2020-07-28-Alfa-02\2020-07-28-11-57-40
+NaN,BigGAN_FC6,NaN,,"003 starts 15:18
+Same setting as 002
+32  [-4 -4]  4  1  'CMAES'  'fc6'
+32  [-4 -4]  4  1  'CMAES'  'BigGAN_class'   0.7 * truncnorm
+BigGAN is doing great, climb like crazy since gen 8
+GC6 GAN Climbs as well.
+both are successful.
+Both are pretty successful.
+FC6 GAN is still climbing ~ 20-25 But I still cannot see a clear shape there.
+BigGAN Stuck in the middle for a while.
+2 threads begin to converge again.
+So CMA is definitely struggling. BigGAN thread is oscilating....One gen good one gen bad, Seems to me like an overshoot problem.
+29 min.
+So BigGAN CMA is finding something but not stable.
+Completed",Alfa-29072020-003,200729_Alfa_generate_BigGAN(2),32,NaN,4,N:\Stimuli\2020-BigGAN\2020-07-29-Alfa-01\2020-07-29-15-19-16
+NaN,BigGAN,NaN,,"004 starts 15:52
+BigGAN class space  New optimizer CMAES-Hessian
+32  [-4 -4]  4  1  'CMAES_Hessian'
+Pilot test
+Start climbing around gen 6.
+Late activity is recruited largely.
+CMAES grows slowly. But in a steady pace.
+Finally match FC6 generation from last",Alfa-29072020-004,200729_Alfa_generate_BigGAN(3),32,NaN,4,N:\Stimuli\2020-BigGAN\2020-07-29-Alfa-02\2020-07-29-15-54-57
+NaN,BigGAN_FC6,NaN,,"Gen biggan start at 1051.
+Ch 7  hash. (-0.5, -0.5) 3 1 CMAES fc6 and BigGan class.
+ Block 8, biggan climbing, fc6 not yet....both climbing at 12 blocks!!!
+Wahooo both climbing still at 21. Monkey not working. Ugh, might be last exp. Fc6 totally making grape in lower left corner. Biggan making dog? 224 blocks complete stop at 1139. Both climbed but fc6 was more successful",Alfa-30072020-005,200730_Alfa_generate_BigGAN,7,NaN,3,N:\Stimuli\2020-BigGAN\2020-07-30-Alfa-01\2020-07-30-10-51-34
+NaN,BigGAN_Hessian,1,,"Gen bigGan fc6 vs BigGan class. start at 954. 
+CH 22 SU 2/5. (0, -2.5) 3 1 CMAES for both. They are both climbing slightly. 30 blocks complete stop at 1021. SUcsessful!!!  ",Alfa-04082020-002,200804_Alfa_generate_BigGAN,22,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-04-Alfa-01\2020-08-04-09-54-25
+NaN,BigGAN_FC6,NaN,,"Gen bigGan fc6 vs BigGan class. start at 1054. 
+CH 14 SU hash. (0, -2.5) 3 1 CMAES for both. Stop at 1121. 18 blocks.",Alfa-04082020-004,200804_Alfa_generate_BigGAN(1),14,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-04-Alfa-02\2020-08-04-10-54-57
+NaN,BigGAN_Hessian,2,,"Generate biggan start at 1018. Fc6 vs BigGan class, both with cmaes optimizer 
+CH 6 (-0.3, -3) 3 1  cmaes. Hash.  
+At block 21, not climbing ….. gan climbed a little but not steady, more up and down. Biggan is making a grape/applelooking object, fc6 not doing much. Stop 29 blocks com at 1048 
+I tried doing hessian selectivity with this, it was working earlier..... now its not? It said not enough memory, I ran the pytorchcuda command in matlab and it still telling me  not enough memory error? Idk.  
+Binxu: Yeah not enough memory is a common issue in these experiments. Usually if we restart the python kernel / session in Spyder memory will be released.  
+Generate biggan start at 1103. Fc6 vs BigGan class, both with cmaes optimizer 
+CH 29 (0.5, -2.5) 3 1  cmaes. SU 2/5, stop at 14 blocks, nothing. Did not save ",Alfa-06082020-002,200806_Alfa_generate_BigGAN,6,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-06-Alfa-01\2020-08-06-10-18-55
+NaN,BigGAN_FC6,NaN,,"Generate biggan start at 1142. Fc6 vs BigGan class, both with cmaes optimizer 
+CH 15 (0, 0) 3 1  cmaes. Hash.  
+Both climbing. 22 block stop at 1205 ",Alfa-06082020-005,200806_Alfa_generate_BigGAN(2),15,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-06-Alfa-02\2020-08-06-11-41-51
+NaN,BigGAN_FC6,NaN,,"Gen big gan start at 932. 
+CH 6 (0, -2.6) 3 1 CMEAS SU 1/5, sounds great. Very VR 
+Binxu wanted to redo Hes selectivity for this channel but now it is a SU, I am going to evolve and do Hes first. Block 11, looks like gan is climbing, fc6 not yet. Block 18, neither climbing.... looks like fc6 is making something red tho. 26 blocks stop at 954. Neither climbed. :( ",Alfa-10082020-002,200810_Alfa_generate_BigGAN(1),6,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-10-Alfa-01\2020-08-10-09-32-31
+NaN,BigGAN_FC6,NaN,,"Gen big gan start at 1000 
+CH 19 (1, -3) 4 1 CMEAS hash. It’s a quiet channel but sounds visually responsive.  
+Block 12, looks like biggan is climbing. 24 blocks at 1029, both climbed, biggan for sure, fc6 was very slight ",Alfa-10082020-003,200810_Alfa_generate_BigGAN(2),19,NaN,4,N:\Stimuli\2020-BigGAN\2020-08-10-Alfa-02\2020-08-10-09-59-48
+NaN,BigGAN_FC6,NaN,,"Ch 6 evolving to hash (using whole ch, not separated). (-0.3, -3) 3 1 CMAES. Fc6 vs biggan. Start at 1117. Biggan climbing at ch 8. now fc6 is going up too. Ehhh, kinda up and down, not quite a climb at 12. Nothing... neither climbed at 21. Okay, they may have climbed a tiny bit.  
+Selectivity of CH 19s biggan evolution hess images. 
+Ugh python not work, giving us T error?  ",Alfa-10082020-005,200810_Alfa_generate_BigGAN(3),NaN,NaN,NaN,N:\Stimuli\2020-BigGAN\2020-08-10-Alfa-03\2020-08-10-11-16-31
+NaN,BigGAN_Hessian,3,,"CH 29 (0, -2) 4 1 CMAES, fc6 vs BigGan. Start at 9:51. Now that I selected the whole channel, it looks better, SU kinda disappeared. Biggan is taking off at block 6. nothing from fc6 yet. Hmm. Block 9, biggan climbing like crazy, natural images and fc6 are flat. Alfa not working great today. Swapped to juice. 350 total staring amount, hes had 100 so far. Block 16, still nothing form fc6 BUT, when you listen, the channel is more responsive to the gan iamges, you can totally hear it when they flash. 23 blocks at 1023. Only Biggan climbed. 
+Doing python hess code, start at 1024 ",Alfa-12082020-003,200812_Alfa_generate_BigGAN(2),29,NaN,4,N:\Stimuli\2020-BigGAN\2020-08-12-Alfa-01\2020-08-12-09-51-49
+NaN,BigGAN_FC6,NaN,,"002 at 1231 PM 
+29 (0,-2) 4 1 CMAES, for fc6 and big gan 
+starting with low-norm images 
+big gan climbed, not fc6. Interesting. Let's do a single fc6 
+completed ",Alfa-13082020-002,200813_Alfa_generate_BigGAN,29,NaN,4,N:\Stimuli\2020-BigGAN\2020-08-13-Alfa-01\2020-08-13-12-31-20
+NaN,BigGAN_FC6,NaN,,"004 56 (0,0) 3 1 CMAES, 5/5 hash 
+fc6 and biggan 
+Fc6 climbed highly, biggan less 
+completed ",Alfa-13082020-004,200813_Alfa_generate_BigGAN(2),56,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-13-Alfa-03\2020-08-13-13-11-01
+NaN,BigGAN_FC6,NaN,,"005 at 134 PM 
+60 (0,0) 3 1 CMAES fc6 and biggan 5/5 hash 
+upped to 200 ms rew. He's doing well, and I'm ready to take him home... 
+Good evolutions, both climbed 
+completed ",Alfa-13082020-005,200813_Alfa_generate_BigGAN(3),60,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-13-Alfa-04\2020-08-13-13-34-42
+NaN,BigGAN_Hessian,4,,"51 (-1.8, -1.8) 4 1 CMAES fc6 vs BigGan. Start at 954 
+CH 51, SU 1/5, super VR! Both climbing at block 10. Light/white images evolving so far, very simple. Both making white background with gray circle object in center. 30 blocks at 1024. Ran Hess images. completed ",Alfa-14082020-002,200814_Alfa_generate_BigGAN(2),51,NaN,4,N:\Stimuli\2020-BigGAN\2020-08-14-Alfa-01\2020-08-14-09-54-17
+NaN,BigGAN_FC6,NaN,,"63 hash (0, -1) 3 1 CMAES fc6 vs biggan. Start at 1106. 
+With the juice he is working much better.  fc6 climbing, not BG. 20 blocks at 1130. completed ",Alfa-14082020-004,200814_Alfa_generate_BigGAN(3),63,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-14-Alfa-02\2020-08-14-11-06-59
+NaN,BigGAN_FC6,NaN,,"Gen biggan start at 959 
+CH 58 (0, -2) 4 1 CMAES. Hash. Fc6 vs bigGAN class 
+Sounds very VR, psth looks good too. Both look like they are starting to climb at block 13. Both kinda gray ish images so far.  
+Block 17, still climbing, both gray images with black center. Fc6 is winning by a little. 27 blocks comp. Stop at 1021. Both climbed, just not much because they started out so high to begin with. Images not sure interesting though, going to try another. Completed 
+Entered into project biggan ",Alfa-19082020-002,200819_Alfa_generate_BigGAN(1),58,NaN,4,N:\Stimuli\2020-BigGAN\2020-08-19-Alfa-01\2020-08-19-09-59-21
+NaN,BigGAN_FC6,NaN,,"Generate bigGAN start at 1025.  
+CH 55 (-1, -2.2) 4 1 CMAES fc6 vs bigGAN. 
+Block 6 fc6 is really taking off. Block 12, fc6 still climbing, biggan is climbing but not as high. 32 blocks com. Stop at 1057. completed 
+Entered into project biggan ",Alfa-19082020-003,200819_Alfa_generate_BigGAN(2),55,NaN,4,N:\Stimuli\2020-BigGAN\2020-08-19-Alfa-02\2020-08-19-10-25-54
+NaN,BigGAN_FC6,NaN,,"CH 50 (0, -5.5) SU 1/5. Great SU, just very far rf.  
+Generate bigGAN start at 1124. Last one for the day. Hes had 250 mL already. Ugh he has given up, stop 14 blocks at 1149. Completed, may not keep, only 14 blocks 
+Entered into project biggan ",Alfa-19082020-006,200819_Alfa_generate_BigGAN(5),50,NaN,NaN,N:\Stimuli\2020-BigGAN\2020-08-19-Alfa-03\2020-08-19-11-24-20
+NaN,BigGAN_FC6,NaN,,"Previous experiments from today are in Searh task.  
+Gen BigGAn start at 1020 
+CH 60 (0, -0.5) 3 1 CMAES hash. Fc6 v bigGAN. 5 blocks in, nothing yet from BG but fc6 is climbing. 24 blocks, stop at 1041. Fc6 climbesdbut BG never did.  
+Entered into project biggan ",Alfa-25082020-005,200825_Alfa_generate_BigGAN,NaN,NaN,NaN,N:\Stimuli\2020-BigGAN\2020-08-25-Alfa-01\2020-08-25-10-20-44
+NaN,BigGAN_Hessian,NaN,,"Switched to juice. BigGAN start at 1046. CH 59 SU 1/5. (-2.5, -2.5) 3 1 CMAES fc6 vs bigGAN. Fc6 is climbing, biggan is trying to at block 15. Both climbing!! 24 blocks at 1110. Both climbed! Biggan made a person, but it hink it just liked the black line , fc6 made similar 
+Entered into project biggan ",Alfa-25082020-006,200825_Alfa_generate_BigGAN(1),59,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-25-Alfa-02\2020-08-25-10-46-06
+NaN,BigGAN_Hessian,NaN,,"CH 7 (-1.5, -1.5) 3 1 CMAES hash 1/5. Fc6 vs bigGAN.  
+Start at 941. Sounds good so far. Psth look nice. Biggan started off high. Fc6 psth is spiking highest, its going to climb. Both jumped up at block 13. Fc6 is white background with red/pink grape/eye looking ball in center. 30 blocks at 1009. Completed 
+Entered into project biggan ",Alfa-27082020-002,200827_Alfa_generate_BigGAN(1),7,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-27-Alfa-01\2020-08-27-09-41-28
+NaN,BigGAN_FC6,NaN,,"52 (0,0) 3 1 CMAES. Hash. Fc6 vs bigGAN start at 1050Might be the last exp. he is slowing down. Been working for 1.5 hours. Blasting him. Stop at 1109. Only 13 blocks. May not keep.  ",Alfa-27082020-004,200827_Alfa_generate_BigGAN(2),52,NaN,3,N:\Stimuli\2020-BigGAN\2020-08-27-Alfa-02\2020-08-27-10-50-27
+NaN,BigGAN_FC6,NaN,,"Biggan start at 10:15. CH 3 hash (-1.5, -1.5) 3 1 CMAES fc6 vs BigGAN. We have done this one in the past but did not do Hess sel so I am retrying. Biggan started off high, Block 14: staying high but not climbing much yet. Fc6 is trying but nothing yet. Its starting to sound more VR as we go, I hope it climbs. 25 blocks stop 1040. Neither climbed 🙁 Completed ",Alfa-01092020-002,200901_Alfa_generate_BigGAN(1),3,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-01-Alfa-01\2020-09-01-10-15-53
+NaN,BigGAN_Hessian,NaN,,"BigGAN start at 1042. CH 52 (0, 0) 3 1 CMAES . Hash. This one sounds great. Very VR. Psth looks nice as well. Fc6 started higher and higher peak psth than biggan. Both are climbing at block 6. block 11: fc6 is really climbing. Big gan is too, just not as much, making a colorful bird. Hard to say but fc6 image is colorful with white border. 25 blocks complete. Both climbed. Stop at 1104.  
+Completed 
+entered into project_biggan ",Alfa-01092020-003,200901_Alfa_generate_BigGAN(2),52,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-01-Alfa-02\2020-09-01-10-42-42
+NaN,BigGAN_FC6,NaN,,"Biggan. CH 50  SU 1/5. (0, -5) 3 1 CMAES fc6 vs BigGAN. Start at 953. Great SU, he is tolerating the low rf so far. The unit really likes it, sounds VR. Block 11, fc6 is climbing steady from the start. Nothing from biggan yet. Fc6 is still climbing at 22. Biggan is flat, trying to make very simple image. 26 blocks stop at 1013. Fc6 climbed bigGAN did not . Completed 
+Entered into Biggan ",Alfa-02092020-002,200902_Alfa_generate_BigGAN(1),50,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-02-Alfa-01\2020-09-02-09-54-51
+NaN,BigGAN_Hessian,NaN,,"BigGAN CH 64 (0, -1) 3 1 CMAES fc6 vs biggan. Start at 1017. Hash 2/5. Great, very VR. Both biggan and fc6 started out high, they have higher psth than natural images as well. Block 9, both still climbing. Biggan image is bark brown background with white line in center. Fc6 also has white line in center, with pinkish in lower left corner. Biggan really isnt climbing much, it just started out so high and staying high. Almost done, we can do hess sel with this one. 26 blocks at 1034. Completed 
+Entered into biggan ",Alfa-02092020-003,200902_Alfa_generate_BigGAN(2),64,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-02-Alfa-02\2020-09-02-10-17-21
+NaN,BigGAN_Hessian,NaN,,"Gen bigGAN CH 49 (0, 0) 3 1 CMAES fc6 vs biggan stat at 11:00. Hash. 
+Block 5, both fc6 and BG started out high and psth are higher than natural images. Fc6 is climbing, BG not yet. Block 15, fc6 climbing, BG is slight climb. Added 100 ml juice. 25 blocks at 1121. Completed 
+Entered into biggan ",Alfa-02092020-005,200902_Alfa_generate_BigGAN(3),49,1,3,N:\Stimuli\2020-BigGAN\2020-09-02-Alfa-03\2020-09-02-10-59-57
+NaN,BigGAN_FC6,NaN,,"CH 25 (2.5, -2.5) 4 1 . SU 1/5. CMAES fc6 vs bigGAN start at 1206. Block 12. Nothing yet. 25 blocks complete stop at 1234. Neither climbed. Fc6 image is interesting now that I look at it after the fact, may be worth looking at.  complete.  ",Alfa-04092020-003,200904_Alfa_generate_BigGAN(2),25,NaN,4,N:\Stimuli\2020-BigGAN\2020-09-04-Alfa-01\2020-09-04-12-06-08
+NaN,BigGAN_Hessian,NaN,,"CH 57 (0,0) 3 1 hash(1/5). Generate bigGAN fc6 vs BG. Start at 10:11. Sounds VR. So far so good, both evolved image psth are spiking high. Hes working well too. Block 6, both look to be climbing! Fc6 is steady climb, BG up and down. Bloc 14, BGmaking black square object. 25 blocks complete at 1028. Both climbed, fc6 a lot, BG very slight but it did start off high. complete.  ",Alfa-08092020-002,200908_Alfa_generate_BigGAN(1),57,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-08-Alfa-01\2020-09-08-10-11-27
+NaN,BigGAN_FC6,NaN,,"CH 21 (0, -2.3) 3 1 hash 1/5. Start at 1031. Fc6 vs BG.  
+Giving this one a try, if it fails i will do sel with 57. Sounds fairly VR. Psth doesn’t look that great. Block 9, still not climbing. Bg popped up at 13, maybe it will climb, nope, back down 🙁. Nothing,neither climbed. 19 blocks stop at 1045. complete.  ",Alfa-08092020-003,200908_Alfa_generate_BigGAN(2),21,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-08-Alfa-02\2020-09-08-10-31-42
+NaN,BigGAN_FC6,NaN,,"CH 62 (0, 0) 3 1 CMAES. Hash (1/5) start at 1110. 
+GBGvs fc6. Last one for the day, have meeting at 1230. Starting off looking great. Both climbing at 10. 20 blocks complete stop at 1130. complete.  
+entered into project biggan ",Alfa-08092020-005,200908_Alfa_generate_BigGAN(3),62,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-08-Alfa-03\2020-09-08-11-10-09
+NaN,BigGAN_Hessian,NaN,,"CH 32 (-3.5, -3.5) 4 1 CMAES. MU 2/5. It is separated out into 2 SU and 1 hash. Looks fairly clean. Start at 946. Fc6 vs BG. Both look like they are on the climb at blcok 10. BG is making dog face. Both still going up at 20. BG still dog/ferret face. Fc6 is up,up,up. BG is up and down, but trending up. Stop at 27 blocks, 1007. Wow, BG is a cat-ish face. complete.  
+entered into project biggan ",Alfa-11092020-002,200911_Alfa_generate_BigGAN,32,1,4,N:\Stimuli\2020-BigGAN\2020-09-11-Alfa-01\2020-09-11-09-46-38
+NaN,BigGAN_Hessian,NaN,,"CH 30. (-2, -2, ) 3 1 Start at 1045. CMAES hash 1/5, quiet but VR, has not been done yet. Fc6 vs BG. BG's psth started off higher than all others. And is peaking high as well. Lets hope it climbs. BG is doing great. Still climbing. Block 13, fc6 maybe climbing too. Stop at 1106, 23 blocks. complete.  
+entered into biggan ",Alfa-11092020-005,200911_Alfa_generate_BigGAN(2),30,1,3,N:\Stimuli\2020-BigGAN\2020-09-11-Alfa-02\2020-09-11-10-45-27
+5,BigGAN_Hessian,NaN,,"Generate BG start at 1005. CH 10 (-0.2, -2.2) 3 1 CMAES. Hash 5/5. Fc6 vd=s BG. Unfortunately this channel has noise from reward....we have not done this ch yet and rf looked good. BG started off high. Block 9, BG psth is peaking high, it looks to be climbing. Nothing from fc6 yet. BG making dog face. Fc6 climbing too. BG climbed early and then was up and down. 25 blocks stop at 1026.  ",Alfa-16092020-002,200916_Alfa_generate_BigGAN(1),10,1,3,N:\Stimuli\2020-BigGAN\2020-09-16-Alfa-01\2020-09-16-10-04-30
+2,BigGAN_Hessian,NaN,,"CH 15 (0,0) 3 1 CMAES. SU 2/5. Generate BG start at 1053. Sounds vr. 23 blocks complete stop at 1118.  ",Alfa-16092020-004,200916_Alfa_generate_BigGAN(2),15,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-16-Alfa-02\2020-09-16-10-53-04
+NaN,BigGAN_FC6,NaN,,"CH 6 (0, -2.7) 3 1 CMAES. SU 1/5. Fc6 vs BG like normal. Start at 934. Sounds very visually responsive. It had a great receptive field. Still nothing at 13.....still nothing at 20. Stopped! 
+For this unit, random BGs are better than refs and than fc6s, but they don't climb necessarily ",Alfa-18092020-002,200918_Alfa_generate_BigGAN(3),6,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-18-Alfa-01\2020-09-18-09-34-18
+NaN,BigGAN_FC6,NaN,,"CH 6 (0, -2.7) 5 1 CMAES. SU 1/5. Fc6 vs BG like normal. Start at 952. 
+PSTH sort of anemic. 
+Initial gen of BGs still better than everything else, but BG not climbing. 
+now it is. About an increase of 10 sp/s for both. 
+Making eyes on dogs (BG) or just eyes surrounded by tan swirls (fc6). Next will repeat using class 
+Baseline has become unstable. Not sure what to believe here... 
+This experimented lasted 18 minutes to do ~33 generations at 66% performance ",Alfa-18092020-003,200918_Alfa_generate_BigGAN(4),6,NaN,5,N:\Stimuli\2020-BigGAN\2020-09-18-Alfa-02\2020-09-18-09-51-51
+1,BigGAN_FC6_CMAHess,NaN,,"004 at 1021 AM 
+repeating above but this time with CMAES_hess 
+for what it's worth, cell is kinda funky so who knows, but it'll be interesting if either generator does better than 10 spikes /s from gen 0, or if BG does better than 30 spikes /s relative to refs. 
+CH 6 (0, -2.7) 5 1 CMAES-Hessian. SU 1/5. Fc6 vs BG. Start a1021.  
+Baseline already starting at 50 sp/s for everything, so comparison to previous experiment will have to be adjusted...block 15; fc6 staying with green lines, but slight climb overall. BG looks like its starting to climb, 10-15 sp/s above green.  
+fc6 not doing so great. Images look a bit more texture-like; fewer bounded contours... 
+Stopped him for a second to swap water for juice. Hes working better now. 33 blocks.  
+33 block. 55% stop at 1058. 36 minutes.  ",Alfa-18092020-004,200918_Alfa_generate_BigGAN(5),6,1,5,N:\Stimuli\2020-BigGAN\2020-09-18-Alfa-03\2020-09-18-10-21-58
+NaN,BigGAN_FC6,NaN,,"Gen BG start at 952. Fc6 vs BG. CH 11 (-2, -1) 3 1 cmaes. Hash 5/5. Pretty quiet channel, rf looked okay and this one has not been done yet. BG started higher than the rest. Its still quiet but responds to pics. Block 16, nothing yet....21 blocks, stop at 1007. Both started and stayed higher than nat images, just didn’t cllimb up. complete ",Alfa-22092020-002,200922_Alfa_generate_BigGAN(1),11,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-22-Alfa-01\2020-09-22-09-52-55
+NaN,BigGAN_FC6,NaN,,"CH 20 (0, -3) 4 1 cmaes. Hash 5/5. Fc6 vs BG. Sounds visually responsive! BG started wayyyy higher than all else. Psth looking good too. At block 20, psth jumped up! Channel got noisey. Baseline jumped up. Something funky. 24 blocks stop at 1028. BG was doing well, staying above everyone else, nothing from fc6. complete ",Alfa-22092020-003,200922_Alfa_generate_BigGAN(2),20,NaN,4,N:\Stimuli\2020-BigGAN\2020-09-22-Alfa-02\2020-09-22-10-09-37
+NaN,BigGAN_FC6,NaN,,"CH 18 (0, -4) 41 cmaes. Hash 5/5. Fc6 vs BG. Sounds visually responsive. Start at 1033. Both might be climbing at 24. BG making tiger face. 25 blocks atop at 1153. BG climbed a bit. Fc6 pretty flat. Complete 
+entered into biggan ",Alfa-22092020-004,200922_Alfa_generate_BigGAN(3),18,NaN,4,N:\Stimuli\2020-BigGAN\2020-09-22-Alfa-03\2020-09-22-10-33-35
+NaN,BigGAN_FC6,NaN,,"CH 61 (0, 0) 3 1 cmaes hash 5/5. Fc6 vs BG. Start at 1057. Sounds very VR! Psth looks good too. Fc6 climbing at block 6. fc6 still going up. BG climbng now at 18. 20 blocks at 1114. Fc6 climbed, BG did not. Complete 
+Entered into Biggan ",Alfa-22092020-005,200922_Alfa_generate_BigGAN(4),61,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-22-Alfa-04\2020-09-22-10-57-28
+NaN,BigGAN_FC6,NaN,,"Last one. CH 54(0, 0) 3 1. cmaes hash 5/5 fc vs BG. Start at 1116. Fc6 climbing at B6. Bg trying, not climbing at 14. BG climbed slightly, fc6 climbed at lot. 22 blocks stop at 1141. Both climbed. Yay. Complete 
+entered into biggan ",Alfa-22092020-006,200922_Alfa_generate_BigGAN(5),54,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-22-Alfa-05\2020-09-22-11-16-22
+NaN,BigGAN_FC6,NaN,,"CH 24 (-1 -3.5) 4 1 cmaes fc6 vs BG. Hash 5/5. Start at 928. Sounds VR. Psth looks okay. BG starts off higher as usual. Still nothing at B11. Nothing. 18 blocks stop at 945. complete ",Alfa-24092020-002,200924_Alfa_generate_BigGAN,24,NaN,4,N:\Stimuli\2020-BigGAN\2020-09-24-Alfa-01\2020-09-24-09-28-54
+NaN,BigGAN_FC6,NaN,,"CH 4 (-2, -2.5) 4 1 cmaes. Fc6 vs BG. Start at 946. BG started out higher. Psth looks okay.... bg climbing at block 9! Both climbed very slightly. 23 blocks stop at 1006. complete ",Alfa-24092020-003,200924_Alfa_generate_BigGAN(1),4,NaN,4,N:\Stimuli\2020-BigGAN\2020-09-24-Alfa-02\2020-09-24-09-46-34
+NaN,BigGAN_FC6,NaN,,"CH 14 (0, -2) 3 1 cmaes fc6 vs bg. Start at 1008. BG is doing well, nothing from fc6. BG making little furry ball. 22 blocks stop at 1033. BG stayed high, nothing form fc6. complete ",Alfa-24092020-004,200924_Alfa_generate_BigGAN(2),14,NaN,3,N:\Stimuli\2020-BigGAN\2020-09-24-Alfa-03\2020-09-24-10-08-59
+1.5,BigGAN_FC6,NaN,,"002 Generate BigGAN started 10:43 
+Chan 6 [0 –2.4] 4 1   FC6  CMA Hessian  
+Chan 6 [0 –2.4] 4 1   BigGAN CMA  
+SU 1/5 
+Highly significant single unit beautiful 
+Starts evolve sth at gen 8.  
+Not quite evolved...may abort some time soon.  
+Interesting.... stil like before, there is increase but not significant. 
+This is definitely not a signal quaility problem, but about tuning.  
+18 mins.  
+Worth a try for StyleGAN? Yes! Here we try. 
+High performance and high snr. But not evolved well for both space.  
+Finished  
+completed ",Alfa-21102020-002,201021_Alfa_generate_BigGAN(1),6,NaN,4,N:\Stimuli\2020-BigGAN\2020-10-21-Alfa-01\2020-10-21-10-43-19
+4,BigGANHessMovie,NaN,,"004   BigGAN (3) starts 11:33 
+Chan 7  [-1.5 -2] 4 1   FC6  CMA Hessian  
+Chan 7  [-1.5 -2] 4 1   BigGAN CMA  
+Hash 4/5 
+Clear up memory. Again takes a long time to load up GANs.  
+This neuron has a sustained activity  
+Wow bigGAN evolved a little bit around gen 14.  
+Esp. the sustained activity evolved around 170-200 ms.  
+Bothe evolved a bit.  
+100-130 ms window starts evolving as well! . This is working!! Yeah consistentlly  
+25 gen still climb a bit!  
+BigGAN and FC6 definitely surpass the natural images? OK back to top!  
+BigGAN (3) 
+Stop 31 gens 19 minscompleted ",Alfa-21102020-004,201021_Alfa_generate_BigGAN(3),7,NaN,4,N:\Stimuli\2020-BigGAN\2020-10-21-Alfa-02\2020-10-21-11-33-57
+5,BigGAN_FC6_Hess,NaN,,"002 Generate BigGAN 11:03 starts 
+16 [-0. -2.0] 4 1  CMA_HESSIAN 
+16 [-0. -2.0] 4 1   CMA  
+FC6  CMA_HESSIAN 
+BigGAN   CMA  
+Hash 5/5 super Hashy... may terminate early.  
+Not going anywhere....No consistent trend in it.  
+Terminated, not evolving...may not use in analysis  
+completed ",Alfa-23102020-002,201023_Alfa_generate_BigGAN(1),16,NaN,4,N:\Stimuli\2020-BigGAN\2020-10-23-Alfa-01\2020-10-23-11-03-52
+NaN,BigGAN_FC6,NaN,,"003   starts 11:45  
+Chan 26  
+FC6  CMAES  [-1.5 1.5] 3 1 
+BigGAN  CMAES    [-1.5 1.5] 3 1 
+SU 1.5 / 5 PSTH looks sparse and great!  
+Load the reference images.  
+Things seems to be going pretty well for this channel!  
+This cell fires a ton of spikes  when the monkey is drinking and when the image is off..  
+But very sparely when he is looking at images. May change for another unit  
+So maybe not evolvable, lets see what else.  
+For this more like a cell property problem than a algorithm problem.  
+Sorry monkey we need to choose another channel  
+Perhaps an eye movment related cell? So when eye is fixed it will not fire... 
+completed ",Alfa-27102020-003,201027_Alfa_generate_BigGAN,26,NaN,3,N:\Stimuli\2020-BigGAN\2020-10-27-Alfa-01\2020-10-27-11-45-41
+NaN,BigGAN_FC6,NaN,,"004 starts 12:08 and 18 mins .  
+Chan 9 
+FC6  CMAES  [-1.3  -2.2] 4 1 
+BigGAN  CMAES    [-1.3  -2.2] 4 1 
+Loading up takes forever! Maybe it's copying and deleting files? 
+Hash 4/5  
+Just like the last time, BigGAN does much better and evoke sustained activity. While FC6 is quite transitent.  
+FC6 improves a little bit and BigGAN improves very little.  
+Gets even worse... So may be adaptaition?  
+So FC6 actually evolves!  and BigGAN figure sth out too ? COOL!  
+Still wandering around...  
+Yellowish background is what it likes? 
+Completed . Fc6 does evolve but not reached BigGAN.   
+completed ",Alfa-27102020-004,201027_Alfa_generate_BigGAN(1),9,NaN,4,N:\Stimuli\2020-BigGAN\2020-10-27-Alfa-02\2020-10-27-12-08-19
+3,BigGAN_FC6,NaN,,"002 Generate BigGAN 
+So seems james' code face some issue?  
+27 [-0.5  0]  2  3  CMAES 
+27 [-0.5  0]  2  3  CONCAT_CMAES_CMAES 
+Maybe early stop and see If james' code crash it .  
+OK the references are wrong….these are channel 9's reference  
+Seems evolving a little bit.  
+Performance is super high!  
+But maybe this is not the right channel.  
+FC6 evolves slowly but in a steady pace! And surpass the BigGAN thread!  
+FC6 doing great, fantastic! It climbs really well!  
+BG is doing nothing….  
+Let's finger cross for ML2 don't crash when saving  
+FC6 image is really high contrast and segmentated now.  
+Actuallly BG climb really little as well but just really slow.  
+We are in the animal world another time ! Hahaha  
+35 blocks FC6 climbs great.  
+Crazy high perfomrance !  
+James' code doesn't crash.  
+completed ",Alfa-29102020-002,201029_Alfa_generate_BigGAN,27,NaN,3,N:\Stimuli\2020-BigGAN\2020-10-29-Alfa-01\2020-10-29-11-30-46
+NaN,BigGAN_FC6,NaN,,"002 Generate BigGAN  starts 11:50 
+Signal in 28 seems pretty good and it's majorly transient. Much room for later sustained evolution.  
+28  [-2 –3.5]  5  1 CMAES FC6   
+28  [-2 –3.5]  5  1 CMAES BigGAN 
+Not much thing happened...Late activity starts to evolve at gen 7 
+Preety stable activity in the late part! Doggy evolved 
+Both evolved great!  
+BigGAN doing especially well!  
+20 gens still evolving great! Sustained + transient 
+Super good evolution!  
+BigGAN surpass FC6 in performance  
+Actually control signal is going down maybe repitition suppresion for this unit.  
+40 blocks converged!  
+Complete  
+003 Selectivit 
+Super hard to fixate ….. Discard 
+Aborted ",Alfa-04112020-002,201104_Alfa_generate_BigGAN(2),28,NaN,5,N:\Stimuli\2020-BigGAN\2020-11-04-Alfa-01\2020-11-04-11-50-56
+5,BigGAN_FC6,NaN,,"002 G BG (1) 
+1 [-3 –3.5] 5 3 CMAES 
+1 [-3 –3.5] 5 3 CMAES 
+Copied reference image. Here we go!  
+This unit has looks good  
+Hash 5/5 quite bulky PSTH wtf doesn't look like what I see earlier... 
+If not working I'll try unit 2 instead.  
+BigGAN climbed a little bit, FC6 stay put!  
+BigGAN isevolving a peak... but not quite there yet.  
+May terminate  early.  
+1c unit is quite hashy, 1b is relatively sparse, 1a is just quiet . 
+Signal in 1 is not that reliable.  
+May terminate early. This guy doesn’t seem to like black bears at all.  
+Evolves a little bit but weak. 
+Completed but may not save. 25 blocks  ",Alfa-06112020-002,201106_Alfa_generate_BigGAN(1),1,NaN,5,N:\Stimuli\2020-BigGAN\2020-11-06-Alfa-01\2020-11-06-11-29-50
+4,BigGAN_FC6,NaN,,"003 G BG (2) 11:53-12:14 
+19 [0 –2.4] 4 1 CMAES 
+19 [0 –2.4] 4 1 CMAES 
+BigGAN evolves a bit and it's on top of other threads.  
+Why I feel the online PSTH display looks weird  
+Starts evolving a tiny bit.  
+Monkey is still at full accuracy. … 
+Evolved slightly....but should be significant.  
+FC6 do nothing over there...totally flat.  
+OK lets's play with this evolution and do some movie over it.  
+OMG sth suddenly happen at gen 20 and firing rate drop like a cliff. 
+It comes back to normal at gen 23. … not quite 
+He fluctuates a lot in the last few gens, is there a feature coming up and down? 
+OMG it climbs up a cliff?! This is significant. 
+Is there an decaying effect on the reference images? 
+Lets stop at 31 and play with it!  
+21 mins  
+stop Completed  ",Alfa-06112020-003,201106_Alfa_generate_BigGAN(2),19,NaN,4,N:\Stimuli\2020-BigGAN\2020-11-06-Alfa-02\2020-11-06-11-53-09
+5,BigGAN_FC6,NaN,,"003 generate BigGAN  
+This time at least PSTH looks much better 
+Besides BigGAN responds better than FC6 
+Evolved a little bit  
+Maybe terminates early.  
+Anyway at least for these cells FC6 is less effective than BigGAN.  
+OK both threads stays put not going anywhere.  
+19 mins stays at the same.  
+25 blocks. OK stay there. 
+Completed  ",Alfa-11112020-003,201111_Alfa_generate_BigGAN(2),26,NaN,4.5,N:\Stimuli\2020-BigGAN\2020-11-11-Alfa-01\2020-11-11-11-32-43
+5,Evol_BigGAN_Movie,NaN,,"005 Generate Movie  12;13 
+No crash hopefully.. 
+Monkey looks tired, each trial is longer than expected. It's 1.7, 1.6 sec now 
+The long inter block intevl isa good time for him to rest.  
+This task can definitely work  
+CMAES in the full BigGAN + tangent space 256 * 2dim space  
+9 mins 12 blocks looks great! 
+DOn't thinkg this will go very far...  
+15 mins 17 blocks 
+18 min 21 blocks 
+6 frames 2.5 expon, 0.7 maxdist  
+200 ms duration  
+Completed  ",Alfa-11112020-005,201111_Alfa_generate_Movie(3),26,NaN,4.5,N:\Stimuli\2020-generate-Movie\2020-11-11-Alfa-01\2020-11-11-12-14-11
+5,Evol_BigGAN_Movie,NaN,,"006 Generate moviees  12:38 
+Same settin with chanel 6 2  
+Reference image copied  
+6 [-0.1 2.6 ] 4.5 2 BigGAN (256 d space ) 
+So Movie definitely drives sustained activity in this cell!  
+Good singal  
+Seems like the movie is eolving. 
+It's not too significant but it's defintely evolving . 
+So predictive coding things may work against us.  
+As a movie becomes more and more familiar the firing rate can drop... 
+Kind of stable? Or converged at 16 blocks 15 mins  
+So the score steady decays a bit.  
+20 blocks 21 mins . 
+The thing seems to be far from optimal 
+21 blocks finished  
+Completed  ",Alfa-11112020-006,201111_Alfa_generate_Movie(4),6,NaN,4.5,N:\Stimuli\2020-generate-Movie\2020-11-11-Alfa-02\2020-11-11-12-38-25
+3,Evol_BigGAN_Movie,NaN,,"007 Generate Movies  13:05 
+Generate setting 6 2.5 0.5  
+6 [-0.1 2.6 ] 4.5 2 BigGAN class (128 d space ) 
+Try to evolve sth from this  
+He seems not willing to work very much   
+This evolution is really succesful although it's just 7 blocks!  
+It's stable and consistent  
+Completed  ",Alfa-11112020-007,201111_Alfa_generate_Movie(5),6,NaN,4.5,N:\Stimuli\2020-generate-Movie\2020-11-11-Alfa-03\2020-11-11-13-05-11
+4,Evol_BigGAN_Movie,NaN,,"003 Generate Move (5) 
+CHan 6 [-0.1 -2.5] 2 4  CMAES 
+BigGAN all  512 d space 
+Max Dist 0.7  
+Cool the avg firing rate is comparable to natural.  
+Evolving!  
+BigGAN object based image is harder for him to fixate? Really 
+I'll say today's movie looks better …  
+But I did it wrongly that monkey drinks too much for exp 002, so he is less willing to work with this . 
+Only goes to block 8 So  not very conclusive.  
+Movie definitely drives the neuron more sustained than no movie.  
+9 blocks so not conclusive.... 
+OK  
+Completed  ",Alfa-12112020-003,201112_Alfa_generate_Movie(5),6,NaN,4,N:\Stimuli\2020-generate-Movie\2020-11-12-Alfa-02\2020-11-12-12-24-55
+NaN,BigGAN_FC6,NaN,,"Evolved BigGAN and fc6 on chan 32 [-2.6, -1.9] size 3 degrees, fc6 yes, bigGAN no. Perf ~30% (stubborn monkey) ",Alfa-16112020-001,201116_Alfa_generate_BigGAN(1),32,NaN,3,N:\Stimuli\2020-BigGAN\2020-11-16-Alfa-02\2020-11-16-13-21-55
+5,BigGAN_FC6,NaN,,"Ch 12 (0, -0.8) 3 1 hash 5/5. Fc6 vs BG with still images, see how it climbs. Start at 1021. Both fc6 and BG look to be climbing at block 7. 11 blocks in, both still climbing. Fc6 is making a similar image to the movie, a redish brown oval on left side, white on right. BG is making a blurry busy brown image, kinda looks like ferret in grass. 23 blocks stop at 1048. complete 
+Abort. CH 7 (–0.8, -1.8) 4 degrees, hash 5/5. Fc6 start at 1154. He doesn’t want to work...... nope hes done.  stop at 11, only 2 blocks. I want him to work for a few more minutes though so he doesn’t waste juice. Done working at 1103.  
+Second attempt, first we had the array plugged in wrong.  ",Alfa-25112020-003,201125_Alfa_generate_BigGAN,12,NaN,3,N:\Stimuli\2020-BigGAN\2020-11-25-Alfa-02\2020-11-25-10-21-04
+1,Evol_BigGAN_full_Movie,NaN,201203_Alfa_Video 2 ,"Generate Movie (3) 
+BigGAN full space movie.  
+BigGAN full space 256d movie CMAES  
+chan 26 unit 1 [-1.5 2] 4.5  
+Fixation is hard..... 
+Record video of monkey face  
+This guy is DEFINITELY evolving , in a quite steady pace.  
+Not sure how far this will go!  
+Interesting part is the baseline rate goes up as well.....Leakage of firing activity from movie to image?  
+Or  
+I think this guy converged...?  
+I'll try FC6 GAN on it again.  
+Wow....Keeps evolving this guy.  
+I think this guy converged... 37 blocks completed!  
+32mins exp. 
+Cool!  
+WebCam Video 2  ",Alfa-03122020-002,201203_Alfa_generate_Movie(3),26,NaN,4.5,N:\Stimuli\2020-GANmovies\2020-12-03-Alfa-01\2020-12-03-11-13-47
+1,Evol_BigGAN_Movie,NaN,201209_Alfa_Video 9 ,"Movie Evolution  
+20 BigGAN full space, SU 1  
+20 [-2.8 -4.5] 5 1  
+This cell is really good at movie!  
+Really good PSTH for moth static images and movies.  
+He is performing great!  
+Note the static image response seems to decay steadily. 
+OK it's evolving but just a bit slow 
+This guy evolves a dog / cat and then a sheep?!  
+This cell is great!  
+So now a black sheep;…. 
+To me it's evolving, but a small amount  
+Back on top now! Successful  
+Completed  ",Alfa-09122020-002,201209_Alfa_generate_Movie,20,NaN,5,N:\Stimuli\2020-GANmovies\2020-12-09-Alfa-01\2020-12-09-11-53-29
+1,BigGAN_full_FC6,NaN,201209_Alfa_Video 11 ,"Generate BigGAN 
+20 [-2.8 -4.5] 5 1  BigGAN full CMAES 
+FC6 CMAES Hessian top eignes  
+No evolution happening!  
+No evolution happening AT ALL  
+So this is definitely a cell that has tuning ovr space of movies but not to images per se!  
+How cool is that. 
+Closely match the evolution gens.  
+Lets test if these neurons are really not evolving flat  
+24 mins! So it's quite flat.  
+This unit seems not able to be evolved using static images.  
+Completed  ",Alfa-09122020-004,201209_Alfa_generate_BigGAN(2),20,NaN,5,N:\Stimuli\2020-BigGAN\2020-12-09-Alfa-01\2020-12-09-12-29-46
+1,Evol_BigGAN_Movie,NaN,201229_Alfa_Video 27 ,"002  Generate Movie BigGAN  
+Starts! 11:19  
+20 [-2.5 4.0] 5 1 CMAES 
+BigGAN full space  
+This time seems to really successful.  
+Movie attracts eye gaze much more than others.  
+There is a small increase in FR.... ANd then it decays back.   
+Wow starts climbing. 
+Mid range firing rate climbs a bit.  
+Is there any semsntic feature> 
+It evolves quite a lot of cats and dogs.... Similar evolution trajectory as last time.  
+Evolved activity is more in the sustained part?  
+It's definitely evolving but  
+This evolution is really similar to the 12/09 one evolving chan 20. The trajectory and what we get is similar.  
+Really slow but steady evolve.  
+20 mins 30 blocks not bad!  
+Is there anything about travelling outside manifold.  
+So I think result will still be a small but significant evolution.  
+25mins 35 blocks.  
+Completed ",Alfa-29122020-002,201229_Alfa_generate_Movie(1),20,NaN,5,N:\Stimuli\2020-GANmovies\2020-12-29-Alfa-01\2020-12-29-11-19-18
+NaN,Evol_BigGAN_Movie,NaN,,"007 12:21 Genmov(2)  
+006 005 failed with various reasons.... Plex Remote disconnected for one and reference not copy for another  
+Chan 6 [0 -4 ] 1  5 deg  CMAES  BigGAN  
+Movie Evolution  
+So it's evolving, increasing firing rate in some fashion. But not very dramatic 
+OK it stuck there. 
+I feel I reached this image before …. 
+ I will say this is not successful.  
+Maybe it’s eye signal noisier? 
+This is very much not successful…..Scores seems to drop as well as natural image firing rate. 
+30 gens 22mins 
+Completed    
+008 GenMov(3)  
+20 [-2.5 4.0] 5 1 CMAES 
+BigGAN full space  
+Seems no response in that unit totally…..  
+OK this will not work….. 
+No a spike at all???We get that unit during RFMapping but lose it during recording? 
+Failed ",Alfa-05012021-007,210105_Alfa_generate_Movie(2),6,NaN,5,N:\Stimuli\2020-GANmovies\2021-01-05-Alfa-01\2021-01-05-12-21-04
+NaN,Evol_BigGAN_Movie,NaN,,"009 GenMovie (4) 
+18 [0 -5] 5 1 CMAES 
+Hash 5/5  
+This guy slowly evolves  
+Monkey Still working pretty well!  
+Not sure if the working period is helping or not.  
+Definitely evolving, get a pot like image / movie.  
+It’s late period that is evolving. Now it looks like camera lid. Still roundy stuff  
+Is it general that the reference image firing rate decay over time ? 
+OK this guy stuck and start to decay even more.  
+35 blocks stop.  
+Completed    
+Neuro_feedback 
+Just a pilot trial.  
+NeuroFeedback(1) 
+Modify the code such that we can change criterion and scaling dynamically 
+8.5 he can still reach that! Using IT spontaneous firing  
+10 30 scaling lets see Still work  
+10 40 scaling doesn’t succeed. So spontaneuously  
+12 30 it’s still hard. So criterion should be within 10-12.  
+Seems spontaneously 10 can be reached but 12 is pretty hard.  
+He close his eyes! Still can get rewards  
+Maybe fatigue? The spontaneous rate decays.  
+He cannot reach 10 now.  
+2021/1/21  
+Debug the RFMapping slow problem. Seems like plot function is the burden.  ",Alfa-05012021-009,210105_Alfa_generate_Movie(4),18,NaN,5,N:\Stimuli\2020-GANmovies\2021-01-05-Alfa-02\2021-01-05-13-07-18
+NaN,BigGAN_FC6,NaN,,"002 genrate BigGAN 
+Copied reference  
+58  [-1 -2.4] 4 1 CMAES fc6  
+58  [-1 -2.4] 4 1 CMAES BigGAN full  
+Very fast experiment.  
+Is there some common features for the units that are easy to evolve?  
+Single units?  
+This guy is definitely evolving~ Even the BigGAN thread.  
+Wow…..The FC6 thread is evolving great!  
+This unit is a treasure.  
+FC6  
+OK…. Waste 15 mins doing eye calibaration with no results and monkey is mad:( Sad  
+He is not cooperating  
+Starts from 5-6 -> 18-19 sp.s 
+FC6 thread super successful. BigGAN thread goes nowhere.  
+45 mins finished Monkey has drank 350 +100ml.  
+Yeah backup has ruined 10 mins…. Not good  
+The think looks like a curved surface with shading on it.  
+Completed ",Alfa-07012021-002,210107_Alfa_generate_BigGAN,58,NaN,4,N:\Stimuli\2020-BigGAN\2021-01-07-Alfa-01\2021-01-07-11-11-04
+NaN,BigGAN_FC6,NaN,,"003 
+58  [-1 -2.4] 4 1 CMAES BigGAN class space 
+I feel BigGAN is not the style it likes 
+Stuck around 10 sp/s 
+Interestingly, the cell evolves a cat ball, which is like the surface in last exp.  
+I feel one problem that BigGAN space have is that it’s not converging / attracting. 
+Still Stuck around 10 sp/s.   
+450 mlNow 
+Cool interesting! This guy suddenly evolved at 30 blocks and stay relatively high.  
+So this is actually successful.  
+35 mins 37 blocks matched.  
+500mL +  
+Completed ",Alfa-07012021-003,210107_Alfa_generate_BigGAN(1),58,NaN,4,N:\Stimuli\2020-BigGAN\2021-01-07-Alfa-02\2021-01-07-12-11-50
+NaN,BigGAN_FC6,NaN,,"002  generate BigGAN.  
+27 [0.1 0.1] 4 deg  unit 1 CMAES fc6 
+27 [0.1 0.1] 4 deg  unit 1 CMAES BigGAN full 
+Let’s see how well this goes. There is a high baseline.  
+OK Starting up.  
+Evolved a bit and stuck there kind of. 
+Wow at around 15 gens the BigGAN space catch up with the FC6 thread!   
+2 threads keeps evolving together.  
+White background horizontal bar like object.  
+BigGAN FC6 Both successful and the result is comparable.  
+We are at 150 mL now need to move fast.   
+Note that this cell’s activity is late and the baseline has more leakage from previous trial. Z 
+FC6 still wins 24>22 spikes . But not as crazy as before!  
+Completed really successful experiment.  ",Alfa-12012021-002,210112_Alfa_generate_BigGAN,27,NaN,4,N:\Stimuli\2020-BigGAN\2021-01-12-Alfa-01\2021-01-12-11-33-31
+NaN,BigGAN_FC6,NaN,,"002 Generate BigGAN  
+Chan 28 unit 1  [-2.3 -4.5]  5 deg FC6  
+Chan 28 unit 1  [-2.3 -4.5]  5 deg BigGAN  
+This guy reached ceiling very fast. Definitely evolved.  
+But then evolving again from 30sp/s -> 40+ sp/s  
+Interestingly BigGAN thread is decreasing.  
+OK the FC6 gan suddenly climbs a lot!  
+The sustained part evolves a lot. 40->50 ->59 
+ Decay of reference image activity.  
+Activity latency decrease!  
+BigGAN thread climbs a lot at 37 blocks reached 43 sp/s  
+41 mins.  
+ORZ the BigGAN starts catching up.  
+This is insane…. BigGAN -> 55sp/s FC6 66sp/s  
+Both stay there!  
+52 mins 45 blocks 2 threads !!!  
+Both successful. Esp. the biggan part =-== 
+completed ",Alfa-13012021-002,210113_Alfa_generate_BigGAN,28,NaN,5,N:\Stimuli\2020-BigGAN\2021-01-13-Alfa-01\2021-01-13-11-40-24
+NaN,BigGAN_FC6,NaN,,"Generate BigGAN 
+Chan 32 
+Use ref img from chan_32_exp_04 
+PSTH looks great but is it evolving in the wrong direction?  
+Monkey is doing great! And evolution in BigGAN is working well.  
+So the score increases but not dramatically. Lets wait.  
+This is interesting because dual threads success, but not super success. 75->90 
+And the evolved score is kind of comparable!  
+completed ",Alfa-20012021-003,210120_Alfa_generate_BigGAN(1),32,NaN,NaN,N:\Stimuli\2020-BigGAN\2021-01-20-Alfa-01\2021-01-20-12-10-29
+NaN,BigGAN_FC6,NaN,,"004 Generate BigGAN 
+24  [-3.5  -5]  6  2  
+24  [-3.5  -5]  6  2  
+Seems this is evolving in the wrong way.....  
+ANd also no visual response.  
+Not Saving!!!! 
+Aborted ",Alfa-20012021-004,210120_Alfa_generate_BigGAN(2),24,NaN,6,N:\Stimuli\2020-BigGAN\2021-01-20-Alfa-02\2021-01-20-12-53-17
+NaN,BigGAN_FC6,NaN,,"005 Generate BigGAN 
+55  [0  -1.5]  4  1  
+55  [0  -1.5]  4  1  
+It's evolving! Esp. The FC6 and BigGAN is doing great. Even though the RF mapping don't have a confined RF.  
+The PSTH suggests this can be a successful evolution. r 
+completed ",Alfa-20012021-005,210120_Alfa_generate_BigGAN(3),55,NaN,4,N:\Stimuli\2020-BigGAN\2021-01-20-Alfa-03\2021-01-20-13-06-42
+2,BigGAN_FC6,NaN,,"002  
+58 [-0.6, -4.2] 5 deg 1  
+FC6  
+BigGAN full  
+SU 2/5 
+Pretty good, two threads are both quite successful and doing their job.  
+The reference images are pretty bad at evoking them..... 
+Gen 13 therre is a jump for the FC6 thread. 
+15-17 blocks a sudden jump!  
+The scores and evolution seems not stable...? 
+So the BigGAN thread fluctuate quite a lot. , FC6 is less.  
+Cool So seems from 5-14 
+Completed ",Alfa-26012021-002,210126_Alfa_generate_BigGAN(1),58,NaN,5,N:\Stimuli\2020-BigGAN\2021-01-26-Alfa-01\2021-01-26-12-03-50
+3,BigGAN_FC6,NaN,,"003  Generate BigGAN 
+7 [-1 –2.5] 4 1 CMAES 
+This cell definitely prefer BigGAN image Object like.  
+MU 3/5 
+Not quite successful  
+Maybe this is the high level cell or it's motion sleective.  
+Not quite successful at all. Rrr 
+Completed but not successful  
+004 generate BigGAN 
+24 [-4 –4.6]  6 deg  2  
+Abort! Monk is not cooperating ",Alfa-26012021-003,210126_Alfa_generate_BigGAN(2),7,NaN,4,N:\Stimuli\2020-BigGAN\2021-01-26-Alfa-02\2021-01-26-12-45-32
+4.5,BigGAN_FC6,NaN,,"002 Generate BigGAN 
+24 [-4 –5]  6 deg  unit 2  
+24 [-4 –5]  6 deg  unit 2  
+MU 4.5/5 
+Reference copied.  
+Why the PSTH looks different from what we get from RF mapping exp.  
+Visual response is bad. fixation is bad. Break fixation rate 98%!!!!  
+20mins 9blocks evolve in the negative direction.....This won't work  
+Terminates 
+01 folder  
+Not completed only 10 blocks..... not successful ",Alfa-28012021-002,210128_Alfa_generate_BigGAN,24,NaN,6,N:\Stimuli\2020-BigGAN\2021-01-28-Alfa-01\2021-01-28-10-38-03
+4.5,BigGAN_FC6,NaN,,"003  
+5[-2.5 –3.9]  4 deg  unit 1  
+5[-2.5 –3.9]  4 deg  unit 1  
+4.5/5 signal 
+Monkey struggle for a while but now better.  
+BigGAN thread evolves a bit  
+Fluctuation is large.  
+The evolution is somehow in the negative direction???? 
+Maybe finish this thread and call it a day.  
+Maybe do some debugging.  
+Non-evolvable why? And it's like in the wrong direction.... 
+Completed not successful  
+2021/02/02 ",Alfa-28012021-003,210128_Alfa_generate_BigGAN(1),5,NaN,4,N:\Stimuli\2020-BigGAN\2021-01-28-Alfa-02\2021-01-28-11-05-28
+1.5,BigGAN_FC6_CMAHess,NaN,,"003 generate BigGAN
+Single unit! Good signal, weird PSTH, bad rf but strong selectivity
+The PSTH is pretty late. r
+Not sure why but the reference seems not the ones I copied. (OK it used Beto's images......F**K)
+27 first unit
+FC6, Hessian CMAES
+BigGAN full, CMAES.
+Reference, 27 and the best from the population reference.
+FC6 evolution is quite successful! 10 ->30
+BigGAN is not doing great, meandering.
+Actually this cell is not quite stable towards
+FC6 is super successful.... 10->54
+Actually the trajectory is more variable than normal....
+33 blocks completed! Ds",Alfa-18022021-003,210218_Alfa_generate_BigGAN,27,NaN,7,N:\Stimuli\2020-BigGAN\2021-02-18-Alfa-01\2021-02-18-11-25-57
+NaN,BigGAN_FC6_CMAHess,NaN,,"003 evolving BigGAN FC6
+FC6 Hessian, BigGAN CMAES full space
+[-3 -3 ] 7 deg huge image.
+Save optimizers here to debug the CMAES,,,r
+OK this time the BigGAN full space is much more successfil than the FC6
+OK again.... the animal name is Beto????? I changed that yester day right
+OK FC6 starts to succeed while BigGAN has been there for a while
+What///// FC6 go past BigGAN at last miniut!
+FC6 throw BigGAN to its corner by a large margin.
+FC6 surpass BigGAN by a large margin....FC6 ~60, BigGAN 45
+35 mins 37 blocks pretty good",Alfa-19022021-003,210219_Alfa_generate_BigGAN,NaN,NaN,7,N:\Stimuli\2020-BigGAN\2021-02-19-Alfa-01\2021-02-19-13-03-12
+NaN,BigGAN_FC6_CMAHess,NaN,,"002  Generate BigGAN FC6
+3  [-1.5  -2.0]  6  1  'CMAES_Hessian'
+3  [-1.5  -2.0]  6  1  'CMAES'
+He is working fantastically great! So efficient today.
+Having a good rest is also good for monks.
+Sustained activity definitely get evolved....esp for BigGAN thread.
+Not so significantly reflected in the score traj.
+He evolves a wolf type thing.
+bear like thing
+The firing rate stays around 130~ 140 not changing too much,
+Basically 17 mjin 30 blocks
+100-> 134 not too dramatic
+completed",Alfa-25022021-002,210225_Alfa_generate_BigGAN,3,NaN,6,N:\Stimuli\2020-BigGAN\2021-02-25-Alfa-01\2021-02-25-11-23-18
+NaN,BigGAN_FC6,NaN,,"003 generate BigGAN
+BigGAN FC6
+18 [0.5 -5] 1 7deg.
+BigGAN goes into face zone!!!!!
+Seems first time in the history ~
+But the BigGAN scores still goes up and down. Not staying in the face zone?
+Female with a glass??Really clear faces.
+BigGAN generally stays in a face space
+But seems the evolution is not as stable as before.s
+It seems this cell starts from a high spot because at the first gen there is the human dude body.
+So this is a human body selecting cell?
+60->67 evol.
+24 min 3 blocks!!
+BigGAN definitely have tuning in the space of faces and human body.
+The optimization trajectory is smoother than noise.",Alfa-26022021-003,210226_Alfa_generate_BigGAN,18,NaN,7,N:\Stimuli\2020-BigGAN\2021-02-26-Alfa-01\2021-02-26-12-53-02
+1.5,BigGAN_FC6_CMAHess,NaN,,"002 BigGAN FC6 evolution  
+Copy ref 8 
+8 [-5 –2.5] 6 1 'CMAESHess'  fc6 
+8 [-5 –2.5] 6 1 'CMAES' BigGAN 
+Promising sparse PSTH 
+Su 1.5/5 good signal.  
+Caveat, in this exp at first the unit drifted a bit so I moved the sorting criterion to make it less sparse.  
+This cell prefer FC6 > BigGAN to a large margin! FC6 ~ 45 BigGAN ~ 15 
+Evolution for the FC6 is not stable... 
+This guy is doing up down up down  
+May exclude this cell in analysius... 
+Seems not really successful.  
+003 BigGAN FC6 evolution  
+Copy ref 5 
+5 [-0.5 -3 ]  5 1  'CMAESHess'  fc6 
+5 [-0.5 -3 ]  5 1  'CMAES'  BigGAN 
+Network broke the connection...  ",Alfa-12032021-002,210312_Alfa_generate_BigGAN,8,NaN,6,N:\Stimuli\2020-BigGAN\2021-03-12-Alfa-01\2021-03-12-11-39-05
+1,BigGAN_FC6_CMAHess,NaN,,"004 
+5 [-0.5 -3 ]  5 1  'CMAESHess'  fc6 
+5 [-0.5 -3 ]  5 1  'CMAES'  BigGAN 
+Redo the hting 
+SU 1/5 
+BigGAN part definitely evolved.  
+10 -> 25 -> 31 stays around 25 ",Alfa-12032021-004,210312_Alfa_generate_BigGAN(2),5,NaN,5,N:\Stimuli\2020-BigGAN\2021-03-12-Alfa-02\2021-03-12-12-10-06
+2,BigGAN_FC6,NaN,,"002 Generate BigGAN starts 12:30 
+FC6 BigGAN 
+9 [-1.5 -1.5] 5 1  
+CMAES_Hessian, FC6 
+CMAES BigGAN_class 
+Copyed reference 9 A 
+Cool done.  
+Cool this cell evolve BigGAN much more steadier.  
+Late activity evolved pretty well.  
+BigGAn evolves much bettwe than FC6 but both evolves. 
+Refereence image actiivty definitely decrease.  
+Basically both threads give me a pinkish square.  
+BigGAN goes to 20->75/80  
+FC6 goes from 20->40/50  
+BigGAn is catching up starting to match up.  
+Ref image score keep decraseing maybe general feature for adaptation in IT.  
+Both threads meet at around gen 38 
+Complete  
+Very rewarding experiment 
+40 blocks ",Alfa-01042021-002,210401_Alfa_generate_BigGAN,9,NaN,5,N:\Stimuli\2020-BigGAN\2021-04-01-Alfa-01\2021-04-01-12-30-13
+NaN,BigGAN_FC6_CMAHess,NaN,,"002 BigGAN FC6
+Chan 7 [-1.3 -1.4] 4deg unit 1
+Chan 7 [-1.3 -1.4] 4deg unit 1
+CMAES Hessian FC6
+CMAES BigGAN
+BigGAN really excell orz from 100->150 so it’s a dog face type thing. 
+FC6 stopes not doing good. 
+Stops around 140 not going higher may be it's fine with the dog head manifold?
+Also note it's the 2nd peak that gets evolved. 
+19mins 35blocks super high performance ",Alfa-08042021-002,210408_Alfa_generate_BigGAN,7,NaN,4,N:\Stimuli\2020-BigGAN\2021-04-08-Alfa-01\2021-04-08-11-48-20
+NaN,BigGAN_FC6_CMAHess,NaN,,"004 Generate BigGAN
+Chan 2 [-1.4 -4] 5deg unit 1
+Chan 2 [-1.4 -4] 5deg unit 1
+CMAES Hessian FC6
+CMAES BigGAN
+As before chan 2 is not quite successful. 
+Lay flat 23333 cool
+Even decreasing a bit. 
+High performance not evolving well. Meandering around 40-60",Alfa-08042021-004,210408_Alfa_generate_BigGAN(1),2,NaN,5,N:\Stimuli\2020-BigGAN\2021-04-08-Alfa-02\2021-04-08-12-42-30
+NaN,BigGAN_FC6_CMAHess,NaN,,"002  Generate BigGAN
+26  [-0.9  -4.5]  5  1  'CMAES_Hessian'
+26  [-0.9  -4.5]  5  1  'CMAES'
+Looks sparse and nice PSTH. RF is constrained
+Quite extra foveal, maybe hard to fixate. Cool
+hahahahhaa
+Evolution is so stable. Nothing change at all. Total failure.....
+So really consistent with results months ago, the channel is not quite evolvable.
+Completed",Alfa-15042021-002,210415_Alfa_generate_BigGAN,26,NaN,5,N:\Stimuli\2020-BigGAN\2021-04-15-Alfa-01\2021-04-15-12-06-14
+2,BigGAN_FC6_CMAHess,NaN,,"003 BigGAN FC6 Evolution
+20  [-3  -4]  7  1  'CMAES_Hessian'
+20  [-3  -4]  7  1  'CMAES'
+FC6 BigGAN full space signal 2/5
+Crashed due to some bug
+BigGAN evolve pretty well. 60->78
+Evolution is rugged in many sense. 
+FC6 not changing at all BigGAN evoles from 62 -> 72 and going up and down eterrn 70 and 80 
+Basically it evolved a head of polar bear?
+Neural activity decays back......WTF. It likes white bears but not brown bears.
+Weird evolution …. They evolved the sustained activity for a while and then just drop back. ",Alfa-16042021-003,210416_Alfa_generate_BigGAN(1),20,1,7,N:\Stimuli\2020-BigGAN\2021-04-16-Alfa-01\2021-04-16-11-33-33
+2,BigGAN_FC6_CMAHess,NaN,,"004 Gen BigGAN FC6 comparison
+30  [-5.3 -0.9]  5  1   
+30  [-5.3 -0.9]  5  1   
+CMAES Hessian
+BigGAN Class  CMAES
+See if I could evolve anything from it
+Network break. again
+So actually not bad,…..
+Basically BigGAN is not successful, FC6 is a little success. From 40->55
+58mins 30blocks......vey torturing.",Alfa-12052021-004,210512_Alfa_generate_BigGAN(4),30,1,5,N:\Stimuli\2020-BigGAN\2021-05-12-Alfa-01\2021-05-12-12-48-19
+5,BigGAN_FC6_CMAHess,NaN,,"003 Generate BigGAN
+29 [-0.3 -2.0] 5 1
+Hash 5/5
+FC6 CMAES Hessian
+BigGAN class CMAES
+Good BigGAN evolution
+Maybe do a Hessian selectivity though the monkey is not quite working.
+30 min 33 blocks
+Completed",Alfa-14052021-003,210514_Alfa_generate_BigGAN(1),29,1,5,N:\Stimuli\2020-BigGAN\2021-05-14-Alfa-01\2021-05-14-13-11-03
+2,BigGAN_FC6_CMAHess,NaN,,"004 Generate BigGAN FC6
+22 [     0    -3]  1  6 deg  2/5 SU
+FC6
+BigGAN class
+Wow this guy is really a black pointy ear detector!
+Maybe it is because noise is not optimized.
+Not working around 1:15 block 26
+Monk starts to rebel around 1:17
+Have to stop! Monkey is not coorperating
+26blocks. A pity.
+BigGAN not successful.
+Completed",Alfa-02062021-004,210602_Alfa_generate_BigGAN(1),22,1,6,N:\Stimuli\2020-BigGAN\2021-06-02-Alfa-01\2021-06-02-12-48-00
