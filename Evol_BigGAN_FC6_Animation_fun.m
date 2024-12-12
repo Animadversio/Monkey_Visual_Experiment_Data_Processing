@@ -6,8 +6,10 @@ function videopaths = Evol_BigGAN_FC6_Animation_fun(EStats)
 % Note the Response/score plotted in the video is the 
 %    block average evoke activity - block average baseline activity 
 % (so it's bsl subtracted)
-result_dir = "E:\OneDrive - Washington University in St. Louis\BigGAN_Evol_Movies";
+% result_dir = "E:\OneDrive - Washington University in St. Louis\BigGAN_Evol_Movies";
 ExpType = "BigGAN_FC6";
+result_dir = "E:\OneDrive - Harvard University\Evol_StyleGAN_cmp";
+ExpType = "StyleGAN";
 videopaths = [];
 for Expi = 1:length(EStats)
 % fprintf("Processing BigGAN-FC6 Evolution Exp %d\n",Expi)

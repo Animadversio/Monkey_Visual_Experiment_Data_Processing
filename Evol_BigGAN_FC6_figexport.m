@@ -1,25 +1,46 @@
 %% Compare Evolved image in BigGAN and FC6 in batch
 mat_dir = "E:\OneDrive - Washington University in St. Louis\Mat_Statistics"; 
-for Animal = ["Alfa"] %, "Beto"
+for Animal = ["Both"] %, "Beto""Beto"
 load(fullfile(mat_dir, Animal + "_BigGAN_FC6_Evol_Stats.mat"), 'BFEStats'); 
 end
 %%
 P = struct();
-P.plot_img = true;
+P.plot_img = false;
 P.plot_traj = true;
-rootdir = "E:\OneDrive - Harvard University\Evol_BigGAN_FC6";
-sumdir = "E:\OneDrive - Harvard University\Evol_BigGAN_FC6\summary_figs";
+rootdir = "E:\OneDrive - Harvard University\Evol_BigGAN_FC6_cmp";
+sumdir = "E:\OneDrive - Harvard University\Evol_BigGAN_FC6_cmp\summary_figs";
 % N:\Stimuli\2020-BigGAN\2020-07-23-Beto-01\2020-07-23-15-59-38
 %%
 failures = struct('iter', {}, 'str', {});
 %%
-for Expi = 7:numel(BFEStats)
+% failure_Expis = [failures.iter];
+% failure_Expis = unique(failure_Expis);
+failure_Expis = [failures.iter];
+failure_Expis = failure_Expis(31:end);
+%% Additional plotting failure experiments that are not due to single thread. 
+setdiff(arrayfun(@(i)meta_cmb{i}.ephysFN,failure_Expis','UniformOutput',false),...
+        cellfun(@(M)M.ephysFN, meta_sing','UniformOutput',false))
+% {'Alfa-27072020-002'}
+% {'Beto-16102020-003'}
+% {'Beto-23072020-002'}
+%% fix typos of the experiments 
+find(strcmp("Beto-23072020-002",arrayfun(@(S)S.meta.ephysFN,BFEStats,'Unif',0))); % 5
+% BFEStats(Expi).meta.stimuli = "N:\Stimuli\2020-BigGAN\2020-07-23-Beto-01\2020-07-23-15-59-38";
+find(strcmp("Alfa-27072020-002",arrayfun(@(S)S.meta.ephysFN,BFEStats,'Unif',0))) % 92
+% "N:\Stimuli\2020-BigGAN\2020-07-27-Alfa-01\2020-07-27-09-47-40"
+%%
+% Cord = colororder;
+Cord = [[0,0,1];
+        [1,0,0]];
+for Expi = 1:numel(BFEStats) % failure_Expis %5,
 try
 BFES = BFEStats(Expi);
 stimpath = BFES.meta.stimuli;
 prefchan = BFES.evol.pref_chan(1);
 area  = area_map(prefchan);
-expdir = fullfile(rootdir,compose("%s_Exp%02d_Ch%02d",Animal,Expi,prefchan));
+% expdir = fullfile(rootdir,compose("%s_Exp%02d_Ch%02d",Animal,Expi,prefchan));
+% mkdir(expdir)
+expdir = BFES.meta.figdir;
 mkdir(expdir)
 expstr = compose("%s Exp%02d PrefChan %02d (%s)\nThr1: %s x %s Thr2: %s x %s\n%s",Animal,Expi,prefchan,area,...
                  BFES.evol.space_cfg{1}{1},BFES.evol.optim_names(1),...
@@ -45,16 +66,15 @@ refstd_vec = cellfun(@std, refact_col);
 nGen = size(meanact_vec,2);
 if P.plot_traj
 %% Evol Trajectory mean
-Cord = colororder;
 figure(1);clf;hold off;set(1,'pos',[680   400   460   480])
 for iThr = 1:2
     % plot(meanact_vec(iThr,1:end-1),'linestyle','-','color',Cord(iThr,:),'Linewidth',1.5);
     % shadedErrorBar([],refact_vec(iThr,1:end-1),refsem_vec(iThr,1:end-1),...
     %     'lineProps',{'Color',Cord(iThr+2,:),'Linewidth',1.,'linestyle','-.'},'patchSaturation',0.7)
-    plot(refact_vec(iThr,1:end-1),'Color',Cord(iThr+2,:),'Linewidth',1,'linestyle','-')
-    hold on 
     shadedErrorBar([],meanact_vec(iThr,1:end-1),stdact_vec(iThr,1:end-1),...
         'lineProps',{'Color',Cord(iThr,:),'Linewidth',2},'patchSaturation',0.3)
+    hold on 
+    plot(refact_vec(iThr,1:end-1),'Color',Cord(iThr,:),'Linewidth',1,'linestyle','-.')
     hold on 
     plot(bsl_vec(iThr,1:end-1),'linestyle',':','color',Cord(iThr,:),'Linewidth',1.)
 end
@@ -63,6 +83,29 @@ ylabel("Firing Rate (event/sec)")
 title(compose("%s\nEvolution Trajectory",expstr))
 % legend(["FC6","FC6 baseline","BigGAN","BigGAN baseline"],'location','best')
 legend(["FC6","FC6 ref","FC6 baseline","BigGAN","BigGAN ref","BigGAN baseline"],'location','best')
+xlim([0,nGen+1])
+%%
+figure(3);clf;hold off;set(3,'pos',[680   400   460   480])
+for iThr = 1:2
+    % plot(meanact_vec(iThr,1:end-1),'linestyle','-','color',Cord(iThr,:),'Linewidth',1.5);
+    % shadedErrorBar([],refact_vec(iThr,1:end-1),refsem_vec(iThr,1:end-1),...
+    %     'lineProps',{'Color',Cord(iThr+2,:),'Linewidth',1.,'linestyle','-.'},'patchSaturation',0.7)
+    shadedErrorBar([],meanact_vec(iThr,1:end-1),semact_vec(iThr,1:end-1),...
+        'lineProps',{'Color',Cord(iThr,:),'Linewidth',2},'patchSaturation',0.3)
+    hold on 
+    shadedErrorBar([],refact_vec(iThr,1:end-1),refsem_vec(iThr,1:end-1),...
+        'lineProps',{'Color',Cord(iThr,:),'Linewidth',1,'linestyle','-.'},'patchSaturation',0.1)
+%     plot(refact_vec(iThr,1:end-1),'Color',Cord(iThr+2,:),'Linewidth',1,'linestyle','-')
+    hold on 
+%     plot(bsl_vec(iThr,1:end-1),'linestyle',':','color',Cord(iThr,:),'Linewidth',1.)
+    shadedErrorBar([],bsl_vec(iThr,1:end-1),sembsl_vec(iThr,1:end-1),...
+        'lineProps',{'Color',Cord(iThr,:),'Linewidth',1,'linestyle',':'},'patchSaturation',0.1)
+end
+xlabel("Generations")
+ylabel("Firing Rate (event/sec)")
+title(compose("%s\nEvolution Trajectory",expstr))
+% legend(["FC6","FC6 baseline","BigGAN","BigGAN baseline"],'location','best')
+legend(["FC6","FC6 ref image","FC6 baseline","BigGAN","BigGAN ref image","BigGAN baseline"],'location','southeast')
 xlim([0,nGen+1])
 %% Evol Trajectory std
 % Cord = colororder;
@@ -97,6 +140,8 @@ saveallform([expdir], compose("%s_Exp%02d_EvolTraj",Animal,Expi), 1)
 saveallform([sumdir], compose("%s_Exp%02d_EvolTraj",Animal,Expi), 1, ["png"])
 saveallform([expdir], compose("%s_Exp%02d_EvolTraj_sgtr",Animal,Expi), 2)
 saveallform([sumdir], compose("%s_Exp%02d_EvolTraj_sgtr",Animal,Expi), 2, ["png"])
+saveallform([expdir], compose("%s_Exp%02d_EvolTraj_sem_shaded",Animal,Expi), 3)
+saveallform([sumdir], compose("%s_Exp%02d_EvolTraj_sem_shaded",Animal,Expi), 3, ["png"])
 end
 
 

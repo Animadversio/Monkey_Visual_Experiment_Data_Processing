@@ -1,70 +1,108 @@
 %
 % Analyze Optimization Trajectory in paired BigGAN and FC6 experiment. 
 % Code pattern from Evol_Optimizer_CMAGA_cmp.m and Evol_RedDim_TrajsummaryPlot.m
-% Updated to modern pattern @ July 12th. 
+% Updated to modern API pattern @ July 12th. 
+% Updated for the modern data structure 
 mat_dir = "O:\Mat_Statistics"; 
 saveroot = "O:\Evol_BigGAN_FC6_cmp"; 
 outdir = "O:\ThesisProposal\BigGAN";
 figdir = fullfile(saveroot,"summary");
 %
 Animal = "Both"; Set_Path;
-if Animal == "Both"
-A = load(fullfile(mat_dir, "Alfa" + "_BigGAN_FC6_Evol_Stats.mat"), 'BFEStats');
-B = load(fullfile(mat_dir, "Beto" + "_BigGAN_FC6_Evol_Stats.mat"), 'BFEStats');
-BFEStats = [A.BFEStats;B.BFEStats];
-clear A B
-else
-load(fullfile(mat_dir, Animal + "_BigGAN_FC6_Evol_Stats.mat"), 'BFEStats'); 
-end
+% if Animal == "Both"
+% A = load(fullfile(mat_dir, "Alfa" + "_BigGAN_FC6_Evol_Stats.mat"), 'BFEStats');
+% B = load(fullfile(mat_dir, "Beto" + "_BigGAN_FC6_Evol_Stats.mat"), 'BFEStats');
+% BFEStats = [A.BFEStats;B.BFEStats];
+% clear A B
+% else
+% load(fullfile(mat_dir, Animal + "_BigGAN_FC6_Evol_Stats.mat"), 'BFEStats'); 
+% end
 %% Collect the score each block 
 score_traces = cell(numel(BFEStats),2);
 block_traces = cell(numel(BFEStats),2);
 wdw = [51:200]; bslwdw = [1:50];
 for iTr = 1:numel(BFEStats)
+S = BFEStats(iTr);
 % ui = BFEStats(iTr).evol.unit_in_pref_chan(1);
+if isempty(S.evol), continue; end
+if ~(contains(S.evol.space_names{1},"fc6")) && (contains(S.evol.space_names{2},"BigGAN"))
+    fprintf('Exp%d %s %s %s\n', iTr, S.meta.ephysFN, S.evol.space_names{1}, S.evol.space_names{2})
+    continue; 
+end
 ui=1;
-activ_col = cellfun(@(psth)squeeze(mean(psth(ui,wdw,:),[2])),BFEStats(iTr).evol.psth,"uni",0); % cell arr, vector of score per gen. 
-score_col = cellfun(@(psth)squeeze(mean(psth(ui,wdw,:),[2]))-mean(psth(ui,bslwdw,:),[2,3]), BFEStats(iTr).evol.psth,"uni",0);
-block_col = cellfun(@(idx) BFEStats(iTr).evol.block_arr(idx), BFEStats(iTr).evol.idx_seq,"uni",0); % cell arr, vector of block id per gen. 
-assert(contains(BFEStats(iTr).evol.space_names{1},"fc6"))
-assert(contains(BFEStats(iTr).evol.space_names{2},"BigGAN"))
+activ_col = cellfun(@(psth)squeeze(mean(psth(ui,wdw,:),[2])),S.evol.psth,"uni",0); % cell arr, vector of score per gen. 
+score_col = cellfun(@(psth)squeeze(mean(psth(ui,wdw,:),[2]))-mean(psth(ui,bslwdw,:),[2,3]), S.evol.psth,"uni",0);
+block_col = cellfun(@(idx) S.evol.block_arr(idx), S.evol.idx_seq,"uni",0); % cell arr, vector of block id per gen. 
+% assert(contains(S.evol.space_names{1},"fc6"))
+% assert(contains(S.evol.space_names{2},"BigGAN"))
 for GANi = 1:2
-score_traces{iTr,GANi} = cat(1,score_col{GANi,1:end-1});
-% zscore_traces{iTr,GANi} = zscores_tsr(pref_chan_id, row_gen & thread_msks{threadi});
+% Drop the last block as we assume it's non-complete
+score_traces{iTr,GANi} = cat(1,score_col{GANi,1:end-1}); 
 block_traces{iTr,GANi} = cat(1,block_col{GANi,1:end-1});
+% zscore_traces{iTr,GANi} = zscores_tsr(pref_chan_id, row_gen & thread_msks{threadi});
 end
 end
 %% Newer API verions
 [score_m_traj_col, block_traj_col, score_m_traj_extrap_col, block_traj_extrap_col, ...
    extrap_mask_col, sucsmsk_end, sucsmsk_max, tval_end_arr, pval_end_arr, tval_max_arr, pval_max_arr] =...
-   optim_traj_process(block_traces, score_traces, ["FC6", "BigGAN"], "max1", 35);
+   optim_traj_process(block_traces, score_traces, ["FC6", "BigGAN"], "max1", 50);
 
 %%
-outdir = "O:\ThesisProposal\BigGAN";
-prefchan_arr = arrayfun(@(S)S.evol.pref_chan(1),BFEStats);
-area_arr = arrayfun(@area_map,prefchan_arr);
-anim_arr = arrayfun(@(S)S.Animal,BFEStats);
+% outdir = "O:\ThesisProposal\BigGAN";
+outdir = "E:\OneDrive - Harvard University\Manuscript_BigGAN\Figures\Evol_traj_synopsis";
+figdir = "E:\OneDrive - Harvard University\Evol_BigGAN_FC6_cmp\summary";
+%%
+anim_arr = arrayfun(@(S)S.Animal,BFEStats');
+%prefchan_arr = arrayfun(@(S)S.evol.pref_chan(1),BFEStats');
+%area_arr = arrayfun(@area_map,prefchan_arr');
+% Carefully consider the remapping of the array.
+prefchan_arr = nan(numel(BFEStats),1);
+area_arr = strings(numel(BFEStats),1);
+for iTr = 1:numel(BFEStats)
+if isempty(BFEStats(iTr).evol), continue; end
+prefchan = BFEStats(iTr).evol.pref_chan(1);
+expdate = parseExpDate(BFEStats(iTr).meta.ephysFN, BFEStats(iTr).meta.expControlFN);
+if (BFEStats(iTr).Animal == "Beto") && expdate > datetime(2021,08,01)
+    array_layout = "Beto_new";
+else
+    array_layout = BFEStats(iTr).Animal;
+end
+visarea = area_map(prefchan, array_layout);
+prefchan_arr(iTr) = prefchan;
+area_arr(iTr) = visarea;
+end
+%% Create experiment masks for plotting 
+V1msk = area_arr=="V1";
 V4msk = area_arr=="V4";
 ITmsk = area_arr=="IT";
 Amsk = anim_arr=="Alfa";
 Bmsk = anim_arr=="Beto";
-
-%% statisitcs of succeed for individual GAN, BigGAN and FC6
+baseline_excl = ["Beto-18082020-002";
+                 "Beto-07092020-006";
+                 "Beto-14092020-002";
+                 "Beto-27102020-003";
+                 "Alfa-22092020-003"]; % Beto-2907020-003 seems also unstable. 
+bslexclmsk = arrayfun(@(S)any(strcmp(S.meta.ephysFN,baseline_excl)),BFEStats'); % set of baseline fluctuation 
+lengthmsk = arrayfun(@(S)~isempty(S.evol) && (S.evol.block_n >= 15), BFEStats'); % not too short and valid. 
+validmsk = (~isnan(pval_max_arr(:,1))) & (~bslexclmsk) & lengthmsk; 
+% singular or not FC6, BigGAN pair. Long enough and not baseline fluctuation. 
+%% statisitcs of succeed (count) for individual GAN, BigGAN and FC6
 GANstr = ["FC6","BigGAN"];
 GANsucsmsks = {pval_end_arr(:,1)<0.01, pval_end_arr(:,2)<0.01}; % end vs init 
 GANsucsmsks = {pval_max_arr(:,1)<0.01, pval_max_arr(:,2)<0.01}; % max vs init 
-msk_col = {Amsk,Bmsk,V4msk,ITmsk};
-label_col = ["Alfa","Beto","V4","IT"];
+% validmsk = ~isnan(pval_max_arr(:,1));
+msk_col   = {Amsk,Bmsk,V1msk,V4msk,ITmsk}; % masks for printing statistics 
+label_col = ["Alfa","Beto","V1","V4","IT"]; % labels for mask for printing statistics 
 for GANi = 1:numel(GANstr)
 GANsucsmsk = GANsucsmsks{GANi};
 fprintf("Using GAN %s\n",GANstr(GANi))
 fprintf("Success experiments/Total %d/%d  (%.1f%%)\n",...
-    sum(GANsucsmsk),numel(GANsucsmsk),100*sum(GANsucsmsk)/numel(GANsucsmsk))
+    sum(GANsucsmsk & validmsk),sum(validmsk),100*sum(GANsucsmsk & validmsk)/sum(validmsk))
 for mi = 1:numel(msk_col)
     msk = msk_col{mi};
     msklabel = label_col(mi);
     fprintf("%s Success experiments/Total %d/%d (%.1f%%)\n",msklabel,...
-        sum(msk&GANsucsmsk),sum(msk),sum(msk&GANsucsmsk)/sum(msk)*100)
+        sum(msk&GANsucsmsk & validmsk),sum(msk & validmsk),sum(msk&GANsucsmsk & validmsk)/sum(msk & validmsk)*100)
 end
 end
 %% basic statisitcs of succeed
@@ -79,26 +117,162 @@ for mi = 1:numel(msk_col)
     fprintf("%s Success experiments/Total %d/%d (%.1f%%)\n",msklabel,...
         sum(msk&sucsmsk),sum(msk),sum(msk&sucsmsk)/sum(msk)*100)
 end
-%%
-figh = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
-	{V4msk&sucsmsk_end,ITmsk&sucsmsk_end}, ["V4","IT"], {}, [], ["FC6", "BigGAN"], false);
-%% Final version
+
+%% Normalized by max of FC6 evolution. 
 [score_m_traj_col, block_traj_col, score_m_traj_extrap_col, block_traj_extrap_col, ...
    extrap_mask_col, sucsmsk_end, sucsmsk_max, tval_end_arr, pval_end_arr, tval_max_arr, pval_max_arr] =...
-   optim_traj_process(block_traces, score_traces, ["FC6", "BigGAN"], "max1", 35);
+   optim_traj_process(block_traces, score_traces, ["FC6", "BigGAN"], "max1", 50);
+for plot_indiv = [false,true]
+if plot_indiv, suffix = "_w_indiv"; else, suffix = ""; end
+% Two Animal Merged plot
 [figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
-   {V4msk&sucsmsk_max,ITmsk&sucsmsk_max}, ["V4","IT"], {Amsk,Bmsk}, ["Alfa","Beto"], ["FC6", "BigGAN"], true);
-saveallform([outdir,figdir],"Both_area_sep_FC6maxnorm_pop_w_indiv",figh)
-%% Final Published version
+	{V4msk & sucsmsk_end,ITmsk & sucsmsk_end}, ["V4","IT"], {}, [], ["FC6", "BigGAN"], plot_indiv);
+title(T,["Mask: any thread succeed per end blocks (p<0.01)", "Normalization: FC6 max activation"])
+saveallform([outdir,figdir],"Both_area_sep_FC6maxnorm_pop"+suffix,figh)
+% Two Animal Merged plot use valid mask
+[figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+	{V4msk & sucsmsk_end & validmsk,ITmsk & sucsmsk_end & validmsk}, ["V4","IT"], {}, [], ["FC6", "BigGAN"], plot_indiv);
+title(T,["Mask: any thread succeed per end blocks (p<0.01) & no baseline jump, length > 15", "Normalization: FC6 max activation"])
+saveallform([outdir,figdir],"Both_area_sep_valid_FC6maxnorm_pop"+suffix,figh)
+% Two Animal separated plot 
+[figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+   {V4msk&sucsmsk_end,ITmsk&sucsmsk_end}, ["V4","IT"], {Amsk,Bmsk}, ["Alfa","Beto"], ["FC6", "BigGAN"], plot_indiv);
+title(T,["Mask: any thread succeed per end blocks (p<0.01)", "Normalization: FC6 max activation"])
+saveallform([outdir,figdir],"Both_anim_area_sep_FC6maxnorm_pop"+suffix,figh)
+% Two Animal separated plot with validation mask
+[figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+   {V4msk&sucsmsk_end & validmsk,ITmsk&sucsmsk_end & validmsk}, ["V4","IT"], {Amsk,Bmsk}, ["Alfa","Beto"], ["FC6", "BigGAN"], plot_indiv);
+title(T,["Mask: any thread succeed per end blocks (p<0.01) & no baseline jump, length > 15", "Normalization: FC6 max activation"])
+saveallform([outdir,figdir],"Both_anim_area_sep_valid_FC6maxnorm_pop"+suffix,figh)
+end
+
+%% Max both thread
 [score_m_traj_col, block_traj_col, score_m_traj_extrap_col, block_traj_extrap_col, ...
    extrap_mask_col, sucsmsk_end, sucsmsk_max, tval_end_arr, pval_end_arr, tval_max_arr, pval_max_arr] =...
-   optim_traj_process(block_traces, score_traces, ["FC6", "BigGAN"], "max12", 35);
+   optim_traj_process(block_traces, score_traces, ["FC6", "BigGAN"], "max12", 50);
+for plot_indiv = [false,true]
+if plot_indiv, suffix = "_w_indiv"; else, suffix = ""; end
+% Two Animal Merged plot
+[figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+	{V4msk & sucsmsk_end,ITmsk & sucsmsk_end}, ["V4","IT"], {}, [], ["FC6", "BigGAN"], plot_indiv);
+title(T,["Mask: any thread succeed per end blocks (p<0.01)", "Normalization: max activation both"])
+saveallform([outdir,figdir],"Both_area_sep_maxbothnorm_pop"+suffix,figh)
+% Two Animal Merged plot use valid mask
+[figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+	{V4msk & sucsmsk_end & validmsk,ITmsk & sucsmsk_end & validmsk}, ["V4","IT"], {}, [], ["FC6", "BigGAN"], plot_indiv);
+title(T,["Mask: any thread succeed per end blocks (p<0.01) & no baseline jump, length > 15", "Normalization: max activation both"])
+saveallform([outdir,figdir],"Both_area_sep_valid_maxbothnorm_pop"+suffix,figh)
+% Two Animal separated plot 
+[figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+   {V4msk&sucsmsk_end,ITmsk&sucsmsk_end}, ["V4","IT"], {Amsk,Bmsk}, ["Alfa","Beto"], ["FC6", "BigGAN"], plot_indiv);
+title(T,["Mask: any thread succeed per end blocks (p<0.01)", "Normalization: max activation both"])
+saveallform([outdir,figdir],"Both_anim_area_sep_maxbothnorm_pop"+suffix,figh)
+% Two Animal separated plot with validation mask
+[figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+   {V4msk&sucsmsk_end & validmsk,ITmsk&sucsmsk_end & validmsk}, ["V4","IT"], {Amsk,Bmsk}, ["Alfa","Beto"], ["FC6", "BigGAN"], plot_indiv);
+title(T,["Mask: any thread succeed per end blocks (p<0.01) & no baseline jump, length > 15", "Normalization: max activation both"])
+saveallform([outdir,figdir],"Both_anim_area_sep_valid_maxbothnorm_pop"+suffix,figh)
+end
+
+%% Raw
+[score_m_traj_col, block_traj_col, score_m_traj_extrap_col, block_traj_extrap_col, ...
+   extrap_mask_col, sucsmsk_end, sucsmsk_max, tval_end_arr, pval_end_arr, tval_max_arr, pval_max_arr] =...
+   optim_traj_process(block_traces, score_traces, ["FC6", "BigGAN"], "none", 50);
+for plot_indiv = [false,true]
+if plot_indiv, suffix = "_w_indiv"; else, suffix = ""; end
+% Two Animal Merged plot
+[figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+	{V4msk & sucsmsk_end,ITmsk & sucsmsk_end}, ["V4","IT"], {}, [], ["FC6", "BigGAN"], plot_indiv);
+title(T,["Mask: any thread succeed per end blocks (p<0.01)", "Normalization: none"])
+saveallform([outdir,figdir],"Both_area_sep_raw_pop"+suffix,figh)
+% Two Animal Merged plot use valid mask
+[figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+	{V4msk & sucsmsk_end & validmsk,ITmsk & sucsmsk_end & validmsk}, ["V4","IT"], {}, [], ["FC6", "BigGAN"], plot_indiv);
+title(T,["Mask: any thread succeed per end blocks (p<0.01) & no baseline jump, length > 15", "Normalization: none"])
+saveallform([outdir,figdir],"Both_area_sep_valid_raw_pop"+suffix,figh)
+% Two Animal separated plot 
+[figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+   {V4msk&sucsmsk_end,ITmsk&sucsmsk_end}, ["V4","IT"], {Amsk,Bmsk}, ["Alfa","Beto"], ["FC6", "BigGAN"], plot_indiv);
+title(T,["Mask: any thread succeed per end blocks (p<0.01)", "Normalization: none"])
+saveallform([outdir,figdir],"Both_anim_area_sep_raw_pop"+suffix,figh)
+% Two Animal separated plot with validation mask
+[figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+   {V4msk&sucsmsk_end & validmsk,ITmsk&sucsmsk_end & validmsk}, ["V4","IT"], {Amsk,Bmsk}, ["Alfa","Beto"], ["FC6", "BigGAN"], plot_indiv);
+title(T,["Mask: any thread succeed per end blocks (p<0.01) & no baseline jump, length > 15", "Normalization: none"])
+saveallform([outdir,figdir],"Both_anim_area_sep_valid_raw_pop"+suffix,figh)
+end
+%%
+%% Raw minus first gen
+[score_m_traj_col, block_traj_col, score_m_traj_extrap_col, block_traj_extrap_col, ...
+   extrap_mask_col, sucsmsk_end, sucsmsk_max, tval_end_arr, pval_end_arr, tval_max_arr, pval_max_arr] =...
+   optim_traj_process(block_traces, score_traces, ["FC6", "BigGAN"], "raw_initsubtr12", 50);
+for plot_indiv = [false,true]
+if plot_indiv, suffix = "_w_indiv"; else, suffix = ""; end
+% Two Animal Merged plot
+[figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+	{V4msk & sucsmsk_end,ITmsk & sucsmsk_end}, ["V4","IT"], {}, [], ["FC6", "BigGAN"], plot_indiv);
+title(T,["Mask: any thread succeed per end blocks (p<0.01)", "Normalization: just subtract mean activation of 1st block of both thread"])
+saveallform([outdir,figdir],"Both_area_sep_rawinitsubtr12_pop"+suffix,figh)
+% Two Animal Merged plot use valid mask
+[figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+	{V4msk & sucsmsk_end & validmsk,ITmsk & sucsmsk_end & validmsk}, ["V4","IT"], {}, [], ["FC6", "BigGAN"], plot_indiv);
+title(T,["Mask: any thread succeed per end blocks (p<0.01) & no baseline jump, length > 15", "Normalization: just subtract mean activation of 1st block of both thread"])
+saveallform([outdir,figdir],"Both_area_sep_valid_rawinitsubtr12_pop"+suffix,figh)
+% Two Animal separated plot 
+[figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+   {V4msk&sucsmsk_end,ITmsk&sucsmsk_end}, ["V4","IT"], {Amsk,Bmsk}, ["Alfa","Beto"], ["FC6", "BigGAN"], plot_indiv);
+title(T,["Mask: any thread succeed per end blocks (p<0.01)", "Normalization: just subtract mean activation of 1st block of both thread"])
+saveallform([outdir,figdir],"Both_anim_area_sep_rawinitsubtr12_pop"+suffix,figh)
+% Two Animal separated plot with validation mask
+[figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+   {V4msk&sucsmsk_end & validmsk,ITmsk&sucsmsk_end & validmsk}, ["V4","IT"], {Amsk,Bmsk}, ["Alfa","Beto"], ["FC6", "BigGAN"], plot_indiv);
+title(T,["Mask: any thread succeed per end blocks (p<0.01) & no baseline jump, length > 15", "Normalization: just subtract mean activation of 1st block of both thread"])
+saveallform([outdir,figdir],"Both_anim_area_sep_valid_rawinitsubtr12_pop"+suffix,figh)
+end
+
+%% Raw minus first gen of fc6
+[score_m_traj_col, block_traj_col, score_m_traj_extrap_col, block_traj_extrap_col, ...
+   extrap_mask_col, sucsmsk_end, sucsmsk_max, tval_end_arr, pval_end_arr, tval_max_arr, pval_max_arr] =...
+   optim_traj_process(block_traces, score_traces, ["FC6", "BigGAN"], "raw_initsubtr1", 50);
+for plot_indiv = [false,true]
+if plot_indiv, suffix = "_w_indiv"; else, suffix = ""; end
+% Two Animal Merged plot
+[figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+	{V4msk & sucsmsk_end,ITmsk & sucsmsk_end}, ["V4","IT"], {}, [], ["FC6", "BigGAN"], plot_indiv);
+title(T,["Mask: any thread succeed per end blocks (p<0.01)", "Normalization: just subtract mean activation of 1st block of FC6"])
+saveallform([outdir,figdir],"Both_area_sep_rawinitsubtrFC6_pop"+suffix,figh)
+% Two Animal Merged plot use valid mask
+[figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+	{V4msk & sucsmsk_end & validmsk,ITmsk & sucsmsk_end & validmsk}, ["V4","IT"], {}, [], ["FC6", "BigGAN"], plot_indiv);
+title(T,["Mask: any thread succeed per end blocks (p<0.01) & no baseline jump, length > 15", "Normalization: just subtract mean activation of 1st block of FC6"])
+saveallform([outdir,figdir],"Both_area_sep_valid_rawinitsubtrFC6_pop"+suffix,figh)
+% Two Animal separated plot 
+[figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+   {V4msk&sucsmsk_end,ITmsk&sucsmsk_end}, ["V4","IT"], {Amsk,Bmsk}, ["Alfa","Beto"], ["FC6", "BigGAN"], plot_indiv);
+title(T,["Mask: any thread succeed per end blocks (p<0.01)", "Normalization: just subtract mean activation of 1st block of FC6"])
+saveallform([outdir,figdir],"Both_anim_area_sep_rawinitsubtrFC6_pop"+suffix,figh)
+% Two Animal separated plot with validation mask
+[figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+   {V4msk&sucsmsk_end & validmsk,ITmsk&sucsmsk_end & validmsk}, ["V4","IT"], {Amsk,Bmsk}, ["Alfa","Beto"], ["FC6", "BigGAN"], plot_indiv);
+title(T,["Mask: any thread succeed per end blocks (p<0.01) & no baseline jump, length > 15", "Normalization: just subtract mean activation of 1st block of FC6"])
+saveallform([outdir,figdir],"Both_anim_area_sep_valid_rawinitsubtrFC6_pop"+suffix,figh)
+end
+
+
+%% Final Publishable version
+[score_m_traj_col, block_traj_col, score_m_traj_extrap_col, block_traj_extrap_col, ...
+   extrap_mask_col, sucsmsk_end, sucsmsk_max, tval_end_arr, pval_end_arr, tval_max_arr, pval_max_arr] =...
+   optim_traj_process(block_traces, score_traces, ["FC6", "BigGAN"], "max12", 50);
 [figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
    {V4msk&sucsmsk_max,ITmsk&sucsmsk_max}, ["V4","IT"], {Amsk,Bmsk}, ["Alfa","Beto"], ["FC6", "BigGAN"], true);
 for i=1:4,nexttile(T,i);ylim([0,1]);end
-saveallform([outdir,figdir],"Both_area_sep_maxbothnorm_pop_w_indiv",figh)
+saveallform([outdir,figdir],"Both_area_anim_sep_maxbothnorm_pop_w_indiv",figh)
 % for i=1:4,nexttile(T,i);ylim([0,1]);end
-
+%%
+[figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+   {V4msk&sucsmsk_max&validmsk,ITmsk&sucsmsk_max&validmsk}, ["V4","IT"], {Amsk,Bmsk}, ["Alfa","Beto"], ["FC6", "BigGAN"], true);
+for i=1:4,nexttile(T,i);ylim([0,1]);end
+saveallform([outdir,figdir],"Both_area_anim_sep_valid_maxbothnorm_pop_w_indiv",figh)
 %%
 figh = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
    {V4msk&sucsmsk_max,ITmsk&sucsmsk_max}, ["V4","IT"], {Amsk,Bmsk}, ["Alfa","Beto"], ["FC6", "BigGAN"], true);
@@ -107,6 +281,35 @@ saveallform([outdir,figdir],"Both_area_sep_maxnorm_pop_w_indiv",figh)
 figh = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
    {V4msk&sucsmsk_max,ITmsk&sucsmsk_max}, ["V4","IT"], {Amsk,Bmsk}, ["Alfa","Beto"], ["FC6", "BigGAN"], false);
 saveallform([outdir,figdir],"Both_area_sep_maxnorm_pop",figh)
+
+%%
+[score_m_traj_col, block_traj_col, score_m_traj_extrap_col, block_traj_extrap_col, ...
+   extrap_mask_col, sucsmsk_end, sucsmsk_max, tval_end_arr, pval_end_arr, tval_max_arr, pval_max_arr] =...
+   optim_traj_process(block_traces, score_traces, ["FC6", "BigGAN"], "none", 50);
+
+figh = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+	{V4msk & sucsmsk_end,ITmsk & sucsmsk_end}, ["V4","IT"], {}, [], ["FC6", "BigGAN"], false);
+saveallform([outdir,figdir],"Both_area_sep_raw_pop",figh)
+figh = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+	{V4msk & sucsmsk_end,ITmsk & sucsmsk_end}, ["V4","IT"], {}, [], ["FC6", "BigGAN"], true);
+saveallform([outdir,figdir],"Both_area_sep_raw_pop_w_indiv",figh)
+%%
+[figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+   {V4msk&sucsmsk_end,ITmsk&sucsmsk_end}, ["V4","IT"], {Amsk,Bmsk}, ["Alfa","Beto"], ["FC6", "BigGAN"], true);
+saveallform([outdir,figdir],"Both_anim_area_sep_raw_pop_w_indiv",figh)
+[figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+   {V4msk&sucsmsk_end,ITmsk&sucsmsk_end}, ["V4","IT"], {Amsk,Bmsk}, ["Alfa","Beto"], ["FC6", "BigGAN"], false);
+saveallform([outdir,figdir],"Both_anim_area_sep_raw_pop",figh)
+
+%%
+[figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+   {V4msk&sucsmsk_end & validmsk,ITmsk&sucsmsk_end & validmsk}, ["V4","IT"], {Amsk,Bmsk}, ["Alfa","Beto"], ["FC6", "BigGAN"], true);
+saveallform([outdir,figdir],"Both_anim_area_sep_valid_raw_pop_w_indiv",figh)
+[figh,T] = optim_traj_compare_tileplot(score_m_traj_extrap_col, block_traj_extrap_col, extrap_mask_col, ...
+   {V4msk&sucsmsk_end & validmsk,ITmsk&sucsmsk_end & validmsk}, ["V4","IT"], {Amsk,Bmsk}, ["Alfa","Beto"], ["FC6", "BigGAN"], false);
+saveallform([outdir,figdir],"Both_anim_area_sep_valid_raw_pop",figh)
+
+
 %% Collect stats 
 % normalize by max of the two trajs
 % normalize by min or init gen the two trajs

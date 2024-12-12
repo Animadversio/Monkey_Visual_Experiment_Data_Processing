@@ -12,11 +12,11 @@ disp(ExpRecord(ftrrows,:))
 [meta_new, rasters_new, lfps_new, Trials_new] = loadExperiments(ftrrows([43,45,46:end]), Animal, false);%43,45
 %7,47;7,47,86:
 
-%%
+%% 
 eptymsk = cellfun(@isempty,meta_new);
-meta_new(eptymsk)=[];
-rasters_new(eptymsk)=[];
-Trials_new(eptymsk)=[];
+% meta_new(eptymsk)=[];
+% rasters_new(eptymsk)=[];
+% Trials_new(eptymsk)=[];
 %% New Function
 BFEStats = Evol_BigGAN_FC6_Collect_Stats_fun(meta_new(1:end), rasters_new(1:end), Trials_new(1:end));
 %%

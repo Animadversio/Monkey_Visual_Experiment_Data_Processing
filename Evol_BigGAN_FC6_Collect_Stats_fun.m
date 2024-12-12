@@ -2,6 +2,8 @@ function BFEStats = Evol_BigGAN_FC6_Collect_Stats_fun(meta_new, rasters_new, Tri
 % Compress the information relevant to the preferred channel evolution into a small structure
 % Create a folder containing that structure.
 saveroot = "E:\OneDrive - Washington University in St. Louis\Evol_BigGAN_FC6_cmp"; 
+saveroot = "E:\OneDrive - Harvard University\Evol_StyleGAN_cmp"; 
+% saveroot = "E:\OneDrive - Washington University in St. Louis\Evol_BigGAN_FC6_cmp"; 
 for iTr = 1:numel(meta_new)
 meta = meta_new{iTr};
 if contains(meta.ephysFN,["Alfa","ALfa"]), Animal = "Alfa";
@@ -9,6 +11,9 @@ elseif contains(meta.ephysFN,["Beto"]), Animal = "Beto";end
 rasters = rasters_new{iTr};
 % lfps = lfps_new{Triali};
 Trials = Trials_new{iTr};
+if isnan(rasters) | isempty(rasters)
+    continue
+end
 fprintf("Processing experiment %s %s\n",meta.ephysFN, meta.expControlFN);
 %% Record Basic Infos
 Expi = iTr;% FIXME! Expi should be decoded from the ExpRecord.
@@ -142,7 +147,7 @@ expday = datetime(meta.expControlFN(1:6),'InputFormat','yyMMdd');
 fdrnm = compose("%s-Chan%02d", stimparts{end-1}, pref_chan(1));
 figdir = fullfile(saveroot, fdrnm);
 BFEStats(iTr).meta.fdrnm = fdrnm; 
-BFEStats(iTr).meta.figdir = figdir;
+BFEStats(iTr).meta.figdir = figdir; 
 if exist(figdir),warning("%s figure directory exist! Beware",figdir);end
 mkdir(figdir)
 EvolStat = BFEStats(iTr);
