@@ -27,6 +27,10 @@ bsl = Snat.resp.bslmean(unit_idx);
 imgnm_uniq = Snat.stim.imgname_uniq;
 imgfps = Snat.stim.imgfps;
 imgN = numel(rspvec);
+if K > imgN, 
+    fprintf("Use image number %d instead of K %d as K. avoid overflow.\n", imgN,K);
+    K = imgN;
+end
 [rsp_sort, sortidx] = sort(rspvec);
 if sorted % sort the response from low to high to see the distribution
     rspvec = rspvec(sortidx);
