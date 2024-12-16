@@ -38,6 +38,14 @@ if ~exist(figdir, 'dir'), mkdir(figdir); end
 Expi = nan;
 
 prefchan = Trials.TrialRecord.User.prefChan;
+if numel(prefchan) > 1
+    % check all prefchan are the same
+    if ~all(prefchan == prefchan(1))
+        disp(prefchan)
+        error("Multiple prefchan found, please check the data %s", meta.ephysFN);
+    end
+    prefchan = prefchan(1);
+end
 prefchan_ids = find(meta.spikeID == prefchan);
 unit_name_arr = generate_unit_labels(meta.spikeID);
 [activ_msk, unit_name_arr, unit_num_arr] = check_channel_active_label(unit_name_arr, meta.spikeID, rasters);
@@ -174,6 +182,7 @@ for iCh = prefchan_ids %1:size(rasters,1)
     psth_mean_cls = cellfun(@(idx)mean(rasters(iCh,:,idx),3), idx_arr_cls, 'uni',0);
     psth_col_nois = cellfun(@(idx)rasters(iCh,:,idx), idx_arr_nos, 'uni',0); % All trials
     psth_col_clas = cellfun(@(idx)rasters(iCh,:,idx), idx_arr_cls, 'uni',0);
+end
     % Compute Statistics for psth. 
     stats_nois = calc_tune_stats(psth_col_nois);
     stats_row_nois = arrayfun(@(i)calc_tune_stats(psth_col_nois(i,:)), 1:nrow_nos);
@@ -187,9 +196,13 @@ for iCh = prefchan_ids %1:size(rasters,1)
     HessBGStats(Triali).class.stats_col = stats_col_clas;
     HessBGStats(Triali).noise.stats_row = stats_row_nois;
     HessBGStats(Triali).noise.stats_col = stats_col_nois;
-    end
+    % population average response matrix for each image 
     HessBGStats(Triali).class.resp_mat = cell2mat(shiftdim(cellfun(@(idx)mean(rasters(:,51:200,idx),[2,3]), idx_arr_cls, 'Un', 0),-1));
     HessBGStats(Triali).noise.resp_mat = cell2mat(shiftdim(cellfun(@(idx)mean(rasters(:,51:200,idx),[2,3]), idx_arr_nos, 'Un', 0),-1));
+    % population single trial response for each image, it's a cell array, as the trial number is different for each image
+    HessBGStats(Triali).class.resp_sgtr_col = cellfun(@(idx)squeeze(mean(rasters(:,51:200,idx),[2])), idx_arr_cls, 'Un', 0);
+    HessBGStats(Triali).noise.resp_sgtr_col = cellfun(@(idx)squeeze(mean(rasters(:,51:200,idx),[2])), idx_arr_nos, 'Un', 0);
+    % population average PSTH for each image 
     HessBGStats(Triali).class.psth_col = cell2mat(shiftdim(cellfun(@(idx)mean(rasters(:,:,idx),[3]), idx_arr_cls, 'Un', 0),-2));
     HessBGStats(Triali).noise.psth_col = cell2mat(shiftdim(cellfun(@(idx)mean(rasters(:,:,idx),[3]), idx_arr_nos, 'Un', 0),-2));
 end
