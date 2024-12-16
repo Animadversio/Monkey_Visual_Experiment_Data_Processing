@@ -57,7 +57,7 @@ else
     ExpSpecTable_Aug_caos = readtable("Exp_Record_Caos.xlsx");
     ExpSpecTable_Aug_diab = readtable("Exp_Record_Diablito.xlsx");
 end
-if nargin < 1
+if ~ (exist('Animal','var') == 1)
     Animal = "Both";
 end
 switch Animal
