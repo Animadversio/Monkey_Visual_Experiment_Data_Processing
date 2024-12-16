@@ -12,18 +12,59 @@ currows = find(contains(ExpRecord.expControlFN,["241209","241210"]));  % ,"24120
 bhvfns = ExpRecord.expControlFN(currows);
 %%
 Animal = "Diablito"; Set_Path;
-currows = find(contains(ExpRecord.expControlFN,["241203"])); 
+currows = find(contains(ExpRecord.expControlFN,["241211", "241212"])); % "241203"
 [meta_new, rasters_new, lfps_new, Trials_new] = loadExperiments(currows(1:end), Animal, false);
 bhvfns = ExpRecord.expControlFN(currows);
 %%
+Animal = "Caos";
+ExpRecord = loadBackupExpRecord(Animal);
+currows = find(contains(ExpRecord.expControlFN,["241202","241204","241209","241210"]));  % ,
+[meta_new, rasters_new, lfps_new, Trials_new] = loadExperiments(currows(1:end), Animal, false);
+bhvfns = ExpRecord.expControlFN(currows);
+%%
+Animal = "Diablito"; 
+ExpRecord = loadBackupExpRecord(Animal);
+currows = find(contains(ExpRecord.expControlFN,["241203", "241211", "241212"]) & ...
+               contains(ExpRecord.Exp_collection, "BigGAN_Hessian") ); % 
+[meta_new, rasters_new, lfps_new, Trials_new] = loadExperiments(currows, Animal, false);
+bhvfns = ExpRecord.expControlFN(currows);
+%%  Final loading script for Hessian experiments
+ExpRecord = [loadBackupExpRecord("Caos");...
+             loadBackupExpRecord("Diablito")];
+currows = find(contains(ExpRecord.expControlFN,["241202","241204","241209","241210","241203", "241211", "241212"]) & ...
+               contains(ExpRecord.Exp_collection, "BigGAN_Hessian") ); % 
+[meta_new, rasters_new, lfps_new, Trials_new] = loadExperiments_tabrows(ExpRecord(currows, :), false);
+bhvfns = ExpRecord.expControlFN(currows);
+
 %%
 hess_mask = contains(ExpRecord.Exp_collection(currows), "BigGAN_Hessian");
+disp(ExpRecord(currows(hess_mask),:))
 HEStats = Hess_BigGAN_collect_Stats_fun(meta_new(hess_mask), rasters_new(hess_mask), Trials_new(hess_mask));
+
+%%  Final loading script for BigGAN-FC6 experiments
+ExpRecord = [loadBackupExpRecord("Caos");...
+             loadBackupExpRecord("Diablito")];
+currows = find(contains(ExpRecord.expControlFN,["241202","241204","241209","241210","241203", "241211", "241212"]) & ...
+               contains(ExpRecord.Exp_collection, "BigGAN_FC6") & ...
+                ~isnan(ExpRecord.Expi)); % 
+[meta_exp, rasters_exp, ~, Trials_exp] = loadExperiments_tabrows(ExpRecord(currows, :), false);
+
+%% batch collect stats
+BFEStats = Evol_BigGAN_FC6_Collect_Stats_fun(meta_exp(1:end), rasters_exp(1:end), Trials_exp(1:end));
+%% batch animation
+Evol_BigGAN_FC6_Animation_fun(BFEStats)
+%% save stats for all experiments
+matdir = "E:\OneDrive - Harvard University\Mat_Statistics";
+savefast(fullfile(matdir, "CD_BigGAN_Hessian_Manifold_Stats.mat"), "HEStats");
+savefast(fullfile(matdir, "CD_BigGAN_FC6_Evolution_Stats.mat"), "BFEStats");
 %%
 hess_exp_record = ExpRecord(currows(hess_mask), :);
+disp(hess_exp_record)
+
+
+
 %%
 saveroot = "E:\OneDrive - Harvard University\BigGAN_Hessian";
-Expi = 4;
 for Expi = 1:size(hess_exp_record,1)
 % pref_chan = 71;
 ephys_name = HEStats(Expi).meta.ephysFN;
@@ -38,7 +79,7 @@ noise_imgs = arrayfun(@(imgnm)imread(fullfile(stimroot, imgnm+".jpg")), ...
             HEStats(Expi).noise.imgnm_arr, 'UniformOutput', false);
 class_imgs = arrayfun(@(imgnm)imread(fullfile(stimroot, imgnm+".jpg")), ...
             HEStats(Expi).class.imgnm_arr, 'UniformOutput', false);
-figure(2);clf;
+figure(2);clf;set(2,'pos',[ 81         100       1720         750])
 subplot(1,2,1);
 if numel(class_imgs) > 0
     montage(class_imgs','Size',size(HEStats(Expi).class.imgnm_arr),...
@@ -79,9 +120,12 @@ for chan_id = pref_chan_id'
     end
     % plot the heatmap of the response matrix
     figure(1);clf;
-    set(gcf, 'Position', [100, 100, 1300, 600]);
+    set(1, 'Position', [100, 100, 1300, 600]);
+    % Calculate shared color limits from both matrices
+    CLIM = prctile([class_resp_mat(:); noise_resp_mat(:)],[2,98],'all')';
     subplot(1,2,1);
     imagesc(class_resp_mat);
+    clim(CLIM);
     axis image
     colorbar;
     yticks(1:length(class_eig_id_arr));
@@ -93,6 +137,7 @@ for chan_id = pref_chan_id'
     title(sprintf("Class Response Matrix for Channel %s (idx: %d)", unit_str, chan_id));
     subplot(1,2,2);
     imagesc(noise_resp_mat);
+    clim(CLIM);
     axis image
     colorbar;
     yticks(1:length(noise_eig_id_arr));
@@ -106,10 +151,10 @@ for chan_id = pref_chan_id'
     saveallform(figdir, compose("hess_class_noise_resp_mat_pref_chan%s", unit_str),1,["png","pdf"]);
 
 
-    CLIM = prctile([class_resp_mat(:); noise_resp_mat(:)],[2,98],'all')';
+    % CLIM = prctile([class_resp_mat(:); noise_resp_mat(:)],[2,98],'all')';
     frame_noise_imgs_col = score_frame_image_arr(noise_imgs, noise_resp_mat, CLIM);
     frame_class_imgs_col = score_frame_image_arr(class_imgs, class_resp_mat, CLIM);
-    figure(3);clf;set(gcf,'pos',[ 81         100       1720         750])
+    figure(3);clf;set(3,'pos',[ 81         100       1720         750])
     subplot(1,2,1);
     if numel(class_imgs) > 0
         imagesc(class_resp_mat);

@@ -3,11 +3,15 @@ function BFEStats = Evol_BigGAN_FC6_Collect_Stats_fun(meta_new, rasters_new, Tri
 % Create a folder containing that structure.
 saveroot = "E:\OneDrive - Washington University in St. Louis\Evol_BigGAN_FC6_cmp"; 
 saveroot = "E:\OneDrive - Harvard University\Evol_StyleGAN_cmp"; 
+saveroot = "E:\OneDrive - Harvard University\BigGAN_Hessian";
 % saveroot = "E:\OneDrive - Washington University in St. Louis\Evol_BigGAN_FC6_cmp"; 
 for iTr = 1:numel(meta_new)
 meta = meta_new{iTr};
 if contains(meta.ephysFN,["Alfa","ALfa"]), Animal = "Alfa";
-elseif contains(meta.ephysFN,["Beto"]), Animal = "Beto";end
+elseif contains(meta.ephysFN,["Beto"]), Animal = "Beto";
+elseif contains(meta.ephysFN,["Caos"]), Animal = "Caos";
+elseif contains(meta.ephysFN,["Diablito"]), Animal = "Diablito";
+end
 rasters = rasters_new{iTr};
 % lfps = lfps_new{Triali};
 Trials = Trials_new{iTr};

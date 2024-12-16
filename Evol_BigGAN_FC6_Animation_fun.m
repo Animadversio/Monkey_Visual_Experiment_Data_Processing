@@ -8,8 +8,8 @@ function videopaths = Evol_BigGAN_FC6_Animation_fun(EStats)
 % (so it's bsl subtracted)
 % result_dir = "E:\OneDrive - Washington University in St. Louis\BigGAN_Evol_Movies";
 ExpType = "BigGAN_FC6";
-result_dir = "E:\OneDrive - Harvard University\Evol_StyleGAN_cmp";
-ExpType = "StyleGAN";
+result_dir = "E:\OneDrive - Harvard University\BigGAN_Hessian";
+% ExpType = "StyleGAN";
 videopaths = [];
 for Expi = 1:length(EStats)
 % fprintf("Processing BigGAN-FC6 Evolution Exp %d\n",Expi)
@@ -26,6 +26,8 @@ prefchan_id = find((EStats(Expi).units.spikeID == EStats(Expi).evol.pref_chan(1)
 unit_in_pref_chan = EStats(Expi).evol.unit_in_pref_chan; % this numbering corresponds to A,B,C... U is not included. 
 % chid = find((EStats(Expi).units.unit_num_arr == unit_in_pref_chan(1)) & (EStats(Expi).units.spikeID == EStats(Expi).evol.pref_chan(1))); 
 ui = unit_in_pref_chan(1); %find(prefchan_id==chid);
+
+ui = 1; % assume the saving part has handled the image
 Window = 50:200;
 % Find the image name and score for the best image in each block.
 % Compute this before hand for faster video generation 
