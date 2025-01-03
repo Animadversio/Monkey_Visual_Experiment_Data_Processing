@@ -17,8 +17,10 @@ for iTr = 1:length(Table_Evos_SPAM)
     SPAM_stats(iTr).total_variation_raw = total_variation;
     SPAM_stats(iTr).dirichlet_energy_raw = dirichlet_energy;
     [centrality_weighted_avg, centrality_variance] = quantify_centrality(SPAM, 0.0);
+    % Floor at 0, this one seems NOT to be a good measure
     SPAM_stats(iTr).centrality_weighted_avg_zerofloor = centrality_weighted_avg;
     SPAM_stats(iTr).centrality_variance_zerofloor = centrality_variance;
+    % Floor at min R2, this one seems to be a good measure
     [centrality_weighted_avg, centrality_variance] = quantify_centrality(SPAM, min(SPAM(:)));
     SPAM_stats(iTr).centrality_weighted_avg_minfloor = centrality_weighted_avg;
     SPAM_stats(iTr).centrality_variance_minfloor = centrality_variance;
@@ -26,6 +28,8 @@ end
 %%
 netfigdir = "N:\Stimuli\Project_BigGAN_paired_evolutions\Figures and Analyses\Evol_spatial_attribution_smoothness";
 figdir = "E:\OneDrive - Harvard University\Manuscript_BigGAN\Figures\Evol_spatial_attribution_smoothness";
+savefast(fullfile(netfigdir, 'SPAM_smoothness_stats.mat'), 'SPAM_stats')
+savefast(fullfile(figdir, 'SPAM_smoothness_stats.mat'), 'SPAM_stats')
 %%
 figure('position',[1440         913         986         425])
 subplot(1,2,1)
