@@ -11,75 +11,118 @@ for iTr = 1:length(Table_Evos_SPAM)
     SPAM_stats(iTr).mean_R2 = mean(SPAM(:));
     % Smooth
     [total_variation, dirichlet_energy] = quantify_smoothness(norm_SPAM);
-    [centrality_weighted_avg, centrality_variance] = quantify_centrality(norm_SPAM, 0.0);
     SPAM_stats(iTr).total_variation_norm = total_variation;
     SPAM_stats(iTr).dirichlet_energy_norm = dirichlet_energy;
-    SPAM_stats(iTr).centrality_weighted_avg_norm = centrality_weighted_avg;
-    SPAM_stats(iTr).centrality_variance_norm = centrality_variance;
     [total_variation, dirichlet_energy] = quantify_smoothness(SPAM);
-    [centrality_weighted_avg, centrality_variance] = quantify_centrality(SPAM, 0.0);
     SPAM_stats(iTr).total_variation_raw = total_variation;
     SPAM_stats(iTr).dirichlet_energy_raw = dirichlet_energy;
-    SPAM_stats(iTr).centrality_weighted_avg_raw = centrality_weighted_avg;
-    SPAM_stats(iTr).centrality_variance_raw = centrality_variance;
+    [centrality_weighted_avg, centrality_variance] = quantify_centrality(SPAM, 0.0);
+    SPAM_stats(iTr).centrality_weighted_avg_zerofloor = centrality_weighted_avg;
+    SPAM_stats(iTr).centrality_variance_zerofloor = centrality_variance;
+    [centrality_weighted_avg, centrality_variance] = quantify_centrality(SPAM, min(SPAM(:)));
+    SPAM_stats(iTr).centrality_weighted_avg_minfloor = centrality_weighted_avg;
+    SPAM_stats(iTr).centrality_variance_minfloor = centrality_variance;
 end
+%%
+netfigdir = "N:\Stimuli\Project_BigGAN_paired_evolutions\Figures and Analyses\Evol_spatial_attribution_smoothness";
+figdir = "E:\OneDrive - Harvard University\Manuscript_BigGAN\Figures\Evol_spatial_attribution_smoothness";
 %%
 figure('position',[1440         913         986         425])
 subplot(1,2,1)
 scatter([SPAM_stats.max_R2],[SPAM_stats.total_variation_norm])
+[r, p] = corr([SPAM_stats.max_R2]', [SPAM_stats.total_variation_norm]', 'Type', 'Pearson');
+title(sprintf("Pearson Corr: %.2f, p val=%.1e", r, p))
 ylabel("Total Variation (Normalized SPAM)")
 xlabel("Max R2")
 subplot(1,2,2)
 scatter([SPAM_stats.max_R2],[SPAM_stats.total_variation_raw])
+[r, p] = corr([SPAM_stats.max_R2]', [SPAM_stats.total_variation_raw]', 'Type', 'Pearson');
+title(sprintf("Pearson Corr: %.2f, p val=%.1e", r, p))
 ylabel("Total Variation (Raw SPAM)")
 xlabel("Max R2")
 sgtitle("Spatial Attribution Map Smoothness vs Max R2 of Response Prediction")
+saveallform([figdir, netfigdir], 'SPAM_TotalVariation_vs_max_R2', gcf)
 %%
 figure('position',[1440         913         986         425])
 subplot(1,2,1)
 scatter([SPAM_stats.mean_R2],[SPAM_stats.total_variation_norm])
+[r, p] = corr([SPAM_stats.mean_R2]', [SPAM_stats.total_variation_norm]', 'Type', 'Pearson');
+title(sprintf("Pearson Corr: %.2f, p val=%.1e", r, p))
 ylabel("Total Variation (Normalized SPAM)")
 xlabel("Mean R2")
 subplot(1,2,2)
 scatter([SPAM_stats.mean_R2],[SPAM_stats.total_variation_raw])
+[r, p] = corr([SPAM_stats.mean_R2]', [SPAM_stats.total_variation_raw]', 'Type', 'Pearson');
+title(sprintf("Pearson Corr: %.2f, p val=%.1e", r, p))
 ylabel("Total Variation (Raw SPAM)")
 xlabel("Mean R2")
 sgtitle("Spatial Attribution Map Smoothness vs Mean R2 of Response Prediction")
+saveallform([figdir, netfigdir], 'SPAM_TotalVariation_vs_mean_R2', gcf)
 %%
 figure('position',[1440         913         986         425])
 subplot(1,2,1)
 scatter([SPAM_stats.max_R2],[SPAM_stats.dirichlet_energy_norm])
+[r, p] = corr([SPAM_stats.max_R2]', [SPAM_stats.dirichlet_energy_norm]', 'Type', 'Pearson');
+title(sprintf("Pearson Corr: %.2f, p val=%.1e", r, p))
 ylabel("Dirichlet Energy (Normalized SPAM)")
 xlabel("Max R2")
 subplot(1,2,2)
 scatter([SPAM_stats.max_R2],[SPAM_stats.dirichlet_energy_raw])
+[r, p] = corr([SPAM_stats.max_R2]', [SPAM_stats.dirichlet_energy_raw]', 'Type', 'Pearson');
+title(sprintf("Pearson Corr: %.2f, p val=%.1e", r, p))
 ylabel("Dirichlet Energy (Raw SPAM)")
 xlabel("Max R2")
 sgtitle("Spatial Attribution Map Smoothness vs Max R2 of Response Prediction")
+saveallform([figdir, netfigdir], 'SPAM_DirichletEnergy_vs_max_R2', gcf)
 %%
 figure('position',[1440         913         986         425])
 subplot(1,2,1)
 scatter([SPAM_stats.mean_R2],[SPAM_stats.dirichlet_energy_norm])
+[r, p] = corr([SPAM_stats.mean_R2]', [SPAM_stats.dirichlet_energy_norm]', 'Type', 'Pearson');
+title(sprintf("Pearson Corr: %.2f, p val=%.1e", r, p))
 ylabel("Dirichlet Energy (Normalized SPAM)")
 xlabel("Mean R2")
 subplot(1,2,2)
 scatter([SPAM_stats.mean_R2],[SPAM_stats.dirichlet_energy_raw])
+[r, p] = corr([SPAM_stats.mean_R2]', [SPAM_stats.dirichlet_energy_raw]', 'Type', 'Pearson');
+title(sprintf("Pearson Corr: %.2f, p val=%.1e", r, p))
 ylabel("Dirichlet Energy (Raw SPAM)")
 xlabel("Mean R2")
 sgtitle("Spatial Attribution Map Smoothness vs Mean R2 of Response Prediction")
+saveallform([figdir, netfigdir], 'SPAM_DirichletEnergy_vs_mean_R2', gcf)
 %%
 figure('position',[1440         913         986         425])
 subplot(1,2,1)
-scatter([SPAM_stats.mean_R2],[SPAM_stats.centrality_weighted_avg_norm])
-ylabel("Centrality Weighted Avg (Normalized SPAM)")
+scatter([SPAM_stats.mean_R2],[SPAM_stats.centrality_weighted_avg_minfloor])
+[r, p] = corr([SPAM_stats.mean_R2]', [SPAM_stats.centrality_weighted_avg_minfloor]', 'Type', 'Pearson');
+title(sprintf("Pearson Corr: %.2f, p val=%.1e", r, p))
+ylabel("Weighted Avg Distance to Center of Mass (floor at min R2)")
 xlabel("Mean R2")
 subplot(1,2,2)
-scatter([SPAM_stats.mean_R2],[SPAM_stats.centrality_weighted_avg_raw])
-ylabel("Centrality Weighted Avg (Raw SPAM)")
+scatter([SPAM_stats.mean_R2],[SPAM_stats.centrality_weighted_avg_zerofloor])
+[r, p] = corr([SPAM_stats.mean_R2]', [SPAM_stats.centrality_weighted_avg_zerofloor]', 'Type', 'Pearson');
+title(sprintf("Pearson Corr: %.2f, p val=%.1e", r, p))
+ylabel("Weighted Avg Distance to Center of Mass (floor at 0)")
 xlabel("Mean R2")
 sgtitle("Spatial Attribution Map Centrality Weighted Avg vs Mean R2 of Response Prediction")
+saveallform([figdir, netfigdir], 'SPAM_CentralityWeightedAvg_vs_mean_R2', gcf)
 
-
+%%
+figure('position',[1440         913         986         425])
+subplot(1,2,1)
+scatter([SPAM_stats.max_R2],[SPAM_stats.centrality_weighted_avg_minfloor])
+[r, p] = corr([SPAM_stats.max_R2]', [SPAM_stats.centrality_weighted_avg_minfloor]', 'Type', 'Pearson');
+title(sprintf("Pearson Corr: %.2f, p val=%.1e", r, p))
+ylabel("Weighted Avg Distance to Center of Mass (floor at min R2)")
+xlabel("Max R2")
+subplot(1,2,2)
+scatter([SPAM_stats.mean_R2],[SPAM_stats.centrality_weighted_avg_minfloor])
+[r, p] = corr([SPAM_stats.mean_R2]', [SPAM_stats.centrality_weighted_avg_minfloor]', 'Type', 'Pearson');
+title(sprintf("Pearson Corr: %.2f, p val=%.1e", r, p))
+ylabel("Weighted Avg Distance to Center of Mass (floor at min R2)")
+xlabel("Mean R2")
+sgtitle("Spatial Attribution Map Centrality Weighted Avg vs Mean R2 of Response Prediction")
+saveallform([figdir, netfigdir], 'SPAM_CentralityWeightedAvg_vs_mean_max_R2', gcf)
 %%
 function [total_variation, dirichlet_energy] = quantify_smoothness(matrix)
     % This function quantifies the smoothness of a 13x13 matrix using total variation and Dirichlet energy.
